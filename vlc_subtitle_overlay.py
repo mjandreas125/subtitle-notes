@@ -46,6 +46,111 @@ SUBTITLE_OUTLINE = "#000000"
 SUBTITLE_FONT_PATH = "arialbd.ttf"
 WORD_RE = re.compile(r"[A-Za-z]+(?:[-'][A-Za-z]+)?")
 HTML_TAG_RE = re.compile(r"<[^>]+>")
+STOP_WORDS = {
+    "a",
+    "an",
+    "and",
+    "are",
+    "as",
+    "at",
+    "be",
+    "been",
+    "but",
+    "by",
+    "for",
+    "from",
+    "had",
+    "has",
+    "have",
+    "he",
+    "her",
+    "him",
+    "his",
+    "i",
+    "if",
+    "in",
+    "is",
+    "it",
+    "its",
+    "me",
+    "my",
+    "of",
+    "on",
+    "or",
+    "our",
+    "she",
+    "so",
+    "that",
+    "the",
+    "their",
+    "them",
+    "there",
+    "they",
+    "this",
+    "those",
+    "to",
+    "was",
+    "we",
+    "were",
+    "what",
+    "when",
+    "where",
+    "which",
+    "who",
+    "will",
+    "with",
+    "you",
+    "your",
+}
+AUXILIARY_WORDS = {
+    "am",
+    "are",
+    "be",
+    "been",
+    "being",
+    "can",
+    "could",
+    "did",
+    "do",
+    "does",
+    "had",
+    "has",
+    "have",
+    "is",
+    "may",
+    "might",
+    "must",
+    "shall",
+    "should",
+    "to",
+    "was",
+    "were",
+    "will",
+    "would",
+}
+PHRASAL_PARTICLES = {
+    "about",
+    "across",
+    "after",
+    "against",
+    "along",
+    "around",
+    "away",
+    "back",
+    "by",
+    "down",
+    "for",
+    "from",
+    "into",
+    "off",
+    "on",
+    "out",
+    "over",
+    "through",
+    "to",
+    "up",
+    "with",
+}
 
 
 user32 = ctypes.windll.user32
@@ -94,6 +199,11 @@ class TranslationResult:
     text: str
     variants: tuple[str, ...] = ()
     examples: tuple[str, ...] = ()
+    focus_word: str = ""
+    focus_phrase: str = ""
+    focus_translation: str = ""
+    focus_variants: tuple[str, ...] = ()
+    focus_examples: tuple[str, ...] = ()
 
 
 def parse_timestamp(value: str) -> int:
@@ -211,6 +321,68 @@ def translate_text(text: str) -> TranslationResult:
     return TranslationResult("".join(part[0] for part in payload[0] if part[0]).strip())
 
 
+def choose_focus_phrase(text: str) -> tuple[str, str]:
+    matches = list(WORD_RE.finditer(text))
+    if not matches:
+        cleaned = clean_plain_text(text)
+        return cleaned, cleaned
+    lowered = [match.group(0).lower() for match in matches]
+    focus_index: int | None = None
+
+    for index, word in enumerate(lowered[:-1]):
+        if word in AUXILIARY_WORDS:
+            for next_index in range(index + 1, len(matches)):
+                if lowered[next_index] not in STOP_WORDS:
+                    focus_index = next_index
+                    break
+            if focus_index is not None:
+                break
+
+    if focus_index is None:
+        for index, word in enumerate(lowered):
+            if word not in STOP_WORDS:
+                focus_index = index
+                break
+
+    if focus_index is None:
+        focus_index = 0
+
+    focus_word = matches[focus_index].group(0)
+    focus_phrase = focus_word
+    if focus_index + 1 < len(matches) and lowered[focus_index + 1] in PHRASAL_PARTICLES:
+        focus_phrase = f"{focus_word} {matches[focus_index + 1].group(0)}"
+    return focus_word, focus_phrase
+
+
+def translate_selection_smart(text: str) -> TranslationResult:
+    phrase_result = translate_text(text)
+    focus_word, focus_phrase = choose_focus_phrase(text)
+    phrase_focus_result = phrase_result
+    word_focus_result = phrase_result
+    if focus_phrase and focus_phrase.lower() != text.lower():
+        try:
+            phrase_focus_result = translate_text(focus_phrase)
+        except Exception:
+            phrase_focus_result = phrase_result
+    if focus_word and focus_word.lower() not in {text.lower(), focus_phrase.lower()}:
+        try:
+            word_focus_result = translate_text(focus_word)
+        except Exception:
+            word_focus_result = phrase_focus_result
+    else:
+        word_focus_result = phrase_focus_result
+    return TranslationResult(
+        phrase_result.text,
+        phrase_result.variants,
+        phrase_result.examples,
+        focus_word=focus_word,
+        focus_phrase=focus_phrase,
+        focus_translation=phrase_focus_result.text,
+        focus_variants=word_focus_result.variants or phrase_focus_result.variants,
+        focus_examples=phrase_focus_result.examples or word_focus_result.examples,
+    )
+
+
 def translation_document_path() -> str:
     user_profile = os.environ.get("USERPROFILE") or os.path.expanduser("~")
     documents = os.path.join(user_profile, "Documents")
@@ -282,18 +454,25 @@ def docx_row(label: str, value: object, fill: str | None = None) -> str:
 
 
 def docx_table(entry: dict[str, object]) -> str:
-    variants = entry.get("variants", [])
-    examples = entry.get("examples", [])
+    focus_word = clean_plain_text(entry.get("focus_word", ""))
+    focus_phrase = clean_plain_text(entry.get("focus_phrase", "")) or focus_word
+    focus_translation = clean_plain_text(entry.get("focus_translation", "")) or clean_plain_text(entry.get("translation", ""))
+    variants = entry.get("focus_variants") or entry.get("variants", [])
+    examples = entry.get("focus_examples") or entry.get("examples", [])
     variants_text = "\n".join(clean_plain_text(item) for item in variants if item) if isinstance(variants, list) else ""
     examples_text = "\n".join(clean_plain_text(item) for item in examples if item) if isinstance(examples, list) else ""
     if not examples_text:
-        examples_text = "Google не вернул отдельных примеров для этого выделения"
-    title = f"{entry.get('selected', '')} - {entry.get('translation', '')}"
+        examples_text = "Google не вернул отдельных примеров для этого слова"
+    title_focus = focus_phrase or entry.get("selected", "")
+    title = f"{title_focus} - {focus_translation}"
     rows = [
-        docx_row("Выделено", entry.get("selected", ""), fill="EAF7F2"),
-        docx_row("Перевод", entry.get("translation", ""), fill="EAF7F2"),
-        docx_row("Другие значения", variants_text or "Google не вернул отдельных вариантов для этой фразы"),
-        docx_row("Примеры", examples_text),
+        docx_row("Выделенная фраза", entry.get("selected", ""), fill="EAF7F2"),
+        docx_row("Перевод фразы", entry.get("translation", ""), fill="EAF7F2"),
+        docx_row("Главное слово", focus_word or focus_phrase, fill="F4FBF8"),
+        docx_row("Выражение", focus_phrase, fill="F4FBF8"),
+        docx_row("Значение здесь", focus_translation, fill="F4FBF8"),
+        docx_row("Другие значения", variants_text or "Google не вернул отдельных вариантов для этого слова"),
+        docx_row("Примеры и выражения", examples_text),
     ]
     return (
         docx_paragraph(title, bold=True, size=28, color="0F5F4F")
@@ -662,7 +841,13 @@ class VlcSubtitleOverlay:
     def _draw_subtitles(self, selection_progress: float = 1.0) -> None:
         self.canvas.delete("all")
         self.subtitle_images = []
-        inset = int(max(0.0, 1.0 - selection_progress) * 5)
+        for part in self.render_parts:
+            self._draw_outlined_text(part.x, part.y, part.text)
+        self._redraw_selection(selection_progress)
+
+    def _redraw_selection(self, selection_progress: float = 1.0) -> None:
+        self.canvas.delete("selection")
+        inset = int(max(0.0, 1.0 - selection_progress) * 4)
         for x1, y1, x2, y2 in self._selection_rects():
             self.canvas.create_rectangle(
                 x1,
@@ -673,8 +858,6 @@ class VlcSubtitleOverlay:
                 outline="",
                 tags=("selection",),
             )
-        for part in self.render_parts:
-            self._draw_outlined_text(part.x, part.y, part.text)
         self.canvas.tag_lower("selection")
         self.canvas.tag_raise("subtitle")
 
@@ -693,18 +876,18 @@ class VlcSubtitleOverlay:
         for y, boxes in sorted(by_line.items()):
             boxes = sorted(boxes, key=lambda box: box.x)
             line_height = max(box.height for box in boxes)
-            rects.append((boxes[0].x - 4, y + 5, boxes[-1].x + boxes[-1].width + 4, y + line_height - 3))
+            rects.append((boxes[0].x - 7, y - 6, boxes[-1].x + boxes[-1].width + 7, y + line_height + 3))
         return rects
 
     def _animate_selection(self) -> None:
         self.selection_revision += 1
         revision = self.selection_revision
-        self._draw_subtitles(selection_progress=0.45)
+        self._redraw_selection(selection_progress=0.45)
 
         def step(progress: float) -> None:
             if revision != self.selection_revision:
                 return
-            self._draw_subtitles(selection_progress=progress)
+            self._redraw_selection(selection_progress=progress)
 
         self.root.after(18, lambda: step(0.75))
         self.root.after(36, lambda: step(1.0))
@@ -751,7 +934,7 @@ class VlcSubtitleOverlay:
             self.selection_focus = None
             self.drag_started = False
             self._hide_popup()
-            self._draw_subtitles()
+            self._redraw_selection()
         else:
             self.root.withdraw()
         return "break"
@@ -809,7 +992,7 @@ class VlcSubtitleOverlay:
                     self.selection_focus = None
                     self.drag_started = False
                     self._hide_popup()
-                    self._draw_subtitles()
+                    self._redraw_selection()
         self.left_button_was_down = is_down
         ctrl_down = bool(user32.GetAsyncKeyState(0x11) & 0x8000)
         undo_down = ctrl_down and (
@@ -827,7 +1010,7 @@ class VlcSubtitleOverlay:
             self.selection_focus = None
             self.drag_started = False
             self._hide_popup()
-            self._draw_subtitles()
+            self._redraw_selection()
             return "break"
         self.selection_anchor = char_index
         self.selection_focus = char_index
@@ -844,7 +1027,7 @@ class VlcSubtitleOverlay:
             if char_index != self.selection_focus:
                 self.drag_started = True
             self.selection_focus = char_index
-            self._draw_subtitles()
+            self._redraw_selection()
         return "break"
 
     def _on_release(self, event: tk.Event[tk.Canvas]) -> str:
@@ -939,7 +1122,7 @@ class VlcSubtitleOverlay:
 
     def _translate_in_background(self, job_id: int, key: str, selected_text: str, anchor: tuple[int, int]) -> None:
         try:
-            result = translate_text(selected_text)
+            result = translate_selection_smart(selected_text)
         except Exception:
             result = TranslationResult("\u043d\u0435\u0442 \u0441\u0432\u044f\u0437\u0438")
         self.cache[key] = result
@@ -948,6 +1131,11 @@ class VlcSubtitleOverlay:
     def _popup_text(self, result: object) -> str:
         if not isinstance(result, TranslationResult):
             return str(result)
+        if result.focus_word and result.focus_translation:
+            label = result.focus_phrase or result.focus_word
+            if result.focus_variants:
+                return f"{label} - {result.focus_translation}\n{result.focus_variants[0]}"
+            return f"{label} - {result.focus_translation}"
         if not result.variants:
             return result.text
         return f"{result.text}\n{result.variants[0]}"
@@ -955,9 +1143,11 @@ class VlcSubtitleOverlay:
     def _append_translation(self, selected_text: str, result: TranslationResult) -> None:
         cue = self.cues[self.cue_index] if 0 <= self.cue_index < len(self.cues) else None
         cue_label = cue_time_label(cue.start_ms) if cue else "--:--:--"
-        variants = "; ".join(result.variants)
+        focus = result.focus_phrase or result.focus_word
+        variants = "; ".join(result.focus_variants or result.variants)
         suffix = f" | variants: {variants}" if variants else ""
-        line = f"{selected_text} - {result.text}{suffix}\n"
+        focus_part = f" | focus: {focus} - {result.focus_translation}" if focus else ""
+        line = f"{selected_text} - {result.text}{focus_part}{suffix}\n"
         with open(self.translation_doc_path, "a", encoding="utf-8") as file:
             if file.tell() == 0:
                 file.write("VLC subtitle selections\n")
@@ -980,6 +1170,11 @@ class VlcSubtitleOverlay:
             "translation": result.text,
             "variants": list(result.variants),
             "examples": list(result.examples),
+            "focus_word": result.focus_word,
+            "focus_phrase": result.focus_phrase,
+            "focus_translation": result.focus_translation,
+            "focus_variants": list(result.focus_variants),
+            "focus_examples": list(result.focus_examples),
             "context": context,
         }
         with open(self.translation_entries_path, "a", encoding="utf-8") as file:
@@ -1011,10 +1206,13 @@ class VlcSubtitleOverlay:
             file.write("VLC subtitle selections\n")
             file.write("selected text - Russian translation | variants\n\n")
             for entry in entries:
-                variants = entry.get("variants", [])
+                focus = entry.get("focus_phrase") or entry.get("focus_word") or ""
+                focus_translation = entry.get("focus_translation") or ""
+                variants = entry.get("focus_variants") or entry.get("variants", [])
                 variants_text = "; ".join(str(item) for item in variants if item) if isinstance(variants, list) else ""
                 suffix = f" | variants: {variants_text}" if variants_text else ""
-                file.write(f"{entry.get('selected', '')} - {entry.get('translation', '')}{suffix}\n")
+                focus_part = f" | focus: {focus} - {focus_translation}" if focus else ""
+                file.write(f"{entry.get('selected', '')} - {entry.get('translation', '')}{focus_part}{suffix}\n")
 
     def _undo_last_translation(self, _event: tk.Event[object] | None = None) -> str:
         entries = self._read_translation_entries()
@@ -1064,10 +1262,12 @@ class VlcSubtitleOverlay:
             vlc_height = max(1, bottom - top)
             width = min(MAX_WIDTH, max(MIN_WIDTH, int(vlc_width * 0.82)))
             font_pixels = max(44, min(72, int(vlc_height * 0.064)))
+            needs_redraw = False
             if self.subtitle_font.cget("size") != -font_pixels:
                 self.subtitle_font.configure(size=-font_pixels)
                 if self.current_text:
                     self._layout_words()
+                    needs_redraw = True
             x = left + (vlc_width - width) // 2
             bottom_margin = max(58, min(86, int(vlc_height * 0.065)))
             y = bottom - self.window_height - bottom_margin
@@ -1076,6 +1276,9 @@ class VlcSubtitleOverlay:
             if self.current_text:
                 self._layout_words()
                 self._draw_subtitles()
+                needs_redraw = False
+        if needs_redraw:
+            self._draw_subtitles()
         self.root.geometry(f"{self.window_width}x{self.window_height}+{x}+{y}")
         return True
 

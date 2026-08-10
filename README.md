@@ -11,6 +11,7 @@ It opens a video in VLC, renders a selectable subtitle layer over the video, tra
 - Use external `.srt` subtitles or extract embedded text subtitles with `ffmpeg`.
 - Select subtitle text by dragging over letters.
 - Double-click a word to translate the whole word.
+- For selected phrases, detect the likely key word or verb, for example `brag` / `brag about`, and save separate meanings and examples for it.
 - Show a small Russian translation popup.
 - Save selections to `Documents\Translated VLC\subtitle_translations.docx`.
 - Save a plain text log to `Documents\Translated VLC\subtitle_translations.txt`.
@@ -65,6 +66,7 @@ The overlay:
 - finds the matching subtitle cue by timestamp;
 - draws selectable text near the bottom of the VLC window;
 - translates selected text with Google Translate's public web endpoint;
+- when a phrase is selected, translates the whole phrase and separately looks up the likely key word/expression for better learning notes;
 - writes learning notes into Word and text files.
 
 ## Controls
@@ -73,7 +75,7 @@ The overlay:
 - Double-click a word: translate that word.
 - Click outside subtitles: clear selection.
 - `Ctrl+Z` or `Ctrl+X`: remove the last saved entry from Word/text log.
-- `Esc`: hide overlay.
+- `Esc`: clear the current selection first; if nothing is selected, hide overlay.
 - `Ctrl+Q`: close overlay.
 
 ## Output Files
