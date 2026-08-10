@@ -366,6 +366,7 @@ class VlcSubtitleOverlay:
         self.char_boxes: list[CharBox] = []
         self.render_parts: list[RenderPart] = []
         self.subtitle_images: list[ImageTk.PhotoImage] = []
+        self.subtitle_image_cache: dict[tuple[str, int], tuple[ImageTk.PhotoImage, int, int]] = {}
         self.selection_anchor: int | None = None
         self.selection_focus: int | None = None
         self.drag_started = False
@@ -412,7 +413,7 @@ class VlcSubtitleOverlay:
             pass
         self.root.configure(bg=TRANSPARENT_COLOR)
         self.root.config(cursor="hand2")
-        self.root.bind("<Escape>", lambda _event: self.root.withdraw())
+        self.root.bind("<Escape>", self._on_escape)
         self.root.bind("<Control-q>", lambda _event: self.root.destroy())
         self.root.bind("<Control-z>", self._undo_last_translation)
         self.root.bind("<Control-x>", self._undo_last_translation)
@@ -432,7 +433,7 @@ class VlcSubtitleOverlay:
         self.canvas.bind("<B1-Motion>", self._on_drag)
         self.canvas.bind("<ButtonRelease-1>", self._on_release)
         self.canvas.bind("<Double-Button-1>", self._on_double_click)
-        self.canvas.bind("<Escape>", lambda _event: self.root.withdraw())
+        self.canvas.bind("<Escape>", self._on_escape)
         self.canvas.bind("<Control-z>", self._undo_last_translation)
         self.canvas.bind("<Control-x>", self._undo_last_translation)
         self.canvas.bind("<Control-Z>", self._undo_last_translation)
@@ -500,6 +501,7 @@ class VlcSubtitleOverlay:
             self.current_text = ""
             self.char_boxes = []
             self.render_parts = []
+            self.subtitle_image_cache = {}
             self.canvas.delete("all")
             self._hide_popup()
         self.last_polled_ms = current_ms
@@ -514,6 +516,7 @@ class VlcSubtitleOverlay:
                 self.char_boxes = []
                 self.render_parts = []
                 self.subtitle_images = []
+                self.subtitle_image_cache = {}
                 self.canvas.delete("all")
                 self.root.withdraw()
             else:
@@ -625,14 +628,15 @@ class VlcSubtitleOverlay:
         render_parts: list[RenderPart] = []
         char_index = 0
         for line_number, line in enumerate(lines):
-            line_width = line_widths[line_number]
+            line_text = "".join(piece for piece, _offset in line).rstrip()
+            line_width = self.subtitle_font.measure(line_text)
             start_x = max(8, (self.window_width - line_width) // 2)
             y = start_y + line_number * line_height
+            if line_text:
+                render_parts.append(RenderPart(line_text, int(start_x), int(y)))
             for piece_number, (piece, offset) in enumerate(line):
                 source_start = line_source_starts[line_number][piece_number]
                 visible_piece = piece.rstrip()
-                if visible_piece:
-                    render_parts.append(RenderPart(visible_piece, int(start_x + offset), int(y)))
                 for local_index, char in enumerate(visible_piece):
                     if char.isspace():
                         continue
@@ -653,6 +657,7 @@ class VlcSubtitleOverlay:
                     char_index += 1
         self.char_boxes = boxes
         self.render_parts = render_parts
+        self.subtitle_image_cache = {}
 
     def _draw_subtitles(self, selection_progress: float = 1.0) -> None:
         self.canvas.delete("all")
@@ -706,34 +711,50 @@ class VlcSubtitleOverlay:
 
     def _draw_outlined_text(self, x: int, y: int, text: str) -> None:
         font_size = abs(int(self.subtitle_font.cget("size")))
-        try:
-            font = ImageFont.truetype(SUBTITLE_FONT_PATH, font_size)
-        except OSError:
-            font = ImageFont.load_default()
-        left, top, right, bottom = font.getbbox(text, stroke_width=3)
-        padding = 8
-        width = max(1, right - left + padding * 2)
-        height = max(1, bottom - top + padding * 2)
-        stroke = Image.new("RGBA", (width, height), (0, 0, 0, 0))
-        fill = Image.new("RGBA", (width, height), (0, 0, 0, 0))
-        stroke_draw = ImageDraw.Draw(stroke)
-        fill_draw = ImageDraw.Draw(fill)
-        draw_x = padding - left
-        draw_y = padding - top
-        stroke_draw.text(
-            (draw_x, draw_y),
-            text,
-            font=font,
-            fill=(0, 0, 0, 235),
-            stroke_width=2,
-            stroke_fill=(0, 0, 0, 235),
-        )
-        stroke = stroke.filter(ImageFilter.GaussianBlur(0.45))
-        fill_draw.text((draw_x, draw_y), text, font=font, fill=(255, 255, 255, 255))
-        stroke.alpha_composite(fill)
-        image = ImageTk.PhotoImage(stroke)
+        cache_key = (text, font_size)
+        cached = self.subtitle_image_cache.get(cache_key)
+        if cached is None:
+            try:
+                font = ImageFont.truetype(SUBTITLE_FONT_PATH, font_size)
+            except OSError:
+                font = ImageFont.load_default()
+            left, top, right, bottom = font.getbbox(text, stroke_width=3)
+            padding = 9
+            width = max(1, right - left + padding * 2)
+            height = max(1, bottom - top + padding * 2)
+            stroke = Image.new("RGBA", (width, height), (0, 0, 0, 0))
+            fill = Image.new("RGBA", (width, height), (0, 0, 0, 0))
+            stroke_draw = ImageDraw.Draw(stroke)
+            fill_draw = ImageDraw.Draw(fill)
+            draw_x = padding - left
+            draw_y = padding - top
+            stroke_draw.text(
+                (draw_x, draw_y),
+                text,
+                font=font,
+                fill=(0, 0, 0, 218),
+                stroke_width=2,
+                stroke_fill=(0, 0, 0, 218),
+            )
+            stroke = stroke.filter(ImageFilter.GaussianBlur(0.65))
+            fill_draw.text((draw_x, draw_y), text, font=font, fill=(255, 255, 255, 255))
+            stroke.alpha_composite(fill)
+            cached = (ImageTk.PhotoImage(stroke), padding, padding)
+            self.subtitle_image_cache[cache_key] = cached
+        image, pad_x, pad_y = cached
         self.subtitle_images.append(image)
-        self.canvas.create_image(x - padding, y - padding, image=image, anchor="nw", tags=("subtitle", "subtitle_fill"))
+        self.canvas.create_image(x - pad_x, y - pad_y, image=image, anchor="nw", tags=("subtitle", "subtitle_fill"))
+
+    def _on_escape(self, _event: tk.Event[object] | None = None) -> str:
+        if self.selection_anchor is not None or self.selection_focus is not None:
+            self.selection_anchor = None
+            self.selection_focus = None
+            self.drag_started = False
+            self._hide_popup()
+            self._draw_subtitles()
+        else:
+            self.root.withdraw()
+        return "break"
 
     def _char_at(self, x: int, y: int) -> int | None:
         if not self.char_boxes:
