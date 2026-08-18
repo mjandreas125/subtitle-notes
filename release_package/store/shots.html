@@ -1,0 +1,440 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>Store screenshots</title>
+<style>
+  /* One file, five scenes. ?n=1..5 shows one of them at exactly 1280x800,
+     which is the size the store form wants. */
+  :root {
+    --paper: #f7f4ee;
+    --ink: #10221b;
+    --soft: #6b7a74;
+    --hair: #e3ded3;
+    --green: #2e9668;
+    --lit: #35a874;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: #fff; }
+  body {
+    font: 400 16px/1.5 "Segoe UI", system-ui, sans-serif;
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+  }
+  .shot {
+    display: none; width: 1280px; height: 800px; overflow: hidden;
+    background: var(--paper); padding: 50px 64px; position: relative;
+  }
+  body.only-1 #s1, body.only-2 #s2, body.only-3 #s3,
+  body.only-4 #s4, body.only-5 #s5 { display: block; }
+
+  h1 { font-size: 40px; font-weight: 700; letter-spacing: -.022em; line-height: 1.12; }
+  .lede { margin-top: 10px; font-size: 19px; color: var(--soft); max-width: 940px; }
+  .mark {
+    display: flex; align-items: center; gap: 9px; margin-bottom: 18px;
+    font-size: 12.5px; font-weight: 700; letter-spacing: .16em;
+    text-transform: uppercase; color: var(--green);
+  }
+  .mark i { width: 20px; height: 20px; border-radius: 6px; background: var(--green); position: relative; }
+  .mark i::after { content: ''; position: absolute; inset: 5px 4px; border-radius: 2px; background: var(--paper); }
+
+  /* --- the film frame ------------------------------------------------------ */
+  .screen { position: relative; border-radius: 18px; overflow: hidden; background: #05080a; }
+  .scene { position: absolute; inset: 0; }
+  .scene::before, .scene::after { content: ''; position: absolute; border-radius: 50%; filter: blur(58px); }
+  .scene::before {
+    width: 620px; height: 480px; left: -80px; top: -140px;
+    background: radial-gradient(circle, rgba(94,132,148,.75), transparent 68%);
+  }
+  .scene::after {
+    width: 700px; height: 520px; right: -140px; bottom: -180px;
+    background: radial-gradient(circle, rgba(196,146,74,.55), transparent 66%);
+  }
+  .lamp { position: absolute; border-radius: 50%; filter: blur(16px); background: rgba(255,226,168,.75); }
+  /* A shoulder and the back of a head, rim-lit: enough for the eye to read
+     "night scene from a film" without borrowing anyone's frame. */
+  .silh { position: absolute; left: 54px; bottom: 0; width: 430px; height: 320px; }
+  .silh .head {
+    position: absolute; left: 118px; bottom: 148px; width: 152px; height: 176px;
+    border-radius: 50% 50% 42% 42%; background: #04070a;
+    box-shadow: 7px -7px 0 -3px rgba(255,214,150,.34);
+  }
+  .silh .body {
+    position: absolute; left: 0; bottom: 0; width: 400px; height: 178px;
+    border-radius: 150px 130px 0 0; background: #04070a;
+    box-shadow: 11px -9px 0 -7px rgba(255,214,150,.2);
+  }
+  .blinds {
+    position: absolute; right: 0; top: 0; width: 46%; height: 74%;
+    background: repeating-linear-gradient(
+      to bottom, rgba(255,224,176,.11) 0 5px, transparent 5px 22px);
+    mask-image: radial-gradient(80% 70% at 80% 30%, #000 20%, transparent 78%);
+  }
+  .grain {
+    position: absolute; inset: 0;
+    background-image: radial-gradient(rgba(255,255,255,.055) 1px, transparent 1px);
+    background-size: 3px 3px;
+  }
+  .vignette {
+    position: absolute; inset: 0;
+    background: radial-gradient(120% 90% at 50% 45%, transparent 40%, rgba(0,0,0,.72));
+  }
+
+  .caption {
+    position: absolute; left: 50%; transform: translateX(-50%);
+    bottom: 46px; padding: 9px 16px; border-radius: 8px;
+    background: rgba(0,0,0,.62);
+    font-size: 27px; font-weight: 600; color: #fff;
+    text-shadow: 0 2px 6px rgba(0,0,0,.6); white-space: nowrap;
+  }
+  .caption .pick {
+    background: var(--lit); border-radius: 6px; padding: 2px 6px; margin: 0 -2px;
+    box-shadow: 0 0 0 3px rgba(53,168,116,.28);
+  }
+
+  /* the product's own card */
+  .card {
+    position: absolute; border-radius: 13px; padding: 14px 17px;
+    background: rgba(16,22,20,.95); border: 1px solid rgba(255,255,255,.09);
+    box-shadow: 0 18px 44px rgba(0,0,0,.5); color: #eef3f0;
+    font-size: 17px; line-height: 1.35; max-width: 330px;
+  }
+  .card b { display: block; font-weight: 600; }
+  .card .word { margin-top: 7px; font-size: 14.5px; color: #7fe3ab; }
+  .card .seen { margin-top: 6px; font-size: 12.5px; color: #8b9c94; }
+
+  .key {
+    position: absolute; padding: 7px 13px; border-radius: 8px;
+    background: #f4f1ea; border: 1px solid #cfc8ba; border-bottom-width: 3px;
+    font-size: 14px; font-weight: 700; color: #2c352f;
+    box-shadow: 0 5px 14px rgba(0,0,0,.35);
+  }
+  .arrow { position: absolute; width: 22px; height: 22px; }
+
+  /* --- steps under a picture ---------------------------------------------- */
+  .steps { display: flex; gap: 30px; margin-top: 20px; }
+  .steps div { flex: 1; }
+  .steps b { display: block; font-size: 15.5px; font-weight: 600; }
+  .steps span { font-size: 14px; color: var(--soft); }
+  .steps em { font-style: normal; color: var(--green); font-weight: 700; margin-right: 7px; }
+
+  /* --- meaning, not words -------------------------------------------------- */
+  .versus { margin-top: 22px; display: grid; gap: 16px; }
+  .row {
+    display: grid; grid-template-columns: 176px 1fr; align-items: center;
+    gap: 24px; padding: 22px 26px; border-radius: 14px; background: #fff;
+    border: 1px solid var(--hair);
+  }
+  .row.win { border-color: rgba(46,150,104,.5); box-shadow: 0 10px 30px rgba(20,60,40,.07); }
+  .row .who { font-size: 14px; font-weight: 700; color: var(--soft); letter-spacing: .02em; }
+  .row.win .who { color: var(--green); }
+  .row p { font-size: 27px; font-weight: 600; letter-spacing: -.015em; }
+  .row.lose p { color: #98a29d; text-decoration: line-through; text-decoration-thickness: 1.5px; }
+  .extras { display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
+  .chip {
+    padding: 5px 11px; border-radius: 999px; background: rgba(46,150,104,.1);
+    color: #1f6b49; font-size: 13.5px; font-weight: 600;
+  }
+  .literal { margin-top: 11px; font-size: 14.5px; color: var(--soft); }
+  .source {
+    margin-top: 22px; padding: 16px 20px; border-radius: 12px;
+    background: #0d1512; color: #dfe7e3; font-size: 19px; display: flex;
+    align-items: center; gap: 14px;
+  }
+  .source span.pick { background: var(--lit); border-radius: 5px; padding: 1px 6px; color: #fff; }
+  .source small { margin-left: auto; color: #7d8d86; font-size: 13px; }
+
+  /* --- browser window ------------------------------------------------------ */
+  .win {
+    margin-top: 22px; border-radius: 14px; overflow: hidden;
+    border: 1px solid var(--hair); background: #fff;
+    box-shadow: 0 16px 40px rgba(20,40,30,.09);
+  }
+  .bar {
+    display: flex; align-items: center; gap: 9px; padding: 11px 14px;
+    background: #efece5; border-bottom: 1px solid var(--hair);
+  }
+  .bar i { width: 10px; height: 10px; border-radius: 50%; background: #cfc8ba; }
+  .bar .url {
+    margin-left: 10px; flex: 1; padding: 5px 12px; border-radius: 999px;
+    background: #fff; border: 1px solid var(--hair);
+    font-size: 12.5px; color: #7c877f;
+  }
+  .page { padding: 26px 34px 30px; position: relative; }
+  .page h4 { font-size: 21px; font-weight: 700; letter-spacing: -.015em; }
+  .page p { margin-top: 11px; font-size: 15.5px; line-height: 1.75; color: #33413a; max-width: 600px; }
+  .page .pick { background: rgba(53,168,116,.9); color: #fff; border-radius: 4px; padding: 1px 4px; }
+  .pdfmini {
+    position: absolute; right: 30px; bottom: 26px; width: 250px;
+    border-radius: 10px; border: 1px solid var(--hair); overflow: hidden; background: #fbfaf7;
+  }
+  .pdfmini .t {
+    padding: 6px 10px; background: #333b36; color: #e7ece9; font-size: 11px;
+    display: flex; justify-content: space-between;
+  }
+  .pdfmini .b { padding: 12px; font-size: 11.5px; line-height: 1.7; color: #5c665f; }
+  .pdfmini .b .pick { background: rgba(53,168,116,.9); color: #fff; border-radius: 3px; padding: 0 3px; }
+
+  /* --- phones -------------------------------------------------------------- */
+  .phones { margin-top: 24px; display: flex; gap: 40px; align-items: flex-start; }
+  .phone {
+    width: 262px; border-radius: 24px; padding: 7px; background: #14201b;
+    box-shadow: 0 22px 48px rgba(15,40,28,.22);
+  }
+  .phone img { display: block; width: 100%; height: 486px; object-fit: cover; object-position: top; border-radius: 18px; }
+  .phones figcaption { margin-top: 11px; font-size: 13.5px; color: var(--soft); }
+  .aside { flex: 1; padding-top: 4px; }
+  .aside h5 { font-size: 18px; font-weight: 700; }
+  .aside ul { margin-top: 12px; list-style: none; display: grid; gap: 13px; }
+  .aside li { font-size: 15px; color: #33413a; display: flex; gap: 11px; line-height: 1.5; }
+  .aside li b { color: var(--ink); }
+  .aside li i { flex: none; width: 7px; height: 7px; border-radius: 50%; background: var(--green); margin-top: 8px; }
+
+  .anki { border-radius: 12px; border: 1px solid var(--hair); background: #fff; overflow: hidden; }
+  .anki .h {
+    padding: 10px 15px; background: #f1eee7; font-size: 12px; font-weight: 700;
+    letter-spacing: .1em; text-transform: uppercase; color: var(--soft);
+    display: flex; justify-content: space-between;
+  }
+  .anki .r {
+    display: grid; grid-template-columns: 160px 1fr; gap: 14px;
+    padding: 15px 15px; border-top: 1px solid var(--hair); font-size: 14px;
+  }
+  .anki .r b { font-weight: 600; }
+  .anki .r span { color: var(--soft); }
+
+  /* --- a band of small examples / languages -------------------------------- */
+  .band { margin-top: 26px; }
+  .band h6 {
+    font-size: 12.5px; font-weight: 700; letter-spacing: .14em;
+    text-transform: uppercase; color: var(--soft);
+  }
+  .band .three { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 13px; }
+  .band .three div {
+    padding: 15px 18px; border-radius: 12px; background: #fff; border: 1px solid var(--hair);
+  }
+  .band .three b { display: block; font-size: 15px; font-weight: 600; color: #37453e; }
+  .band .three span { display: block; margin-top: 5px; font-size: 16.5px; font-weight: 600; color: #1f6b49; }
+  .langs { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 13px; }
+  .langs span {
+    padding: 5px 10px; border-radius: 999px; background: #fff;
+    border: 1px solid var(--hair); font-size: 13px; color: #3b4a43;
+  }
+  .langs span.on { background: rgba(46,150,104,.11); border-color: rgba(46,150,104,.4); color: #1f6b49; font-weight: 600; }
+</style>
+
+<!-- 1 ----------------------------------------------------------------------- -->
+<section class="shot" id="s1">
+  <div class="mark"><i></i> Subtitle Notes</div>
+  <h1>Держите Ctrl и протяните по субтитру</h1>
+  <p class="lede">Отпустили - плеер снова ваш: субтитр перетаскивается, клик ставит на паузу.</p>
+  <div class="screen" style="height: 498px; margin-top: 20px">
+    <div class="scene"></div>
+    <div class="blinds"></div>
+    <div class="lamp" style="width: 30px; height: 30px; left: 872px; top: 128px; opacity: .8"></div>
+    <div class="lamp" style="width: 20px; height: 20px; left: 946px; top: 196px; opacity: .55"></div>
+    <div class="lamp" style="width: 44px; height: 44px; left: 1010px; top: 96px; opacity: .45"></div>
+    <div class="lamp" style="width: 16px; height: 16px; left: 760px; top: 214px; opacity: .4"></div>
+    <div class="silh"><div class="body"></div><div class="head"></div></div>
+    <div class="grain"></div>
+    <div class="vignette"></div>
+    <div class="card" style="right: 70px; top: 56px">
+      <b>Никому не нужна судимость.</b>
+      <div class="word">a record - судимость</div>
+      <div class="seen">Сохранено в библиотеку</div>
+    </div>
+    <div class="caption">No one wants <span class="pick">a record</span>.</div>
+    <div class="key" style="left: 92px; bottom: 50px">Ctrl</div>
+    <svg class="arrow" style="left: 462px; bottom: 32px" viewBox="0 0 24 24">
+      <path d="M4 2 L4 20 L9.4 14.6 L12.6 22 L15.4 20.8 L12.2 13.6 L20 13.6 Z"
+            fill="#fff" stroke="#12201a" stroke-width="1.2" />
+    </svg>
+  </div>
+  <div class="steps">
+    <div><b><em>1</em>Зажали клавишу</b><span>Субтитр становится обычным текстом</span></div>
+    <div><b><em>2</em>Протянули по словам</b><span>Видео встаёт на паузу само</span></div>
+    <div><b><em>3</em>Прочитали и смотрите дальше</b><span>Слово уже в библиотеке, кнопок нет</span></div>
+  </div>
+</section>
+
+<!-- 2 ----------------------------------------------------------------------- -->
+<section class="shot" id="s2">
+  <div class="mark"><i></i> Subtitle Notes</div>
+  <h1>Переводит фразу, а не слово по отдельности</h1>
+  <p class="lede">Строку читает языковая модель: она видит всю реплику и отвечает так, как перевёл бы дубляж.</p>
+  <div class="source">
+    <span>No one wants <span class="pick">a record</span>.</span>
+    <small>серия, 27:44</small>
+  </div>
+  <div class="versus">
+    <div class="row lose">
+      <div class="who">Обычный словарь</div>
+      <p>никто не хочет рекорд</p>
+    </div>
+    <div class="row win">
+      <div class="who">Subtitle Notes</div>
+      <div>
+        <p>никому не нужна судимость</p>
+        <div class="extras">
+          <span class="chip">criminal record</span>
+          <span class="chip">conviction</span>
+          <span class="chip">приговор</span>
+        </div>
+        <div class="literal">Буквально «запись» - в этом значении запись о приговоре, которая остаётся с человеком.</div>
+      </div>
+    </div>
+  </div>
+  <div class="band">
+    <h6>Так же с идиомами, сарказмом и сленгом</h6>
+    <div class="three">
+      <div><b>It’s not my cup of tea.</b><span>мне это не по вкусу</span></div>
+      <div><b>He threw me under the bus.</b><span>он меня подставил</span></div>
+      <div><b>Let’s call it a day.</b><span>на сегодня хватит</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- 3 ----------------------------------------------------------------------- -->
+<section class="shot" id="s3">
+  <div class="mark"><i></i> Subtitle Notes</div>
+  <h1>На любом сайте и в PDF - просто выделите</h1>
+  <p class="lede">Статья, документ, комментарий, субтитры фильма. Одно движение мышью, окно появляется рядом.</p>
+  <div class="win">
+    <div class="bar"><i></i><i></i><i></i><div class="url">longreads.example/how-we-learn-words</div></div>
+    <div class="page" style="height: 372px; display: grid; grid-template-columns: 1fr 300px; gap: 34px">
+      <div>
+        <h4>The words we keep</h4>
+        <p>
+          Readers rarely stop for a dictionary. They guess, move on, and the word
+          <span class="pick">slips through the cracks</span> - which is why the second
+          meeting with it feels exactly like the first one.
+        </p>
+        <p>
+          A note taken in the second it happens is worth more than an hour of lists
+          written later in the evening. The difference is not effort. It is whether
+          the word still carries the scene it came from.
+        </p>
+        <p>
+          That is also why a word met in a film sticks better than the same word met
+          in a column of twenty others.
+        </p>
+      </div>
+      <div style="display: grid; align-content: start; gap: 20px">
+        <div class="card" style="position: static; max-width: none">
+          <b>ускользает от внимания</b>
+          <div class="word">slip through the cracks - остаться незамеченным</div>
+          <div class="seen">Сохранено в библиотеку</div>
+        </div>
+        <div class="pdfmini" style="position: static; width: auto">
+          <div class="t"><span>report-2026.pdf</span><span>14 / 32</span></div>
+          <div class="b">
+            The committee found no <span class="pick">grounds</span> for the claim,
+            and the matter was closed.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="steps">
+    <div><b>Обычное выделение мышью</b><span>Ни настройки, ни отдельного режима: выделили - окно рядом.</span></div>
+    <div><b>Ctrl+Alt при выделении</b><span>Сохранить молча, даже не открывая окно с переводом.</span></div>
+    <div><b>В PDF - правый клик</b><span>«Сохранить в Subtitle Notes» там, где больше ничего не работает.</span></div>
+  </div>
+</section>
+
+<!-- 4 ----------------------------------------------------------------------- -->
+<section class="shot" id="s4">
+  <div class="mark"><i></i> Subtitle Notes</div>
+  <h1>Утром слова уже в телефоне</h1>
+  <p class="lede">Один аккаунт Google - одна библиотека: браузер, телефон, компьютер.</p>
+  <div class="phones">
+    <figure>
+      <div class="phone"><img src="../guide/phone-library.png" alt="" /></div>
+      <figcaption>Библиотека: слова по фильмам и сериям</figcaption>
+    </figure>
+    <figure>
+      <div class="phone"><img src="../guide/phone-review.png" alt="" /></div>
+      <figcaption>Повторение: сначала слово, потом смысл</figcaption>
+    </figure>
+    <div class="aside">
+      <h5>Что с этим делать дальше</h5>
+      <ul>
+        <li><i></i><span><b>Две минуты в транспорте.</b> Приложение само предлагает те слова, которым пора вернуться.</span></li>
+        <li><i></i><span><b>Поиск по своим словам.</b> Видно, из какого фильма и с какой минуты слово пришло.</span></li>
+        <li><i></i><span><b>Свой вариант перевода.</b> Если неточно - напишите, как правильно.</span></li>
+        <li><i></i><span><b>Работает без сети.</b> Сохранённое читается и повторяется offline.</span></li>
+      </ul>
+      <div style="margin-top: 22px; padding: 17px 20px; border-radius: 12px;
+                  background: #fff; border: 1px solid var(--hair); font-size: 14.5px;
+                  color: #33413a; line-height: 1.6">
+        Слово, сохранённое в браузере, оказывается в телефоне через секунду.
+        Ничего не нужно переносить руками.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 5 ----------------------------------------------------------------------- -->
+<section class="shot" id="s5">
+  <div class="mark"><i></i> Subtitle Notes</div>
+  <h1>Anki, VLC и 14 языков интерфейса</h1>
+  <p class="lede">Ничего не заперто внутри: слова выгружаются одним файлом, а на компьютере работает и обычный плеер.</p>
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 34px; margin-top: 22px">
+    <div>
+      <div class="screen" style="height: 292px">
+        <div class="scene"></div>
+        <div class="silh" style="transform: scale(.62); transform-origin: left bottom">
+          <div class="body"></div><div class="head"></div>
+        </div>
+        <div class="grain"></div>
+        <div class="vignette"></div>
+        <div style="position: absolute; left: 0; right: 0; top: 0; padding: 8px 14px;
+                    background: rgba(8,10,9,.72); color: #c9d3ce; font-size: 12px;
+                    display: flex; justify-content: space-between">
+          <span>VLC media player</span><span>00:27:44 / 00:52:10</span>
+        </div>
+        <div class="caption" style="bottom: 24px; font-size: 20px">
+          I can’t <span class="pick">make out</span> a word.
+        </div>
+        <div class="card" style="left: 20px; top: 52px; font-size: 15px; max-width: 240px">
+          <b>разобрать на слух</b>
+          <div class="word">make out - различить</div>
+        </div>
+      </div>
+      <div class="steps" style="margin-top: 16px">
+        <div>
+          <b>VLC на компьютере</b>
+          <span>Программа сама прописывает себя в плеер, а Ctrl+Alt+S переводит текст в любом окне.</span>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="anki">
+        <div class="h"><span>Выгрузка для Anki</span><span>29 слов</span></div>
+        <div class="r"><b>a record</b><span>судимость - No one wants a record.</span></div>
+        <div class="r"><b>slip through the cracks</b><span>остаться незамеченным</span></div>
+        <div class="r"><b>make out</b><span>разобрать на слух</span></div>
+        <div class="r"><b>at the commons</b><span>на общей территории</span></div>
+      </div>
+      <div class="steps" style="margin-top: 16px">
+        <div>
+          <b>Ваши слова остаются вашими</b>
+          <span>Файл со словом, значением и репликой, из которой оно взято. Аккаунт удаляется одной кнопкой.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="band">
+    <h6>Интерфейс подхватывает язык браузера</h6>
+    <div class="langs">
+      <span class="on">Русский</span><span>English</span><span>Eesti</span>
+      <span>Deutsch</span><span>Français</span><span>Español</span>
+      <span>Italiano</span><span>Polski</span><span>Nederlands</span>
+      <span>Português</span><span>Suomi</span><span>Svenska</span>
+      <span>Türkçe</span><span>Українська</span>
+    </div>
+  </div>
+</section>
+
+<script>
+  const n = new URLSearchParams(location.search).get('n') || '1';
+  document.body.className = 'only-' + n;
+</script>
