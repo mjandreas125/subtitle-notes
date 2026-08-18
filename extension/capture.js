@@ -242,6 +242,14 @@
   const escape = (value) =>
     String(value).replace(/[&<>"]/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[character]));
 
+  // A fast dictionary request may be rate-limited while the contextual
+  // reading is still on its way. Never turn that temporary failure into a
+  // visible card.
+  function hasTranslation(value) {
+    const text = String(value ?? '').trim();
+    return Boolean(text) && text.toLowerCase() !== 'translation unavailable';
+  }
+
   /// A pinned panel can be dragged to a better spot, and stays there next time.
   function makeDraggable(node) {
     if (settings.position === 'selection') return;
@@ -395,13 +403,24 @@
     const saving = ask({ type: 'capture', text, context, title, timecodeMs });
     ask({ type: 'quick', text }).then((quick) => {
       // Only until something better arrives, and never over the top of it.
-      if (panel !== mine || !quick.ok || mine.dataset.read || mine.dataset.settled) return;
+      if (
+        panel !== mine ||
+        !quick.ok ||
+        !hasTranslation(quick.data?.translation) ||
+        mine.dataset.read ||
+        mine.dataset.settled
+      ) return;
       mine.innerHTML = compact()
         ? `<div class="term">${escape(quick.data.translation)}</div>`
         : `<div class="head">${escape(quick.data.translation)}</div>`;
     });
     ask({ type: 'reading', text, context }).then((reading) => {
-      if (panel !== mine || !reading.ok || mine.dataset.settled) return;
+      if (
+        panel !== mine ||
+        !reading.ok ||
+        !hasTranslation(reading.data?.translation) ||
+        mine.dataset.settled
+      ) return;
       mine.innerHTML = readingHtml(reading.data, text);
       mine.dataset.read = '1';
       activate(mine, { spokenText: true });
@@ -409,7 +428,12 @@
 
     const saved = await saving;
     if (panel !== mine) return;
-    mine.dataset.settled = '1';
+    const storedTranslation = saved.data.focus_translation || saved.data.translation;
+    // Leave the request alive when saving got a temporary unavailable response:
+    // the contextual reading can still replace the original text with the real
+    // translation a moment later.
+    const waitingForReading = !mine.dataset.read && !hasTranslation(storedTranslation);
+    if (!waitingForReading) mine.dataset.settled = '1';
     // Placed once, when it appeared. Everything after that only changes what
     // is written inside it.
 
@@ -432,11 +456,12 @@
     // Whatever the fast reading already drew stays; the badge is added above
     // it. If the reading has not landed yet, the saved card carries a
     // translation of its own to show instead.
+    const safeStoredTranslation = hasTranslation(storedTranslation) ? storedTranslation : text;
     const body = mine.dataset.read
       ? [...mine.children].map((node) => node.outerHTML).join('')
       : compact()
-        ? `<div class="term">${escape(saved.data.focus_translation || saved.data.translation || text)}</div>`
-        : `<div class="head">${escape(saved.data.focus_translation || saved.data.translation || text)}</div>`;
+        ? `<div class="term">${escape(safeStoredTranslation)}</div>`
+        : `<div class="head">${escape(safeStoredTranslation)}</div>`;
     panel.innerHTML = `
       ${compact() ? '' : `<div class="flag${reused ? ' grey' : ''}">${reused ? t('inLibrary') : t('saved')}</div>`}
       ${body}
@@ -556,9 +581,10 @@
         if (panel?.classList.contains('chip')) close();
         return;
       }
-      const instant = settings.instantAlways || snMatchesHotkey(event, settings.hotkey);
+      const instant = snMatchesHotkey(event, settings.hotkey);
+      // A plain browser selection belongs to the page. Reading, saving and
+      // network requests begin only with the configured Ctrl+Alt shortcut.
       if (instant) saveNow(found.rect, found.text, found.context, document.title);
-      else showChip(found.rect, found.text, found.context, document.title);
     }, 10);
   });
 
@@ -574,7 +600,7 @@
       window.getSelection()?.removeAllRanges();
       return close();
     }
-    if (asleep || !armed || settings.instantAlways) return;
+    if (asleep || !armed) return;
     if (!snMatchesHotkey(event, settings.hotkey)) return;
     const found = currentSelection();
     if (!found) return;

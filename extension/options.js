@@ -247,7 +247,6 @@ function translatePage() {
 
 function paintSettings() {
   view('capture').textContent = snHotkeyLabel(settings.hotkey);
-  view('instantAlways').checked = Boolean(settings.instantAlways);
   view('subtitles').checked = settings.subtitles !== false;
   view('pauseVideo').checked = settings.pauseVideo !== false;
   view('speak').checked = Boolean(settings.speak);
@@ -268,15 +267,12 @@ function paintSettings() {
   view('comboNow').innerHTML = none
     ? t('optSubKeyNoneNow')
     : t('optSubKeyNow', '').replace('', `<b>${snSubtitleKeyLabel(settings)}</b>`);
-  // A hotkey is meaningless when everything saves anyway.
-  view('capture').disabled = Boolean(settings.instantAlways);
 }
 
 /// Records the next combination pressed. Modifiers alone are a valid answer —
 /// "hold Ctrl+Alt and select" is the whole idea — so the recording ends when
 /// the keys come back up rather than on the first keydown.
 view('capture').addEventListener('click', () => {
-  if (settings.instantAlways) return;
   const button = view('capture');
   button.classList.add('listening');
   button.textContent = t('optHotkeyPress');
@@ -312,10 +308,6 @@ view('resetKey').addEventListener('click', async () => {
   paintSettings();
 });
 
-view('instantAlways').addEventListener('change', async (event) => {
-  await store({ instantAlways: event.target.checked });
-  paintSettings();
-});
 view('subtitles').addEventListener('change', (event) => store({ subtitles: event.target.checked }));
 view('pauseVideo').addEventListener('change', (event) => store({ pauseVideo: event.target.checked }));
 view('speak').addEventListener('change', (event) => store({ speak: event.target.checked }));

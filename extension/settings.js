@@ -20,8 +20,6 @@ const t = (key, ...args) => {
 const SN_DEFAULTS = {
   /// Held while selecting — or pressed just after — saves without asking.
   hotkey: { ctrl: true, alt: true, shift: false, meta: false, key: '' },
-  /// Save every selection instantly, with no key held at all.
-  instantAlways: false,
   /// Where the panel appears: by the selection, or pinned to a corner.
   position: 'selection', // selection | top-left | top-right | bottom-left | bottom-right
   /// Remembered after the panel is dragged, per corner mode.
