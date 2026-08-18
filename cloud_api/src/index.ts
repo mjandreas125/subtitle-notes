@@ -390,24 +390,41 @@ async function googleAccount(env: Env, idToken: string) {
 }
 
 
+/// The personalised Google button rides on FedCM, which browsers can switch
+/// off - and when it is off, the button simply does nothing when clicked. The
+/// plain popup flow returns an access token instead, so this turns one into an
+/// account the same way the id token path does.
+async function googleAccountFromAccess(env: Env, accessToken: string) {
+  const who: any = await (await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+    headers: { authorization: `Bearer ${accessToken}` },
+  })).json();
+  if (!who?.email) throw new Error('Google sign-in could not be verified');
+  const email = String(who.email).toLowerCase();
+  const found = await env.DB.prepare('SELECT id, email, display_name FROM users WHERE email = ?').bind(email).first<any>();
+  if (found) return found as { id: string; email: string; display_name: string };
+  const user = { id: uid(), email, display_name: who.name || email.split('@')[0] };
+  await env.DB.prepare('INSERT INTO users (id, email, display_name, created_at) VALUES (?, ?, ?, ?)').bind(user.id, user.email, user.display_name, now()).run();
+  return user;
+}
+
 /// The sign-in page in the reader's own language. It is opened from a browser
 /// whose interface is already translated and from a Windows program that
 /// follows the system language, so arriving at an English page is a jolt.
 const LINK_TEXT: Record<string, Record<string, string>> = {
-  en: { title: 'Connect this device', intro: 'Sign in with the same Google account you use on your phone, and everything you save here lands in the same library.', type: 'Type the eight-character code shown on the device:', note: 'Nothing else is asked for - only your name and e-mail, so the library knows whose it is.', connecting: 'Connecting…', needCode: 'Type the code from the device first.', failed: 'Could not connect', blocked: 'Google sign-in could not load here. Approve the code in the phone app instead.', done: 'Connected. You can close this page and go back.' },
-  ru: { title: 'Подключить это устройство', intro: 'Войдите тем же аккаунтом Google, что и на телефоне: всё сохранённое здесь попадёт в ту же библиотеку.', type: 'Введите восьмизначный код, показанный на устройстве:', note: 'Больше ничего не спрашивается - только имя и почта, чтобы библиотека знала, чья она.', connecting: 'Подключаю…', needCode: 'Сначала введите код с устройства.', failed: 'Не удалось подключить', blocked: 'Вход через Google здесь не загрузился. Подтвердите код в приложении на телефоне.', done: 'Готово. Можно закрыть эту страницу и вернуться назад.' },
-  et: { title: 'Ühenda see seade', intro: 'Logi sisse sama Google’i kontoga, mida kasutad telefonis - kõik siin salvestatu jõuab samasse kogusse.', type: 'Sisesta seadmes näidatud kaheksakohaline kood:', note: 'Rohkem midagi ei küsita - ainult nimi ja e-post, et kogu teaks, kelle oma see on.', connecting: 'Ühendan…', needCode: 'Sisesta esmalt seadme kood.', failed: 'Ühendamine ebaõnnestus', blocked: 'Google’i sisselogimine ei laadinud siin. Kinnita kood telefonirakenduses.', done: 'Valmis. Selle lehe võib sulgeda ja tagasi minna.' },
-  de: { title: 'Dieses Gerät verbinden', intro: 'Melden Sie sich mit demselben Google-Konto an wie auf dem Telefon - alles Gespeicherte landet in derselben Sammlung.', type: 'Geben Sie den achtstelligen Code vom Gerät ein:', note: 'Mehr wird nicht abgefragt - nur Name und E-Mail, damit die Sammlung weiß, wem sie gehört.', connecting: 'Verbinde…', needCode: 'Geben Sie zuerst den Code vom Gerät ein.', failed: 'Verbindung fehlgeschlagen', blocked: 'Die Google-Anmeldung konnte hier nicht geladen werden. Bestätigen Sie den Code in der Telefon-App.', done: 'Verbunden. Sie können diese Seite schließen.' },
-  fr: { title: 'Connecter cet appareil', intro: 'Connectez-vous avec le compte Google de votre téléphone : tout ce que vous enregistrez ici rejoint la même bibliothèque.', type: 'Saisissez le code à huit caractères affiché sur l’appareil :', note: 'Rien d’autre n’est demandé - seulement votre nom et votre e-mail, pour savoir à qui appartient la bibliothèque.', connecting: 'Connexion…', needCode: 'Saisissez d’abord le code de l’appareil.', failed: 'Connexion impossible', blocked: 'La connexion Google n’a pas pu se charger ici. Validez le code dans l’application du téléphone.', done: 'Connecté. Vous pouvez fermer cette page.' },
-  es: { title: 'Conectar este dispositivo', intro: 'Inicia sesión con la misma cuenta de Google que en el teléfono: todo lo que guardes aquí irá a la misma biblioteca.', type: 'Escribe el código de ocho caracteres que muestra el dispositivo:', note: 'No se pide nada más: solo tu nombre y tu correo, para saber de quién es la biblioteca.', connecting: 'Conectando…', needCode: 'Escribe primero el código del dispositivo.', failed: 'No se pudo conectar', blocked: 'El inicio de sesión de Google no se cargó aquí. Aprueba el código en la app del teléfono.', done: 'Conectado. Ya puedes cerrar esta página.' },
-  it: { title: 'Collega questo dispositivo', intro: 'Accedi con lo stesso account Google del telefono: tutto ciò che salvi qui finisce nella stessa raccolta.', type: 'Digita il codice di otto caratteri mostrato sul dispositivo:', note: 'Non viene chiesto altro: solo nome ed e-mail, perché la raccolta sappia di chi è.', connecting: 'Collegamento…', needCode: 'Digita prima il codice del dispositivo.', failed: 'Impossibile collegare', blocked: 'L’accesso Google non si è caricato qui. Approva il codice nell’app del telefono.', done: 'Collegato. Puoi chiudere questa pagina.' },
-  pt: { title: 'Conectar este dispositivo', intro: 'Entre com a mesma conta do Google do celular - tudo o que você salvar aqui vai para a mesma biblioteca.', type: 'Digite o código de oito caracteres mostrado no dispositivo:', note: 'Nada mais é pedido - só nome e e-mail, para a biblioteca saber de quem é.', connecting: 'Conectando…', needCode: 'Digite primeiro o código do dispositivo.', failed: 'Não foi possível conectar', blocked: 'O login do Google não carregou aqui. Aprove o código no app do celular.', done: 'Conectado. Você já pode fechar esta página.' },
-  pl: { title: 'Połącz to urządzenie', intro: 'Zaloguj się tym samym kontem Google co w telefonie - wszystko, co tu zapiszesz, trafi do tej samej biblioteki.', type: 'Wpisz ośmioznakowy kod pokazany na urządzeniu:', note: 'O nic więcej nie pytamy - tylko imię i e-mail, żeby biblioteka wiedziała, czyja jest.', connecting: 'Łączę…', needCode: 'Najpierw wpisz kod z urządzenia.', failed: 'Nie udało się połączyć', blocked: 'Logowanie Google nie wczytało się tutaj. Zatwierdź kod w aplikacji na telefonie.', done: 'Połączono. Możesz zamknąć tę stronę.' },
-  uk: { title: 'Підключити цей пристрій', intro: 'Увійдіть тим самим обліковим записом Google, що й на телефоні: усе збережене потрапить до тієї самої бібліотеки.', type: 'Введіть восьмизначний код, показаний на пристрої:', note: 'Більше нічого не запитується - лише ім’я та пошта, щоб бібліотека знала, чия вона.', connecting: 'Підключаю…', needCode: 'Спершу введіть код із пристрою.', failed: 'Не вдалося підключити', blocked: 'Вхід через Google тут не завантажився. Підтвердіть код у застосунку на телефоні.', done: 'Готово. Цю сторінку можна закрити.' },
-  nl: { title: 'Dit apparaat verbinden', intro: 'Meld je aan met hetzelfde Google-account als op je telefoon - alles wat je hier bewaart, komt in dezelfde bibliotheek.', type: 'Typ de code van acht tekens die op het apparaat staat:', note: 'Meer wordt niet gevraagd - alleen je naam en e-mail, zodat de bibliotheek weet van wie die is.', connecting: 'Verbinden…', needCode: 'Typ eerst de code van het apparaat.', failed: 'Verbinden lukte niet', blocked: 'Google-aanmelding kon hier niet laden. Keur de code goed in de telefoon-app.', done: 'Verbonden. Je kunt deze pagina sluiten.' },
-  tr: { title: 'Bu cihazı bağla', intro: 'Telefonunuzdaki Google hesabıyla giriş yapın; burada kaydettiğiniz her şey aynı kütüphaneye gider.', type: 'Cihazda görünen sekiz karakterli kodu yazın:', note: 'Başka bir şey istenmez - yalnızca adınız ve e-postanız, kütüphanenin kime ait olduğu bilinsin diye.', connecting: 'Bağlanıyor…', needCode: 'Önce cihazdaki kodu yazın.', failed: 'Bağlanılamadı', blocked: 'Google girişi burada yüklenemedi. Kodu telefon uygulamasında onaylayın.', done: 'Bağlandı. Bu sayfayı kapatabilirsiniz.' },
-  sv: { title: 'Anslut den här enheten', intro: 'Logga in med samma Google-konto som i telefonen - allt du sparar hamnar i samma bibliotek.', type: 'Skriv den åttatecken långa koden som visas på enheten:', note: 'Inget annat efterfrågas - bara namn och e-post, så att biblioteket vet vems det är.', connecting: 'Ansluter…', needCode: 'Skriv först koden från enheten.', failed: 'Kunde inte ansluta', blocked: 'Google-inloggningen kunde inte laddas här. Godkänn koden i telefonappen i stället.', done: 'Ansluten. Du kan stänga sidan.' },
-  fi: { title: 'Yhdistä tämä laite', intro: 'Kirjaudu samalla Google-tilillä kuin puhelimessa - kaikki tallentamasi päätyy samaan kirjastoon.', type: 'Kirjoita laitteessa näkyvä kahdeksanmerkkinen koodi:', note: 'Muuta ei kysytä - vain nimi ja sähköposti, jotta kirjasto tietää kenen se on.', connecting: 'Yhdistetään…', needCode: 'Kirjoita ensin laitteen koodi.', failed: 'Yhdistäminen ei onnistunut', blocked: 'Google-kirjautuminen ei latautunut tässä. Hyväksy koodi puhelimen sovelluksessa.', done: 'Yhdistetty. Voit sulkea tämän sivun.' },
+  en: { title: 'Connect this device', intro: 'Sign in with the same Google account you use on your phone, and everything you save here lands in the same library.', type: 'Type the eight-character code shown on the device:', note: 'Nothing else is asked for - only your name and e-mail, so the library knows whose it is.', connecting: 'Connecting…', needCode: 'Type the code from the device first.', failed: 'Could not connect', blocked: 'Google sign-in could not load here. Approve the code in the phone app instead.', done: 'Connected. You can close this page and go back.' , button: 'Continue with Google' },
+  ru: { title: 'Подключить это устройство', intro: 'Войдите тем же аккаунтом Google, что и на телефоне: всё сохранённое здесь попадёт в ту же библиотеку.', type: 'Введите восьмизначный код, показанный на устройстве:', note: 'Больше ничего не спрашивается - только имя и почта, чтобы библиотека знала, чья она.', connecting: 'Подключаю…', needCode: 'Сначала введите код с устройства.', failed: 'Не удалось подключить', blocked: 'Вход через Google здесь не загрузился. Подтвердите код в приложении на телефоне.', done: 'Готово. Можно закрыть эту страницу и вернуться назад.' , button: 'Войти через Google' },
+  et: { title: 'Ühenda see seade', intro: 'Logi sisse sama Google’i kontoga, mida kasutad telefonis - kõik siin salvestatu jõuab samasse kogusse.', type: 'Sisesta seadmes näidatud kaheksakohaline kood:', note: 'Rohkem midagi ei küsita - ainult nimi ja e-post, et kogu teaks, kelle oma see on.', connecting: 'Ühendan…', needCode: 'Sisesta esmalt seadme kood.', failed: 'Ühendamine ebaõnnestus', blocked: 'Google’i sisselogimine ei laadinud siin. Kinnita kood telefonirakenduses.', done: 'Valmis. Selle lehe võib sulgeda ja tagasi minna.' , button: 'Jätka Google’iga' },
+  de: { title: 'Dieses Gerät verbinden', intro: 'Melden Sie sich mit demselben Google-Konto an wie auf dem Telefon - alles Gespeicherte landet in derselben Sammlung.', type: 'Geben Sie den achtstelligen Code vom Gerät ein:', note: 'Mehr wird nicht abgefragt - nur Name und E-Mail, damit die Sammlung weiß, wem sie gehört.', connecting: 'Verbinde…', needCode: 'Geben Sie zuerst den Code vom Gerät ein.', failed: 'Verbindung fehlgeschlagen', blocked: 'Die Google-Anmeldung konnte hier nicht geladen werden. Bestätigen Sie den Code in der Telefon-App.', done: 'Verbunden. Sie können diese Seite schließen.' , button: 'Mit Google fortfahren' },
+  fr: { title: 'Connecter cet appareil', intro: 'Connectez-vous avec le compte Google de votre téléphone : tout ce que vous enregistrez ici rejoint la même bibliothèque.', type: 'Saisissez le code à huit caractères affiché sur l’appareil :', note: 'Rien d’autre n’est demandé - seulement votre nom et votre e-mail, pour savoir à qui appartient la bibliothèque.', connecting: 'Connexion…', needCode: 'Saisissez d’abord le code de l’appareil.', failed: 'Connexion impossible', blocked: 'La connexion Google n’a pas pu se charger ici. Validez le code dans l’application du téléphone.', done: 'Connecté. Vous pouvez fermer cette page.' , button: 'Continuer avec Google' },
+  es: { title: 'Conectar este dispositivo', intro: 'Inicia sesión con la misma cuenta de Google que en el teléfono: todo lo que guardes aquí irá a la misma biblioteca.', type: 'Escribe el código de ocho caracteres que muestra el dispositivo:', note: 'No se pide nada más: solo tu nombre y tu correo, para saber de quién es la biblioteca.', connecting: 'Conectando…', needCode: 'Escribe primero el código del dispositivo.', failed: 'No se pudo conectar', blocked: 'El inicio de sesión de Google no se cargó aquí. Aprueba el código en la app del teléfono.', done: 'Conectado. Ya puedes cerrar esta página.' , button: 'Continuar con Google' },
+  it: { title: 'Collega questo dispositivo', intro: 'Accedi con lo stesso account Google del telefono: tutto ciò che salvi qui finisce nella stessa raccolta.', type: 'Digita il codice di otto caratteri mostrato sul dispositivo:', note: 'Non viene chiesto altro: solo nome ed e-mail, perché la raccolta sappia di chi è.', connecting: 'Collegamento…', needCode: 'Digita prima il codice del dispositivo.', failed: 'Impossibile collegare', blocked: 'L’accesso Google non si è caricato qui. Approva il codice nell’app del telefono.', done: 'Collegato. Puoi chiudere questa pagina.' , button: 'Continua con Google' },
+  pt: { title: 'Conectar este dispositivo', intro: 'Entre com a mesma conta do Google do celular - tudo o que você salvar aqui vai para a mesma biblioteca.', type: 'Digite o código de oito caracteres mostrado no dispositivo:', note: 'Nada mais é pedido - só nome e e-mail, para a biblioteca saber de quem é.', connecting: 'Conectando…', needCode: 'Digite primeiro o código do dispositivo.', failed: 'Não foi possível conectar', blocked: 'O login do Google não carregou aqui. Aprove o código no app do celular.', done: 'Conectado. Você já pode fechar esta página.' , button: 'Continuar com Google' },
+  pl: { title: 'Połącz to urządzenie', intro: 'Zaloguj się tym samym kontem Google co w telefonie - wszystko, co tu zapiszesz, trafi do tej samej biblioteki.', type: 'Wpisz ośmioznakowy kod pokazany na urządzeniu:', note: 'O nic więcej nie pytamy - tylko imię i e-mail, żeby biblioteka wiedziała, czyja jest.', connecting: 'Łączę…', needCode: 'Najpierw wpisz kod z urządzenia.', failed: 'Nie udało się połączyć', blocked: 'Logowanie Google nie wczytało się tutaj. Zatwierdź kod w aplikacji na telefonie.', done: 'Połączono. Możesz zamknąć tę stronę.' , button: 'Kontynuuj z Google' },
+  uk: { title: 'Підключити цей пристрій', intro: 'Увійдіть тим самим обліковим записом Google, що й на телефоні: усе збережене потрапить до тієї самої бібліотеки.', type: 'Введіть восьмизначний код, показаний на пристрої:', note: 'Більше нічого не запитується - лише ім’я та пошта, щоб бібліотека знала, чия вона.', connecting: 'Підключаю…', needCode: 'Спершу введіть код із пристрою.', failed: 'Не вдалося підключити', blocked: 'Вхід через Google тут не завантажився. Підтвердіть код у застосунку на телефоні.', done: 'Готово. Цю сторінку можна закрити.' , button: 'Увійти через Google' },
+  nl: { title: 'Dit apparaat verbinden', intro: 'Meld je aan met hetzelfde Google-account als op je telefoon - alles wat je hier bewaart, komt in dezelfde bibliotheek.', type: 'Typ de code van acht tekens die op het apparaat staat:', note: 'Meer wordt niet gevraagd - alleen je naam en e-mail, zodat de bibliotheek weet van wie die is.', connecting: 'Verbinden…', needCode: 'Typ eerst de code van het apparaat.', failed: 'Verbinden lukte niet', blocked: 'Google-aanmelding kon hier niet laden. Keur de code goed in de telefoon-app.', done: 'Verbonden. Je kunt deze pagina sluiten.' , button: 'Doorgaan met Google' },
+  tr: { title: 'Bu cihazı bağla', intro: 'Telefonunuzdaki Google hesabıyla giriş yapın; burada kaydettiğiniz her şey aynı kütüphaneye gider.', type: 'Cihazda görünen sekiz karakterli kodu yazın:', note: 'Başka bir şey istenmez - yalnızca adınız ve e-postanız, kütüphanenin kime ait olduğu bilinsin diye.', connecting: 'Bağlanıyor…', needCode: 'Önce cihazdaki kodu yazın.', failed: 'Bağlanılamadı', blocked: 'Google girişi burada yüklenemedi. Kodu telefon uygulamasında onaylayın.', done: 'Bağlandı. Bu sayfayı kapatabilirsiniz.' , button: 'Google ile devam et' },
+  sv: { title: 'Anslut den här enheten', intro: 'Logga in med samma Google-konto som i telefonen - allt du sparar hamnar i samma bibliotek.', type: 'Skriv den åttatecken långa koden som visas på enheten:', note: 'Inget annat efterfrågas - bara namn och e-post, så att biblioteket vet vems det är.', connecting: 'Ansluter…', needCode: 'Skriv först koden från enheten.', failed: 'Kunde inte ansluta', blocked: 'Google-inloggningen kunde inte laddas här. Godkänn koden i telefonappen i stället.', done: 'Ansluten. Du kan stänga sidan.' , button: 'Fortsätt med Google' },
+  fi: { title: 'Yhdistä tämä laite', intro: 'Kirjaudu samalla Google-tilillä kuin puhelimessa - kaikki tallentamasi päätyy samaan kirjastoon.', type: 'Kirjoita laitteessa näkyvä kahdeksanmerkkinen koodi:', note: 'Muuta ei kysytä - vain nimi ja sähköposti, jotta kirjasto tietää kenen se on.', connecting: 'Yhdistetään…', needCode: 'Kirjoita ensin laitteen koodi.', failed: 'Yhdistäminen ei onnistunut', blocked: 'Google-kirjautuminen ei latautunut tässä. Hyväksy koodi puhelimen sovelluksessa.', done: 'Yhdistetty. Voit sulkea tämän sivun.' , button: 'Jatka Google-tilillä' },
 };
 
 /// The language asked for, or the best of the ones the browser says it reads.
@@ -455,6 +472,11 @@ const linkPage = (code: string, lang: string) => {
           background:transparent; color:var(--ink); text-align:center; text-transform:uppercase;
           font:640 19px ui-monospace, Consolas, monospace; letter-spacing:.18em; }
   #button { display:flex; justify-content:center; min-height:44px; }
+  .enter { border:0; border-radius:999px; padding:13px 26px; font:inherit; font-weight:700;
+           color:#fff; background:var(--accent); cursor:pointer;
+           transition:transform .12s, filter .16s, box-shadow .16s; }
+  .enter:hover { filter:brightness(1.07); box-shadow:0 10px 24px rgb(20 60 40/.18); }
+  .enter:active { transform:translateY(1px) scale(.985); }
   .note { margin:18px 0 0; font-size:13px; color:var(--soft); }
   .done { padding:16px; border-radius:12px; background:var(--wash); color:var(--accent); font-weight:640; text-align:center; }
   .fail { color:#c0453f; font-weight:600; font-size:14px; }
@@ -487,7 +509,7 @@ const linkPage = (code: string, lang: string) => {
     note.className = 'note'; note.textContent = SAY.connecting;
     const reply = await fetch('/v1/pairings/approve-google', {
       method: 'POST', headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ code, id_token: credential }),
+      body: JSON.stringify({ code, access_token: credential }),
     });
     const body = await reply.json().catch(() => ({}));
     if (!reply.ok) { note.className = 'note fail'; note.textContent = body.detail || SAY.failed; return; }
@@ -514,19 +536,33 @@ const linkPage = (code: string, lang: string) => {
   });
 
   function start() {
-    if (!window.google?.accounts?.id) return;
-    google.accounts.id.initialize({
-      client_id: ${JSON.stringify(CLIENT_ID)},
-      ux_mode: 'popup',
-      callback: (response) => connect(response.credential),
-      error_callback: () => {
-        note.className = 'note fail';
-        note.textContent = SAY.blocked;
-      },
+    // Straight to Google and back, carrying the pairing code in the state:
+    // popups get blocked and the rendered Google button needs FedCM, which a
+    // browser may have switched off.
+    const holder = document.getElementById('button');
+    holder.innerHTML = '<button class="enter" id="enter"></button>';
+    document.getElementById('enter').textContent = SAY.button;
+    document.getElementById('enter').addEventListener('click', () => {
+      const code = codeNow();
+      if (!code) { note.className = 'note fail'; note.textContent = SAY.needCode; return; }
+      note.className = 'note';
+      note.textContent = SAY.connecting;
+      location.href = 'https://accounts.google.com/o/oauth2/v2/auth' +
+        '?client_id=' + encodeURIComponent(${JSON.stringify(CLIENT_ID)}) +
+        '&redirect_uri=' + encodeURIComponent(location.origin + '/link') +
+        '&response_type=token&scope=' + encodeURIComponent('openid email profile') +
+        '&include_granted_scopes=true&prompt=select_account&state=' + encodeURIComponent(code);
     });
-    google.accounts.id.renderButton(document.getElementById('button'), {
-      theme: 'filled_black', size: 'large', shape: 'pill', text: 'continue_with', width: 300,
-    });
+
+    const back = location.hash.match(/access_token=([^&]+)/);
+    const state = location.hash.match(/state=([^&]+)/);
+    if (back && state) {
+      const code = decodeURIComponent(state[1]);
+      history.replaceState(null, '', location.pathname + '?code=' + code);
+      const field = document.getElementById('typed');
+      if (field) field.value = code;
+      connect(decodeURIComponent(back[1]));
+    }
   }
 </script></body></html>`;
 };
@@ -859,6 +895,11 @@ export default { async fetch(request: Request, env: Env): Promise<Response> {
         headers: { ...cors, 'Content-Type': 'text/html; charset=utf-8' },
       });
     }
+    if (path === '/v1/auth/google-access' && request.method === 'POST') {
+      const body: any = await request.json();
+      const user = await googleAccountFromAccess(env, clean(body.access_token));
+      return json({ token: await token(user, env.TOKEN_SECRET), user });
+    }
     if (path === '/v1/auth/google' && request.method === 'POST') { const body: any = await request.json(); const user = await googleAccount(env, clean(body.id_token)); return json({ token: await token(user, env.TOKEN_SECRET), user }); }
     // Approving from the sign-in page rather than from the phone. The pairing
     // code is what proves the request came from the device that is waiting:
@@ -867,7 +908,9 @@ export default { async fetch(request: Request, env: Env): Promise<Response> {
       const body: any = await request.json();
       const row = await env.DB.prepare('SELECT * FROM device_pairings WHERE code = ?').bind(clean(body.code).toUpperCase()).first<any>();
       if (!row || row.expires_at < Date.now() || row.user_id) throw new Error('That code has expired - ask the device for a new one');
-      const account = await googleAccount(env, clean(body.id_token));
+      const account = body.access_token
+        ? await googleAccountFromAccess(env, clean(body.access_token))
+        : await googleAccount(env, clean(body.id_token));
       await env.DB.prepare('UPDATE device_pairings SET user_id = ?, token = ? WHERE id = ?').bind(account.id, await token(account, env.TOKEN_SECRET), row.id).run();
       return json({ status: 'approved', device_name: row.device_name, email: account.email });
     }

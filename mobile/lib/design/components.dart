@@ -62,6 +62,170 @@ class _SquishState extends State<Squish> {
   );
 }
 
+/// A restrained 3D surface for the saved-word cards. It borrows the physical
+/// "medallion" behaviour from Liisbet Native: the card leans toward a pointer,
+/// lifts a little off its lower lip and catches a soft light under the cursor.
+///
+/// The child is kept as the static AnimatedBuilder child, so moving the mouse
+/// only repaints the transform and glow. On a touch screen the same depth is
+/// briefly shown while a card is pressed, without taking over its tap or swipe
+/// gestures.
+class TiltMedallion extends StatefulWidget {
+  const TiltMedallion({
+    required this.child,
+    this.radius = AppRadius.card,
+    super.key,
+  });
+
+  final Widget child;
+  final double radius;
+
+  @override
+  State<TiltMedallion> createState() => _TiltMedallionState();
+}
+
+class _TiltMedallionState extends State<TiltMedallion>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 120),
+    reverseDuration: const Duration(milliseconds: 220),
+  );
+  late final Animation<double> _amount = CurvedAnimation(
+    parent: _controller,
+    curve: Curves.easeOutCubic,
+    reverseCurve: Curves.easeOut,
+  );
+
+  Offset _localPosition = Offset.zero;
+  Size _size = const Size(320, 176);
+  bool _hovering = false;
+  bool _pressing = false;
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _remember(PointerEvent event) {
+    _localPosition = event.localPosition;
+    final renderBox = context.findRenderObject();
+    if (renderBox is RenderBox && renderBox.hasSize) {
+      _size = renderBox.size;
+    }
+  }
+
+  void _enter(PointerEnterEvent event) {
+    _hovering = true;
+    _remember(event);
+    _controller.forward();
+  }
+
+  void _exit(PointerExitEvent event) {
+    _hovering = false;
+    if (!_pressing) _controller.reverse();
+  }
+
+  void _move(PointerEvent event) {
+    if (!_hovering && !_pressing) return;
+    _remember(event);
+    if (_controller.value > 0) setState(() {});
+  }
+
+  void _down(PointerDownEvent event) {
+    _pressing = true;
+    _remember(event);
+    _controller.forward();
+  }
+
+  void _up(PointerEvent event) {
+    _pressing = false;
+    if (!_hovering) _controller.reverse();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Listener(
+      behavior: HitTestBehavior.deferToChild,
+      onPointerDown: _down,
+      onPointerMove: _move,
+      onPointerUp: _up,
+      onPointerCancel: (_) {
+        _pressing = false;
+        if (!_hovering) _controller.reverse();
+      },
+      child: MouseRegion(
+        onEnter: _enter,
+        onExit: _exit,
+        onHover: _move,
+        child: AnimatedBuilder(
+          animation: _amount,
+          child: widget.child,
+          builder: (context, child) {
+            final amount = _amount.value;
+            final width = _size.width <= 0 ? 1.0 : _size.width;
+            final height = _size.height <= 0 ? 1.0 : _size.height;
+            final x = (_localPosition.dx / width).clamp(0.0, 1.0) - .5;
+            final y = (_localPosition.dy / height).clamp(0.0, 1.0) - .5;
+            final transform = Matrix4.identity()
+              ..setEntry(3, 2, .00115)
+              ..rotateX(-y * .13 * amount)
+              ..rotateY(x * .13 * amount)
+              ..translateByDouble(0, -3.0 * amount, 0, 1);
+
+            return Transform(
+              transform: transform,
+              alignment: Alignment.center,
+              child: Stack(
+                fit: StackFit.passthrough,
+                children: [
+                  child!,
+                  if (amount > .01)
+                    Positioned.fill(
+                      child: IgnorePointer(
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(widget.radius),
+                          child: Opacity(
+                            opacity: amount,
+                            child: CustomPaint(
+                              painter: _MedallionGlowPainter(_localPosition),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class _MedallionGlowPainter extends CustomPainter {
+  const _MedallionGlowPainter(this.position);
+
+  final Offset position;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final radius = size.longestSide * .9;
+    final paint = Paint()
+      ..shader = RadialGradient(
+        colors: const [Color(0x38FFFFFF), Color(0x16FFFFFF), Color(0x00FFFFFF)],
+        stops: const [0, .34, .78],
+      ).createShader(Rect.fromCircle(center: position, radius: radius));
+    canvas.drawRect(Offset.zero & size, paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant _MedallionGlowPainter oldDelegate) =>
+      oldDelegate.position != position;
+}
+
 enum PushTone { green, blue, amber, red, neutral, ghost }
 
 /// The pressable surface the whole app is built on: a flat face sitting on a
@@ -461,7 +625,11 @@ Future<bool> confirmDestructive(
               ),
             ),
             const SizedBox(height: AppSpace.lg),
-            Text(context.t(title), textAlign: TextAlign.center, style: AppText.heading(c.ink)),
+            Text(
+              context.t(title),
+              textAlign: TextAlign.center,
+              style: AppText.heading(c.ink),
+            ),
             const SizedBox(height: AppSpace.sm),
             Text(
               context.t(message),
@@ -635,16 +803,16 @@ class _SwipeRowState extends State<SwipeRow> with TickerProviderStateMixin {
         child: Align(
           alignment: Alignment.topCenter,
           heightFactor: 1 - _collapse.value,
-          child: Opacity(
-            opacity: 1 - _collapse.value,
-            child: child,
-          ),
+          child: Opacity(opacity: 1 - _collapse.value, child: child),
         ),
       ),
       child: LayoutBuilder(
         builder: (context, constraints) {
           _width = constraints.maxWidth;
-          final progress = (_offset.abs() / (_width * _threshold)).clamp(0.0, 1.0);
+          final progress = (_offset.abs() / (_width * _threshold)).clamp(
+            0.0,
+            1.0,
+          );
           final fromStart = _offset > 0;
 
           return GestureDetector(
@@ -753,7 +921,11 @@ class _SwipeRowState extends State<SwipeRow> with TickerProviderStateMixin {
 /// Locked levels stay legible rather than being greyed into nothing — there is
 /// no penalty for not having reached them.
 class AchievementRow extends StatelessWidget {
-  const AchievementRow({required this.achievement, this.dense = false, super.key});
+  const AchievementRow({
+    required this.achievement,
+    this.dense = false,
+    super.key,
+  });
 
   final Achievement achievement;
   final bool dense;
