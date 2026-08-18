@@ -821,7 +821,12 @@ async function enrich(env: Env, selected: string, context = '', language = 'ru')
   if (isSentence) examples.unshift({ text: selected, translation: main.text });
   const variants = focusResult.variants.length ? focusResult.variants : main.variants;
   const isSingleWord = wordsIn(selected).length === 1;
+  // What enough readers have already agreed this expression means, if they
+  // have. Their wording wins over the model's.
+  const agreed = await agreedCorrection(env, item.phrase || item.word || selected, language);
   return {
+    source_lang: main.source || '',
+    corrected: Boolean(agreed),
     translation: smart?.line || main.text,
     focus_word: item.word,
     focus_phrase: item.phrase,
