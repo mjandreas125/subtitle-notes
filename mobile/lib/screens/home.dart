@@ -167,6 +167,10 @@ class HomeShellState extends State<HomeShell> {
     // After the current frame, so the removal animation owns the main thread
     // until it is done.
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      // Long enough for the row to finish collapsing: encoding the library and
+      // handing it to the home-screen widget is not free, and doing it in the
+      // middle of the animation is what made it stutter to a stop.
+      await Future<void>.delayed(AppMotion.normal);
       await StudyCache.save(widget.session, snapshot);
       try {
         await NativeBridge.syncCompanionCards(snapshot);
@@ -177,14 +181,21 @@ class HomeShellState extends State<HomeShell> {
   }
 
   Future<bool> archive(StudyCard card) async {
+    // Same as deleting: the list moves now, the server catches up.
+    await _forget(card);
+    setState(() => _learned = [card, ..._learned]);
     try {
       await api.setArchived(card.id, archived: true);
     } on ApiException catch (error) {
+      if (mounted) {
+        setState(() {
+          _learned = _learned.where((item) => item.id != card.id).toList();
+          _cards = [card, ..._cards];
+        });
+      }
       _notify(error.message, tone: _Tone.error);
       return false;
     }
-    await _forget(card);
-    setState(() => _learned = [card, ..._learned]);
     _notify('“${card.learningLabel}” marked as learned', tone: _Tone.success);
     return true;
   }
@@ -206,15 +217,29 @@ class HomeShellState extends State<HomeShell> {
     return true;
   }
 
+  /// The row goes at once; the server is told afterwards.
+  ///
+  /// Waiting for the round trip first is what left a deleted card sitting on
+  /// screen with its animation half-played. If the server refuses, the card
+  /// comes back where it was and says why.
   Future<bool> delete(StudyCard card) async {
+    final gone = context.t('Deleted');
+    final at = _cards.indexWhere((item) => item.id == card.id);
+    await _forget(card);
     try {
       await api.delete(card.id);
     } on ApiException catch (error) {
+      if (mounted) {
+        setState(() {
+          final restored = List<StudyCard>.of(_cards);
+          restored.insert(at < 0 ? 0 : at.clamp(0, restored.length), card);
+          _cards = restored;
+        });
+      }
       _notify(error.message, tone: _Tone.error);
       return false;
     }
-    await _forget(card);
-    _notify('“${card.learningLabel}” deleted');
+    _notify('$gone: ${card.learningLabel}');
     return true;
   }
 

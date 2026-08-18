@@ -84,14 +84,26 @@
     for (const pane of glowRoot.querySelectorAll('.pane')) pane.remove();
   }
 
+  /// Draws the highlight from a list of boxes rather than from the live
+  /// selection, so the words can stay marked after the selection itself is
+  /// gone. Keeping the selection alive was what left the browser's blue
+  /// rectangle on the line once the card had opened.
+  let frozen = null;
+
   function drawGlow() {
     clearGlow();
     if (!armed) return;
     const selection = window.getSelection();
-    if (!selection || selection.isCollapsed || !selection.rangeCount) return;
-    const range = selection.getRangeAt(0);
-    if (!insideCaption(range.startContainer)) return;
-    for (const rect of range.getClientRects()) {
+    const live = selection && !selection.isCollapsed && selection.rangeCount
+      ? selection.getRangeAt(0)
+      : null;
+    if (!live && frozen) return paintPanes(frozen);
+    if (!live || !insideCaption(live.startContainer)) return;
+    paintPanes([...live.getClientRects()]);
+  }
+
+  function paintPanes(rects) {
+    for (const rect of rects) {
       if (rect.width < 1 || rect.height < 1) continue;
       // Trimmed top and bottom: a line box is taller than the letters in it,
       // and a highlight that fills it looks like a bar rather than a mark.
@@ -275,6 +287,7 @@
       }
       clearGlow();
       grip = null;
+      frozen = null;
     }
     if (window.__subtitleNotes) window.__subtitleNotes.armed = value;
   }
@@ -355,6 +368,7 @@
       // line is being read.
       event.stopPropagation();
       holding = true;
+      frozen = null;
       // Pausing here rather than at the end of the selection is the difference
       // between reading a line and chasing it: cues change every two seconds,
       // and the words would move out from under the cursor mid-drag.
@@ -390,7 +404,13 @@
         rect = range.getBoundingClientRect();
       }
 
-      drawGlow();
+      // The words stay marked, but the browser's own selection goes: that is
+      // the blue rectangle, and it has no business staying behind.
+      frozen = rect ? [rect] : null;
+      window.getSelection()?.removeAllRanges();
+      clearGlow();
+      if (frozen) paintPanes(frozen);
+
       text = text.replace(/^[^\p{L}\p{N}]+|[^\p{L}\p{N}]+$/gu, '');
       if (!text) return;
 
