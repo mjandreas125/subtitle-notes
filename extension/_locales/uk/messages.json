@@ -102,6 +102,10 @@
   "popupExport": {
     "message": "Вивантажити для Anki"
   },
+  "popupLibrary": {
+    "message": "Уся бібліотека",
+    "description": "Popup button that opens the web library"
+  },
   "optTitle": {
     "message": "Subtitle Notes у браузері"
   },

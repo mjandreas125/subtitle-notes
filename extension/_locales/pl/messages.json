@@ -102,6 +102,10 @@
   "popupExport": {
     "message": "Eksportuj do Anki"
   },
+  "popupLibrary": {
+    "message": "Cała biblioteka",
+    "description": "Popup button that opens the web library"
+  },
   "optTitle": {
     "message": "Subtitle Notes w przeglądarce"
   },

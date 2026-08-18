@@ -29,6 +29,20 @@ const view = (id) => document.getElementById(id);
   settingsButton.textContent = t('popupSettings');
   settingsButton.addEventListener('click', () => chrome.runtime.openOptionsPage());
 
+  // Everything the phone shows - all the words, practice, achievements - lives
+  // on one page. The token rides in the fragment so nobody signs in twice; a
+  // fragment is never sent to a server.
+  const libraryButton = view('library');
+  libraryButton.hidden = false;
+  libraryButton.textContent = t('popupLibrary');
+  libraryButton.addEventListener('click', () => {
+    chrome.tabs.create({
+      url: 'https://subtitle-notes-api.andreas-sultseng228.workers.dev/library#t=' +
+        encodeURIComponent(token),
+    });
+    window.close();
+  });
+
   // Anki reads plain tab-separated text, so the server hands back a file the
   // browser can download without anything in between.
   const exportButton = view('export');
