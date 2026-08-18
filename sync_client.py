@@ -352,7 +352,9 @@ def open_setup_window() -> None:
     tk.Label(frame, text=tr("connect_title"), font=title_font, fg=INK, bg=PAPER, anchor="w").pack(fill="x")
     tk.Label(frame, text=tr("connect_intro"), font=body, fg=SOFT, bg=PAPER, anchor="w", justify="left", wraplength=430).pack(fill="x", pady=(6, 18))
 
-    status = tk.StringVar(value=tr("waiting_confirm"))
+    # Empty to start with: the waiting line belongs to the waiting panel,
+    # and a computer that is already connected must not be told to wait.
+    status = tk.StringVar(value="")
     code_text = tk.StringVar(value="········")
 
     connected = tk.Frame(frame, bg=PAPER)
@@ -489,6 +491,7 @@ def open_setup_window() -> None:
 
     if str(config.get("token", "")).strip():
         account.set(tr("connected_as", email=str(config.get("email", "")) or "?"))
+        status.set(tr("pairing_done"))
         connected.pack(fill="x")
     else:
         start_pairing()
