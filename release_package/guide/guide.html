@@ -78,10 +78,35 @@
         background: var(--wash); color: var(--accent); font-size: 8pt; font-weight: 700; letter-spacing: .08em;
       }
 
-      .shots { display: grid; grid-template-columns: 1fr 1fr; gap: 6mm; align-items: start; margin-top: 5mm; }
-      .shot img { width: 100%; border-radius: 3mm; border: .3mm solid var(--hair); display: block; }
+      .shots { display: grid; grid-template-columns: 1fr 1fr; gap: 6mm; align-items: start; margin-top: 4mm; }
+      .shot img { width: 100%; max-height: 72mm; object-fit: contain; object-position: top;
+        border-radius: 3mm; border: .3mm solid var(--hair); display: block; }
       .shot p { margin: 2mm 0 0; font-size: 9pt; color: var(--soft); }
       .phone img { width: 62mm; }
+
+      /* One evening, told in order. A left column of plain time labels keeps
+         it a sequence rather than a list of features. */
+      .story { margin-top: 2mm; }
+      .story .when {
+        display: grid; grid-template-columns: 26mm 1fr; gap: 6mm;
+        padding: 2.9mm 0; border-top: .3mm solid var(--hair);
+      }
+      .story .when:last-child { border-bottom: .3mm solid var(--hair); }
+      .story .label { font-size: 9pt; font-weight: 700; color: var(--accent); letter-spacing: .04em; padding-top: .6mm; }
+      .story b { display: block; margin-bottom: 1mm; font-size: 11pt; }
+      .story span { color: var(--soft); font-size: 9.5pt; line-height: 1.4; }
+
+      .strip {
+        display: grid; grid-template-columns: 1fr 1fr; gap: 6mm; align-items: center;
+        margin-top: 5mm; padding: 4mm; border-radius: 3mm; background: #fff;
+        border: .3mm solid var(--hair);
+      }
+      .strip .mini { position: relative; height: 24mm; border-radius: 2.4mm; overflow: hidden;
+        background: linear-gradient(150deg, #33414d, #16202a 55%, #0d1216); }
+      .strip .mini .caption { bottom: 13mm; font-size: 9.5pt; }
+      .strip .mini .answer { bottom: 4mm; font-size: 9.5pt; padding: 1.6mm 2.4mm; }
+      .strip img { width: 30mm; display: block; margin: 0 auto; border-radius: 2.4mm; border: .3mm solid var(--hair); }
+      .strip p { margin: 2.5mm 0 0; font-size: 8.5pt; color: var(--soft); text-align: center; }
 
       .note {
         margin-top: 6mm; padding: 4mm 5mm; border-radius: 3mm; background: var(--wash);
@@ -100,12 +125,17 @@
     <!-- 1 -->
     <section class="page">
       <div class="mark"><i></i><span>Subtitle Notes</span></div>
-      <h1>Слово из фильма —<br />в том смысле, что здесь</h1>
+      <h1>Перевод там, где вы<br />смотрите и читаете</h1>
       <p class="lede">
-        Словарь переводит «No one wants a record» как «никто не хочет рекорд».
-        Subtitle Notes читает всю реплику и отвечает так, как перевёл бы дубляж:
-        «никому не нужна судимость». Слово остаётся в вашей библиотеке и через
-        день возвращается, чтобы вы его вспомнили.
+        Выделяете незнакомое слово — сразу видите, что оно значит в этой
+        реплике. Работает в субтитрах веб-плееров, на любом сайте, в PDF и в
+        VLC на компьютере. Слово остаётся в вашей библиотеке, общей для
+        телефона, браузера и компьютера.
+      </p>
+      <p style="color: var(--soft)">
+        Перевод не пословный. «No one wants a record» словарь передаёт как
+        «никто не хочет рекорд»; здесь строка читается целиком, поэтому ответ —
+        «судимость».
       </p>
 
       <div class="frame">
@@ -113,77 +143,158 @@
         <div class="answer">судимость</div>
       </div>
 
-      <h2>Как это работает</h2>
+      <h2>Как этим пользоваться</h2>
       <ol class="steps">
         <li>
-          <h3>Держите Ctrl и протяните по субтитру</h3>
-          <span>Строка становится обычным текстом. Отпустили — плеер снова ваш:
-          субтитры перетаскиваются, клик ставит на паузу.</span>
+          <h3>В субтитрах: держите Ctrl и протяните по слову</h3>
+          <span>Пока клавиша зажата, строка ведёт себя как обычный текст.
+          Отпустили — плеер работает как прежде: субтитры перетаскиваются,
+          клик ставит на паузу.</span>
         </li>
         <li>
           <h3>Перевод появляется сразу, слово сохраняется само</h3>
-          <span>Никаких кнопок. Отменить можно в приложении — смахнуть карточку
-          в сторону.</span>
+          <span>Нажимать ничего не нужно. Если слово попалось случайно,
+          смахните карточку в приложении.</span>
         </li>
         <li>
-          <h3>Во всём остальном просто выделяйте</h3>
-          <span>Страница, PDF, комментарий, субтитры в VLC. Всё попадает в одну
-          библиотеку.</span>
+          <h3>Во всём остальном — обычное выделение мышью</h3>
+          <span>Статья, документ PDF, комментарий, субтитры фильма в VLC.
+          Всё попадает в ту же библиотеку.</span>
         </li>
       </ol>
 
       <div class="foot"><span>Subtitle Notes</span><span>1</span></div>
     </section>
 
+
     <!-- 2 -->
+    <section class="page">
+      <h2>Как это выглядит в жизни</h2>
+      <h1 style="font-size: 22pt">Один вечер с сериалом</h1>
+      <p class="lede" style="font-size: 11pt">
+        Ничего не нужно открывать заранее: всё происходит там, где вы и так
+        находитесь.
+      </p>
+
+      <div class="story">
+        <div class="when">
+          <div class="label">Вечером</div>
+          <div>
+            <b>Включили серию на любимом сайте</b>
+            <span>Расширение уже стоит и молчит: плеер ведёт себя как обычно,
+            пока вы сами его не попросите.</span>
+          </div>
+        </div>
+        <div class="when">
+          <div class="label">Через минуту</div>
+          <div>
+            <b>Не поняли фразу — зажали Ctrl и протянули по ней</b>
+            <span>Видео встаёт на паузу, под строкой появляется перевод именно
+            этого места. Слово сохраняется само, нажимать нечего.</span>
+          </div>
+        </div>
+        <div class="when">
+          <div class="label">До конца серии</div>
+          <div>
+            <b>Ещё три-четыре слова — тем же движением</b>
+            <span>Каждое занимает пару секунд, так что смотреть это не мешает.
+            Если фильм идёт в VLC на компьютере — всё то же самое.</span>
+          </div>
+        </div>
+        <div class="when">
+          <div class="label">Утром</div>
+          <div>
+            <b>В транспорте открыли приложение</b>
+            <span>Те же слова уже там. Сверху: «5 слов повторить» — сначала
+            слово, значение только после того, как вы попробовали вспомнить.</span>
+          </div>
+        </div>
+        <div class="when">
+          <div class="label">Днём</div>
+          <div>
+            <b>Читали статью или PDF — выделили термин</b>
+            <span>Он ложится в ту же библиотеку, рядом со словами из сериала.</span>
+          </div>
+        </div>
+        <div class="when">
+          <div class="label">Когда захотите</div>
+          <div>
+            <b>Выгрузили всё в Anki одной кнопкой</b>
+            <span>Файл со словами, значениями и репликами, из которых они взяты.
+            Если Anki не нужен — повторение работает прямо в приложении.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="strip">
+        <div>
+          <div class="mini">
+            <div class="caption">No one wants <span class="picked">a record</span>.</div>
+            <div class="answer">судимость</div>
+          </div>
+          <p>Вечером: слово в субтитре</p>
+        </div>
+        <div>
+          <img src="phone-review.png" alt="Экран повторения в приложении" />
+          <p>Утром: то же слово на повторении</p>
+        </div>
+      </div>
+
+      <div class="foot"><span>Как это выглядит</span><span>2</span></div>
+    </section>
+
     <section class="page">
       <h2>Установка</h2>
       <h1 style="font-size: 22pt">Три места, один аккаунт</h1>
       <p class="lede" style="font-size: 11pt">
-        Войдите везде одним и тем же аккаунтом Google — библиотека будет общая.
-        Начать можно с чего угодно, остальное добавить потом.
+        Ставить всё сразу необязательно: начните с того, чем пользуетесь чаще.
+        Вход везде через один аккаунт Google, поэтому библиотека общая.
       </p>
 
       <div class="cards">
         <div class="card">
           <span class="num">ТЕЛЕФОН</span>
           <b>Приложение</b>
-          <span>Установите Subtitle Notes из Google Play и войдите через Google.
-          Дальше выделяете текст в любом приложении, «Поделиться» → Subtitle Notes.</span>
+          <span>Из Google Play. Выделяете текст в любом приложении,
+          «Поделиться» → Subtitle Notes.</span>
         </div>
         <div class="card">
           <span class="num">БРАУЗЕР</span>
           <b>Расширение</b>
-          <span>Chrome, Edge или Opera. После установки откроется страница
-          с коротким вступлением и кнопкой «Войти через Google».</span>
+          <span>Chrome, Edge, Opera. Субтитры в веб-плеерах, выделение
+          на сайтах и в PDF.</span>
         </div>
         <div class="card">
           <span class="num">КОМПЬЮТЕР</span>
           <b>Программа</b>
-          <span>Для субтитров в VLC и текста в любой программе по Ctrl+Alt+S.
-          Скачивается кнопкой в настройках расширения.</span>
+          <span>Субтитры в VLC и текст в любой программе по Ctrl+Alt+S.
+          Ссылка на установщик — в настройках расширения.</span>
         </div>
       </div>
 
-      <div class="note">
-        <strong>Про предупреждение Windows.</strong> Установщик не подписан
-        сертификатом, поэтому система покажет синее окно: нажмите «Подробнее»,
-        затем «Выполнить в любом случае». VLC программа настроит сама.
+      <div class="note" style="margin-top: 5mm; padding: 3.4mm 4.4mm">
+        <strong>Про предупреждение Windows.</strong> Установщик не подписан,
+        поэтому система покажет синее окно: «Подробнее» → «Выполнить в любом
+        случае». VLC программа настроит сама.
       </div>
 
-      <h2 style="margin-top: 10mm">В браузере</h2>
+      <h2 style="margin-top: 7mm">Где это работает</h2>
+      <p style="margin-bottom: 5mm">
+        YouTube, Netflix и сайты с фильмами на Playerjs, Video.js, JW и Plyr —
+        почти любой веб-плеер. Плюс страницы, PDF в Chrome и субтитры в VLC.
+      </p>
       <div class="shots">
         <div class="shot">
           <img src="browser-popup.png" alt="Окно расширения со списком последних слов" />
-          <p>Значок расширения: последние слова и выгрузка для Anki.</p>
+          <p>Значок расширения: последние слова, выгрузка в Anki.</p>
         </div>
         <div class="shot">
           <img src="browser-settings.png" alt="Настройки расширения" />
-          <p>Настройки: язык перевода, клавиша для субтитров, где показывать окно.</p>
+          <p>Настройки: язык, клавиша для субтитров, место окна.</p>
         </div>
       </div>
 
-      <div class="foot"><span>Установка</span><span>2</span></div>
+      <div class="foot"><span>Установка</span><span>3</span></div>
     </section>
 
     <!-- 3 -->
@@ -209,8 +320,8 @@
 
       <div class="note" style="margin-top: 8mm">
         <strong>Если перевод неточный.</strong> На карточке есть «Свой вариант»:
-        напишите, как правильно. Ваша карточка изменится сразу, а если так же
-        напишут ещё двое — вариант станет общим для всех.
+        напишите, как правильно. Ваша карточка изменится сразу; если то же самое
+        напишут ещё двое, вариант станет общим для всех.
       </div>
 
       <p style="margin-top: 8mm; font-size: 9.5pt; color: var(--soft)">
@@ -219,7 +330,7 @@
         Программа для Windows: <code>github.com/mjandreas125/subtitle-notes/releases</code>
       </p>
 
-      <div class="foot"><span>Телефон</span><span>3</span></div>
+      <div class="foot"><span>Телефон</span><span>4</span></div>
     </section>
   </body>
 </html>
