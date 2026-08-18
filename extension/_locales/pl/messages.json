@@ -94,7 +94,7 @@
     }
   },
   "popupConnectedPlain": {
-    "message": "Połączono. Zaznacz tekst na dowolnej stronie."
+    "message": "Twoja biblioteka"
   },
   "popupEmpty": {
     "message": "Nic jeszcze nie zapisano. Zaznacz słowo na stronie, w PDF-ie albo w napisach."
@@ -334,5 +334,11 @@
   },
   "optCompactHelp": {
     "message": "Tylko znaczenie: bez synonimów i notatek."
+  },
+  "popupRecent": {
+    "message": "Ostatnie"
+  },
+  "popupEmptyTitle": {
+    "message": "Jeszcze pusto"
   }
 }

@@ -94,7 +94,7 @@
     }
   },
   "popupConnectedPlain": {
-    "message": "Yhdistetty. Maalaa tekstiä millä tahansa sivulla."
+    "message": "Kirjastosi"
   },
   "popupEmpty": {
     "message": "Mitään ei ole vielä tallennettu. Maalaa sana sivulta, PDF:stä tai tekstityksestä."
@@ -334,5 +334,11 @@
   },
   "optCompactHelp": {
     "message": "Vain merkitys: ei synonyymejä eikä huomioita."
+  },
+  "popupRecent": {
+    "message": "Viimeisimmät"
+  },
+  "popupEmptyTitle": {
+    "message": "Vielä tyhjä"
   }
 }

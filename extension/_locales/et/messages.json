@@ -94,7 +94,7 @@
     }
   },
   "popupConnectedPlain": {
-    "message": "Ühendatud. Märgi tekst mis tahes lehel ära."
+    "message": "Sinu kogu"
   },
   "popupEmpty": {
     "message": "Midagi pole veel salvestatud. Märgi sõna lehel, PDF-is või subtiitrites."
@@ -334,5 +334,11 @@
   },
   "optCompactHelp": {
     "message": "Ainult tähendus: ilma sünonüümide ja märkusteta."
+  },
+  "popupRecent": {
+    "message": "Hiljutised"
+  },
+  "popupEmptyTitle": {
+    "message": "Veel tühi"
   }
 }

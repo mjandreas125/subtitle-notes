@@ -94,7 +94,7 @@
     }
   },
   "popupConnectedPlain": {
-    "message": "Ansluten. Markera text på vilken sida som helst."
+    "message": "Ditt bibliotek"
   },
   "popupEmpty": {
     "message": "Inget sparat ännu. Markera ett ord på en sida, i en PDF eller i undertexter."
@@ -334,5 +334,11 @@
   },
   "optCompactHelp": {
     "message": "Bara betydelsen: inga synonymer, inga noteringar."
+  },
+  "popupRecent": {
+    "message": "Senaste"
+  },
+  "popupEmptyTitle": {
+    "message": "Tomt än så länge"
   }
 }

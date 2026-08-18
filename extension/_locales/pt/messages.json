@@ -94,7 +94,7 @@
     }
   },
   "popupConnectedPlain": {
-    "message": "Conectado. Destaque texto em qualquer página."
+    "message": "A sua biblioteca"
   },
   "popupEmpty": {
     "message": "Nada salvo ainda. Destaque uma palavra numa página, num PDF ou nas legendas."
@@ -334,5 +334,11 @@
   },
   "optCompactHelp": {
     "message": "Apenas o significado: sem sinónimos nem notas."
+  },
+  "popupRecent": {
+    "message": "Recentes"
+  },
+  "popupEmptyTitle": {
+    "message": "Ainda vazio"
   }
 }

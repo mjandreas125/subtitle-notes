@@ -19,7 +19,12 @@ const view = (id) => document.getElementById(id);
     return;
   }
 
-  view('state').textContent = email ? t('popupConnected', email) : t('popupConnectedPlain');
+  // Connected: the account belongs at the top as a fact, not as a sentence.
+  view('state').hidden = true;
+  view('who').hidden = false;
+  view('whoTitle').textContent = t('popupConnectedPlain');
+  view('whoMail').textContent = email || '';
+  view('face').textContent = (email || '?').trim().charAt(0) || '?';
   const settingsButton = view('settings');
   settingsButton.textContent = t('popupSettings');
   settingsButton.addEventListener('click', () => chrome.runtime.openOptionsPage());
@@ -48,10 +53,14 @@ const view = (id) => document.getElementById(id);
 
   const saved = recent ?? [];
   if (!saved.length) {
-    view('recent').innerHTML = `<li><span>${escape(t('popupEmpty'))}</span></li>`;
+    view('recent').innerHTML =
+      `<li class="empty" style="background:none"><b>${escape(t('popupEmptyTitle'))}</b>` +
+      `<span>${escape(t('popupEmpty'))}</span></li>`;
     show();
     return;
   }
+  view('count').hidden = false;
+  view('count').textContent = t('popupRecent');
   view('recent').innerHTML = saved
     .map(
       (item) =>

@@ -94,7 +94,7 @@
     }
   },
   "popupConnectedPlain": {
-    "message": "Collegato. Evidenzia del testo su qualsiasi pagina."
+    "message": "La tua raccolta"
   },
   "popupEmpty": {
     "message": "Ancora niente salvato. Evidenzia una parola su una pagina, in un PDF o nei sottotitoli."
@@ -334,5 +334,11 @@
   },
   "optCompactHelp": {
     "message": "Solo il significato: niente sinonimi né note."
+  },
+  "popupRecent": {
+    "message": "Recenti"
+  },
+  "popupEmptyTitle": {
+    "message": "Ancora vuoto"
   }
 }

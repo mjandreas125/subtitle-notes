@@ -94,7 +94,7 @@
     }
   },
   "popupConnectedPlain": {
-    "message": "Verbonden. Markeer tekst op elke pagina."
+    "message": "Jouw bibliotheek"
   },
   "popupEmpty": {
     "message": "Nog niets opgeslagen. Markeer een woord op een pagina, in een pdf of in ondertiteling."
@@ -334,5 +334,11 @@
   },
   "optCompactHelp": {
     "message": "Alleen de betekenis: geen synoniemen, geen notities."
+  },
+  "popupRecent": {
+    "message": "Recent"
+  },
+  "popupEmptyTitle": {
+    "message": "Nog niets"
   }
 }
