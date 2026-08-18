@@ -398,12 +398,13 @@
       mine.innerHTML = readingHtml(reading.data, text);
       mine.dataset.read = '1';
       activate(mine, { spokenText: true });
-      place(mine, rect);
     });
 
     const saved = await saving;
     if (panel !== mine) return;
     mine.dataset.settled = '1';
+    // Placed once, when it appeared. Everything after that only changes what
+    // is written inside it.
 
     if (!saved.ok) {
       panel.innerHTML =
@@ -426,9 +427,11 @@
     // translation of its own to show instead.
     const body = mine.dataset.read
       ? [...mine.children].map((node) => node.outerHTML).join('')
-      : `<div class="head">${escape(saved.data.focus_translation || saved.data.translation || text)}</div>`;
+      : compact()
+        ? `<div class="term">${escape(saved.data.focus_translation || saved.data.translation || text)}</div>`
+        : `<div class="head">${escape(saved.data.focus_translation || saved.data.translation || text)}</div>`;
     panel.innerHTML = `
-      <div class="flag${reused ? ' grey' : ''}">${reused ? t('inLibrary') : t('saved')}</div>
+      ${compact() ? '' : `<div class="flag${reused ? ' grey' : ''}">${reused ? t('inLibrary') : t('saved')}</div>`}
       ${body}
       <div class="row thin">
         ${reused ? '' : `<button class="ghost" id="undo">${t('undo')}</button>`}
@@ -436,7 +439,6 @@
         <button class="ghost" id="mine">${t('mine')}</button>`}
       </div>`;
     activate(panel, { seen: Number(saved.data.seen_count) || 1 });
-    place(panel, rect);
 
     // A second opinion on a card that is already saved: the server re-reads the
     // line with the slower model, which is not the answer the fast one gave.
