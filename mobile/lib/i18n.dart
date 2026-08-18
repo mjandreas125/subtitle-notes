@@ -40,6 +40,8 @@ class AppI18n {
 
   static const _values = <String, Map<String, String>>{
     'de': {
+      'Sync with the app': 'Mit der App synchronisieren',
+      'One account for phone, computer and browser.': 'Ein Konto für Telefon, Computer und Browser.',
       'What does it mean here?': 'Was bedeutet es hier?',
       'Your wording': 'Ihre Fassung',
       'My wording': 'Eigene Fassung',
@@ -325,6 +327,8 @@ class AppI18n {
       '“\${card.learningLabel}” marked as learned': '„\${card.learningLabel}“ als gelernt markiert',
     },
     'es': {
+      'Sync with the app': 'Sincronizar con la aplicación',
+      'One account for phone, computer and browser.': 'Una cuenta para teléfono, ordenador y navegador.',
       'What does it mean here?': '¿Qué significa aquí?',
       'Your wording': 'Tu versión',
       'My wording': 'Mi versión',
@@ -611,6 +615,8 @@ class AppI18n {
       '“\${card.learningLabel}” marked as learned': '“\${card.learningLabel}” marcado como aprendido',
     },
     'et': {
+      'Sync with the app': 'Sünkroonimine rakendusega',
+      'One account for phone, computer and browser.': 'Üks konto telefonile, arvutile ja brauserile.',
       'What does it mean here?': 'Mida see siin tähendab?',
       'Your wording': 'Sinu sõnastus',
       'My wording': 'Oma sõnastus',
@@ -906,6 +912,8 @@ class AppI18n {
       '“\${card.learningLabel}” marked as learned': '„\${card.learningLabel}” on märgitud õpituks',
     },
     'fi': {
+      'Sync with the app': 'Synkronoi sovelluksen kanssa',
+      'One account for phone, computer and browser.': 'Yksi tili puhelimelle, tietokoneelle ja selaimelle.',
       'What does it mean here?': 'Mitä se tarkoittaa tässä?',
       'Your wording': 'Oma käännöksesi',
       'My wording': 'Oma käännös',
@@ -1191,6 +1199,8 @@ class AppI18n {
       '“\${card.learningLabel}” marked as learned': '"\${card.learningLabel}" merkitty opituksi',
     },
     'fr': {
+      'Sync with the app': 'Synchroniser avec l’application',
+      'One account for phone, computer and browser.': 'Un compte pour le téléphone, l’ordinateur et le navigateur.',
       'What does it mean here?': 'Que veut dire ceci ici ?',
       'Your wording': 'Votre version',
       'My wording': 'Ma version',
@@ -1476,6 +1486,8 @@ class AppI18n {
       '“\${card.learningLabel}” marked as learned': '« \${card.learningLabel} » marqué comme appris',
     },
     'it': {
+      'Sync with the app': 'Sincronizza con l’app',
+      'One account for phone, computer and browser.': 'Un account per telefono, computer e browser.',
       'What does it mean here?': 'Che cosa significa qui?',
       'Your wording': 'La tua versione',
       'My wording': 'La mia versione',
@@ -1762,6 +1774,8 @@ class AppI18n {
       '“\${card.learningLabel}” marked as learned': '“\${card.learningLabel}” contrassegnato come appreso',
     },
     'nl': {
+      'Sync with the app': 'Synchroniseren met de app',
+      'One account for phone, computer and browser.': 'Eén account voor telefoon, computer en browser.',
       'What does it mean here?': 'Wat betekent het hier?',
       'Your wording': 'Jouw versie',
       'My wording': 'Mijn versie',
@@ -2046,6 +2060,8 @@ class AppI18n {
       '“\${card.learningLabel}” marked as learned': '“\${card.learningLabel}” gemarkeerd als geleerd',
     },
     'pl': {
+      'Sync with the app': 'Synchronizacja z aplikacją',
+      'One account for phone, computer and browser.': 'Jedno konto na telefon, komputer i przeglądarkę.',
       'What does it mean here?': 'Co to tu znaczy?',
       'Your wording': 'Twoja wersja',
       'My wording': 'Moja wersja',
@@ -2332,6 +2348,8 @@ class AppI18n {
       '“\${card.learningLabel}” marked as learned': '„\${card.learningLabel}” oznaczone jako nauczone',
     },
     'pt': {
+      'Sync with the app': 'Sincronizar com a aplicação',
+      'One account for phone, computer and browser.': 'Uma conta para telemóvel, computador e navegador.',
       'What does it mean here?': 'O que significa aqui?',
       'Your wording': 'A sua versão',
       'My wording': 'Minha versão',
@@ -2617,6 +2635,8 @@ class AppI18n {
       '“\${card.learningLabel}” marked as learned': '“\${card.learningLabel}” marcado como aprendido',
     },
     'ru': {
+      'Sync with the app': 'Синхронизация с приложением',
+      'One account for phone, computer and browser.': 'Один аккаунт для телефона, компьютера и браузера.',
       'What does it mean here?': 'Что это значит здесь?',
       'Your wording': 'Ваш вариант',
       'My wording': 'Свой вариант',
@@ -2913,6 +2933,8 @@ class AppI18n {
       '“\${card.learningLabel}” marked as learned': '«\${card.learningLabel}» отмечено как изученное',
     },
     'sv': {
+      'Sync with the app': 'Synkronisera med appen',
+      'One account for phone, computer and browser.': 'Ett konto för telefon, dator och webbläsare.',
       'What does it mean here?': 'Vad betyder det här?',
       'Your wording': 'Din version',
       'My wording': 'Min version',
@@ -3197,6 +3219,8 @@ class AppI18n {
       '“\${card.learningLabel}” marked as learned': '"\${card.learningLabel}" markerad som inlärd',
     },
     'tr': {
+      'Sync with the app': 'Uygulamayla eşitle',
+      'One account for phone, computer and browser.': 'Telefon, bilgisayar ve tarayıcı için tek hesap.',
       'What does it mean here?': 'Burada ne anlama geliyor?',
       'Your wording': 'Sizin çeviriniz',
       'My wording': 'Kendi çevirim',
@@ -3483,6 +3507,8 @@ class AppI18n {
       '“\${card.learningLabel}” marked as learned': '“\${card.learningLabel}” öğrenildi olarak işaretlendi',
     },
     'uk': {
+      'Sync with the app': 'Синхронізація із застосунком',
+      'One account for phone, computer and browser.': 'Один обліковий запис для телефона, комп’ютера та браузера.',
       'What does it mean here?': 'Що це означає тут?',
       'Your wording': 'Ваш варіант',
       'My wording': 'Свій варіант',

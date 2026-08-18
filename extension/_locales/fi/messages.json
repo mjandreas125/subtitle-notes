@@ -286,10 +286,10 @@
     "message": "Asetukset"
   },
   "tourTitle": {
-    "message": "Mikä tahansa sana siinä merkityksessä kuin tässä"
+    "message": "Subtitle Notes"
   },
   "tourLede": {
-    "message": "Kymmenen sekuntia, sitten voit jatkaa."
+    "message": "Näin se toimii"
   },
   "tourMeaning": {
     "message": "a record - rikosrekisteri"
