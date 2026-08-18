@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 /// The version carried by the Windows installer.  The updater reads published
 /// GitHub Release assets, not a mutable "latest.exe" URL, so a partial upload
 /// can never be installed by someone who happens to open the library then.
-const desktopAppVersion = '1.6.0';
+const desktopAppVersion = '1.6.3';
 
 class DesktopRelease {
   const DesktopRelease({required this.version, required this.downloadUrl});
@@ -17,7 +17,7 @@ class DesktopRelease {
 
 class DesktopUpdates {
   static final _releaseApi = Uri.parse(
-    'https://api.github.com/repos/mjandreas125/translated-vlc/releases/latest',
+    'https://api.github.com/repos/mjandreas125/subtitle-notes/releases/latest',
   );
 
   /// Returns an installer only when its semantic version is newer than this
