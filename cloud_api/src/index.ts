@@ -89,6 +89,20 @@ function focus(text: string, sourceLanguage = 'en') {
   return { word, phrase };
 }
 
+/// A reader who deliberately selected a compact phrase already told us exactly
+/// what should be translated. The language model is useful for a whole
+/// subtitle line, but asking it to reinterpret a name-heavy phrase such as
+/// "beaches of Tennessee" can turn a reliable dictionary answer into a made-up
+/// sense. Keep these selections literal and deterministic.
+function isDeliberatePhrase(text: string) {
+  const words = wordsIn(text);
+  return (
+    words.length > 0 &&
+    words.length <= PHRASE_MAX_WORDS &&
+    !looksLikeSentence(text, words.map((word) => word.toLowerCase()))
+  );
+}
+
 /// The dictionary only carries examples for headwords: "brag" has them,
 /// "bragging" and "brag about" do not. These are the spellings worth trying
 /// before giving up on finding any.
@@ -795,7 +809,8 @@ async function enrich(env: Env, selected: string, context = '', language = 'ru')
     language,
     sourceLanguage,
   );
-  const learning = narrowed(selected, smart?.english);
+  const deliberatePhrase = isDeliberatePhrase(selected);
+  const learning = deliberatePhrase ? null : narrowed(selected, smart?.english);
   const item = focus(learning ?? selected, sourceLanguage);
   // Dictionary entries live under the base form. Asked about "hoarding" the
   // dictionary answers with a noun meaning a fence; asked about "hoard" it
@@ -831,16 +846,21 @@ async function enrich(env: Env, selected: string, context = '', language = 'ru')
   return {
     source_lang: main.source || '',
     corrected: Boolean(agreed),
-    translation: smart?.line || main.text,
+    translation: deliberatePhrase ? main.text : (smart?.line || main.text),
     focus_word: item.word,
     focus_phrase: item.phrase,
     // The reading of the line wins; the dictionary is what is left when the
     // model could not be reached. For a word picked out of a sentence, the
     // sense used in that sentence still beats the dictionary's first entry.
     focus_translation:
-      agreed ?? smart?.term ?? ((isSingleWord ? null : contextualSense(variants, main.text)) ?? focusResult.text),
-    synonyms: smart?.synonyms ?? [],
-    sense_note: smart?.note ?? null,
+      agreed ??
+      (deliberatePhrase
+        ? main.text
+        : (smart?.term ??
+            ((isSingleWord ? null : contextualSense(variants, main.text)) ??
+                focusResult.text))),
+    synonyms: deliberatePhrase ? variants : (smart?.synonyms ?? []),
+    sense_note: deliberatePhrase ? null : (smart?.note ?? null),
     variants,
     examples: examples.slice(0, 5),
     source_language: sourceLanguage,
@@ -1124,6 +1144,7 @@ export default { async fetch(request: Request, env: Env): Promise<Response> {
       // ask the model to read the line.  It also makes the panel useful when
       // Workers AI is temporarily unavailable instead of returning an error.
       const dictionary = await translate(text, false, user.language || 'ru');
+      const deliberatePhrase = isDeliberatePhrase(text);
       const smart = await smartReading(
         env,
         text,
@@ -1133,11 +1154,17 @@ export default { async fetch(request: Request, env: Env): Promise<Response> {
         dictionary.source,
       );
       return json({
-        term_en: smart?.english || text,
-        translation: smart?.line || dictionary.text,
-        focus_translation: smart?.term || null,
-        synonyms: smart?.synonyms || dictionary.variants,
-        sense_note: smart?.note || null,
+        term_en: deliberatePhrase ? text : (smart?.english || text),
+        translation: deliberatePhrase
+          ? dictionary.text
+          : (smart?.line || dictionary.text),
+        focus_translation: deliberatePhrase
+          ? dictionary.text
+          : (smart?.term || null),
+        synonyms: deliberatePhrase
+          ? dictionary.variants
+          : (smart?.synonyms || dictionary.variants),
+        sense_note: deliberatePhrase ? null : (smart?.note || null),
         source_language: dictionary.source,
       });
     }
