@@ -3,7 +3,7 @@
     "message": "Subtitle Notes"
   },
   "appDescription": {
-    "message": "Highlight a word anywhere - a page, a PDF, a film's subtitles - and keep what it really means."
+    "message": "Translates the word you select, taking the whole line into account. Works in subtitles, on any page and in PDF."
   },
   "menuSave": {
     "message": "Save “%s” to Subtitle Notes"

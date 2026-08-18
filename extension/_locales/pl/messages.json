@@ -3,7 +3,7 @@
     "message": "Subtitle Notes"
   },
   "appDescription": {
-    "message": "Zaznacz słowo gdziekolwiek - na stronie, w PDF-ie, w napisach filmu - i zachowaj to, co naprawdę znaczy."
+    "message": "Tłumaczy zaznaczone słowo z uwzględnieniem całego zdania. Działa w napisach, na każdej stronie i w PDF."
   },
   "menuSave": {
     "message": "Zapisz „%s” w Subtitle Notes"

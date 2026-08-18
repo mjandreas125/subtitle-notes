@@ -3,7 +3,7 @@
     "message": "Subtitle Notes"
   },
   "appDescription": {
-    "message": "Surlignez un mot n'importe où - une page, un PDF, les sous-titres d'un film - et gardez ce qu'il veut vraiment dire."
+    "message": "Traduit le mot sélectionné en tenant compte de toute la phrase. Fonctionne dans les sous-titres, sur toute page et en PDF."
   },
   "menuSave": {
     "message": "Enregistrer « %s » dans Subtitle Notes"
