@@ -1,0 +1,31 @@
+# Signing material and anything else that must never leave this machine.
+mobile/android/key.properties
+*.jks
+*.keystore
+
+# Built things. The installer and the Android package are attached to a
+# release instead, so the repository stays a repository.
+dist/
+build/
+mobile/build/
+mobile/.dart_tool/
+mobile/android/.gradle/
+release_package/*.exe
+release_package/*.zip
+release_package/*.aab
+release_package/dist/
+cloud_api/.wrangler/
+cloud_api/node_modules/
+node_modules/
+
+# Local runtime and scratch.
+__pycache__/
+*.pyc
+*.log
+.venv/
+.venv312/
+tmp_*
+TranslatedVLC-*.zip
+release_package/play/
+*.spec
+.wrangler/

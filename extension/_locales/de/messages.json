@@ -1,0 +1,332 @@
+{
+  "appName": {
+    "message": "Subtitle Notes"
+  },
+  "appDescription": {
+    "message": "Markiere ein Wort - auf einer Seite, in einem PDF, in Filmuntertiteln - und behalte, was es wirklich bedeutet."
+  },
+  "menuSave": {
+    "message": "„%s“ in Subtitle Notes speichern"
+  },
+  "chipAsk": {
+    "message": "Was heißt das?"
+  },
+  "reading": {
+    "message": "Lese die Zeile…"
+  },
+  "translating": {
+    "message": "übersetze…"
+  },
+  "listen": {
+    "message": "Anhören"
+  },
+  "rerun": {
+    "message": "Übersetzung stimmt nicht"
+  },
+  "rerunning": {
+    "message": "Lese erneut…"
+  },
+  "seenBefore": {
+    "message": "$COUNT$-mal begegnet",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "connectTitle": {
+    "message": "Telefon verbinden"
+  },
+  "connectBody": {
+    "message": "Dieser Browser ist noch nicht mit deiner Sammlung verbunden."
+  },
+  "connectAction": {
+    "message": "Verbinden"
+  },
+  "close": {
+    "message": "Schließen"
+  },
+  "save": {
+    "message": "Speichern"
+  },
+  "saving": {
+    "message": "Speichere…"
+  },
+  "saved": {
+    "message": "Gespeichert ✓"
+  },
+  "savedAlready": {
+    "message": "War schon da ✓"
+  },
+  "inLibrary": {
+    "message": "Schon in deiner Sammlung"
+  },
+  "notSaved": {
+    "message": "Nicht gespeichert"
+  },
+  "failed": {
+    "message": "Hat nicht geklappt"
+  },
+  "undo": {
+    "message": "Rückgängig"
+  },
+  "undoing": {
+    "message": "Entferne…"
+  },
+  "undone": {
+    "message": "Entfernt"
+  },
+  "reloaded": {
+    "message": "Die Erweiterung wurde neu geladen. Seite aktualisieren."
+  },
+  "popupNotPaired": {
+    "message": "Dieser Browser ist nicht mit deiner Sammlung verbunden."
+  },
+  "popupConnect": {
+    "message": "Telefon verbinden"
+  },
+  "popupConnected": {
+    "message": "Verbunden - $EMAIL$",
+    "placeholders": {
+      "email": {
+        "content": "$1"
+      }
+    }
+  },
+  "popupConnectedPlain": {
+    "message": "Verbunden. Markiere Text auf einer beliebigen Seite."
+  },
+  "popupEmpty": {
+    "message": "Noch nichts gespeichert. Markiere ein Wort auf einer Seite, in einem PDF oder in Untertiteln."
+  },
+  "popupExport": {
+    "message": "Für Anki exportieren"
+  },
+  "optTitle": {
+    "message": "Subtitle Notes im Browser"
+  },
+  "optSub": {
+    "message": "Markiere Wörter auf jeder Seite, in PDFs und in Untertiteln - sie landen in derselben App auf deinem Telefon."
+  },
+  "optConnected": {
+    "message": "Verbunden"
+  },
+  "optForget": {
+    "message": "Diesen Browser trennen"
+  },
+  "optPairIntro": {
+    "message": "Bestätige einen Code in der App auf deinem Telefon, um diesen Browser zu verbinden."
+  },
+  "optPairGet": {
+    "message": "Code anfordern"
+  },
+  "optStep1": {
+    "message": "Öffne Subtitle Notes auf deinem Telefon."
+  },
+  "optStep2": {
+    "message": "Einstellungen → Verbundene Geräte."
+  },
+  "optStep3": {
+    "message": "Gib diesen Code ein."
+  },
+  "optWaiting": {
+    "message": "Warte auf Bestätigung…"
+  },
+  "optPaired": {
+    "message": "Fertig. Markiere Text auf einer beliebigen Seite."
+  },
+  "optExpired": {
+    "message": "Der Code ist abgelaufen. Fordere einen neuen an."
+  },
+  "optCancel": {
+    "message": "Abbrechen"
+  },
+  "optHotkeyTitle": {
+    "message": "Speichern ohne Knopf"
+  },
+  "optHotkeyHelp": {
+    "message": "Halte diese Tastenkombination beim Markieren gedrückt, und das Wort wandert sofort in deine Sammlung. Oder markiere normal und drücke sie danach."
+  },
+  "optHotkeyPress": {
+    "message": "Kombination drücken…"
+  },
+  "optReset": {
+    "message": "Zurücksetzen"
+  },
+  "optInstantTitle": {
+    "message": "Immer speichern"
+  },
+  "optInstantHelp": {
+    "message": "Jede Markierung wird sofort gespeichert, ganz ohne Tasten. Die Karte bietet trotzdem an, es rückgängig zu machen."
+  },
+  "optWhereTitle": {
+    "message": "Wo das Fenster erscheint"
+  },
+  "optAtSelection": {
+    "message": "Bei der Markierung"
+  },
+  "optTopRight": {
+    "message": "Oben rechts"
+  },
+  "optTopLeft": {
+    "message": "Oben links"
+  },
+  "optBottomRight": {
+    "message": "Unten rechts"
+  },
+  "optBottomLeft": {
+    "message": "Unten links"
+  },
+  "optDragHint": {
+    "message": "Ein in einer Ecke verankertes Fenster lässt sich mit der Maus verschieben - es merkt sich den Platz."
+  },
+  "optHideAfter": {
+    "message": "Ausblenden nach"
+  },
+  "optHideAfterHelp": {
+    "message": "Sekunden, die das Fenster nach einem Sofort-Speichern stehen bleibt."
+  },
+  "optVideoTitle": {
+    "message": "Video und Seiten"
+  },
+  "optSubtitles": {
+    "message": "Anklickbare Untertitel"
+  },
+  "optSubtitlesHelp": {
+    "message": "Ersetzt auf YouTube und Netflix die Untertitel durch eine Kopie, in der du ein Wort anklicken oder über eine Wendung ziehen kannst."
+  },
+  "optPause": {
+    "message": "Video pausieren"
+  },
+  "optPauseHelp": {
+    "message": "Wenn du ein Wort aus einem Untertitel wählst."
+  },
+  "optSpeak": {
+    "message": "Wort vorlesen"
+  },
+  "optSpeakHelp": {
+    "message": "Spricht das englische Wort aus, wenn die Karte erscheint."
+  },
+  "optBlocked": {
+    "message": "Auf diesen Seiten nicht arbeiten"
+  },
+  "optBlockedHelp": {
+    "message": "Eine Adresse pro Zeile, zum Beispiel mail.google.com."
+  },
+  "optSavedToast": {
+    "message": "Gespeichert"
+  },
+  "optAccountTitle": {
+    "message": "Konto"
+  },
+  "optGoogle": {
+    "message": "Mit Google fortfahren"
+  },
+  "optGoogleHelp": {
+    "message": "Melden Sie sich mit demselben Google-Konto an wie auf dem Telefon - alles Gespeicherte landet in derselben Sammlung."
+  },
+  "optOtherWay": {
+    "message": "Stattdessen vom Telefon verbinden"
+  },
+  "optScanHelp": {
+    "message": "Richten Sie die Handykamera auf das Quadrat oder geben Sie den Code in der App ein: Einstellungen → Verbundene Geräte."
+  },
+  "optLangTitle": {
+    "message": "Sprache der Karten"
+  },
+  "optLangHelp": {
+    "message": "Neue Karten werden in dieser Sprache erklärt. Bereits gespeicherte bleiben, wie sie sind."
+  },
+  "optPrivacy": {
+    "message": "Datenschutzerklärung"
+  },
+  "optSubKeyTitle": {
+    "message": "Wörter aus Untertiteln herausgreifen"
+  },
+  "optSubKeyHelp": {
+    "message": "Solange die Taste gehalten wird, ist die Zeile markierbarer Text. Beim Loslassen gehört die Maus wieder dem Player: Untertitel verschieben, Klick zum Pausieren und die Untertitelgröße des Players funktionieren weiter."
+  },
+  "optSubKeyNone": {
+    "message": "Ohne Taste"
+  },
+  "optOr": {
+    "message": "oder"
+  },
+  "optSubKeyNow": {
+    "message": "Jetzt: $KEYS$",
+    "placeholders": {
+      "keys": {
+        "content": "$1"
+      }
+    }
+  },
+  "optSubKeyNoneNow": {
+    "message": "Jetzt: ohne Taste - die Zeile ist immer markierbar"
+  },
+  "optLangLocked": {
+    "message": "Zuerst ein Konto verbinden - die Sprache gehört dazu."
+  },
+  "mine": {
+    "message": "Eigene Fassung"
+  },
+  "minePlaceholder": {
+    "message": "Was es hier bedeutet"
+  },
+  "mineThanks": {
+    "message": "Gespeichert. Schreiben andere dasselbe, wird es zur Vorgabe."
+  },
+  "mineAgreed": {
+    "message": "Gespeichert - genug Leute sind derselben Meinung, das ist jetzt die Vorgabe."
+  },
+  "popupSettings": {
+    "message": "Einstellungen"
+  },
+  "tourTitle": {
+    "message": "Jedes Wort so, wie es hier gemeint ist"
+  },
+  "tourLede": {
+    "message": "Zehn Sekunden, dann kann es losgehen."
+  },
+  "tourMeaning": {
+    "message": "a record - Vorstrafe"
+  },
+  "tourSaved": {
+    "message": "In der Sammlung gespeichert"
+  },
+  "tourStep1": {
+    "message": "Strg halten und über den Untertitel ziehen"
+  },
+  "tourStep1Body": {
+    "message": "Ohne Taste bleibt der Player unangetastet: die Zeile lässt sich ziehen, ein Klick pausiert."
+  },
+  "tourStep2": {
+    "message": "Überall sonst einfach markieren"
+  },
+  "tourStep2Body": {
+    "message": "Eine Seite, ein PDF, ein Kommentar. Mit Strg+Alt beim Markieren wird es sofort gespeichert."
+  },
+  "tourStep3": {
+    "message": "Alles landet in einer Sammlung"
+  },
+  "tourStep3Body": {
+    "message": "Dasselbe Google-Konto auf dem Telefon, im Browser und am Computer."
+  },
+  "tourConnect": {
+    "message": "Konto verbinden"
+  },
+  "tourLater": {
+    "message": "Später"
+  },
+  "optDesktopTitle": {
+    "message": "Auf dem Computer"
+  },
+  "optDesktopHelp": {
+    "message": "Untertitel in VLC und Text in jedem Programm - in dieselbe Sammlung."
+  },
+  "optDesktopGet": {
+    "message": "Für Windows herunterladen"
+  },
+  "tourDesktop": {
+    "message": "Auch für den Computer"
+  }
+}

@@ -1,0 +1,332 @@
+{
+  "appName": {
+    "message": "Subtitle Notes"
+  },
+  "appDescription": {
+    "message": "Markeer een woord waar dan ook - een pagina, een pdf, de ondertiteling van een film - en bewaar wat het echt betekent."
+  },
+  "menuSave": {
+    "message": "„%s” opslaan in Subtitle Notes"
+  },
+  "chipAsk": {
+    "message": "Wat betekent dit?"
+  },
+  "reading": {
+    "message": "Regel lezen…"
+  },
+  "translating": {
+    "message": "vertalen…"
+  },
+  "listen": {
+    "message": "Beluisteren"
+  },
+  "rerun": {
+    "message": "Vertaling klopt niet"
+  },
+  "rerunning": {
+    "message": "Opnieuw lezen…"
+  },
+  "seenBefore": {
+    "message": "$COUNT$ keer tegengekomen",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "connectTitle": {
+    "message": "Verbind je telefoon"
+  },
+  "connectBody": {
+    "message": "Deze browser is nog niet gekoppeld aan je verzameling."
+  },
+  "connectAction": {
+    "message": "Verbinden"
+  },
+  "close": {
+    "message": "Sluiten"
+  },
+  "save": {
+    "message": "Opslaan"
+  },
+  "saving": {
+    "message": "Opslaan…"
+  },
+  "saved": {
+    "message": "Opgeslagen ✓"
+  },
+  "savedAlready": {
+    "message": "Stond er al ✓"
+  },
+  "inLibrary": {
+    "message": "Staat al in je verzameling"
+  },
+  "notSaved": {
+    "message": "Niet opgeslagen"
+  },
+  "failed": {
+    "message": "Is niet gelukt"
+  },
+  "undo": {
+    "message": "Ongedaan maken"
+  },
+  "undoing": {
+    "message": "Verwijderen…"
+  },
+  "undone": {
+    "message": "Verwijderd"
+  },
+  "reloaded": {
+    "message": "De extensie is herladen. Ververs de pagina."
+  },
+  "popupNotPaired": {
+    "message": "Deze browser is niet gekoppeld aan je verzameling."
+  },
+  "popupConnect": {
+    "message": "Telefoon verbinden"
+  },
+  "popupConnected": {
+    "message": "Verbonden - $EMAIL$",
+    "placeholders": {
+      "email": {
+        "content": "$1"
+      }
+    }
+  },
+  "popupConnectedPlain": {
+    "message": "Verbonden. Markeer tekst op elke pagina."
+  },
+  "popupEmpty": {
+    "message": "Nog niets opgeslagen. Markeer een woord op een pagina, in een pdf of in ondertiteling."
+  },
+  "popupExport": {
+    "message": "Exporteren naar Anki"
+  },
+  "optTitle": {
+    "message": "Subtitle Notes in de browser"
+  },
+  "optSub": {
+    "message": "Markeer woorden op elke site, in pdf's en in ondertiteling - ze komen in dezelfde app op je telefoon terecht."
+  },
+  "optConnected": {
+    "message": "Verbonden"
+  },
+  "optForget": {
+    "message": "Deze browser loskoppelen"
+  },
+  "optPairIntro": {
+    "message": "Bevestig een code in de app op je telefoon om deze browser te koppelen."
+  },
+  "optPairGet": {
+    "message": "Code opvragen"
+  },
+  "optStep1": {
+    "message": "Open Subtitle Notes op je telefoon."
+  },
+  "optStep2": {
+    "message": "Instellingen → Verbonden apparaten."
+  },
+  "optStep3": {
+    "message": "Typ deze code."
+  },
+  "optWaiting": {
+    "message": "Wacht op bevestiging…"
+  },
+  "optPaired": {
+    "message": "Klaar. Markeer tekst op elke pagina."
+  },
+  "optExpired": {
+    "message": "De code is verlopen. Vraag een nieuwe aan."
+  },
+  "optCancel": {
+    "message": "Annuleren"
+  },
+  "optHotkeyTitle": {
+    "message": "Opslaan zonder knop"
+  },
+  "optHotkeyHelp": {
+    "message": "Houd deze toetsencombinatie ingedrukt tijdens het markeren en het woord gaat meteen naar je verzameling. Of markeer gewoon en druk erna."
+  },
+  "optHotkeyPress": {
+    "message": "Druk een combinatie…"
+  },
+  "optReset": {
+    "message": "Herstellen"
+  },
+  "optInstantTitle": {
+    "message": "Altijd opslaan"
+  },
+  "optInstantHelp": {
+    "message": "Elke selectie wordt meteen opgeslagen, zonder toetsen. De kaart biedt nog steeds aan het ongedaan te maken."
+  },
+  "optWhereTitle": {
+    "message": "Waar het venster verschijnt"
+  },
+  "optAtSelection": {
+    "message": "Bij de selectie"
+  },
+  "optTopRight": {
+    "message": "Rechtsboven"
+  },
+  "optTopLeft": {
+    "message": "Linksboven"
+  },
+  "optBottomRight": {
+    "message": "Rechtsonder"
+  },
+  "optBottomLeft": {
+    "message": "Linksonder"
+  },
+  "optDragHint": {
+    "message": "Een venster dat in een hoek vastzit kun je met de muis verslepen - het onthoudt de plek."
+  },
+  "optHideAfter": {
+    "message": "Verbergen na"
+  },
+  "optHideAfterHelp": {
+    "message": "Seconden dat het venster blijft staan na direct opslaan."
+  },
+  "optVideoTitle": {
+    "message": "Video en sites"
+  },
+  "optSubtitles": {
+    "message": "Aanklikbare ondertiteling"
+  },
+  "optSubtitlesHelp": {
+    "message": "Vervangt op YouTube en Netflix de ondertiteling door een kopie waarin je een woord kunt aanklikken of over een uitdrukking kunt slepen."
+  },
+  "optPause": {
+    "message": "Video pauzeren"
+  },
+  "optPauseHelp": {
+    "message": "Wanneer je een woord uit een ondertitel kiest."
+  },
+  "optSpeak": {
+    "message": "Woord voorlezen"
+  },
+  "optSpeakHelp": {
+    "message": "Spreekt het Engelse woord uit wanneer de kaart opent."
+  },
+  "optBlocked": {
+    "message": "Niet werken op deze sites"
+  },
+  "optBlockedHelp": {
+    "message": "Eén adres per regel, bijvoorbeeld mail.google.com."
+  },
+  "optSavedToast": {
+    "message": "Opgeslagen"
+  },
+  "optAccountTitle": {
+    "message": "Account"
+  },
+  "optGoogle": {
+    "message": "Doorgaan met Google"
+  },
+  "optGoogleHelp": {
+    "message": "Meld je aan met hetzelfde Google-account als op je telefoon - alles wat je hier bewaart, komt in dezelfde bibliotheek."
+  },
+  "optOtherWay": {
+    "message": "Verbinden vanaf de telefoon"
+  },
+  "optScanHelp": {
+    "message": "Richt de camera van je telefoon op dit vierkant, of typ de code in de app: Instellingen → Verbonden apparaten."
+  },
+  "optLangTitle": {
+    "message": "Taal van de kaarten"
+  },
+  "optLangHelp": {
+    "message": "Nieuwe kaarten worden in deze taal uitgelegd. Al bewaarde kaarten blijven zoals ze zijn."
+  },
+  "optPrivacy": {
+    "message": "Privacybeleid"
+  },
+  "optSubKeyTitle": {
+    "message": "Woorden uit ondertitels pakken"
+  },
+  "optSubKeyHelp": {
+    "message": "Zolang de toets ingedrukt is, wordt de regel selecteerbare tekst. Laat je los, dan heeft de speler de muis weer: ondertitels slepen, klikken om te pauzeren en de eigen ondertitelgrootte blijven werken."
+  },
+  "optSubKeyNone": {
+    "message": "Zonder toets"
+  },
+  "optOr": {
+    "message": "of"
+  },
+  "optSubKeyNow": {
+    "message": "Nu: $KEYS$",
+    "placeholders": {
+      "keys": {
+        "content": "$1"
+      }
+    }
+  },
+  "optSubKeyNoneNow": {
+    "message": "Nu: zonder toets - de regel is altijd selecteerbaar"
+  },
+  "optLangLocked": {
+    "message": "Verbind eerst een account - de taal hoort daarbij."
+  },
+  "mine": {
+    "message": "Mijn versie"
+  },
+  "minePlaceholder": {
+    "message": "Wat het hier betekent"
+  },
+  "mineThanks": {
+    "message": "Bewaard. Schrijven anderen hetzelfde, dan wordt het de standaard."
+  },
+  "mineAgreed": {
+    "message": "Bewaard - genoeg mensen zijn het eens, dit is nu de standaard."
+  },
+  "popupSettings": {
+    "message": "Instellingen"
+  },
+  "tourTitle": {
+    "message": "Elk woord, in de betekenis die het hier heeft"
+  },
+  "tourLede": {
+    "message": "Tien seconden, dan kun je verder."
+  },
+  "tourMeaning": {
+    "message": "a record - strafblad"
+  },
+  "tourSaved": {
+    "message": "Bewaard in je bibliotheek"
+  },
+  "tourStep1": {
+    "message": "Houd Ctrl ingedrukt en sleep over de ondertitel"
+  },
+  "tourStep1Body": {
+    "message": "Zonder de toets blijft de speler ongemoeid: de regel sleept, een klik pauzeert."
+  },
+  "tourStep2": {
+    "message": "Overal elders gewoon selecteren"
+  },
+  "tourStep2Body": {
+    "message": "Een pagina, een pdf, een reactie. Met Ctrl+Alt wordt het meteen bewaard."
+  },
+  "tourStep3": {
+    "message": "Alles komt in één bibliotheek"
+  },
+  "tourStep3Body": {
+    "message": "Hetzelfde Google-account op de telefoon, in de browser en op de computer."
+  },
+  "tourConnect": {
+    "message": "Account verbinden"
+  },
+  "tourLater": {
+    "message": "Later"
+  },
+  "optDesktopTitle": {
+    "message": "Op de computer"
+  },
+  "optDesktopHelp": {
+    "message": "Ondertitels in VLC en tekst uit elk programma, in dezelfde bibliotheek."
+  },
+  "optDesktopGet": {
+    "message": "Downloaden voor Windows"
+  },
+  "tourDesktop": {
+    "message": "Ook voor de computer"
+  }
+}

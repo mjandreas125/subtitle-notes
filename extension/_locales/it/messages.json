@@ -1,0 +1,332 @@
+{
+  "appName": {
+    "message": "Subtitle Notes"
+  },
+  "appDescription": {
+    "message": "Evidenzia una parola ovunque - una pagina, un PDF, i sottotitoli di un film - e conserva ciò che significa davvero."
+  },
+  "menuSave": {
+    "message": "Salva «%s» in Subtitle Notes"
+  },
+  "chipAsk": {
+    "message": "Che cosa significa?"
+  },
+  "reading": {
+    "message": "Leggo la riga…"
+  },
+  "translating": {
+    "message": "traduco…"
+  },
+  "listen": {
+    "message": "Ascolta"
+  },
+  "rerun": {
+    "message": "Traduzione sbagliata"
+  },
+  "rerunning": {
+    "message": "Rileggo…"
+  },
+  "seenBefore": {
+    "message": "incontrato $COUNT$ volte",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "connectTitle": {
+    "message": "Collega il telefono"
+  },
+  "connectBody": {
+    "message": "Questo browser non è ancora collegato alla tua raccolta."
+  },
+  "connectAction": {
+    "message": "Collega"
+  },
+  "close": {
+    "message": "Chiudi"
+  },
+  "save": {
+    "message": "Salva"
+  },
+  "saving": {
+    "message": "Salvataggio…"
+  },
+  "saved": {
+    "message": "Salvato ✓"
+  },
+  "savedAlready": {
+    "message": "C'era già ✓"
+  },
+  "inLibrary": {
+    "message": "Già nella tua raccolta"
+  },
+  "notSaved": {
+    "message": "Non salvato"
+  },
+  "failed": {
+    "message": "Non ha funzionato"
+  },
+  "undo": {
+    "message": "Annulla"
+  },
+  "undoing": {
+    "message": "Rimuovo…"
+  },
+  "undone": {
+    "message": "Rimosso"
+  },
+  "reloaded": {
+    "message": "L'estensione è stata ricaricata. Aggiorna la pagina."
+  },
+  "popupNotPaired": {
+    "message": "Questo browser non è collegato alla tua raccolta."
+  },
+  "popupConnect": {
+    "message": "Collega il telefono"
+  },
+  "popupConnected": {
+    "message": "Collegato - $EMAIL$",
+    "placeholders": {
+      "email": {
+        "content": "$1"
+      }
+    }
+  },
+  "popupConnectedPlain": {
+    "message": "Collegato. Evidenzia del testo su qualsiasi pagina."
+  },
+  "popupEmpty": {
+    "message": "Ancora niente salvato. Evidenzia una parola su una pagina, in un PDF o nei sottotitoli."
+  },
+  "popupExport": {
+    "message": "Esporta per Anki"
+  },
+  "optTitle": {
+    "message": "Subtitle Notes nel browser"
+  },
+  "optSub": {
+    "message": "Evidenzia parole su qualsiasi sito, nei PDF e nei sottotitoli: finiscono nella stessa app sul telefono."
+  },
+  "optConnected": {
+    "message": "Collegato"
+  },
+  "optForget": {
+    "message": "Scollega questo browser"
+  },
+  "optPairIntro": {
+    "message": "Per collegare il browser alla tua raccolta, conferma un codice nell'app sul telefono."
+  },
+  "optPairGet": {
+    "message": "Ottieni un codice"
+  },
+  "optStep1": {
+    "message": "Apri Subtitle Notes sul telefono."
+  },
+  "optStep2": {
+    "message": "Impostazioni → Dispositivi collegati."
+  },
+  "optStep3": {
+    "message": "Inserisci questo codice."
+  },
+  "optWaiting": {
+    "message": "Attendo conferma…"
+  },
+  "optPaired": {
+    "message": "Fatto. Evidenzia del testo su qualsiasi pagina."
+  },
+  "optExpired": {
+    "message": "Il codice è scaduto. Chiedine uno nuovo."
+  },
+  "optCancel": {
+    "message": "Annulla"
+  },
+  "optHotkeyTitle": {
+    "message": "Salvare senza pulsante"
+  },
+  "optHotkeyHelp": {
+    "message": "Tieni premuta questa combinazione mentre evidenzi e la parola va subito nella raccolta. Oppure evidenzia normalmente e premila dopo."
+  },
+  "optHotkeyPress": {
+    "message": "Premi una combinazione…"
+  },
+  "optReset": {
+    "message": "Reimposta"
+  },
+  "optInstantTitle": {
+    "message": "Salva sempre"
+  },
+  "optInstantHelp": {
+    "message": "Ogni selezione viene salvata subito, senza tasti. La scheda propone comunque di annullare."
+  },
+  "optWhereTitle": {
+    "message": "Dove appare la finestra"
+  },
+  "optAtSelection": {
+    "message": "Vicino alla selezione"
+  },
+  "optTopRight": {
+    "message": "In alto a destra"
+  },
+  "optTopLeft": {
+    "message": "In alto a sinistra"
+  },
+  "optBottomRight": {
+    "message": "In basso a destra"
+  },
+  "optBottomLeft": {
+    "message": "In basso a sinistra"
+  },
+  "optDragHint": {
+    "message": "Una finestra fissata in un angolo si può trascinare col mouse: ricorda dove l'hai messa."
+  },
+  "optHideAfter": {
+    "message": "Nascondi dopo"
+  },
+  "optHideAfterHelp": {
+    "message": "Secondi in cui la finestra resta dopo un salvataggio immediato."
+  },
+  "optVideoTitle": {
+    "message": "Video e siti"
+  },
+  "optSubtitles": {
+    "message": "Sottotitoli cliccabili"
+  },
+  "optSubtitlesHelp": {
+    "message": "Su YouTube e Netflix sostituisce i sottotitoli con una copia in cui puoi cliccare una parola o trascinare su un'espressione."
+  },
+  "optPause": {
+    "message": "Metti in pausa il video"
+  },
+  "optPauseHelp": {
+    "message": "Quando scegli una parola da un sottotitolo."
+  },
+  "optSpeak": {
+    "message": "Leggi la parola ad alta voce"
+  },
+  "optSpeakHelp": {
+    "message": "Pronuncia la parola inglese quando la scheda si apre."
+  },
+  "optBlocked": {
+    "message": "Non funzionare su questi siti"
+  },
+  "optBlockedHelp": {
+    "message": "Un indirizzo per riga, per esempio mail.google.com."
+  },
+  "optSavedToast": {
+    "message": "Salvato"
+  },
+  "optAccountTitle": {
+    "message": "Account"
+  },
+  "optGoogle": {
+    "message": "Continua con Google"
+  },
+  "optGoogleHelp": {
+    "message": "Accedi con lo stesso account Google del telefono: tutto ciò che salvi qui finisce nella stessa raccolta."
+  },
+  "optOtherWay": {
+    "message": "Collega dal telefono"
+  },
+  "optScanHelp": {
+    "message": "Inquadra questo quadrato con la fotocamera del telefono oppure digita il codice nell’app: Impostazioni → Dispositivi collegati."
+  },
+  "optLangTitle": {
+    "message": "Lingua delle schede"
+  },
+  "optLangHelp": {
+    "message": "Le nuove schede saranno spiegate in questa lingua. Quelle già salvate restano come sono."
+  },
+  "optPrivacy": {
+    "message": "Informativa sulla privacy"
+  },
+  "optSubKeyTitle": {
+    "message": "Prendere parole dai sottotitoli"
+  },
+  "optSubKeyHelp": {
+    "message": "Finché il tasto è premuto, la riga diventa testo selezionabile. Rilasciandolo il lettore riprende il mouse: trascinare i sottotitoli, cliccare per mettere in pausa e la loro dimensione continuano a funzionare."
+  },
+  "optSubKeyNone": {
+    "message": "Senza tasto"
+  },
+  "optOr": {
+    "message": "oppure"
+  },
+  "optSubKeyNow": {
+    "message": "Ora: $KEYS$",
+    "placeholders": {
+      "keys": {
+        "content": "$1"
+      }
+    }
+  },
+  "optSubKeyNoneNow": {
+    "message": "Ora: senza tasto - la riga è sempre selezionabile"
+  },
+  "optLangLocked": {
+    "message": "Collega prima un account: la lingua è salvata con esso."
+  },
+  "mine": {
+    "message": "La mia versione"
+  },
+  "minePlaceholder": {
+    "message": "Che cosa significa qui"
+  },
+  "mineThanks": {
+    "message": "Salvato. Se altri scrivono lo stesso, diventerà la versione predefinita."
+  },
+  "mineAgreed": {
+    "message": "Salvato: abbastanza persone concordano, ora è la versione predefinita."
+  },
+  "popupSettings": {
+    "message": "Impostazioni"
+  },
+  "tourTitle": {
+    "message": "Ogni parola nel senso che ha qui"
+  },
+  "tourLede": {
+    "message": "Dieci secondi e sei a posto."
+  },
+  "tourMeaning": {
+    "message": "a record - precedenti penali"
+  },
+  "tourSaved": {
+    "message": "Salvato nella raccolta"
+  },
+  "tourStep1": {
+    "message": "Tieni premuto Ctrl e trascina sul sottotitolo"
+  },
+  "tourStep1Body": {
+    "message": "Senza il tasto il lettore resta com’è: la riga si trascina, un clic mette in pausa."
+  },
+  "tourStep2": {
+    "message": "Altrove basta selezionare"
+  },
+  "tourStep2Body": {
+    "message": "Una pagina, un PDF, un commento. Con Ctrl+Alt viene salvato senza chiedere."
+  },
+  "tourStep3": {
+    "message": "Tutto finisce in un’unica raccolta"
+  },
+  "tourStep3Body": {
+    "message": "Lo stesso account Google sul telefono, nel browser e sul computer."
+  },
+  "tourConnect": {
+    "message": "Collega l’account"
+  },
+  "tourLater": {
+    "message": "Più tardi"
+  },
+  "optDesktopTitle": {
+    "message": "Sul computer"
+  },
+  "optDesktopHelp": {
+    "message": "Sottotitoli in VLC e testo di qualsiasi programma, nella stessa raccolta."
+  },
+  "optDesktopGet": {
+    "message": "Scarica per Windows"
+  },
+  "tourDesktop": {
+    "message": "Anche per il computer"
+  }
+}

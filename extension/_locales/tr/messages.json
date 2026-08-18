@@ -1,0 +1,332 @@
+{
+  "appName": {
+    "message": "Subtitle Notes"
+  },
+  "appDescription": {
+    "message": "Herhangi bir yerde bir kelimeyi seç - bir sayfa, bir PDF, bir filmin altyazısı - ve gerçekte ne demek olduğunu sakla."
+  },
+  "menuSave": {
+    "message": "“%s” ifadesini Subtitle Notes'a kaydet"
+  },
+  "chipAsk": {
+    "message": "Bu ne demek?"
+  },
+  "reading": {
+    "message": "Satır okunuyor…"
+  },
+  "translating": {
+    "message": "çevriliyor…"
+  },
+  "listen": {
+    "message": "Dinle"
+  },
+  "rerun": {
+    "message": "Çeviri yanlış"
+  },
+  "rerunning": {
+    "message": "Yeniden okunuyor…"
+  },
+  "seenBefore": {
+    "message": "$COUNT$ kez karşılaşıldı",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "connectTitle": {
+    "message": "Telefonunu bağla"
+  },
+  "connectBody": {
+    "message": "Bu tarayıcı henüz kitaplığına bağlı değil."
+  },
+  "connectAction": {
+    "message": "Bağla"
+  },
+  "close": {
+    "message": "Kapat"
+  },
+  "save": {
+    "message": "Kaydet"
+  },
+  "saving": {
+    "message": "Kaydediliyor…"
+  },
+  "saved": {
+    "message": "Kaydedildi ✓"
+  },
+  "savedAlready": {
+    "message": "Zaten vardı ✓"
+  },
+  "inLibrary": {
+    "message": "Zaten kitaplığında"
+  },
+  "notSaved": {
+    "message": "Kaydedilmedi"
+  },
+  "failed": {
+    "message": "Olmadı"
+  },
+  "undo": {
+    "message": "Geri al"
+  },
+  "undoing": {
+    "message": "Kaldırılıyor…"
+  },
+  "undone": {
+    "message": "Kaldırıldı"
+  },
+  "reloaded": {
+    "message": "Uzantı yeniden yüklendi. Sayfayı yenile."
+  },
+  "popupNotPaired": {
+    "message": "Bu tarayıcı kitaplığına bağlı değil."
+  },
+  "popupConnect": {
+    "message": "Telefonu bağla"
+  },
+  "popupConnected": {
+    "message": "Bağlandı - $EMAIL$",
+    "placeholders": {
+      "email": {
+        "content": "$1"
+      }
+    }
+  },
+  "popupConnectedPlain": {
+    "message": "Bağlandı. Herhangi bir sayfada metin seç."
+  },
+  "popupEmpty": {
+    "message": "Henüz hiçbir şey kaydedilmedi. Bir sayfada, PDF'te ya da altyazıda bir kelime seç."
+  },
+  "popupExport": {
+    "message": "Anki için dışa aktar"
+  },
+  "optTitle": {
+    "message": "Tarayıcıda Subtitle Notes"
+  },
+  "optSub": {
+    "message": "Herhangi bir sitede, PDF'lerde ve altyazılarda kelime seç - telefonundaki aynı uygulamaya düşerler."
+  },
+  "optConnected": {
+    "message": "Bağlandı"
+  },
+  "optForget": {
+    "message": "Bu tarayıcının bağlantısını kes"
+  },
+  "optPairIntro": {
+    "message": "Bu tarayıcıyı kitaplığına bağlamak için telefonundaki uygulamada bir kodu onayla."
+  },
+  "optPairGet": {
+    "message": "Kod al"
+  },
+  "optStep1": {
+    "message": "Telefonunda Subtitle Notes'u aç."
+  },
+  "optStep2": {
+    "message": "Ayarlar → Bağlı cihazlar."
+  },
+  "optStep3": {
+    "message": "Bu kodu gir."
+  },
+  "optWaiting": {
+    "message": "Onay bekleniyor…"
+  },
+  "optPaired": {
+    "message": "Hazır. Herhangi bir sayfada metin seç."
+  },
+  "optExpired": {
+    "message": "Kodun süresi doldu. Yenisini al."
+  },
+  "optCancel": {
+    "message": "Vazgeç"
+  },
+  "optHotkeyTitle": {
+    "message": "Düğmesiz kaydetme"
+  },
+  "optHotkeyHelp": {
+    "message": "Seçim yaparken bu tuş birleşimini basılı tut, kelime doğrudan kitaplığına gitsin. Ya da normal seç ve sonra bas."
+  },
+  "optHotkeyPress": {
+    "message": "Bir tuş birleşimine bas…"
+  },
+  "optReset": {
+    "message": "Sıfırla"
+  },
+  "optInstantTitle": {
+    "message": "Her zaman kaydet"
+  },
+  "optInstantHelp": {
+    "message": "Her seçim tuşsuz olarak hemen kaydedilir. Kart yine de geri almayı önerir."
+  },
+  "optWhereTitle": {
+    "message": "Pencere nerede görünsün"
+  },
+  "optAtSelection": {
+    "message": "Seçimin yanında"
+  },
+  "optTopRight": {
+    "message": "Sağ üstte"
+  },
+  "optTopLeft": {
+    "message": "Sol üstte"
+  },
+  "optBottomRight": {
+    "message": "Sağ altta"
+  },
+  "optBottomLeft": {
+    "message": "Sol altta"
+  },
+  "optDragHint": {
+    "message": "Bir köşeye sabitlenen pencere fareyle sürüklenebilir - yerini hatırlar."
+  },
+  "optHideAfter": {
+    "message": "Şu süreden sonra gizle"
+  },
+  "optHideAfterHelp": {
+    "message": "Anında kaydetmeden sonra pencerenin ekranda kalma süresi (saniye)."
+  },
+  "optVideoTitle": {
+    "message": "Video ve siteler"
+  },
+  "optSubtitles": {
+    "message": "Tıklanabilir altyazılar"
+  },
+  "optSubtitlesHelp": {
+    "message": "YouTube ve Netflix'te altyazıları, bir kelimeye tıklayabildiğin ya da bir ifadenin üzerinden sürükleyebildiğin bir kopyayla değiştirir."
+  },
+  "optPause": {
+    "message": "Videoyu duraklat"
+  },
+  "optPauseHelp": {
+    "message": "Altyazıdan bir kelime seçtiğinde."
+  },
+  "optSpeak": {
+    "message": "Kelimeyi sesli oku"
+  },
+  "optSpeakHelp": {
+    "message": "Kart açıldığında İngilizce kelimeyi seslendirir."
+  },
+  "optBlocked": {
+    "message": "Bu sitelerde çalışma"
+  },
+  "optBlockedHelp": {
+    "message": "Satır başına bir adres, örneğin mail.google.com."
+  },
+  "optSavedToast": {
+    "message": "Kaydedildi"
+  },
+  "optAccountTitle": {
+    "message": "Hesap"
+  },
+  "optGoogle": {
+    "message": "Google ile devam et"
+  },
+  "optGoogleHelp": {
+    "message": "Telefonunuzdaki Google hesabıyla giriş yapın; burada kaydettiğiniz her şey aynı kütüphaneye gider."
+  },
+  "optOtherWay": {
+    "message": "Bunun yerine telefondan bağla"
+  },
+  "optScanHelp": {
+    "message": "Telefonun kamerasını bu kareye tutun ya da kodu uygulamada yazın: Ayarlar → Bağlı cihazlar."
+  },
+  "optLangTitle": {
+    "message": "Kartların dili"
+  },
+  "optLangHelp": {
+    "message": "Yeni kartlar bu dilde açıklanır. Önceden kaydedilenler olduğu gibi kalır."
+  },
+  "optPrivacy": {
+    "message": "Gizlilik politikası"
+  },
+  "optSubKeyTitle": {
+    "message": "Altyazıdan kelime seçme"
+  },
+  "optSubKeyHelp": {
+    "message": "Tuş basılıyken satır seçilebilir metne dönüşür. Bıraktığınızda fare yine oynatıcının olur: altyazıyı sürüklemek, duraklatmak için tıklamak ve altyazı boyutu çalışmaya devam eder."
+  },
+  "optSubKeyNone": {
+    "message": "Tuşsuz"
+  },
+  "optOr": {
+    "message": "veya"
+  },
+  "optSubKeyNow": {
+    "message": "Şu an: $KEYS$",
+    "placeholders": {
+      "keys": {
+        "content": "$1"
+      }
+    }
+  },
+  "optSubKeyNoneNow": {
+    "message": "Şu an: tuşsuz - satır her zaman seçilebilir"
+  },
+  "optLangLocked": {
+    "message": "Önce bir hesap bağlayın - dil hesapla birlikte saklanır."
+  },
+  "mine": {
+    "message": "Kendi çevirim"
+  },
+  "minePlaceholder": {
+    "message": "Burada ne anlama geliyor"
+  },
+  "mineThanks": {
+    "message": "Kaydedildi. Başkaları da aynısını yazarsa varsayılan olur."
+  },
+  "mineAgreed": {
+    "message": "Kaydedildi - yeterince kişi aynı fikirde, artık varsayılan bu."
+  },
+  "popupSettings": {
+    "message": "Ayarlar"
+  },
+  "tourTitle": {
+    "message": "Her kelime, burada taşıdığı anlamıyla"
+  },
+  "tourLede": {
+    "message": "On saniye, sonra devam edebilirsiniz."
+  },
+  "tourMeaning": {
+    "message": "a record - sabıka kaydı"
+  },
+  "tourSaved": {
+    "message": "Kütüphanenize kaydedildi"
+  },
+  "tourStep1": {
+    "message": "Ctrl tuşunu basılı tutup altyazının üzerinde sürükleyin"
+  },
+  "tourStep1Body": {
+    "message": "Tuş olmadan oynatıcı aynı kalır: satır sürüklenir, tıklama duraklatır."
+  },
+  "tourStep2": {
+    "message": "Diğer her yerde sadece seçin"
+  },
+  "tourStep2Body": {
+    "message": "Sayfa, PDF, yorum. Ctrl+Alt ile hemen kaydedilir."
+  },
+  "tourStep3": {
+    "message": "Her şey tek bir kütüphaneye gider"
+  },
+  "tourStep3Body": {
+    "message": "Telefonda, tarayıcıda ve bilgisayarda aynı Google hesabı."
+  },
+  "tourConnect": {
+    "message": "Hesabı bağla"
+  },
+  "tourLater": {
+    "message": "Sonra"
+  },
+  "optDesktopTitle": {
+    "message": "Bilgisayarda"
+  },
+  "optDesktopHelp": {
+    "message": "VLC’deki altyazılar ve her programdaki metin, aynı kütüphaneye."
+  },
+  "optDesktopGet": {
+    "message": "Windows için indir"
+  },
+  "tourDesktop": {
+    "message": "Bilgisayar için de"
+  }
+}

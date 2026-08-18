@@ -1,0 +1,386 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Subtitle Notes</title>
+    <style>
+      /* The same warm paper, hairline edges and single accent as the reading
+         panel. Settings are a page you visit twice and then forget, so the
+         chrome stays out of the way: no boxes inside boxes, one column, and
+         section names small enough to scan past. */
+      :root {
+        color-scheme: light dark;
+        --paper: #faf8f4; --raised: #ffffff; --ink: #14201c; --soft: #6b7a74;
+        --hair: #e2ddd3; --accent: #1e7a4c; --accent-deep: #17603b; --wash: #e7f2ea; --shade: 12 32 24;
+        --warn: #c0453f;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --paper: #121816; --raised: #182020; --ink: #eaf1ed; --soft: #93a49c;
+          --hair: #2a3733; --accent: #64c795; --accent-deep: #7ad6a8; --wash: #1d2a25; --shade: 0 0 0;
+          --warn: #e2827c;
+        }
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0; padding: 0 20px 90px; background: var(--paper); color: var(--ink);
+        font: 15px/1.55 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+      main { max-width: 34rem; margin: 0 auto; }
+
+      header { padding: 54px 0 30px; }
+      .mark {
+        display: flex; align-items: center; gap: 9px; margin-bottom: 22px;
+        font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--accent);
+      }
+      .mark i { width: 18px; height: 18px; border-radius: 5px; background: var(--accent); position: relative; }
+      .mark i::after {
+        content: ""; position: absolute; inset: 4px 4px auto 4px; height: 2px;
+        background: var(--paper); box-shadow: 0 5px 0 var(--paper);
+      }
+      h1 { margin: 0 0 8px; font-size: 30px; line-height: 1.14; letter-spacing: -.028em; font-weight: 640; text-wrap: balance; }
+      .lede { margin: 0; max-width: 30rem; color: var(--soft); font-size: 15px; text-wrap: pretty; }
+
+      section { padding: 26px 0; border-top: 1px solid var(--hair); }
+      h2 {
+        margin: 0 0 18px; font-size: 11.5px; font-weight: 700; letter-spacing: .13em;
+        text-transform: uppercase; color: var(--soft);
+      }
+      .row { display: flex; align-items: flex-start; gap: 18px; padding: 11px 0; }
+      .row + .row { border-top: 1px solid var(--hair); }
+      .row .text { flex: 1; min-width: 0; }
+      .row b { display: block; font-size: 14.5px; font-weight: 620; letter-spacing: -.008em; }
+      .row span { display: block; margin-top: 2px; color: var(--soft); font-size: 13px; line-height: 1.45; }
+
+      /* A switch reads as a state; a checkbox reads as a form. */
+      .switch { position: relative; flex: 0 0 auto; width: 40px; height: 23px; margin-top: 2px; }
+      .switch input { position: absolute; opacity: 0; width: 100%; height: 100%; margin: 0; cursor: pointer; }
+      .switch i {
+        position: absolute; inset: 0; border-radius: 999px; background: var(--hair);
+        transition: background .16s ease; pointer-events: none;
+      }
+      .switch i::after {
+        content: ""; position: absolute; top: 3px; left: 3px; width: 17px; height: 17px; border-radius: 50%;
+        background: var(--raised); box-shadow: 0 1px 2px rgb(var(--shade) / .3); transition: transform .16s ease;
+      }
+      .switch input:checked + i { background: var(--accent); }
+      .switch input:checked + i::after { transform: translateX(17px); }
+      .switch input:focus-visible + i { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+      /* Hover is stated per component rather than as one brightness filter:
+         on pale surfaces a filter changes nothing, which is what made half the
+         page feel dead under the cursor. */
+      button {
+        border: 1px solid transparent; border-radius: 10px; padding: 10px 16px; cursor: pointer;
+        font: 620 14px/1.2 inherit; letter-spacing: -.005em; background: var(--accent); color: #ffffff;
+        transition: background-color .14s ease, border-color .14s ease, color .14s ease,
+                    box-shadow .14s ease, transform .08s ease;
+      }
+      button:hover { background: var(--accent-deep); }
+      button:active { transform: translateY(1px); }
+      button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+      button[disabled] { opacity: .45; cursor: default; transform: none; background: var(--accent); }
+      button.quiet { background: transparent; color: var(--soft); border-color: var(--hair); }
+      button.quiet:hover { background: var(--wash); color: var(--ink); border-color: #cfe3d6; }
+      button.plain { background: transparent; color: var(--accent); border-color: transparent; padding: 8px 4px; }
+      button.plain:hover { background: transparent; color: var(--accent-deep); text-decoration: underline; }
+      button.wide { width: 100%; }
+      .google {
+        display: flex; align-items: center; justify-content: center; gap: 11px;
+        height: 50px; padding: 0 18px; font-size: 15px; font-weight: 640; border-radius: 13px;
+        box-shadow: 0 1px 2px rgb(var(--shade) / .16), 0 8px 20px -10px rgb(var(--shade) / .45);
+      }
+      .google:active { box-shadow: 0 1px 2px rgb(var(--shade) / .2); }
+      .google .g {
+        display: grid; place-items: center; flex: 0 0 auto; width: 26px; height: 26px;
+        border-radius: 50%; background: #ffffff;
+      }
+      .google .g svg { width: 15px; height: 15px; display: block; }
+
+      /* Two ways in, with the quieter one clearly second. */
+      .orline { display: flex; align-items: center; gap: 12px; margin: 16px 0 4px; }
+      .orline::before, .orline::after { content: ""; flex: 1; height: 1px; background: var(--hair); }
+      .orline span { font-size: 11.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--soft); }
+
+      .panel {
+        padding: 20px; border-radius: 16px; background: var(--raised); border: 1px solid var(--hair);
+        box-shadow: 0 1px 2px rgb(var(--shade) / .06);
+      }
+
+      select, input[type="number"], textarea {
+        border: 1px solid var(--hair); border-radius: 10px; background: var(--raised); color: var(--ink);
+        font: 14px/1.4 inherit; padding: 9px 11px;
+      }
+      select:focus-visible, input:focus-visible, textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+      select { flex: 0 0 auto; min-width: 11rem; }
+      input[type="number"] { flex: 0 0 5rem; width: 5rem; text-align: center; font-variant-numeric: tabular-nums; }
+      textarea {
+        width: 100%; min-height: 78px; margin-top: 10px; resize: vertical;
+        font: 13.5px/1.6 ui-monospace, Consolas, monospace;
+      }
+
+      /* Where the window appears - small pictures of the choice rather than a
+         row of identical buttons. */
+      .places { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+      .places button {
+        display: grid; gap: 7px; justify-items: center; padding: 11px 6px 9px;
+        background: var(--raised); color: var(--soft); border-color: var(--hair); font-size: 11.5px; font-weight: 600;
+      }
+      .places button:hover { background: var(--wash); color: var(--ink); border-color: #cfe3d6; }
+      .places button:hover .box { opacity: .85; }
+      .places button.on:hover { color: var(--accent); border-color: var(--accent); }
+      .places button .box {
+        width: 34px; height: 22px; border: 1px solid currentColor; border-radius: 4px; opacity: .55;
+        position: relative;
+      }
+      .places button .box::after {
+        content: ""; position: absolute; width: 12px; height: 7px; border-radius: 2px; background: currentColor;
+      }
+      .places button[data-value="top-left"] .box::after { top: 3px; left: 3px; }
+      .places button[data-value="top-right"] .box::after { top: 3px; right: 3px; }
+      .places button[data-value="bottom-left"] .box::after { bottom: 3px; left: 3px; }
+      .places button[data-value="bottom-right"] .box::after { bottom: 3px; right: 3px; }
+      .places button[data-value="selection"] .box::after { top: 7px; left: 11px; }
+      .places button.on { color: var(--accent); border-color: var(--accent); background: var(--wash); }
+      .places button.on .box { opacity: 1; }
+      .places-wide { grid-column: span 4; }
+
+      .keys { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 10px; }
+      .keys button {
+        background: var(--raised); color: var(--soft); border-color: var(--hair);
+        font: 620 13.5px ui-monospace, Consolas, monospace; padding: 10px 6px;
+      }
+      .keys button:hover { background: var(--wash); color: var(--ink); border-color: #cfe3d6; }
+      .keys button.on { color: var(--accent); border-color: var(--accent); background: var(--wash); }
+      .keys button.on:hover { color: var(--accent-deep); border-color: var(--accent-deep); }
+      .keys .combo {
+        grid-column: span 4; margin-top: 4px; color: var(--soft);
+        font: 600 12.5px ui-sans-serif, system-ui, sans-serif;
+      }
+      .keys .combo b { color: var(--accent); font: 700 13px ui-monospace, Consolas, monospace; }
+
+      /* Languages, each written in itself and chosen by tapping. A dropdown
+         would hide thirteen of them behind a click. */
+      .langs { display: flex; flex-wrap: wrap; gap: 8px; }
+      .langs button {
+        background: var(--raised); color: var(--soft); border-color: var(--hair);
+        border-radius: 999px; padding: 8px 14px; font-size: 13.5px; font-weight: 600;
+      }
+      .langs button:hover { background: var(--wash); color: var(--ink); border-color: #cfe3d6; }
+      .langs button.on { background: var(--accent); color: #ffffff; border-color: var(--accent); }
+      .langs button.on:hover { background: var(--accent-deep); border-color: var(--accent-deep); }
+      .langs.off { opacity: .4; pointer-events: none; }
+
+      kbd {
+        display: inline-block; padding: 3px 9px; border-radius: 7px; border: 1px solid var(--hair);
+        border-bottom-width: 2px; background: var(--raised);
+        font: 620 13px ui-monospace, Consolas, monospace; letter-spacing: .04em;
+      }
+      #capture { background: var(--raised); border-color: var(--hair); color: var(--ink);
+                 font: 620 14px ui-monospace, Consolas, monospace; letter-spacing: .06em; padding: 11px 18px; }
+      #capture:hover { background: var(--wash); border-color: #cfe3d6; }
+      #capture.listening { border-color: var(--accent); color: var(--accent); background: var(--wash); }
+      #capture[disabled] { background: var(--raised); }
+      select:hover, textarea:hover, input[type="number"]:hover { border-color: #cfe3d6; }
+      .switch:hover i { background: #d3ccc0; }
+      .switch:hover input:checked + i { background: var(--accent-deep); }
+
+      /* Connecting */
+      .account { display: flex; align-items: center; gap: 13px; }
+      .avatar {
+        flex: 0 0 auto; width: 38px; height: 38px; border-radius: 50%; background: var(--wash); color: var(--accent);
+        display: grid; place-items: center; font-weight: 700; font-size: 15px; text-transform: uppercase;
+      }
+      .ways { margin-top: 16px; display: grid; gap: 14px; grid-template-columns: 132px 1fr; align-items: center; }
+      .qr { width: 132px; height: 132px; border-radius: 12px; border: 1px solid var(--hair); background: #ffffff; padding: 6px; }
+      .qr svg { display: block; width: 100%; height: 100%; }
+      .code {
+        display: inline-block; margin-top: 9px; padding: 7px 12px; border-radius: 9px; background: var(--wash);
+        font: 640 19px ui-monospace, Consolas, monospace; letter-spacing: .2em; text-indent: .2em; color: var(--accent);
+      }
+      .state { margin-top: 12px; font-size: 13.5px; color: var(--soft); }
+      .state.ok { color: var(--accent); font-weight: 620; }
+      .state.fail { color: var(--warn); font-weight: 600; }
+      .hint { margin: 0; color: var(--soft); font-size: 13px; }
+
+      footer { padding: 24px 0 0; border-top: 1px solid var(--hair); display: flex; gap: 18px; flex-wrap: wrap; }
+      footer a { color: var(--soft); font-size: 13px; text-decoration: none; }
+      footer a:hover { color: var(--accent); text-decoration: underline; }
+
+      .toast {
+        position: fixed; left: 50%; bottom: 26px; transform: translate(-50%, 8px);
+        padding: 9px 18px; border-radius: 999px; background: var(--ink); color: var(--paper);
+        font-size: 13px; font-weight: 620; opacity: 0; transition: opacity .18s ease, transform .18s ease;
+        pointer-events: none;
+      }
+      .toast.show { opacity: 1; transform: translate(-50%, 0); }
+      [hidden] { display: none !important; }
+      @media (max-width: 30rem) {
+        .places { grid-template-columns: repeat(2, 1fr); }
+        .places-wide { grid-column: span 2; }
+        .ways { grid-template-columns: 1fr; justify-items: start; }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <div class="mark"><i></i><span data-i18n="appName">Subtitle Notes</span></div>
+        <h1 data-i18n="optTitle">Subtitle Notes in the browser</h1>
+        <p class="lede" data-i18n="optSub">Highlight words anywhere.</p>
+      </header>
+
+      <section>
+        <h2 data-i18n="optAccountTitle">Account</h2>
+
+        <div id="connected" class="panel" hidden>
+          <div class="account">
+            <div class="avatar" id="initial">·</div>
+            <div class="text" style="flex:1">
+              <b id="email">-</b>
+              <span data-i18n="optConnected">Connected</span>
+            </div>
+            <button class="quiet" id="forget" data-i18n="optForget">Disconnect</button>
+          </div>
+        </div>
+
+        <div id="start" class="panel">
+          <p class="hint" style="margin:0 0 16px" data-i18n="optGoogleHelp">
+            Sign in with the same Google account as on the phone.
+          </p>
+          <button class="google wide" id="google">
+            <span class="g" aria-hidden="true"><svg viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9 3.6l6.7-6.7C35.6 2.6 30.2.5 24 .5 14.6.5 6.5 5.9 2.6 13.8l7.8 6.1C12.3 13.7 17.6 9.5 24 9.5z"/><path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.7c-.6 3-2.3 5.5-4.8 7.2l7.5 5.8c4.4-4.1 7.1-10.1 7.1-17.5z"/><path fill="#FBBC05" d="M10.4 28.1c-.5-1.5-.8-3-.8-4.6s.3-3.1.8-4.6l-7.8-6.1C.9 16.1 0 19.9 0 23.5s.9 7.4 2.6 10.7l7.8-6.1z"/><path fill="#34A853" d="M24 47.5c6.2 0 11.5-2 15.4-5.5l-7.5-5.8c-2.1 1.4-4.8 2.3-7.9 2.3-6.4 0-11.7-4.2-13.6-9.9l-7.8 6.1C6.5 42.1 14.6 47.5 24 47.5z"/></svg></span>
+            <span data-i18n="optGoogle">Continue with Google</span>
+          </button>
+          <div class="orline"><span data-i18n="optOr">or</span></div>
+          <button class="plain wide" id="phoneWay" data-i18n="optOtherWay">
+            Connect from the phone instead
+          </button>
+          <div class="state" id="startState" hidden></div>
+        </div>
+
+        <div id="waiting" class="panel" hidden>
+          <div class="ways" id="ways">
+            <div class="qr" id="qr"></div>
+            <div>
+              <p class="hint" data-i18n="optScanHelp">Point the phone camera at this.</p>
+              <div class="code" id="code">••••••••</div>
+            </div>
+          </div>
+          <div class="state" id="state" data-i18n="optWaiting">Waiting…</div>
+          <button class="quiet" id="cancel" style="margin-top:12px" data-i18n="optCancel">Cancel</button>
+        </div>
+      </section>
+
+      <section>
+        <h2 data-i18n="optDesktopTitle">On your computer</h2>
+        <p class="hint" style="margin:0 0 14px" data-i18n="optDesktopHelp">
+          Subtitles in VLC and text in any program, into the same library.
+        </p>
+        <button class="wide" id="getProgram" data-i18n="optDesktopGet">Download for Windows</button>
+      </section>
+
+      <section>
+        <h2 data-i18n="optLangTitle">Language of the cards</h2>
+        <p class="hint" style="margin:0 0 12px" data-i18n="optLangHelp">
+          New cards are explained in this language.
+        </p>
+        <div class="langs" id="language"></div>
+        <p class="hint" id="languageLocked" style="margin:10px 0 0" hidden data-i18n="optLangLocked">
+          Connect an account first.
+        </p>
+      </section>
+
+      <section>
+        <h2 data-i18n="optHotkeyTitle">Saving without a button</h2>
+        <p class="hint" data-i18n="optHotkeyHelp">Hold this while you highlight.</p>
+        <div class="row" style="align-items:center">
+          <div class="text"><button id="capture" type="button">Ctrl + Alt</button></div>
+          <button class="plain" id="resetKey" type="button" data-i18n="optReset">Reset</button>
+        </div>
+        <div class="row">
+          <div class="text">
+            <b data-i18n="optInstantTitle">Always save</b>
+            <span data-i18n="optInstantHelp">Every highlight is saved at once.</span>
+          </div>
+          <label class="switch"><input type="checkbox" id="instantAlways" /><i></i></label>
+        </div>
+      </section>
+
+      <section>
+        <h2 data-i18n="optWhereTitle">Where the window appears</h2>
+        <div class="places" id="positions">
+          <button class="places-wide" data-value="selection" type="button">
+            <span class="box"></span><span data-i18n="optAtSelection">By the selection</span>
+          </button>
+          <button data-value="top-left" type="button"><span class="box"></span><span data-i18n="optTopLeft">Top left</span></button>
+          <button data-value="top-right" type="button"><span class="box"></span><span data-i18n="optTopRight">Top right</span></button>
+          <button data-value="bottom-left" type="button"><span class="box"></span><span data-i18n="optBottomLeft">Bottom left</span></button>
+          <button data-value="bottom-right" type="button"><span class="box"></span><span data-i18n="optBottomRight">Bottom right</span></button>
+        </div>
+        <p class="hint" style="margin-top:14px" data-i18n="optDragHint">A pinned window can be dragged.</p>
+        <div class="row" style="align-items:center">
+          <div class="text">
+            <b data-i18n="optHideAfter">Hide after</b>
+            <span data-i18n="optHideAfterHelp">Seconds the window stays up.</span>
+          </div>
+          <input type="number" id="hideAfter" min="2" max="60" />
+        </div>
+      </section>
+
+      <section>
+        <h2 data-i18n="optVideoTitle">Video and sites</h2>
+        <div class="row">
+          <div class="text">
+            <b data-i18n="optSubtitles">Clickable subtitles</b>
+            <span data-i18n="optSubtitlesHelp">Replaces the captions with a clickable copy.</span>
+          </div>
+          <label class="switch"><input type="checkbox" id="subtitles" /><i></i></label>
+        </div>
+        <div style="margin-top:14px">
+          <b style="font-size:14.5px; font-weight:620" data-i18n="optSubKeyTitle">Picking words out of subtitles</b>
+          <p class="hint" style="margin-top:2px" data-i18n="optSubKeyHelp">Hold the key to select.</p>
+          <div class="keys" id="subtitleKey">
+            <button data-value="ctrl" type="button">Ctrl</button>
+            <button data-value="alt" type="button">Alt</button>
+            <button data-value="shift" type="button">Shift</button>
+            <button data-value="none" type="button" data-i18n="optSubKeyNone">No key</button>
+            <div class="combo" id="comboNow"></div>
+          </div>
+        </div>
+
+        <div class="row" style="margin-top:14px">
+          <div class="text">
+            <b data-i18n="optPause">Pause the video</b>
+            <span data-i18n="optPauseHelp">When you pick a word out of a subtitle.</span>
+          </div>
+          <label class="switch"><input type="checkbox" id="pauseVideo" /><i></i></label>
+        </div>
+        <div class="row">
+          <div class="text">
+            <b data-i18n="optSpeak">Read the word aloud</b>
+            <span data-i18n="optSpeakHelp">Says the English out loud.</span>
+          </div>
+          <label class="switch"><input type="checkbox" id="speak" /><i></i></label>
+        </div>
+        <div style="margin-top:18px">
+          <b style="font-size:14.5px; font-weight:620" data-i18n="optBlocked">Stay off these sites</b>
+          <p class="hint" style="margin-top:2px" data-i18n="optBlockedHelp">One address per line.</p>
+          <textarea id="blocked" spellcheck="false" placeholder="bank.ee&#10;mail.google.com"></textarea>
+        </div>
+      </section>
+
+      <footer>
+        <a href="https://subtitle-notes-api.andreas-sultseng228.workers.dev/privacy" target="_blank" rel="noreferrer"
+           data-i18n="optPrivacy">Privacy policy</a>
+        <a href="#" id="export" data-i18n="popupExport">Export for Anki</a>
+      </footer>
+    </main>
+
+    <div class="toast" id="toast" data-i18n="optSavedToast">Saved</div>
+    <script src="settings.js"></script>
+    <script src="qr.js"></script>
+    <script src="options.js"></script>
+  </body>
+</html>

@@ -1,0 +1,10 @@
+{
+  "manifest_version": 3,
+  "name": "Subtitle Notes Capture",
+  "version": "1.2.0",
+  "description": "Save selected subtitle text or any selected phrase to Subtitle Notes.",
+  "permissions": ["contextMenus", "storage", "activeTab", "scripting"],
+  "host_permissions": ["http://*/*", "https://*/*"],
+  "background": {"service_worker": "background.js"},
+  "options_page": "options.html"
+}

@@ -1,0 +1,332 @@
+{
+  "appName": {
+    "message": "Subtitle Notes"
+  },
+  "appDescription": {
+    "message": "Highlight a word anywhere - a page, a PDF, a film's subtitles - and keep what it really means."
+  },
+  "menuSave": {
+    "message": "Save “%s” to Subtitle Notes"
+  },
+  "chipAsk": {
+    "message": "What does this mean?"
+  },
+  "reading": {
+    "message": "Reading the line…"
+  },
+  "translating": {
+    "message": "translating…"
+  },
+  "listen": {
+    "message": "Listen"
+  },
+  "rerun": {
+    "message": "Wrong translation"
+  },
+  "rerunning": {
+    "message": "Reading again…"
+  },
+  "seenBefore": {
+    "message": "seen $COUNT$ times",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "connectTitle": {
+    "message": "Connect your phone"
+  },
+  "connectBody": {
+    "message": "This browser is not linked to your library yet."
+  },
+  "connectAction": {
+    "message": "Connect"
+  },
+  "close": {
+    "message": "Close"
+  },
+  "save": {
+    "message": "Save"
+  },
+  "saving": {
+    "message": "Saving…"
+  },
+  "saved": {
+    "message": "Saved ✓"
+  },
+  "savedAlready": {
+    "message": "Already there ✓"
+  },
+  "inLibrary": {
+    "message": "Already in your library"
+  },
+  "notSaved": {
+    "message": "Not saved"
+  },
+  "failed": {
+    "message": "Didn't work"
+  },
+  "undo": {
+    "message": "Undo"
+  },
+  "undoing": {
+    "message": "Removing…"
+  },
+  "undone": {
+    "message": "Removed"
+  },
+  "reloaded": {
+    "message": "The extension reloaded. Refresh the page."
+  },
+  "popupNotPaired": {
+    "message": "This browser is not linked to your library."
+  },
+  "popupConnect": {
+    "message": "Connect your phone"
+  },
+  "popupConnected": {
+    "message": "Connected - $EMAIL$",
+    "placeholders": {
+      "email": {
+        "content": "$1"
+      }
+    }
+  },
+  "popupConnectedPlain": {
+    "message": "Connected. Highlight text on any page."
+  },
+  "popupEmpty": {
+    "message": "Nothing saved yet. Highlight a word on a page, in a PDF or in subtitles."
+  },
+  "popupExport": {
+    "message": "Export for Anki"
+  },
+  "optTitle": {
+    "message": "Subtitle Notes in the browser"
+  },
+  "optSub": {
+    "message": "Highlight words on any site, in PDFs and in subtitles - they land in the same app on your phone."
+  },
+  "optConnected": {
+    "message": "Connected"
+  },
+  "optForget": {
+    "message": "Disconnect this browser"
+  },
+  "optPairIntro": {
+    "message": "To link this browser to your library, confirm a code in the app on your phone."
+  },
+  "optPairGet": {
+    "message": "Get a code"
+  },
+  "optStep1": {
+    "message": "Open Subtitle Notes on your phone."
+  },
+  "optStep2": {
+    "message": "Settings → Connected devices."
+  },
+  "optStep3": {
+    "message": "Type this code."
+  },
+  "optWaiting": {
+    "message": "Waiting for confirmation…"
+  },
+  "optPaired": {
+    "message": "Done. Highlight text on any page."
+  },
+  "optExpired": {
+    "message": "The code expired. Get a new one."
+  },
+  "optCancel": {
+    "message": "Cancel"
+  },
+  "optHotkeyTitle": {
+    "message": "Saving without a button"
+  },
+  "optHotkeyHelp": {
+    "message": "Hold this combination while you highlight and the word goes straight to your library. Or highlight normally and press it afterwards."
+  },
+  "optHotkeyPress": {
+    "message": "Press a combination…"
+  },
+  "optReset": {
+    "message": "Reset"
+  },
+  "optInstantTitle": {
+    "message": "Always save"
+  },
+  "optInstantHelp": {
+    "message": "Every highlight is saved at once, no keys at all. The card still offers to undo it."
+  },
+  "optWhereTitle": {
+    "message": "Where the window appears"
+  },
+  "optAtSelection": {
+    "message": "By the selection"
+  },
+  "optTopRight": {
+    "message": "Top right"
+  },
+  "optTopLeft": {
+    "message": "Top left"
+  },
+  "optBottomRight": {
+    "message": "Bottom right"
+  },
+  "optBottomLeft": {
+    "message": "Bottom left"
+  },
+  "optDragHint": {
+    "message": "A window pinned to a corner can be dragged with the mouse - it remembers where you put it."
+  },
+  "optHideAfter": {
+    "message": "Hide after"
+  },
+  "optHideAfterHelp": {
+    "message": "Seconds the window stays up after an instant save."
+  },
+  "optVideoTitle": {
+    "message": "Video and sites"
+  },
+  "optSubtitles": {
+    "message": "Clickable subtitles"
+  },
+  "optSubtitlesHelp": {
+    "message": "On YouTube and Netflix, replaces the captions with a copy where you can click a word or drag across a phrase."
+  },
+  "optPause": {
+    "message": "Pause the video"
+  },
+  "optPauseHelp": {
+    "message": "When you pick a word out of a subtitle."
+  },
+  "optSpeak": {
+    "message": "Read the word aloud"
+  },
+  "optSpeakHelp": {
+    "message": "Says the English out loud when the card opens."
+  },
+  "optBlocked": {
+    "message": "Stay off these sites"
+  },
+  "optBlockedHelp": {
+    "message": "One address per line, for example mail.google.com."
+  },
+  "optSavedToast": {
+    "message": "Saved"
+  },
+  "optAccountTitle": {
+    "message": "Account"
+  },
+  "optGoogle": {
+    "message": "Continue with Google"
+  },
+  "optGoogleHelp": {
+    "message": "Sign in with the same Google account as on your phone - everything you save here lands in the same library."
+  },
+  "optOtherWay": {
+    "message": "Connect from the phone instead"
+  },
+  "optScanHelp": {
+    "message": "Point the phone’s camera at this square, or type the code in the app under Settings → Connected devices."
+  },
+  "optLangTitle": {
+    "message": "Language of the cards"
+  },
+  "optLangHelp": {
+    "message": "New cards are explained in this language. Ones already saved keep the language they were written in."
+  },
+  "optPrivacy": {
+    "message": "Privacy policy"
+  },
+  "optSubKeyTitle": {
+    "message": "Picking words out of subtitles"
+  },
+  "optSubKeyHelp": {
+    "message": "While the key is held the line becomes selectable text. Let go and the player has its mouse back: dragging the subtitle, clicking to pause and the player’s own caption size all keep working."
+  },
+  "optSubKeyNone": {
+    "message": "No key"
+  },
+  "optOr": {
+    "message": "or"
+  },
+  "optSubKeyNow": {
+    "message": "Now: $KEYS$",
+    "placeholders": {
+      "keys": {
+        "content": "$1"
+      }
+    }
+  },
+  "optSubKeyNoneNow": {
+    "message": "Now: no key - the line is always selectable"
+  },
+  "optLangLocked": {
+    "message": "Connect an account first - the language is stored with it."
+  },
+  "mine": {
+    "message": "My wording"
+  },
+  "minePlaceholder": {
+    "message": "What it means here"
+  },
+  "mineThanks": {
+    "message": "Saved. If others write the same, it becomes the default."
+  },
+  "mineAgreed": {
+    "message": "Saved - enough people agree, so this is now the default."
+  },
+  "popupSettings": {
+    "message": "Settings"
+  },
+  "tourTitle": {
+    "message": "Any word, the way it is meant here"
+  },
+  "tourLede": {
+    "message": "Ten seconds of it, then you can go."
+  },
+  "tourMeaning": {
+    "message": "a record - a criminal record"
+  },
+  "tourSaved": {
+    "message": "Saved to your library"
+  },
+  "tourStep1": {
+    "message": "Hold Ctrl and drag across the subtitle"
+  },
+  "tourStep1Body": {
+    "message": "Without the key the player is untouched: the line still drags, a click still pauses."
+  },
+  "tourStep2": {
+    "message": "Anywhere else, just highlight"
+  },
+  "tourStep2Body": {
+    "message": "A page, a PDF, a comment. Hold Ctrl+Alt while you do it and it is saved without asking."
+  },
+  "tourStep3": {
+    "message": "Everything lands in one library"
+  },
+  "tourStep3Body": {
+    "message": "The same Google account on the phone, in the browser and on the computer."
+  },
+  "tourConnect": {
+    "message": "Connect the account"
+  },
+  "tourLater": {
+    "message": "Later"
+  },
+  "optDesktopTitle": {
+    "message": "On your computer"
+  },
+  "optDesktopHelp": {
+    "message": "Subtitles in VLC and text in any program, into the same library."
+  },
+  "optDesktopGet": {
+    "message": "Download for Windows"
+  },
+  "tourDesktop": {
+    "message": "Also for the computer"
+  }
+}

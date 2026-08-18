@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Light values of the Subtitle Notes palette. Kept in step with
+     lib/design/tokens.dart so the widget and the splash cannot drift away from
+     the app they belong to. -->
+<resources>
+    <color name="brand_bg">#FFF3F6F2</color>
+    <color name="brand_surface">#FFFFFFFF</color>
+    <color name="brand_surface_alt">#FFFAFBF8</color>
+    <color name="brand_line">#FFE1E7DE</color>
+    <color name="brand_lip">#FFD2DACF</color>
+    <color name="brand_ink">#FF20302A</color>
+    <color name="brand_ink2">#FF63756D</color>
+    <color name="brand_ink3">#FF93A29A</color>
+    <color name="brand_green">#FF2BA84A</color>
+
+    <!-- Adaptive-icon background. Defined only here, never in values-night: a
+         launcher icon that changes colour with the system theme looks like a
+         different app. -->
+    <color name="ic_launcher_background">#FF2BA84A</color>
+</resources>

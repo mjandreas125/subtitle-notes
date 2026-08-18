@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Dark values of the Subtitle Notes palette. -->
+<resources>
+    <color name="brand_bg">#FF101A1E</color>
+    <color name="brand_surface">#FF18262B</color>
+    <color name="brand_surface_alt">#FF1E3038</color>
+    <color name="brand_line">#FF2C4149</color>
+    <color name="brand_lip">#FF0C161A</color>
+    <color name="brand_ink">#FFEAF3F0</color>
+    <color name="brand_ink2">#FF92A7AD</color>
+    <color name="brand_ink3">#FF6B8188</color>
+    <color name="brand_green">#FF35BE58</color>
+</resources>

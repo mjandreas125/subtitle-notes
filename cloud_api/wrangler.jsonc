@@ -1,0 +1,15 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "subtitle-notes-api",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-08-11",
+  "ai": { "binding": "AI" },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "subtitle-notes-production",
+      "database_id": "b90dfac0-72ae-411d-8d5e-fa4cb5171a0d",
+      "migrations_dir": "migrations"
+    }
+  ]
+}
