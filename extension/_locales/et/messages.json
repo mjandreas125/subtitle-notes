@@ -328,5 +328,11 @@
   },
   "tourDesktop": {
     "message": "Ka arvutisse"
+  },
+  "optCompact": {
+    "message": "Lühike kaart"
+  },
+  "optCompactHelp": {
+    "message": "Ainult tähendus: ilma sünonüümide ja märkusteta."
   }
 }

@@ -328,5 +328,11 @@
   },
   "tourDesktop": {
     "message": "Bilgisayar için de"
+  },
+  "optCompact": {
+    "message": "Kısa kart"
+  },
+  "optCompactHelp": {
+    "message": "Sadece anlam: eş anlamlı ve not yok."
   }
 }

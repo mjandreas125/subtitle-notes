@@ -56,6 +56,15 @@
         width: 336px; max-width: calc(100vw - 24px); padding: 16px 18px 15px;
         border-radius: 16px; border-left: 3px solid var(--accent);
       }
+      /* Only the meaning: for people who want an answer, not a card. Narrower,
+         quieter, and everything that is not the answer is gone. */
+      .card.small { width: 238px; padding: 11px 13px 10px; border-radius: 13px; border-left-width: 2px; }
+      .card.small .head { font-size: 15.5px; line-height: 1.3; }
+      .card.small .term { margin-top: 8px; padding-top: 7px; font-size: 13px; }
+      .card.small .syn, .card.small .note, .card.small .seen { display: none; }
+      .card.small .row { margin-top: 9px; gap: 6px; }
+      .card.small button { padding: 6px 9px; font-size: 12.5px; }
+      .card.small .flag { margin-bottom: 6px; font-size: 10px; }
       .card.pinned { cursor: grab; }
       .card.dragging { cursor: grabbing; user-select: none; }
 
@@ -187,6 +196,9 @@
     node.style.top = `${Math.round(clamp(y + (settings.offset?.y ?? 0), window.innerHeight - height))}px`;
   }
 
+  /// Whether the reader asked for the short card.
+  const compact = () => settings.compactCard !== false;
+
   function element(className, html) {
     const node = document.createElement('div');
     node.className = className;
@@ -290,7 +302,7 @@
   async function showCard(rect, text, context, title, timecodeMs = null) {
     close();
     reparent();
-    panel = element('card', `<div class="muted">${t('reading')}</div>`);
+    panel = element(`card${compact() ? ' small' : ''}`, `<div class="muted">${t('reading')}</div>`);
     layer.appendChild(panel);
     place(panel, rect);
     makeDraggable(panel);
@@ -337,7 +349,7 @@
     // Leading with "Сохраняю…" made the card look stuck for the second before
     // the reading landed, so the word itself sits there instead and the save
     // only announces itself once it is done.
-    panel = element('card', `<div class="head">${escape(text)}</div><div class="note">${t('translating')}</div>`);
+    panel = element(`card${compact() ? ' small' : ''}`, `<div class="head">${escape(text)}</div><div class="note">${t('translating')}</div>`);
     layer.appendChild(panel);
     place(panel, rect);
     makeDraggable(panel);
@@ -364,8 +376,11 @@
       panel.innerHTML =
         saved.error === 'not-paired'
           ? notPairedHtml()
-          : `<div class="flag grey">${t('notSaved')}</div><div class="muted">${escape(saved.error)}</div>
-             <div class="row"><button class="ghost" id="close">${t('close')}</button></div>`;
+          : `<div class="flag grey">${t('notSaved')}</div>
+             <div class="head">${escape(text)}</div>
+             <div class="muted" style="margin-top:8px">${escape(saved.error)}</div>
+             <div class="row"><button id="retry">${t('save')}</button><button class="ghost" id="close">${t('close')}</button></div>`;
+      panel.querySelector('#retry')?.addEventListener('click', () => saveNow(rect, text, context, title, timecodeMs));
       panel.querySelector('#connect')?.addEventListener('click', () => ask({ type: 'options' }).then(close));
       panel.querySelector('#close')?.addEventListener('click', close);
       place(panel, rect);
@@ -384,15 +399,15 @@
       ${body}
       <div class="row thin">
         ${reused ? '' : `<button class="ghost" id="undo">${t('undo')}</button>`}
-        <button class="ghost" id="rerun">${t('rerun')}</button>
-        <button class="ghost" id="mine">${t('mine')}</button>
+        ${compact() ? '' : `<button class="ghost" id="rerun">${t('rerun')}</button>
+        <button class="ghost" id="mine">${t('mine')}</button>`}
       </div>`;
     activate(panel, { seen: Number(saved.data.seen_count) || 1 });
     place(panel, rect);
 
     // A second opinion on a card that is already saved: the server re-reads the
     // line with the slower model, which is not the answer the fast one gave.
-    panel.querySelector('#rerun').addEventListener('click', async (event) => {
+    panel.querySelector('#rerun')?.addEventListener('click', async (event) => {
       const button = event.currentTarget;
       button.disabled = true;
       button.textContent = t('rerunning');

@@ -328,5 +328,11 @@
   },
   "tourDesktop": {
     "message": "Aussi pour l’ordinateur"
+  },
+  "optCompact": {
+    "message": "Fiche courte"
+  },
+  "optCompactHelp": {
+    "message": "Seulement le sens : ni synonymes ni notes."
   }
 }

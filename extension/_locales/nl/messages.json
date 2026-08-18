@@ -328,5 +328,11 @@
   },
   "tourDesktop": {
     "message": "Ook voor de computer"
+  },
+  "optCompact": {
+    "message": "Korte kaart"
+  },
+  "optCompactHelp": {
+    "message": "Alleen de betekenis: geen synoniemen, geen notities."
   }
 }

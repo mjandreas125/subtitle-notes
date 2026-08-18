@@ -156,19 +156,21 @@ async function translate(text: string, withExamples = false, language = 'ru', so
 /// requests run together: four short sentences should not add four round trips
 /// to a capture that the player is waiting on.
 async function translateExamples(sentences: string[], language = 'ru', sourceLanguage = 'auto') {
-  const translated: { text: string; translation: string | null }[] = [];
-  for (const sentence of sentences.slice(0, 3)) {
-    try {
-      const result = await translate(sentence, false, language, sourceLanguage);
-      translated.push({
-        text: sentence,
-        translation: result.text === UNAVAILABLE ? null : result.text,
-      });
-    } catch {
-      translated.push({ text: sentence, translation: null });
-    }
-  }
-  return translated;
+  // Three short sentences, asked for at once rather than one after the other:
+  // a card should not cost three round trips in a row.
+  return Promise.all(
+    sentences.slice(0, 3).map(async (sentence) => {
+      try {
+        const result = await translate(sentence, false, language, sourceLanguage);
+        return {
+          text: sentence,
+          translation: result.text === UNAVAILABLE ? null : result.text,
+        };
+      } catch {
+        return { text: sentence, translation: null };
+      }
+    }),
+  );
 }
 /// Asks a language model what the highlighted expression means in its line.
 ///
@@ -796,14 +798,17 @@ async function enrich(env: Env, selected: string, context = '', language = 'ru')
   // gives the verb the sentence actually used. The same lookup carries the
   // usage examples, so this costs no extra requests.
   const phraseTerm = item.phrase || learning || selected;
-  const inflected = await translate(phraseTerm, true, language, sourceLanguage);
   // The base form is always consulted as well, and both entries are kept: a
   // word can be a noun in the dictionary and a verb in the line, and the
-  // reader deserves to see both.
+  // reader deserves to see both. Neither lookup depends on the other, so they
+  // go out together rather than one after the other.
   const baseForm = (sourceLanguage === 'en' ? headwords(item.word) : [])
     .slice(1)
     .find((form) => form !== phraseTerm.toLowerCase());
-  const base = baseForm ? await translate(baseForm, true, language, sourceLanguage) : null;
+  const [inflected, base] = await Promise.all([
+    translate(phraseTerm, true, language, sourceLanguage),
+    baseForm ? translate(baseForm, true, language, sourceLanguage) : Promise.resolve(null),
+  ]);
   const focusResult = {
     text: inflected.text,
     variants: mergeVariants(inflected.variants, base?.variants ?? []),

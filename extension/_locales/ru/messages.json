@@ -328,5 +328,11 @@
   },
   "tourDesktop": {
     "message": "Ещё и на компьютер"
+  },
+  "optCompact": {
+    "message": "Короткая карточка"
+  },
+  "optCompactHelp": {
+    "message": "Только значение: без синонимов и пояснений."
   }
 }

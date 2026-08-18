@@ -51,7 +51,8 @@
        square corners, and nothing about it can be changed — not the height,
        not the radius. So it is made invisible and drawn again below. */
     .sn-pick ::selection { background: transparent !important; }
-    .sn-pick::selection { background: transparent !important; }`;
+    .sn-pick::selection { background: transparent !important; }
+    .sn-picking ::selection { background: transparent !important; }`;
   document.documentElement.appendChild(style);
 
   const flat = (value) => (value || '').replace(/\s+/g, ' ').trim();
@@ -172,7 +173,7 @@
 
   // A caption replaced while the mouse is down takes the selection with it.
   new MutationObserver(() => {
-    if (holding) requestAnimationFrame(restoreGrip);
+    if (armed) requestAnimationFrame(restoreGrip);
   }).observe(document.documentElement, { childList: true, subtree: true, characterData: true });
 
   /// A drag that wanders past the end of the line used to swallow the player's
@@ -251,16 +252,24 @@
   /// throttled, and it has to have happened before the mouse goes down —
   /// afterwards is too late for the browser to start a selection.
   function refresh(force = false) {
-    if (!armed || holding) return;
-    if (!force && performance.now() - markedAt < 120) return;
+    if (!armed) return;
+    // A drag normally freezes the scan, so the element under the cursor is not
+    // swapped out from under it. `force` is for the one case that must scan
+    // anyway: the player has already swapped it, and the selection has to be
+    // found again on the new element.
+    if (!force && (holding || performance.now() - markedAt < 120)) return;
     mark(true);
   }
 
   function setArmed(value) {
     if (armed === value) return;
     armed = value;
+    document.documentElement.classList.toggle('sn-picking', value);
     mark(value);
-    if (!value) clearGlow();
+    if (!value) {
+      clearGlow();
+      grip = null;
+    }
     if (window.__subtitleNotes) window.__subtitleNotes.armed = value;
   }
 
@@ -355,7 +364,6 @@
     (event) => {
       if (!holding) return;
       holding = false;
-      grip = null;
       if (!armed) return;
       event.stopPropagation();
 
@@ -385,10 +393,10 @@
       const caption = marked.find((node) => node.contains(selection?.anchorNode?.parentElement ?? null));
       const line = flat(caption?.innerText) || text;
       const video = currentVideo();
-      const instant =
-        settings().instantAlways ||
-        (typeof snMatchesHotkey === 'function' && snMatchesHotkey(event, settings().hotkey));
-      (instant ? api.saveNow : api.showCard)(
+      // Subtitles always save themselves: you paused a film and dragged across
+      // a word on purpose, and a "Save" button after that is a question with
+      // one answer. The card still offers to undo.
+      (api.saveNow)(
         rect,
         text,
         line,

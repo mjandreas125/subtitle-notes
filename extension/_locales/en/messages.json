@@ -328,5 +328,11 @@
   },
   "tourDesktop": {
     "message": "Also for the computer"
+  },
+  "optCompact": {
+    "message": "Short card"
+  },
+  "optCompactHelp": {
+    "message": "Only the meaning: no synonyms, no notes."
   }
 }
