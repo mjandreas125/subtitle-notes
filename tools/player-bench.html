@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Player bench</title>
+<style>
+  body { margin: 0; background: #111; font-family: system-ui, sans-serif; color: #ddd; }
+  #wrap { position: relative; width: 800px; height: 450px; margin: 40px auto; background: #000; }
+  video { width: 100%; height: 100%; display: block; background: #202430; }
+  /* Same shape as Playerjs: a positioned element with an inner span that holds
+     the background, drawn over the picture and draggable. */
+  pjsdiv { display: block; }
+  #pjs_cdnplayer_subtitle {
+    position: absolute; left: 0; width: 100%; bottom: 60px; text-align: center;
+    user-select: none; -webkit-user-select: none; cursor: move; z-index: 5;
+  }
+  #pjs_cdnplayer_subtitle span {
+    background-color: rgba(0,0,0,.7); color: #fff; padding: 5px 10px; border-radius: 3px;
+    font: 22px/1.35 sans-serif; -webkit-box-decoration-break: clone;
+  }
+  #state { width: 800px; margin: 0 auto; font: 13px ui-monospace, monospace; color: #8ba; white-space: pre; }
+</style></head><body>
+<div id="wrap">
+  <video id="v" muted playsinline></video>
+  <pjsdiv id="pjs_cdnplayer_subtitle"><span>Loading…</span></pjsdiv>
+</div>
+<div id="state">clicks on video: 0 | drags of the subtitle: 0 | paused: true</div>
+<script>
+  // A silent moving picture, so nothing has to be downloaded and nothing makes
+  // a sound.
+  const canvas = document.createElement('canvas');
+  canvas.width = 800; canvas.height = 450;
+  const paint = canvas.getContext('2d');
+  setInterval(() => {
+    paint.fillStyle = `hsl(${(Date.now() / 40) % 360} 30% 18%)`;
+    paint.fillRect(0, 0, 800, 450);
+  }, 60);
+  const video = document.getElementById('v');
+  video.srcObject = canvas.captureStream(25);
+  video.play();
+
+  const LINES = [
+    'No one wants a record.',
+    "It's not supposed to be easy, or I would\nhave emailed you an MP3.",
+    'The Coke machine at the commons.',
+    'She was reluctant to admit it.',
+  ];
+  const caption = document.getElementById('pjs_cdnplayer_subtitle');
+  let index = 0;
+  // A player rebuilds the element for every line — the thing that made the old
+  // approach flicker.
+  setInterval(() => {
+    if (video.paused) return;
+    index = (index + 1) % LINES.length;
+    caption.innerHTML = '';
+    const span = document.createElement('span');
+    span.textContent = LINES[index];
+    caption.appendChild(span);
+  }, 3000);
+  caption.querySelector('span').textContent = LINES[0];
+
+  const state = document.getElementById('state');
+  let clicks = 0, drags = 0;
+  const show = () => {
+    state.textContent = `clicks on video: ${clicks} | drags of the subtitle: ${drags} | paused: ${video.paused}`;
+  };
+  document.getElementById('wrap').addEventListener('click', () => {
+    clicks += 1;
+    if (video.paused) video.play(); else video.pause();
+    show();
+  });
+  // Playerjs lets you drag the caption up and down; this is the behaviour that
+  // must survive.
+  caption.addEventListener('mousedown', (event) => {
+    event.preventDefault();
+    drags += 1;
+    show();
+    const from = event.clientY;
+    const start = parseInt(getComputedStyle(caption).bottom, 10);
+    const move = (moveEvent) => { caption.style.bottom = `${start - (moveEvent.clientY - from)}px`; };
+    const drop = () => { document.removeEventListener('mousemove', move); document.removeEventListener('mouseup', drop); };
+    document.addEventListener('mousemove', move);
+    document.addEventListener('mouseup', drop);
+  });
+  video.addEventListener('play', show);
+  video.addEventListener('pause', show);
+  show();
+</script>
+</body></html>
