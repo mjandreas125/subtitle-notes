@@ -1,5 +1,5 @@
 ﻿#define AppName "Subtitle Notes"
-#define AppVersion "1.6.1"
+#define AppVersion "1.6.2"
 #define AppPublisher "Subtitle Notes"
 #define AppExe "TranslatedVLCSyncSetup.exe"
 
@@ -11,7 +11,7 @@ AppPublisher={#AppPublisher}
 DefaultDirName={autopf}\Subtitle Notes
 DefaultGroupName={#AppName}
 OutputDir=..\release_package
-OutputBaseFilename=SubtitleNotesSetup-1.6.1
+OutputBaseFilename=SubtitleNotesSetup-1.6.2
 Compression=lzma2
 SolidCompression=yes
 WizardStyle=modern
@@ -24,6 +24,10 @@ DisableWelcomePage=no
 AppCopyright=Subtitle Notes
 PrivilegesRequired=admin
 ArchitecturesInstallIn64BitMode=x64compatible
+; The Ctrl+Alt+S helper has no window, so the polite "please close" cannot
+; reach it. Shut ours down ourselves instead of stopping to ask.
+CloseApplications=force
+RestartApplications=no
 
 [Files]
 Source: "..\dist\OpenWithTranslatedVLC.exe"; DestDir: "{app}"; Flags: ignoreversion
@@ -67,8 +71,32 @@ Filename: "{app}\TranslatedVLCSyncSetup.exe"; Description: "Set up your account"
 Filename: "{app}\SubtitleNotesQuickCapture.exe"; Description: "Start the Ctrl+Alt+S capture helper"; Flags: nowait postinstall skipifsilent
 
 [Code]
-function InitializeSetup(): Boolean;
+// Anything of ours that may still be running: the background capture helper,
+// the connect window, the overlay, the library. Ending them is what the user
+// would have to do by hand otherwise, and none of them holds unsaved work.
+procedure StopOurPrograms();
+var
+  ours: array[0..5] of String;
+  index, code: Integer;
 begin
-  Result := True;
-  MsgBox('Subtitle Notes keeps your words in one place. After installing, sign in with Google - on this computer, in the browser extension, and in the Android app - and everything you highlight lands in the same library. VLC is set up for you; no IP address, firewall rule, or local server is needed.', mbInformation, MB_OK);
+  ours[0] := 'SubtitleNotesQuickCapture.exe';
+  ours[1] := 'TranslatedVLCSyncSetup.exe';
+  ours[2] := 'VlcSubtitleOverlay.exe';
+  ours[3] := 'OpenWithTranslatedVLC.exe';
+  ours[4] := 'SubtitleNotesServer.exe';
+  ours[5] := 'translated_vlc_mobile.exe';
+  for index := 0 to 5 do
+    Exec(ExpandConstant('{sys}	askkill.exe'), '/f /im ' + ours[index], '',
+         SW_HIDE, ewWaitUntilTerminated, code);
+end;
+
+function PrepareToInstall(var NeedsRestart: Boolean): String;
+begin
+  StopOurPrograms();
+  Result := '';
+end;
+
+procedure InitializeUninstallProgressForm();
+begin
+  StopOurPrograms();
 end;
