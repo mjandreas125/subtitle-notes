@@ -1090,6 +1090,19 @@ export default { async fetch(request: Request, env: Env): Promise<Response> {
     if (path === '/v1/selections' && request.method === 'GET') { const archived = url.searchParams.get('archived') === 'true' ? 1 : 0; const rows = await env.DB.prepare('SELECT * FROM selections WHERE owner_id = ? AND archived = ? ORDER BY created_at DESC LIMIT 100').bind(user.id, archived).all<any>(); return json(await Promise.all(rows.results.map(card))); }
     if (path === '/v1/selections' && request.method === 'POST') { const input: any = await request.json(); const row = await upsertSelection(env, user.id, input); return json(await detail(row), 201); }
     if (path === '/v1/captures' && request.method === 'POST') { const input: any = await request.json(); const row = await upsertSelection(env, user.id, input, await enrich(env, clean(input.selected_text), String(input.context ?? ''), user.language || 'ru')); return json(await detail(row), 201); }
+    // The dictionary alone, as fast as the network allows. The model reads the
+    // line better, but it takes a second or two, and a person who paused a film
+    // wants something on screen now. The card shows this first and replaces it
+    // when the better answer arrives - which is why the desktop overlay, which
+    // only ever asked the dictionary, always felt quicker.
+    if (path === '/v1/quick' && request.method === 'POST') {
+      const input: any = await request.json();
+      const text = clean(input.text);
+      if (!text) throw new Error('Nothing to read');
+      const answer = await translate(text, false, user.language || 'ru');
+      return json({ translation: answer.text, source_lang: answer.source });
+    }
+
     // The player asks for the same reading to put in its popup, without saving
     // anything: what it shows on screen should not be worse than the card.
     if (path === '/v1/reading' && request.method === 'POST') {

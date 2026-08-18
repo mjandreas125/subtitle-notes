@@ -138,6 +138,9 @@ function titleFor(tab, info) {
 chrome.runtime.onMessage.addListener((message, sender, respond) => {
   const handlers = {
     reading: () => reading(message),
+    // The dictionary alone: back in a moment, and good enough to read while
+    // the better answer is still being worked out.
+    quick: () => call('/quick', { text: message.text }),
     capture: () => capture({ ...message, title: message.title || titleFor(sender.tab) }),
     status: async () => ({ paired: Boolean(await session()) }),
     undo: () => undo(message.id),

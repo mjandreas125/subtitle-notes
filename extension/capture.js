@@ -75,7 +75,10 @@
       .card.small .sentence {
         margin-top: 5px; font-size: 12.5px; font-weight: 500; color: #93a49c; line-height: 1.35;
       }
-      .card.small .syn, .card.small .note, .card.small .seen, .card.small .row { display: none; }
+      .card.small .syn, .card.small .note, .card.small .seen,
+      .card.small .row, .card.small .say, .card.small .sentence,
+      .card.small .head { display: none; }
+      .card.small .head.keep { display: block; font-size: 14px; color: #f2f7f4; }
       .card.small .row.keep { display: flex; margin-top: 9px; }
       .card.small .row.keep button { padding: 7px 10px; font-size: 13px; background: #1e7a4c; color: #ffffff; }
       .card.small .flag { margin-bottom: 5px; font-size: 9.5px; letter-spacing: .09em; color: #7fe3ab; }
@@ -83,11 +86,8 @@
       .card.small .muted { font-size: 12.5px; color: #93a49c; }
       .card.small .say { color: #93a49c; }
       .card.small .say:hover { background: rgba(255, 255, 255, .08); }
-      /* The one control the short card keeps, because a save that happened by
-         accident has to be undoable. */
-      .card.small .row.thin { display: flex; margin-top: 8px; }
-      .card.small .row.thin button { padding: 4px 8px; font-size: 12px; color: #93a49c; }
-      .card.small .row.thin button:hover { background: rgba(255, 255, 255, .08); color: #f2f7f4; }
+      /* Undoing is still possible - the word is one swipe away in the app -
+         so the card itself stays a single line. */
       .card.pinned { cursor: grab; }
       .card.dragging { cursor: grabbing; user-select: none; }
 
@@ -314,7 +314,7 @@
   }
 
   function notPairedHtml() {
-    return `<div class="head">${t('connectTitle')}</div>
+    return `<div class="head keep">${t('connectTitle')}</div>
       <div class="muted" style="margin-top:8px">${t('connectBody')}</div>
       <div class="row keep"><button id="connect">${t('connectAction')}</button></div>`;
   }
@@ -393,6 +393,13 @@
     // "Сохраняю…" long after the answer was ready.
     const mine = panel;
     const saving = ask({ type: 'capture', text, context, title, timecodeMs });
+    ask({ type: 'quick', text }).then((quick) => {
+      // Only until something better arrives, and never over the top of it.
+      if (panel !== mine || !quick.ok || mine.dataset.read || mine.dataset.settled) return;
+      mine.innerHTML = compact()
+        ? `<div class="term">${escape(quick.data.translation)}</div>`
+        : `<div class="head">${escape(quick.data.translation)}</div>`;
+    });
     ask({ type: 'reading', text, context }).then((reading) => {
       if (panel !== mine || !reading.ok || mine.dataset.settled) return;
       mine.innerHTML = readingHtml(reading.data, text);
