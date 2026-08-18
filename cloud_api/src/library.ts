@@ -916,16 +916,17 @@ export const libraryPage = (lang: string, clientId: string) => {
     var back = location.hash.match(/access_token=([^&]+)/);
     var state = location.hash.match(/state=([^&]+)/);
     if (back && state && state[1] === sessionStorage.getItem('sn-state')) {
-      sessionStorage.removeItem('sn-state');
       var search = sessionStorage.getItem('sn-search') || '';
-      sessionStorage.removeItem('sn-search');
       var wanted = (search.match(/lang=([A-Za-z_-]+)/) || [])[1];
       if (wanted && wanted.slice(0, 2).toLowerCase() !== document.documentElement.lang) {
         // Rendered in the browser's language, not the one asked for: load it
-        // again with the token still in hand.
+        // again with the token still in hand. What is remembered stays put -
+        // the second pass has to recognise this same trip.
         location.replace(location.pathname + search + location.hash);
         return;
       }
+      sessionStorage.removeItem('sn-state');
+      sessionStorage.removeItem('sn-search');
       history.replaceState(null, '', location.pathname + search);
       signedIn(decodeURIComponent(back[1]));
       return;
