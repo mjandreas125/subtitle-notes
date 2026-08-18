@@ -1,0 +1,332 @@
+{
+  "appName": {
+    "message": "Subtitle Notes"
+  },
+  "appDescription": {
+    "message": "Выделите слово где угодно - на странице, в PDF, в субтитрах - и сохраните то, что оно значит на самом деле."
+  },
+  "menuSave": {
+    "message": "Сохранить «%s» в Subtitle Notes"
+  },
+  "chipAsk": {
+    "message": "Что это значит?"
+  },
+  "reading": {
+    "message": "Читаю строку…"
+  },
+  "translating": {
+    "message": "перевожу…"
+  },
+  "listen": {
+    "message": "Послушать"
+  },
+  "rerun": {
+    "message": "Перевод неточный"
+  },
+  "rerunning": {
+    "message": "Перечитываю…"
+  },
+  "seenBefore": {
+    "message": "встречалось раз: $COUNT$",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "connectTitle": {
+    "message": "Подключите телефон"
+  },
+  "connectBody": {
+    "message": "Браузер ещё не связан с вашей библиотекой."
+  },
+  "connectAction": {
+    "message": "Подключить"
+  },
+  "close": {
+    "message": "Закрыть"
+  },
+  "save": {
+    "message": "Сохранить"
+  },
+  "saving": {
+    "message": "Сохраняю…"
+  },
+  "saved": {
+    "message": "Сохранено ✓"
+  },
+  "savedAlready": {
+    "message": "Уже было ✓"
+  },
+  "inLibrary": {
+    "message": "Уже в библиотеке"
+  },
+  "notSaved": {
+    "message": "Не сохранилось"
+  },
+  "failed": {
+    "message": "Не вышло"
+  },
+  "undo": {
+    "message": "Отменить"
+  },
+  "undoing": {
+    "message": "Убираю…"
+  },
+  "undone": {
+    "message": "Убрано"
+  },
+  "reloaded": {
+    "message": "Расширение перезагрузилось. Обновите страницу."
+  },
+  "popupNotPaired": {
+    "message": "Браузер ещё не связан с вашей библиотекой."
+  },
+  "popupConnect": {
+    "message": "Подключить телефон"
+  },
+  "popupConnected": {
+    "message": "Подключено - $EMAIL$",
+    "placeholders": {
+      "email": {
+        "content": "$1"
+      }
+    }
+  },
+  "popupConnectedPlain": {
+    "message": "Подключено. Выделите текст на любой странице."
+  },
+  "popupEmpty": {
+    "message": "Пока ничего не сохранено. Выделите слово на странице, в PDF или в субтитрах."
+  },
+  "popupExport": {
+    "message": "Выгрузить для Anki"
+  },
+  "optTitle": {
+    "message": "Subtitle Notes в браузере"
+  },
+  "optSub": {
+    "message": "Выделяйте слова на любом сайте, в PDF и в субтитрах - они попадут в то же приложение на телефоне."
+  },
+  "optConnected": {
+    "message": "Подключено"
+  },
+  "optForget": {
+    "message": "Отключить этот браузер"
+  },
+  "optPairIntro": {
+    "message": "Чтобы связать браузер с библиотекой, подтвердите код в приложении на телефоне."
+  },
+  "optPairGet": {
+    "message": "Получить код"
+  },
+  "optStep1": {
+    "message": "Откройте Subtitle Notes на телефоне."
+  },
+  "optStep2": {
+    "message": "Настройки → Подключённые устройства."
+  },
+  "optStep3": {
+    "message": "Введите этот код."
+  },
+  "optWaiting": {
+    "message": "Жду подтверждения…"
+  },
+  "optPaired": {
+    "message": "Готово. Можно выделять текст на любой странице."
+  },
+  "optExpired": {
+    "message": "Срок кода истёк. Получите новый."
+  },
+  "optCancel": {
+    "message": "Отмена"
+  },
+  "optHotkeyTitle": {
+    "message": "Сохранение без кнопки"
+  },
+  "optHotkeyHelp": {
+    "message": "Держите это сочетание, когда выделяете, - слово уйдёт в библиотеку сразу. Или выделите обычно и нажмите его после."
+  },
+  "optHotkeyPress": {
+    "message": "Нажмите сочетание…"
+  },
+  "optReset": {
+    "message": "Сброс"
+  },
+  "optInstantTitle": {
+    "message": "Сохранять всегда"
+  },
+  "optInstantHelp": {
+    "message": "Любое выделение уходит сразу, никаких клавиш. Карточка всё равно предложит отменить."
+  },
+  "optWhereTitle": {
+    "message": "Где показывать окно"
+  },
+  "optAtSelection": {
+    "message": "У выделения"
+  },
+  "optTopRight": {
+    "message": "Сверху справа"
+  },
+  "optTopLeft": {
+    "message": "Сверху слева"
+  },
+  "optBottomRight": {
+    "message": "Снизу справа"
+  },
+  "optBottomLeft": {
+    "message": "Снизу слева"
+  },
+  "optDragHint": {
+    "message": "Закреплённое в углу окно можно перетащить мышью - оно запомнит место."
+  },
+  "optHideAfter": {
+    "message": "Скрывать через"
+  },
+  "optHideAfterHelp": {
+    "message": "Сколько секунд висит окно после мгновенного сохранения."
+  },
+  "optVideoTitle": {
+    "message": "Видео и сайты"
+  },
+  "optSubtitles": {
+    "message": "Кликабельные субтитры"
+  },
+  "optSubtitlesHelp": {
+    "message": "На YouTube и Netflix заменяет субтитры своими, где можно нажать слово или протянуть по фразе."
+  },
+  "optPause": {
+    "message": "Ставить видео на паузу"
+  },
+  "optPauseHelp": {
+    "message": "Когда выбираете слово из субтитра."
+  },
+  "optSpeak": {
+    "message": "Проговаривать слово"
+  },
+  "optSpeakHelp": {
+    "message": "Произносит английское слово вслух, когда открывается карточка."
+  },
+  "optBlocked": {
+    "message": "Не работать на этих сайтах"
+  },
+  "optBlockedHelp": {
+    "message": "По одному адресу в строке, например mail.google.com."
+  },
+  "optSavedToast": {
+    "message": "Сохранено"
+  },
+  "optAccountTitle": {
+    "message": "Аккаунт"
+  },
+  "optGoogle": {
+    "message": "Войти через Google"
+  },
+  "optGoogleHelp": {
+    "message": "Войдите тем же аккаунтом Google, что и на телефоне: всё сохранённое здесь попадёт в ту же библиотеку."
+  },
+  "optOtherWay": {
+    "message": "Подключить с телефона"
+  },
+  "optScanHelp": {
+    "message": "Наведите камеру телефона на этот квадрат или введите код в приложении: Настройки → Подключённые устройства."
+  },
+  "optLangTitle": {
+    "message": "Язык перевода"
+  },
+  "optLangHelp": {
+    "message": "Новые карточки будут объясняться на этом языке. Уже сохранённые останутся как есть."
+  },
+  "optPrivacy": {
+    "message": "Политика конфиденциальности"
+  },
+  "optSubKeyTitle": {
+    "message": "Как выделять слова в субтитрах"
+  },
+  "optSubKeyHelp": {
+    "message": "Пока клавиша зажата, строка становится обычным текстом - можно выделять по буквам. Отпустили - мышь снова у плеера: субтитры перетаскиваются, клик ставит на паузу, размер субтитров меняется в самом плеере."
+  },
+  "optSubKeyNone": {
+    "message": "Без клавиши"
+  },
+  "optOr": {
+    "message": "или"
+  },
+  "optSubKeyNow": {
+    "message": "Сейчас: $KEYS$",
+    "placeholders": {
+      "keys": {
+        "content": "$1"
+      }
+    }
+  },
+  "optSubKeyNoneNow": {
+    "message": "Сейчас: без клавиши - строка выделяется всегда"
+  },
+  "optLangLocked": {
+    "message": "Сначала подключите аккаунт: язык хранится вместе с ним."
+  },
+  "mine": {
+    "message": "Свой вариант"
+  },
+  "minePlaceholder": {
+    "message": "Что это значит здесь"
+  },
+  "mineThanks": {
+    "message": "Сохранено. Если так же напишут другие, вариант станет общим."
+  },
+  "mineAgreed": {
+    "message": "Сохранено - так считают уже многие, теперь это общий вариант."
+  },
+  "popupSettings": {
+    "message": "Настройки"
+  },
+  "tourTitle": {
+    "message": "Любое слово - в том смысле, что здесь"
+  },
+  "tourLede": {
+    "message": "Десять секунд, и можно идти смотреть."
+  },
+  "tourMeaning": {
+    "message": "a record - судимость"
+  },
+  "tourSaved": {
+    "message": "Сохранено в библиотеку"
+  },
+  "tourStep1": {
+    "message": "Держите Ctrl и протяните по субтитру"
+  },
+  "tourStep1Body": {
+    "message": "Без клавиши плеер работает как обычно: субтитр перетаскивается, клик ставит на паузу."
+  },
+  "tourStep2": {
+    "message": "Во всём остальном просто выделяйте"
+  },
+  "tourStep2Body": {
+    "message": "Страница, PDF, комментарий. Зажмите Ctrl+Alt при выделении - сохранится сразу, без вопросов."
+  },
+  "tourStep3": {
+    "message": "Всё попадает в одну библиотеку"
+  },
+  "tourStep3Body": {
+    "message": "Один аккаунт Google - на телефоне, в браузере и на компьютере."
+  },
+  "tourConnect": {
+    "message": "Подключить аккаунт"
+  },
+  "tourLater": {
+    "message": "Позже"
+  },
+  "optDesktopTitle": {
+    "message": "На компьютере"
+  },
+  "optDesktopHelp": {
+    "message": "Субтитры в VLC и текст в любой программе - в ту же библиотеку."
+  },
+  "optDesktopGet": {
+    "message": "Скачать для Windows"
+  },
+  "tourDesktop": {
+    "message": "Ещё и на компьютер"
+  }
+}

@@ -1,0 +1,332 @@
+{
+  "appName": {
+    "message": "Subtitle Notes"
+  },
+  "appDescription": {
+    "message": "Resalta una palabra en cualquier sitio - una página, un PDF, los subtítulos de una película - y guarda lo que significa de verdad."
+  },
+  "menuSave": {
+    "message": "Guardar «%s» en Subtitle Notes"
+  },
+  "chipAsk": {
+    "message": "¿Qué significa esto?"
+  },
+  "reading": {
+    "message": "Leyendo la línea…"
+  },
+  "translating": {
+    "message": "traduciendo…"
+  },
+  "listen": {
+    "message": "Escuchar"
+  },
+  "rerun": {
+    "message": "Traducción incorrecta"
+  },
+  "rerunning": {
+    "message": "Leyendo de nuevo…"
+  },
+  "seenBefore": {
+    "message": "visto $COUNT$ veces",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "connectTitle": {
+    "message": "Conecta tu teléfono"
+  },
+  "connectBody": {
+    "message": "Este navegador aún no está enlazado con tu biblioteca."
+  },
+  "connectAction": {
+    "message": "Conectar"
+  },
+  "close": {
+    "message": "Cerrar"
+  },
+  "save": {
+    "message": "Guardar"
+  },
+  "saving": {
+    "message": "Guardando…"
+  },
+  "saved": {
+    "message": "Guardado ✓"
+  },
+  "savedAlready": {
+    "message": "Ya estaba ✓"
+  },
+  "inLibrary": {
+    "message": "Ya está en tu biblioteca"
+  },
+  "notSaved": {
+    "message": "No se guardó"
+  },
+  "failed": {
+    "message": "No funcionó"
+  },
+  "undo": {
+    "message": "Deshacer"
+  },
+  "undoing": {
+    "message": "Quitando…"
+  },
+  "undone": {
+    "message": "Quitado"
+  },
+  "reloaded": {
+    "message": "La extensión se recargó. Actualiza la página."
+  },
+  "popupNotPaired": {
+    "message": "Este navegador no está enlazado con tu biblioteca."
+  },
+  "popupConnect": {
+    "message": "Conectar el teléfono"
+  },
+  "popupConnected": {
+    "message": "Conectado - $EMAIL$",
+    "placeholders": {
+      "email": {
+        "content": "$1"
+      }
+    }
+  },
+  "popupConnectedPlain": {
+    "message": "Conectado. Resalta texto en cualquier página."
+  },
+  "popupEmpty": {
+    "message": "Aún no hay nada guardado. Resalta una palabra en una página, en un PDF o en los subtítulos."
+  },
+  "popupExport": {
+    "message": "Exportar a Anki"
+  },
+  "optTitle": {
+    "message": "Subtitle Notes en el navegador"
+  },
+  "optSub": {
+    "message": "Resalta palabras en cualquier sitio, en PDF y en subtítulos: llegan a la misma aplicación en tu teléfono."
+  },
+  "optConnected": {
+    "message": "Conectado"
+  },
+  "optForget": {
+    "message": "Desconectar este navegador"
+  },
+  "optPairIntro": {
+    "message": "Para enlazar este navegador con tu biblioteca, confirma un código en la aplicación del teléfono."
+  },
+  "optPairGet": {
+    "message": "Pedir un código"
+  },
+  "optStep1": {
+    "message": "Abre Subtitle Notes en tu teléfono."
+  },
+  "optStep2": {
+    "message": "Ajustes → Dispositivos conectados."
+  },
+  "optStep3": {
+    "message": "Escribe este código."
+  },
+  "optWaiting": {
+    "message": "Esperando confirmación…"
+  },
+  "optPaired": {
+    "message": "Listo. Resalta texto en cualquier página."
+  },
+  "optExpired": {
+    "message": "El código caducó. Pide uno nuevo."
+  },
+  "optCancel": {
+    "message": "Cancelar"
+  },
+  "optHotkeyTitle": {
+    "message": "Guardar sin botón"
+  },
+  "optHotkeyHelp": {
+    "message": "Mantén esta combinación mientras resaltas y la palabra irá directa a tu biblioteca. O resalta normalmente y púlsala después."
+  },
+  "optHotkeyPress": {
+    "message": "Pulsa una combinación…"
+  },
+  "optReset": {
+    "message": "Restablecer"
+  },
+  "optInstantTitle": {
+    "message": "Guardar siempre"
+  },
+  "optInstantHelp": {
+    "message": "Cada selección se guarda al instante, sin teclas. La tarjeta sigue ofreciendo deshacerlo."
+  },
+  "optWhereTitle": {
+    "message": "Dónde aparece la ventana"
+  },
+  "optAtSelection": {
+    "message": "Junto a la selección"
+  },
+  "optTopRight": {
+    "message": "Arriba a la derecha"
+  },
+  "optTopLeft": {
+    "message": "Arriba a la izquierda"
+  },
+  "optBottomRight": {
+    "message": "Abajo a la derecha"
+  },
+  "optBottomLeft": {
+    "message": "Abajo a la izquierda"
+  },
+  "optDragHint": {
+    "message": "Una ventana fijada en una esquina se puede arrastrar con el ratón: recuerda dónde la dejaste."
+  },
+  "optHideAfter": {
+    "message": "Ocultar tras"
+  },
+  "optHideAfterHelp": {
+    "message": "Segundos que la ventana permanece tras un guardado instantáneo."
+  },
+  "optVideoTitle": {
+    "message": "Vídeo y sitios"
+  },
+  "optSubtitles": {
+    "message": "Subtítulos en los que se puede hacer clic"
+  },
+  "optSubtitlesHelp": {
+    "message": "En YouTube y Netflix sustituye los subtítulos por una copia donde puedes pulsar una palabra o arrastrar sobre una expresión."
+  },
+  "optPause": {
+    "message": "Pausar el vídeo"
+  },
+  "optPauseHelp": {
+    "message": "Cuando eliges una palabra de un subtítulo."
+  },
+  "optSpeak": {
+    "message": "Leer la palabra en voz alta"
+  },
+  "optSpeakHelp": {
+    "message": "Pronuncia la palabra en inglés al abrirse la tarjeta."
+  },
+  "optBlocked": {
+    "message": "No funcionar en estos sitios"
+  },
+  "optBlockedHelp": {
+    "message": "Una dirección por línea, por ejemplo mail.google.com."
+  },
+  "optSavedToast": {
+    "message": "Guardado"
+  },
+  "optAccountTitle": {
+    "message": "Cuenta"
+  },
+  "optGoogle": {
+    "message": "Continuar con Google"
+  },
+  "optGoogleHelp": {
+    "message": "Inicia sesión con la misma cuenta de Google que en el teléfono: todo lo que guardes aquí irá a la misma biblioteca."
+  },
+  "optOtherWay": {
+    "message": "Conectar desde el teléfono"
+  },
+  "optScanHelp": {
+    "message": "Apunta la cámara del teléfono a este cuadro o escribe el código en la app: Ajustes → Dispositivos conectados."
+  },
+  "optLangTitle": {
+    "message": "Idioma de las tarjetas"
+  },
+  "optLangHelp": {
+    "message": "Las tarjetas nuevas se explicarán en este idioma. Las ya guardadas se quedan como están."
+  },
+  "optPrivacy": {
+    "message": "Política de privacidad"
+  },
+  "optSubKeyTitle": {
+    "message": "Coger palabras de los subtítulos"
+  },
+  "optSubKeyHelp": {
+    "message": "Mientras la tecla está pulsada, la línea es texto que se puede seleccionar. Al soltarla el reproductor recupera el ratón: arrastrar los subtítulos, hacer clic para pausar y su tamaño siguen funcionando."
+  },
+  "optSubKeyNone": {
+    "message": "Sin tecla"
+  },
+  "optOr": {
+    "message": "o"
+  },
+  "optSubKeyNow": {
+    "message": "Ahora: $KEYS$",
+    "placeholders": {
+      "keys": {
+        "content": "$1"
+      }
+    }
+  },
+  "optSubKeyNoneNow": {
+    "message": "Ahora: sin tecla: la línea siempre se puede seleccionar"
+  },
+  "optLangLocked": {
+    "message": "Conecta primero una cuenta: el idioma se guarda con ella."
+  },
+  "mine": {
+    "message": "Mi versión"
+  },
+  "minePlaceholder": {
+    "message": "Qué significa aquí"
+  },
+  "mineThanks": {
+    "message": "Guardado. Si otros escriben lo mismo, será la versión por defecto."
+  },
+  "mineAgreed": {
+    "message": "Guardado: bastantes personas coinciden, ahora es la versión por defecto."
+  },
+  "popupSettings": {
+    "message": "Ajustes"
+  },
+  "tourTitle": {
+    "message": "Cualquier palabra, en el sentido que tiene aquí"
+  },
+  "tourLede": {
+    "message": "Diez segundos y listo."
+  },
+  "tourMeaning": {
+    "message": "a record - antecedentes penales"
+  },
+  "tourSaved": {
+    "message": "Guardado en tu biblioteca"
+  },
+  "tourStep1": {
+    "message": "Mantén Ctrl y arrastra sobre el subtítulo"
+  },
+  "tourStep1Body": {
+    "message": "Sin la tecla el reproductor sigue igual: la línea se arrastra, un clic pausa."
+  },
+  "tourStep2": {
+    "message": "En cualquier otro sitio, solo selecciona"
+  },
+  "tourStep2Body": {
+    "message": "Una página, un PDF, un comentario. Con Ctrl+Alt se guarda sin preguntar."
+  },
+  "tourStep3": {
+    "message": "Todo llega a una sola biblioteca"
+  },
+  "tourStep3Body": {
+    "message": "La misma cuenta de Google en el teléfono, el navegador y el ordenador."
+  },
+  "tourConnect": {
+    "message": "Conectar la cuenta"
+  },
+  "tourLater": {
+    "message": "Más tarde"
+  },
+  "optDesktopTitle": {
+    "message": "En el ordenador"
+  },
+  "optDesktopHelp": {
+    "message": "Subtítulos en VLC y texto de cualquier programa, en la misma biblioteca."
+  },
+  "optDesktopGet": {
+    "message": "Descargar para Windows"
+  },
+  "tourDesktop": {
+    "message": "También para el ordenador"
+  }
+}

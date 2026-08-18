@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Subtitle Notes</title>
+    <style>
+      /* An animation rather than a video: three moments, drawn in the same
+         warm paper and single accent as the rest, so the first thing a person
+         sees is the thing they are about to use. Nothing is loaded from
+         anywhere, and it plays the same on a slow machine. */
+      :root {
+        color-scheme: light dark;
+        --paper: #ffffff; --page: #faf8f4; --ink: #14201c; --soft: #6b7a74;
+        --hair: #e2ddd3; --accent: #1e7a4c; --accent-deep: #17603b; --wash: #e7f2ea;
+        --shade: 12 32 24;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --paper: #182020; --page: #121816; --ink: #eaf1ed; --soft: #93a49c;
+          --hair: #2a3733; --accent: #64c795; --accent-deep: #7ad6a8; --wash: #1d2a25;
+          --shade: 0 0 0;
+        }
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0; min-height: 100dvh; display: grid; place-items: center; padding: 32px 20px 56px;
+        background: var(--page); color: var(--ink);
+        font: 15px/1.55 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+      main { width: 100%; max-width: 33rem; }
+
+      .mark {
+        display: flex; align-items: center; gap: 9px; margin-bottom: 20px;
+        font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--accent);
+      }
+      .mark i { width: 18px; height: 18px; border-radius: 5px; background: var(--accent); position: relative; }
+      .mark i::after {
+        content: ""; position: absolute; inset: 4px 4px auto 4px; height: 2px;
+        background: var(--page); box-shadow: 0 5px 0 var(--page);
+      }
+      h1 { margin: 0 0 6px; font-size: 27px; line-height: 1.15; letter-spacing: -.028em; font-weight: 660; }
+      .lede { margin: 0 0 26px; color: var(--soft); text-wrap: pretty; }
+
+      /* The stage: a still of a film with a caption, which is where all three
+         steps happen. */
+      .stage {
+        position: relative; aspect-ratio: 16 / 9; border-radius: 16px; overflow: hidden;
+        background: linear-gradient(160deg, #24313c, #131a20 60%, #0d1216);
+        box-shadow: 0 1px 2px rgb(var(--shade) / .14), 0 18px 40px -20px rgb(var(--shade) / .5);
+      }
+      .stage::after {
+        content: ""; position: absolute; inset: 0;
+        background: radial-gradient(120% 90% at 30% 15%, rgba(255,255,255,.07), transparent 60%);
+      }
+      .caption {
+        position: absolute; left: 50%; bottom: 15%; transform: translateX(-50%);
+        padding: 7px 12px; border-radius: 5px; background: rgba(0, 0, 0, .72);
+        color: #ffffff; font-size: clamp(13px, 2.6vw, 18px); font-weight: 600; white-space: nowrap;
+      }
+      .pick {
+        position: relative; border-radius: 6px; padding: 1px 2px;
+        background: transparent; transition: background .25s ease;
+      }
+      .cursor {
+        position: absolute; width: 15px; height: 22px; pointer-events: none;
+        left: 30%; bottom: 17%; filter: drop-shadow(0 2px 3px rgba(0,0,0,.6));
+      }
+      .key {
+        position: absolute; left: 6%; bottom: 15%; padding: 5px 11px; border-radius: 8px;
+        background: rgba(255,255,255,.92); color: #10201a; font: 700 12px ui-monospace, Consolas, monospace;
+        opacity: 0; transform: translateY(6px);
+      }
+      /* The panel that answers, drawn the way the real one is. */
+      .card {
+        position: absolute; right: 5%; top: 12%; width: 46%; padding: 12px 13px;
+        border-radius: 12px; border: 1px solid var(--hair); border-left: 3px solid var(--accent);
+        background: var(--paper); opacity: 0; transform: translateY(8px) scale(.97);
+        box-shadow: 0 12px 30px -12px rgb(var(--shade) / .55);
+      }
+      .card b { display: block; font-size: 15px; font-weight: 640; letter-spacing: -.02em; }
+      .card u {
+        display: block; margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--hair);
+        text-decoration: none; font-size: 13px; font-weight: 600; color: var(--accent);
+      }
+      .card em { display: block; margin-top: 6px; font-size: 11.5px; color: var(--soft); font-style: normal; }
+
+      /* Three steps, on a loop. Each one is a keyframe track of its own so the
+         timings stay readable. */
+      .stage.play .pick { animation: pick 9s infinite; }
+      .stage.play .cursor { animation: sweep 9s infinite; }
+      .stage.play .key { animation: press 9s infinite; }
+      .stage.play .card { animation: answer 9s infinite; }
+
+      @keyframes sweep {
+        0%, 8% { left: 30%; opacity: 0; }
+        12% { left: 30%; opacity: 1; }
+        30% { left: 52%; opacity: 1; }
+        62% { left: 52%; opacity: 1; }
+        70%, 100% { left: 52%; opacity: 0; }
+      }
+      @keyframes press {
+        0%, 8% { opacity: 0; transform: translateY(6px); }
+        14%, 60% { opacity: 1; transform: none; }
+        68%, 100% { opacity: 0; transform: translateY(6px); }
+      }
+      @keyframes pick {
+        0%, 14% { background: transparent; }
+        30%, 96% { background: rgba(70, 214, 143, .34); }
+        100% { background: transparent; }
+      }
+      @keyframes answer {
+        0%, 34% { opacity: 0; transform: translateY(8px) scale(.97); }
+        44%, 92% { opacity: 1; transform: none; }
+        100% { opacity: 0; transform: translateY(8px) scale(.97); }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .stage.play * { animation: none !important; }
+        .card, .key { opacity: 1; transform: none; }
+        .pick { background: rgba(70, 214, 143, .34); }
+      }
+
+      ol { counter-reset: step; list-style: none; margin: 26px 0 0; padding: 0; }
+      li {
+        counter-increment: step; position: relative; padding: 13px 0 13px 42px;
+        border-top: 1px solid var(--hair);
+      }
+      li::before {
+        content: counter(step); position: absolute; left: 0; top: 13px;
+        width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center;
+        background: var(--wash); color: var(--accent); font-size: 12.5px; font-weight: 700;
+      }
+      li b { display: block; font-size: 15px; font-weight: 640; letter-spacing: -.01em; }
+      li span { color: var(--soft); font-size: 13.5px; }
+
+      .actions { display: flex; gap: 12px; align-items: center; margin-top: 26px; }
+      button {
+        padding: 12px 20px; border: 1px solid transparent; border-radius: 12px; cursor: pointer;
+        background: var(--accent); color: #ffffff; font: 680 14.5px inherit;
+        transition: background-color .14s ease;
+      }
+      button:hover { background: var(--accent-deep); }
+      button.quiet { background: transparent; color: var(--soft); border-color: var(--hair); }
+      button.quiet:hover { background: var(--wash); color: var(--ink); }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="mark"><i></i><span data-i18n="appName">Subtitle Notes</span></div>
+      <h1 data-i18n="tourTitle">Any word, the way it is meant here</h1>
+      <p class="lede" data-i18n="tourLede">Three seconds of it, then you can go.</p>
+
+      <div class="stage play" id="stage">
+        <div class="caption">
+          No one wants <span class="pick">a record</span>.
+        </div>
+        <div class="key">Ctrl</div>
+        <svg class="cursor" viewBox="0 0 12 18" aria-hidden="true">
+          <path d="M1 1l9.5 9.5H6.2l2.4 5.2-2 .9-2.4-5.3L1 14.6z" fill="#fff" stroke="#111" stroke-width="1"/>
+        </svg>
+        <div class="card">
+          <b>Никому не нужна судимость.</b>
+          <u data-i18n="tourMeaning">a record - судимость</u>
+          <em data-i18n="tourSaved">Saved to your library</em>
+        </div>
+      </div>
+
+      <ol>
+        <li>
+          <b data-i18n="tourStep1">Hold Ctrl and drag across the subtitle</b>
+          <span data-i18n="tourStep1Body">Without the key the player is untouched: the line still drags, a click still pauses.</span>
+        </li>
+        <li>
+          <b data-i18n="tourStep2">Anywhere else, just highlight</b>
+          <span data-i18n="tourStep2Body">A page, a PDF, a comment. Hold Ctrl+Alt while you do it and it is saved without asking.</span>
+        </li>
+        <li>
+          <b data-i18n="tourStep3">Everything lands in one library</b>
+          <span data-i18n="tourStep3Body">The same Google account on the phone, in the browser and on the computer.</span>
+        </li>
+      </ol>
+
+      <div class="actions">
+        <button id="connect" data-i18n="tourConnect">Connect the account</button>
+        <button class="quiet" id="desktop" data-i18n="tourDesktop">Also for the computer</button>
+        <button class="quiet" id="later" data-i18n="tourLater">Later</button>
+      </div>
+    </main>
+    <script src="settings.js"></script>
+    <script src="welcome.js"></script>
+  </body>
+</html>

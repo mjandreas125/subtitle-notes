@@ -1,0 +1,332 @@
+{
+  "appName": {
+    "message": "Subtitle Notes"
+  },
+  "appDescription": {
+    "message": "Zaznacz słowo gdziekolwiek - na stronie, w PDF-ie, w napisach filmu - i zachowaj to, co naprawdę znaczy."
+  },
+  "menuSave": {
+    "message": "Zapisz „%s” w Subtitle Notes"
+  },
+  "chipAsk": {
+    "message": "Co to znaczy?"
+  },
+  "reading": {
+    "message": "Czytam linijkę…"
+  },
+  "translating": {
+    "message": "tłumaczę…"
+  },
+  "listen": {
+    "message": "Posłuchaj"
+  },
+  "rerun": {
+    "message": "Zły przekład"
+  },
+  "rerunning": {
+    "message": "Czytam ponownie…"
+  },
+  "seenBefore": {
+    "message": "napotkane $COUNT$ razy",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "connectTitle": {
+    "message": "Połącz telefon"
+  },
+  "connectBody": {
+    "message": "Ta przeglądarka nie jest jeszcze połączona z twoim zbiorem."
+  },
+  "connectAction": {
+    "message": "Połącz"
+  },
+  "close": {
+    "message": "Zamknij"
+  },
+  "save": {
+    "message": "Zapisz"
+  },
+  "saving": {
+    "message": "Zapisuję…"
+  },
+  "saved": {
+    "message": "Zapisano ✓"
+  },
+  "savedAlready": {
+    "message": "Już było ✓"
+  },
+  "inLibrary": {
+    "message": "Już w twoim zbiorze"
+  },
+  "notSaved": {
+    "message": "Nie zapisano"
+  },
+  "failed": {
+    "message": "Nie udało się"
+  },
+  "undo": {
+    "message": "Cofnij"
+  },
+  "undoing": {
+    "message": "Usuwam…"
+  },
+  "undone": {
+    "message": "Usunięto"
+  },
+  "reloaded": {
+    "message": "Rozszerzenie przeładowano. Odśwież stronę."
+  },
+  "popupNotPaired": {
+    "message": "Ta przeglądarka nie jest połączona z twoim zbiorem."
+  },
+  "popupConnect": {
+    "message": "Połącz telefon"
+  },
+  "popupConnected": {
+    "message": "Połączono - $EMAIL$",
+    "placeholders": {
+      "email": {
+        "content": "$1"
+      }
+    }
+  },
+  "popupConnectedPlain": {
+    "message": "Połączono. Zaznacz tekst na dowolnej stronie."
+  },
+  "popupEmpty": {
+    "message": "Nic jeszcze nie zapisano. Zaznacz słowo na stronie, w PDF-ie albo w napisach."
+  },
+  "popupExport": {
+    "message": "Eksportuj do Anki"
+  },
+  "optTitle": {
+    "message": "Subtitle Notes w przeglądarce"
+  },
+  "optSub": {
+    "message": "Zaznaczaj słowa na dowolnej stronie, w PDF-ach i w napisach - trafią do tej samej aplikacji na telefonie."
+  },
+  "optConnected": {
+    "message": "Połączono"
+  },
+  "optForget": {
+    "message": "Odłącz tę przeglądarkę"
+  },
+  "optPairIntro": {
+    "message": "Aby połączyć przeglądarkę ze zbiorem, potwierdź kod w aplikacji na telefonie."
+  },
+  "optPairGet": {
+    "message": "Poproś o kod"
+  },
+  "optStep1": {
+    "message": "Otwórz Subtitle Notes na telefonie."
+  },
+  "optStep2": {
+    "message": "Ustawienia → Połączone urządzenia."
+  },
+  "optStep3": {
+    "message": "Wpisz ten kod."
+  },
+  "optWaiting": {
+    "message": "Czekam na potwierdzenie…"
+  },
+  "optPaired": {
+    "message": "Gotowe. Zaznacz tekst na dowolnej stronie."
+  },
+  "optExpired": {
+    "message": "Kod wygasł. Poproś o nowy."
+  },
+  "optCancel": {
+    "message": "Anuluj"
+  },
+  "optHotkeyTitle": {
+    "message": "Zapis bez przycisku"
+  },
+  "optHotkeyHelp": {
+    "message": "Przytrzymaj tę kombinację podczas zaznaczania, a słowo trafi prosto do zbioru. Albo zaznacz normalnie i naciśnij ją potem."
+  },
+  "optHotkeyPress": {
+    "message": "Naciśnij kombinację…"
+  },
+  "optReset": {
+    "message": "Przywróć"
+  },
+  "optInstantTitle": {
+    "message": "Zawsze zapisuj"
+  },
+  "optInstantHelp": {
+    "message": "Każde zaznaczenie zapisuje się od razu, bez klawiszy. Karta i tak zaproponuje cofnięcie."
+  },
+  "optWhereTitle": {
+    "message": "Gdzie pojawia się okno"
+  },
+  "optAtSelection": {
+    "message": "Przy zaznaczeniu"
+  },
+  "optTopRight": {
+    "message": "Prawy górny róg"
+  },
+  "optTopLeft": {
+    "message": "Lewy górny róg"
+  },
+  "optBottomRight": {
+    "message": "Prawy dolny róg"
+  },
+  "optBottomLeft": {
+    "message": "Lewy dolny róg"
+  },
+  "optDragHint": {
+    "message": "Okno przypięte w rogu można przeciągnąć myszą - zapamięta miejsce."
+  },
+  "optHideAfter": {
+    "message": "Ukryj po"
+  },
+  "optHideAfterHelp": {
+    "message": "Sekundy, przez które okno zostaje po natychmiastowym zapisie."
+  },
+  "optVideoTitle": {
+    "message": "Wideo i strony"
+  },
+  "optSubtitles": {
+    "message": "Klikalne napisy"
+  },
+  "optSubtitlesHelp": {
+    "message": "Na YouTube i Netflixie zastępuje napisy kopią, w której można kliknąć słowo albo przeciągnąć po zwrocie."
+  },
+  "optPause": {
+    "message": "Wstrzymaj wideo"
+  },
+  "optPauseHelp": {
+    "message": "Gdy wybierasz słowo z napisu."
+  },
+  "optSpeak": {
+    "message": "Czytaj słowo na głos"
+  },
+  "optSpeakHelp": {
+    "message": "Wymawia angielskie słowo, gdy karta się otwiera."
+  },
+  "optBlocked": {
+    "message": "Nie działaj na tych stronach"
+  },
+  "optBlockedHelp": {
+    "message": "Jeden adres na linijkę, na przykład mail.google.com."
+  },
+  "optSavedToast": {
+    "message": "Zapisano"
+  },
+  "optAccountTitle": {
+    "message": "Konto"
+  },
+  "optGoogle": {
+    "message": "Kontynuuj z Google"
+  },
+  "optGoogleHelp": {
+    "message": "Zaloguj się tym samym kontem Google co w telefonie - wszystko, co tu zapiszesz, trafi do tej samej biblioteki."
+  },
+  "optOtherWay": {
+    "message": "Połącz z telefonu"
+  },
+  "optScanHelp": {
+    "message": "Skieruj aparat telefonu na ten kwadrat albo wpisz kod w aplikacji: Ustawienia → Połączone urządzenia."
+  },
+  "optLangTitle": {
+    "message": "Język fiszek"
+  },
+  "optLangHelp": {
+    "message": "Nowe fiszki będą objaśniane w tym języku. Już zapisane zostają bez zmian."
+  },
+  "optPrivacy": {
+    "message": "Polityka prywatności"
+  },
+  "optSubKeyTitle": {
+    "message": "Zaznaczanie słów w napisach"
+  },
+  "optSubKeyHelp": {
+    "message": "Gdy klawisz jest wciśnięty, linia staje się zwykłym tekstem do zaznaczania. Po puszczeniu mysz wraca do odtwarzacza: przeciąganie napisów, kliknięcie pauzy i ich rozmiar działają jak wcześniej."
+  },
+  "optSubKeyNone": {
+    "message": "Bez klawisza"
+  },
+  "optOr": {
+    "message": "albo"
+  },
+  "optSubKeyNow": {
+    "message": "Teraz: $KEYS$",
+    "placeholders": {
+      "keys": {
+        "content": "$1"
+      }
+    }
+  },
+  "optSubKeyNoneNow": {
+    "message": "Teraz: bez klawisza - linię można zaznaczać zawsze"
+  },
+  "optLangLocked": {
+    "message": "Najpierw połącz konto - język zapisuje się razem z nim."
+  },
+  "mine": {
+    "message": "Moja wersja"
+  },
+  "minePlaceholder": {
+    "message": "Co to tu znaczy"
+  },
+  "mineThanks": {
+    "message": "Zapisano. Jeśli inni napiszą to samo, stanie się to wersją domyślną."
+  },
+  "mineAgreed": {
+    "message": "Zapisano - zgadza się wystarczająco wielu, to teraz wersja domyślna."
+  },
+  "popupSettings": {
+    "message": "Ustawienia"
+  },
+  "tourTitle": {
+    "message": "Każde słowo w tym znaczeniu, jakie ma tutaj"
+  },
+  "tourLede": {
+    "message": "Dziesięć sekund i możesz zaczynać."
+  },
+  "tourMeaning": {
+    "message": "a record - kartoteka karna"
+  },
+  "tourSaved": {
+    "message": "Zapisano w bibliotece"
+  },
+  "tourStep1": {
+    "message": "Przytrzymaj Ctrl i przeciągnij po napisach"
+  },
+  "tourStep1Body": {
+    "message": "Bez klawisza odtwarzacz działa jak zwykle: napis można przeciągnąć, klik pauzuje."
+  },
+  "tourStep2": {
+    "message": "Wszędzie indziej po prostu zaznacz"
+  },
+  "tourStep2Body": {
+    "message": "Strona, PDF, komentarz. Z Ctrl+Alt zapisze się od razu."
+  },
+  "tourStep3": {
+    "message": "Wszystko trafia do jednej biblioteki"
+  },
+  "tourStep3Body": {
+    "message": "To samo konto Google w telefonie, przeglądarce i na komputerze."
+  },
+  "tourConnect": {
+    "message": "Połącz konto"
+  },
+  "tourLater": {
+    "message": "Później"
+  },
+  "optDesktopTitle": {
+    "message": "Na komputerze"
+  },
+  "optDesktopHelp": {
+    "message": "Napisy w VLC i tekst z dowolnego programu - do tej samej biblioteki."
+  },
+  "optDesktopGet": {
+    "message": "Pobierz na Windows"
+  },
+  "tourDesktop": {
+    "message": "Także na komputer"
+  }
+}
