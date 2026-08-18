@@ -82,9 +82,9 @@ class _LibraryTabState extends State<LibraryTab> {
   }
 
   Future<void> _practise() async {
-    await Navigator.of(context).push(
-      MaterialPageRoute<int>(builder: (_) => ReviewPage(api: widget.api)),
-    );
+    await Navigator.of(
+      context,
+    ).push(MaterialPageRoute<int>(builder: (_) => ReviewPage(api: widget.api)));
     await _countDue();
   }
 
@@ -102,7 +102,10 @@ class _LibraryTabState extends State<LibraryTab> {
       card.mediaTitle,
       ...card.synonyms,
     ].join(' ').toLowerCase();
-    return _query.split(' ').where((word) => word.isNotEmpty).every(haystack.contains);
+    return _query
+        .split(' ')
+        .where((word) => word.isNotEmpty)
+        .every(haystack.contains);
   }
 
   @override
@@ -132,7 +135,8 @@ class _LibraryTabState extends State<LibraryTab> {
         ),
         _SearchField(
           controller: _search,
-          onChanged: (value) => setState(() => _query = value.trim().toLowerCase()),
+          onChanged: (value) =>
+              setState(() => _query = value.trim().toLowerCase()),
         ),
         Expanded(
           child: RefreshIndicator(
@@ -158,7 +162,9 @@ class _LibraryTabState extends State<LibraryTab> {
                     child: EmptyState(
                       icon: Icons.cloud_off_rounded,
                       title: context.t('No connection'),
-                      message: context.t('Your library is safe in the cloud. Pull down or try again once you are back online.'),
+                      message: context.t(
+                        'Your library is safe in the cloud. Pull down or try again once you are back online.',
+                      ),
                       tone: c.blue,
                       action: PushButton(
                         label: context.t('Try again'),
@@ -175,7 +181,9 @@ class _LibraryTabState extends State<LibraryTab> {
                     child: EmptyState(
                       icon: Icons.search_off_rounded,
                       title: context.t('Nothing matches'),
-                      message: context.t('Try part of the word, its meaning, or the name of what you were watching.'),
+                      message: context.t(
+                        'Try part of the word, its meaning, or the name of what you were watching.',
+                      ),
                     ),
                   )
                 else if (cards.isEmpty)
@@ -362,7 +370,10 @@ Future<void> showAchievements(BuildContext context, StudyStats stats) {
           children: [
             Padding(
               padding: const EdgeInsets.fromLTRB(
-                AppSpace.xxl, AppSpace.xxl, AppSpace.lg, AppSpace.md,
+                AppSpace.xxl,
+                AppSpace.xxl,
+                AppSpace.lg,
+                AppSpace.md,
               ),
               child: Row(
                 children: [
@@ -377,7 +388,10 @@ Future<void> showAchievements(BuildContext context, StudyStats stats) {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(context.t('Achievements'), style: AppText.heading(c.ink)),
+                        Text(
+                          context.t('Achievements'),
+                          style: AppText.heading(c.ink),
+                        ),
                         const SizedBox(height: 2),
                         Text(
                           '${stats.unlocked} unlocked',
@@ -402,7 +416,10 @@ Future<void> showAchievements(BuildContext context, StudyStats stats) {
               child: ListView.separated(
                 shrinkWrap: true,
                 padding: const EdgeInsets.fromLTRB(
-                  AppSpace.xxl, 0, AppSpace.xxl, AppSpace.xxl,
+                  AppSpace.xxl,
+                  0,
+                  AppSpace.xxl,
+                  AppSpace.xxl,
                 ),
                 itemCount: stats.achievements.length,
                 separatorBuilder: (context, index) => Padding(
@@ -436,33 +453,36 @@ class _AchievementCard extends StatelessWidget {
       return Squish(
         onTap: () => showAchievements(context, stats),
         child: AppCard(
-        raised: true,
-        color: c.greenWash,
-        borderColor: c.green.withValues(alpha: .35),
-        child: Row(
-          children: [
-            IconTile(
-              icon: Icons.emoji_events_rounded,
-              color: c.amber,
-              background: c.amberWash,
-              size: 44,
-            ),
-            const SizedBox(width: AppSpace.md),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(context.t('Everything unlocked'), style: AppText.word(c.ink)),
-                  const SizedBox(height: 2),
-                  Text(
-                    'All ${stats.unlocked} levels. Keep saving what you like.',
-                    style: AppText.caption(c.ink2),
-                  ),
-                ],
+          raised: true,
+          color: c.greenWash,
+          borderColor: c.green.withValues(alpha: .35),
+          child: Row(
+            children: [
+              IconTile(
+                icon: Icons.emoji_events_rounded,
+                color: c.amber,
+                background: c.amberWash,
+                size: 44,
               ),
-            ),
-          ],
-        ),
+              const SizedBox(width: AppSpace.md),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      context.t('Everything unlocked'),
+                      style: AppText.word(c.ink),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      'All ${stats.unlocked} levels. Keep saving what you like.',
+                      style: AppText.caption(c.ink2),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       );
     }
@@ -470,33 +490,38 @@ class _AchievementCard extends StatelessWidget {
     return Squish(
       onTap: () => showAchievements(context, stats),
       child: AppCard(
-      raised: true,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Text(
-                context.t('CLOSEST ACHIEVEMENT'),
-                style: font(
-                  size: 11,
-                  weight: 800,
-                  color: c.ink3,
-                  height: 1.2,
-                  letterSpacing: 1.1,
+        raised: true,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Text(
+                  context.t('CLOSEST ACHIEVEMENT'),
+                  style: font(
+                    size: 11,
+                    weight: 800,
+                    color: c.ink3,
+                    height: 1.2,
+                    letterSpacing: 1.1,
+                  ),
                 ),
-              ),
-              const Spacer(),
-              Text(
-                '${stats.unlocked} unlocked',
-                style: font(size: 11, weight: 800, color: c.ink3, height: 1.2),
-              ),
-            ],
-          ),
-          const SizedBox(height: AppSpace.md),
-          AchievementRow(achievement: next),
-        ],
-      ),
+                const Spacer(),
+                Text(
+                  '${stats.unlocked} unlocked',
+                  style: font(
+                    size: 11,
+                    weight: 800,
+                    color: c.ink3,
+                    height: 1.2,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: AppSpace.md),
+            AchievementRow(achievement: next),
+          ],
+        ),
       ),
     );
   }
@@ -617,7 +642,9 @@ class _TipCard extends StatelessWidget {
           const SizedBox(width: AppSpace.md),
           Expanded(
             child: Text(
-              context.t('Select text anywhere, then pick Subtitle Notes from the menu.'),
+              context.t(
+                'Select text anywhere, then pick Subtitle Notes from the menu.',
+              ),
               style: font(size: 13, weight: 700, color: c.ink2, height: 1.4),
             ),
           ),
@@ -671,13 +698,23 @@ class _PractiseCard extends StatelessWidget {
                 const SizedBox(height: AppSpace.xxs),
                 Text(
                   context.t('Two minutes now beats reading the list again.'),
-                  style: font(size: 13, weight: 600, color: c.ink3, height: 1.35),
+                  style: font(
+                    size: 13,
+                    weight: 600,
+                    color: c.ink3,
+                    height: 1.35,
+                  ),
                 ),
               ],
             ),
           ),
           const SizedBox(width: AppSpace.md),
-          PushButton(label: context.t('Start'), expand: false, compact: true, onPressed: onStart),
+          PushButton(
+            label: context.t('Start'),
+            expand: false,
+            compact: true,
+            onPressed: onStart,
+          ),
         ],
       ),
     );
@@ -727,7 +764,9 @@ class _FirstRun extends StatelessWidget {
           ),
           const SizedBox(height: AppSpace.sm),
           Text(
-            context.t('Words land here from anywhere you are signed in with the same Google account.'),
+            context.t(
+              'Words land here from anywhere you are signed in with the same Google account.',
+            ),
             style: font(size: 15, weight: 600, color: c.ink3, height: 1.4),
           ),
           const SizedBox(height: AppSpace.xxl),
@@ -771,7 +810,9 @@ class _FirstRun extends StatelessWidget {
             ),
           const SizedBox(height: AppSpace.sm),
           Text(
-            context.t('The computer and the browser are connected from You → Connected devices.'),
+            context.t(
+              'The computer and the browser are connected from You → Connected devices.',
+            ),
             style: font(size: 13, weight: 600, color: c.ink3, height: 1.4),
           ),
         ],
@@ -821,7 +862,10 @@ class _SourceSection extends StatelessWidget {
               Container(
                 height: 10,
                 width: 10,
-                decoration: BoxDecoration(color: accent, shape: BoxShape.circle),
+                decoration: BoxDecoration(
+                  color: accent,
+                  shape: BoxShape.circle,
+                ),
               ),
               const SizedBox(width: AppSpace.sm),
               Expanded(
@@ -888,7 +932,9 @@ class _SourceSection extends StatelessWidget {
           confirm: () => confirmDestructive(
             context,
             title: 'Delete “${card.learningLabel}”?',
-            message: context.t('This removes it from every device signed in to your account. To retire a word you already know, swipe right instead.'),
+            message: context.t(
+              'This removes it from every device signed in to your account. To retire a word you already know, swipe right instead.',
+            ),
             confirmLabel: context.t('Delete'),
             cancelLabel: context.t('Keep it'),
           ),
@@ -940,132 +986,136 @@ class StudyCardTile extends StatelessWidget {
     final chips = card.sourceChips;
     final context_ = card.contextLine;
 
-    return Squish(
-      onTap: onTap,
-      semanticLabel: '${card.learningLabel}. ${card.primaryMeaning}',
-      child: Container(
-        decoration: BoxDecoration(
-          color: c.lip,
-          borderRadius: BorderRadius.circular(AppRadius.card),
-        ),
-        padding: const EdgeInsets.only(bottom: AppLip.card),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(AppRadius.card),
-          child: Container(
-            decoration: BoxDecoration(
-              color: c.surface,
-              borderRadius: BorderRadius.circular(AppRadius.card),
-              border: Border.all(color: c.line, width: 1.5),
-            ),
-            child: IntrinsicHeight(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Container(width: 6, color: accent),
-                  Expanded(
-                    child: Padding(
-                      padding: EdgeInsets.fromLTRB(
-                        AppSpace.lg,
-                        compact ? AppSpace.md : AppSpace.lg,
-                        AppSpace.lg,
-                        compact ? AppSpace.md : AppSpace.lg,
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  card.learningLabel,
-                                  maxLines: compact ? 2 : 3,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: compact
-                                      ? font(
-                                          size: 17,
-                                          weight: 800,
-                                          color: c.ink,
-                                          height: 1.2,
-                                        )
-                                      : AppText.word(c.ink),
-                                ),
-                              ),
-                              if (trailing != null) ...[
-                                const SizedBox(width: AppSpace.sm),
-                                trailing!,
-                              ],
-                            ],
-                          ),
-                          const SizedBox(height: AppSpace.xs),
-                          Text(
-                            card.primaryMeaning,
-                            maxLines: compact ? 2 : 3,
-                            overflow: TextOverflow.ellipsis,
-                            style: font(
-                              size: compact ? 14 : 15,
-                              weight: 600,
-                              color: c.ink2,
-                              height: 1.4,
-                            ),
-                          ),
-                          if (showContext && context_ != null) ...[
-                            const SizedBox(height: AppSpace.md),
-                            Container(
-                              padding: const EdgeInsets.fromLTRB(
-                                AppSpace.md,
-                                AppSpace.sm,
-                                AppSpace.md,
-                                AppSpace.sm,
-                              ),
-                              decoration: BoxDecoration(
-                                color: c.surfaceAlt,
-                                borderRadius: BorderRadius.circular(
-                                  AppRadius.small,
-                                ),
-                                border: Border(
-                                  left: BorderSide(
-                                    color: accent.withValues(alpha: .5),
-                                    width: 3,
-                                  ),
-                                ),
-                              ),
-                              child: Text(
-                                context_,
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                                style: font(
-                                  size: 13,
-                                  weight: 600,
-                                  color: c.ink3,
-                                  height: 1.4,
-                                  italic: true,
-                                ),
-                              ),
-                            ),
-                          ],
-                          if (chips.isNotEmpty) ...[
-                            SizedBox(height: compact ? AppSpace.sm : AppSpace.md),
-                            Wrap(
-                              spacing: AppSpace.sm,
-                              runSpacing: AppSpace.xs,
+    return TiltMedallion(
+      child: Squish(
+        onTap: onTap,
+        semanticLabel: '${card.learningLabel}. ${card.primaryMeaning}',
+        child: Container(
+          decoration: BoxDecoration(
+            color: c.lip,
+            borderRadius: BorderRadius.circular(AppRadius.card),
+          ),
+          padding: const EdgeInsets.only(bottom: AppLip.card),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(AppRadius.card),
+            child: Container(
+              decoration: BoxDecoration(
+                color: c.surface,
+                borderRadius: BorderRadius.circular(AppRadius.card),
+                border: Border.all(color: c.line, width: 1.5),
+              ),
+              child: IntrinsicHeight(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Container(width: 6, color: accent),
+                    Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.fromLTRB(
+                          AppSpace.lg,
+                          compact ? AppSpace.md : AppSpace.lg,
+                          AppSpace.lg,
+                          compact ? AppSpace.md : AppSpace.lg,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                for (final chip in chips)
-                                  Pill(
-                                    label: chip,
-                                    color: c.ink3,
-                                    background: c.surfaceAlt,
-                                    dense: true,
+                                Expanded(
+                                  child: Text(
+                                    card.learningLabel,
+                                    maxLines: compact ? 2 : 3,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: compact
+                                        ? font(
+                                            size: 17,
+                                            weight: 800,
+                                            color: c.ink,
+                                            height: 1.2,
+                                          )
+                                        : AppText.word(c.ink),
                                   ),
+                                ),
+                                if (trailing != null) ...[
+                                  const SizedBox(width: AppSpace.sm),
+                                  trailing!,
+                                ],
                               ],
                             ),
+                            const SizedBox(height: AppSpace.xs),
+                            Text(
+                              card.primaryMeaning,
+                              maxLines: compact ? 2 : 3,
+                              overflow: TextOverflow.ellipsis,
+                              style: font(
+                                size: compact ? 14 : 15,
+                                weight: 600,
+                                color: c.ink2,
+                                height: 1.4,
+                              ),
+                            ),
+                            if (showContext && context_ != null) ...[
+                              const SizedBox(height: AppSpace.md),
+                              Container(
+                                padding: const EdgeInsets.fromLTRB(
+                                  AppSpace.md,
+                                  AppSpace.sm,
+                                  AppSpace.md,
+                                  AppSpace.sm,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: c.surfaceAlt,
+                                  borderRadius: BorderRadius.circular(
+                                    AppRadius.small,
+                                  ),
+                                  border: Border(
+                                    left: BorderSide(
+                                      color: accent.withValues(alpha: .5),
+                                      width: 3,
+                                    ),
+                                  ),
+                                ),
+                                child: Text(
+                                  context_,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: font(
+                                    size: 13,
+                                    weight: 600,
+                                    color: c.ink3,
+                                    height: 1.4,
+                                    italic: true,
+                                  ),
+                                ),
+                              ),
+                            ],
+                            if (chips.isNotEmpty) ...[
+                              SizedBox(
+                                height: compact ? AppSpace.sm : AppSpace.md,
+                              ),
+                              Wrap(
+                                spacing: AppSpace.sm,
+                                runSpacing: AppSpace.xs,
+                                children: [
+                                  for (final chip in chips)
+                                    Pill(
+                                      label: chip,
+                                      color: c.ink3,
+                                      background: c.surfaceAlt,
+                                      dense: true,
+                                    ),
+                                ],
+                              ),
+                            ],
                           ],
-                        ],
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
