@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <title>Subtitle Notes</title>
+    <style>
+      /* Печатная версия того же оформления, что и у самой программы: тёплая
+         бумага, один зелёный акцент, тонкие линии. Ничего не подгружается
+         из сети - файл должен печататься одинаково где угодно. */
+      @page { size: A4; margin: 0; }
+      :root {
+        --paper: #faf8f4; --ink: #14201c; --soft: #6b7a74; --hair: #e2ddd3;
+        --accent: #1e7a4c; --wash: #e7f2ea; --deep: #0b2e20;
+      }
+      * { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      body {
+        margin: 0; background: var(--paper); color: var(--ink);
+        font: 10.5pt/1.5 "Segoe UI", system-ui, -apple-system, sans-serif;
+      }
+      .page {
+        width: 210mm; height: 296.6mm; overflow: hidden; padding: 18mm 18mm 14mm;
+        page-break-after: always; position: relative; background: var(--paper);
+      }
+      .page:last-child { page-break-after: auto; }
+
+      h1 { margin: 0 0 4mm; font-size: 30pt; line-height: 1.08; letter-spacing: -.02em; font-weight: 700; }
+      h2 {
+        margin: 0 0 5mm; font-size: 9pt; font-weight: 700; letter-spacing: .16em;
+        text-transform: uppercase; color: var(--soft);
+      }
+      h3 { margin: 0 0 1.5mm; font-size: 12pt; font-weight: 700; letter-spacing: -.01em; }
+      p { margin: 0 0 3mm; }
+      .lede { font-size: 13pt; line-height: 1.45; color: var(--soft); max-width: 130mm; }
+      .mark {
+        display: flex; align-items: center; gap: 3mm; margin-bottom: 10mm;
+        font-size: 9pt; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--accent);
+      }
+      .mark i { width: 6mm; height: 6mm; border-radius: 1.6mm; background: var(--accent); position: relative; }
+      .mark i::after {
+        content: ""; position: absolute; inset: 1.4mm 1.3mm auto 1.3mm; height: .7mm;
+        background: var(--paper); box-shadow: 0 1.7mm 0 var(--paper);
+      }
+
+      /* Кадр с субтитром - тот же, что человек увидит на экране. */
+      .frame {
+        position: relative; height: 62mm; border-radius: 4mm; overflow: hidden; margin: 8mm 0;
+        background: linear-gradient(150deg, #33414d, #16202a 55%, #0d1216);
+      }
+      .caption {
+        position: absolute; left: 50%; bottom: 26mm; transform: translateX(-50%);
+        padding: 1.6mm 3mm; border-radius: 1.4mm; background: rgba(0,0,0,.72);
+        color: #fff; font-size: 12pt; font-weight: 600; white-space: nowrap;
+      }
+      .caption .picked { background: rgba(70, 214, 143, .34); border-radius: 1.6mm; padding: 0 .6mm; }
+      .answer {
+        position: absolute; left: 50%; bottom: 8mm; transform: translateX(-50%);
+        padding: 2.4mm 3.4mm; border-radius: 2.6mm; background: rgba(18,22,21,.96);
+        border-left: .8mm solid #46d68f; color: #7fe3ab; font-size: 12pt; font-weight: 650;
+      }
+
+      ol.steps { counter-reset: s; list-style: none; margin: 0; padding: 0; }
+      ol.steps li { counter-increment: s; position: relative; padding: 4mm 0 4mm 13mm; border-top: .3mm solid var(--hair); }
+      ol.steps li::before {
+        content: counter(s); position: absolute; left: 0; top: 4mm; width: 8mm; height: 8mm;
+        border-radius: 50%; background: var(--wash); color: var(--accent);
+        display: grid; place-items: center; font-size: 9.5pt; font-weight: 700;
+      }
+      ol.steps span { color: var(--soft); }
+
+      .cards { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 5mm; margin-top: 6mm; }
+      .card {
+        padding: 5mm; border: .3mm solid var(--hair); border-radius: 3mm; background: #fff;
+      }
+      .card b { display: block; margin-bottom: 1.5mm; font-size: 11pt; }
+      .card span { color: var(--soft); font-size: 9.5pt; line-height: 1.45; }
+      .card .num {
+        display: inline-block; margin-bottom: 3mm; padding: .8mm 2.4mm; border-radius: 999px;
+        background: var(--wash); color: var(--accent); font-size: 8pt; font-weight: 700; letter-spacing: .08em;
+      }
+
+      .shots { display: grid; grid-template-columns: 1fr 1fr; gap: 6mm; align-items: start; margin-top: 5mm; }
+      .shot img { width: 100%; border-radius: 3mm; border: .3mm solid var(--hair); display: block; }
+      .shot p { margin: 2mm 0 0; font-size: 9pt; color: var(--soft); }
+      .phone img { width: 62mm; }
+
+      .note {
+        margin-top: 6mm; padding: 4mm 5mm; border-radius: 3mm; background: var(--wash);
+        color: var(--deep); font-size: 9.5pt;
+      }
+      .foot {
+        position: absolute; left: 18mm; right: 18mm; bottom: 10mm;
+        display: flex; justify-content: space-between; font-size: 8.5pt; color: var(--soft);
+        border-top: .3mm solid var(--hair); padding-top: 3mm;
+      }
+      code { font-family: Consolas, ui-monospace, monospace; font-size: 9.5pt; color: var(--deep); }
+      strong { font-weight: 700; }
+    </style>
+  </head>
+  <body>
+    <!-- 1 -->
+    <section class="page">
+      <div class="mark"><i></i><span>Subtitle Notes</span></div>
+      <h1>Слово из фильма —<br />в том смысле, что здесь</h1>
+      <p class="lede">
+        Словарь переводит «No one wants a record» как «никто не хочет рекорд».
+        Subtitle Notes читает всю реплику и отвечает так, как перевёл бы дубляж:
+        «никому не нужна судимость». Слово остаётся в вашей библиотеке и через
+        день возвращается, чтобы вы его вспомнили.
+      </p>
+
+      <div class="frame">
+        <div class="caption">No one wants <span class="picked">a record</span>.</div>
+        <div class="answer">судимость</div>
+      </div>
+
+      <h2>Как это работает</h2>
+      <ol class="steps">
+        <li>
+          <h3>Держите Ctrl и протяните по субтитру</h3>
+          <span>Строка становится обычным текстом. Отпустили — плеер снова ваш:
+          субтитры перетаскиваются, клик ставит на паузу.</span>
+        </li>
+        <li>
+          <h3>Перевод появляется сразу, слово сохраняется само</h3>
+          <span>Никаких кнопок. Отменить можно в приложении — смахнуть карточку
+          в сторону.</span>
+        </li>
+        <li>
+          <h3>Во всём остальном просто выделяйте</h3>
+          <span>Страница, PDF, комментарий, субтитры в VLC. Всё попадает в одну
+          библиотеку.</span>
+        </li>
+      </ol>
+
+      <div class="foot"><span>Subtitle Notes</span><span>1</span></div>
+    </section>
+
+    <!-- 2 -->
+    <section class="page">
+      <h2>Установка</h2>
+      <h1 style="font-size: 22pt">Три места, один аккаунт</h1>
+      <p class="lede" style="font-size: 11pt">
+        Войдите везде одним и тем же аккаунтом Google — библиотека будет общая.
+        Начать можно с чего угодно, остальное добавить потом.
+      </p>
+
+      <div class="cards">
+        <div class="card">
+          <span class="num">ТЕЛЕФОН</span>
+          <b>Приложение</b>
+          <span>Установите Subtitle Notes из Google Play и войдите через Google.
+          Дальше выделяете текст в любом приложении, «Поделиться» → Subtitle Notes.</span>
+        </div>
+        <div class="card">
+          <span class="num">БРАУЗЕР</span>
+          <b>Расширение</b>
+          <span>Chrome, Edge или Opera. После установки откроется страница
+          с коротким вступлением и кнопкой «Войти через Google».</span>
+        </div>
+        <div class="card">
+          <span class="num">КОМПЬЮТЕР</span>
+          <b>Программа</b>
+          <span>Для субтитров в VLC и текста в любой программе по Ctrl+Alt+S.
+          Скачивается кнопкой в настройках расширения.</span>
+        </div>
+      </div>
+
+      <div class="note">
+        <strong>Про предупреждение Windows.</strong> Установщик не подписан
+        сертификатом, поэтому система покажет синее окно: нажмите «Подробнее»,
+        затем «Выполнить в любом случае». VLC программа настроит сама.
+      </div>
+
+      <h2 style="margin-top: 10mm">В браузере</h2>
+      <div class="shots">
+        <div class="shot">
+          <img src="browser-popup.png" alt="Окно расширения со списком последних слов" />
+          <p>Значок расширения: последние слова и выгрузка для Anki.</p>
+        </div>
+        <div class="shot">
+          <img src="browser-settings.png" alt="Настройки расширения" />
+          <p>Настройки: язык перевода, клавиша для субтитров, где показывать окно.</p>
+        </div>
+      </div>
+
+      <div class="foot"><span>Установка</span><span>2</span></div>
+    </section>
+
+    <!-- 3 -->
+    <section class="page">
+      <h2>В телефоне</h2>
+      <h1 style="font-size: 22pt">Библиотека и повторение</h1>
+      <p class="lede" style="font-size: 11pt">
+        Слова копятся сами. Раз в день приложение предлагает вспомнить те,
+        которым пора: сначала слово, потом — если не вспомнили — значение.
+        Знакомое возвращается всё реже, забытое — снова завтра.
+      </p>
+
+      <div class="shots" style="grid-template-columns: 1fr 1fr; margin-top: 8mm">
+        <div class="shot phone" style="justify-self: center">
+          <img src="phone-library.png" alt="Библиотека слов" />
+          <p>Все слова, поиск и «повторить».</p>
+        </div>
+        <div class="shot phone" style="justify-self: center">
+          <img src="phone-review.png" alt="Экран повторения" />
+          <p>Повторение: вспомнил — вернётся позже.</p>
+        </div>
+      </div>
+
+      <div class="note" style="margin-top: 8mm">
+        <strong>Если перевод неточный.</strong> На карточке есть «Свой вариант»:
+        напишите, как правильно. Ваша карточка изменится сразу, а если так же
+        напишут ещё двое — вариант станет общим для всех.
+      </div>
+
+      <p style="margin-top: 8mm; font-size: 9.5pt; color: var(--soft)">
+        Библиотека доступна и в браузере на любом компьютере:
+        <code>subtitle-notes-api.andreas-sultseng228.workers.dev/library</code><br />
+        Программа для Windows: <code>github.com/mjandreas125/subtitle-notes/releases</code>
+      </p>
+
+      <div class="foot"><span>Телефон</span><span>3</span></div>
+    </section>
+  </body>
+</html>
