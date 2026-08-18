@@ -328,5 +328,11 @@
   },
   "tourDesktop": {
     "message": "Também para o computador"
+  },
+  "optCompact": {
+    "message": "Cartão curto"
+  },
+  "optCompactHelp": {
+    "message": "Apenas o significado: sem sinónimos nem notas."
   }
 }

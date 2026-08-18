@@ -328,5 +328,11 @@
   },
   "tourDesktop": {
     "message": "Także na komputer"
+  },
+  "optCompact": {
+    "message": "Krótka fiszka"
+  },
+  "optCompactHelp": {
+    "message": "Tylko znaczenie: bez synonimów i notatek."
   }
 }

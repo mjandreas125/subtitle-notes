@@ -328,5 +328,11 @@
   },
   "tourDesktop": {
     "message": "Även till datorn"
+  },
+  "optCompact": {
+    "message": "Kort kort"
+  },
+  "optCompactHelp": {
+    "message": "Bara betydelsen: inga synonymer, inga noteringar."
   }
 }

@@ -45,6 +45,8 @@ const SN_DEFAULTS = {
   blocked: [],
   /// Say the English word out loud when a card opens.
   speak: false,
+  /// The short card: the meaning and nothing else.
+  compactCard: true,
 };
 
 function snMatchesHotkey(event, hotkey) {

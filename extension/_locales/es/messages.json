@@ -328,5 +328,11 @@
   },
   "tourDesktop": {
     "message": "También para el ordenador"
+  },
+  "optCompact": {
+    "message": "Tarjeta corta"
+  },
+  "optCompactHelp": {
+    "message": "Solo el significado: sin sinónimos ni notas."
   }
 }

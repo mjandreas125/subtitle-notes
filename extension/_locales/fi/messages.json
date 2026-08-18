@@ -328,5 +328,11 @@
   },
   "tourDesktop": {
     "message": "Myös tietokoneelle"
+  },
+  "optCompact": {
+    "message": "Lyhyt kortti"
+  },
+  "optCompactHelp": {
+    "message": "Vain merkitys: ei synonyymejä eikä huomioita."
   }
 }

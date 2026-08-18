@@ -328,5 +328,11 @@
   },
   "tourDesktop": {
     "message": "Auch für den Computer"
+  },
+  "optCompact": {
+    "message": "Kurze Karte"
+  },
+  "optCompactHelp": {
+    "message": "Nur die Bedeutung: keine Synonyme, keine Notizen."
   }
 }
