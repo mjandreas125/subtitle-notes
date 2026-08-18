@@ -9,8 +9,6 @@ const SAY: Record<string, Record<string, string>> = {
     title: 'Your library', words: 'Words', review: 'Practise', goals: 'Achievements',
     settings: 'Settings', search: 'Search your words', clear: 'Clear', all: 'All',
     active: 'Saved', learned: 'Learned', refresh: 'Refresh', signout: 'Sign out',
-    signin: 'Your words, on any computer.',
-    signinNote: 'Sign in with the same Google account as on your phone. Nothing is installed, and this browser only ever sees your own library.',
     empty: 'Nothing saved here yet',
     emptyNote: 'Highlight a subtitle in a player or any text on a page, and it appears here.',
     ready: 'ready to practise', reveal: 'Show meaning', again: 'Again', knew: 'I knew it',
@@ -27,13 +25,12 @@ const SAY: Record<string, Record<string, string>> = {
     exportAnki: 'Export for Anki', exportNote: 'A file with the word, its meaning and the line it came from.',
     deleteAccount: 'Delete account', working: 'One moment…',
     enter: 'Continue with Google',
+    sync: 'Sync with the app',
   },
   ru: {
     title: 'Ваша библиотека', words: 'Слова', review: 'Повторение', goals: 'Достижения',
     settings: 'Настройки', search: 'Поиск по словам', clear: 'Очистить', all: 'Все',
     active: 'Сохранённые', learned: 'Выученные', refresh: 'Обновить', signout: 'Выйти',
-    signin: 'Ваши слова на любом компьютере.',
-    signinNote: 'Войдите тем же аккаунтом Google, что и на телефоне. Ничего не устанавливается, а браузер видит только вашу библиотеку.',
     empty: 'Здесь пока пусто',
     emptyNote: 'Выделите субтитр в плеере или любой текст на странице - слово появится тут.',
     ready: 'ждут повторения', reveal: 'Показать значение', again: 'Ещё раз', knew: 'Вспомнил',
@@ -50,13 +47,12 @@ const SAY: Record<string, Record<string, string>> = {
     exportAnki: 'Выгрузить для Anki', exportNote: 'Файл со словом, значением и репликой, из которой оно взято.',
     deleteAccount: 'Удалить аккаунт', working: 'Секунду…',
     enter: 'Войти через Google',
+    sync: 'Синхронизация с приложением',
   },
   et: {
     title: 'Sinu kogu', words: 'Sõnad', review: 'Kordamine', goals: 'Saavutused',
     settings: 'Seaded', search: 'Otsi oma sõnadest', clear: 'Tühjenda', all: 'Kõik',
     active: 'Salvestatud', learned: 'Selged', refresh: 'Värskenda', signout: 'Logi välja',
-    signin: 'Sinu sõnad igas arvutis.',
-    signinNote: 'Logi sisse sama Google’i kontoga mis telefonis. Midagi ei paigaldata ja see brauser näeb ainult sinu kogu.',
     empty: 'Siin pole veel midagi',
     emptyNote: 'Märgi subtiiter mängijas või mis tahes tekst lehel - sõna ilmub siia.',
     ready: 'ootab kordamist', reveal: 'Näita tähendust', again: 'Uuesti', knew: 'Teadsin',
@@ -73,13 +69,12 @@ const SAY: Record<string, Record<string, string>> = {
     exportAnki: 'Ekspordi Ankisse', exportNote: 'Fail sõna, tähenduse ja lausega, kust see pärineb.',
     deleteAccount: 'Kustuta konto', working: 'Hetk…',
     enter: 'Jätka Google’iga',
+    sync: 'Sünkroonimine rakendusega',
   },
   de: {
     title: 'Deine Sammlung', words: 'Wörter', review: 'Üben', goals: 'Erfolge',
     settings: 'Einstellungen', search: 'In deinen Wörtern suchen', clear: 'Leeren', all: 'Alle',
     active: 'Gespeichert', learned: 'Gelernt', refresh: 'Aktualisieren', signout: 'Abmelden',
-    signin: 'Deine Wörter, an jedem Rechner.',
-    signinNote: 'Melde dich mit demselben Google-Konto an wie auf dem Handy. Es wird nichts installiert, und dieser Browser sieht nur deine eigene Sammlung.',
     empty: 'Hier ist noch nichts',
     emptyNote: 'Markiere einen Untertitel im Player oder Text auf einer Seite - das Wort erscheint hier.',
     ready: 'warten aufs Üben', reveal: 'Bedeutung zeigen', again: 'Nochmal', knew: 'Wusste ich',
@@ -96,13 +91,12 @@ const SAY: Record<string, Record<string, string>> = {
     exportAnki: 'Für Anki exportieren', exportNote: 'Eine Datei mit Wort, Bedeutung und der Zeile, aus der es stammt.',
     deleteAccount: 'Konto löschen', working: 'Einen Moment…',
     enter: 'Mit Google fortfahren',
+    sync: 'Mit der App synchronisieren',
   },
   fr: {
     title: 'Votre bibliothèque', words: 'Mots', review: 'Réviser', goals: 'Réussites',
     settings: 'Réglages', search: 'Chercher dans vos mots', clear: 'Effacer', all: 'Tous',
     active: 'Enregistrés', learned: 'Appris', refresh: 'Actualiser', signout: 'Se déconnecter',
-    signin: 'Vos mots, sur n’importe quel ordinateur.',
-    signinNote: 'Connectez-vous avec le compte Google du téléphone. Rien ne s’installe, et ce navigateur ne voit que votre bibliothèque.',
     empty: 'Rien d’enregistré ici',
     emptyNote: 'Sélectionnez un sous-titre ou du texte sur une page : le mot apparaît ici.',
     ready: 'à réviser', reveal: 'Voir le sens', again: 'Encore', knew: 'Je savais',
@@ -119,13 +113,12 @@ const SAY: Record<string, Record<string, string>> = {
     exportAnki: 'Exporter vers Anki', exportNote: 'Un fichier avec le mot, le sens et la réplique d’où il vient.',
     deleteAccount: 'Supprimer le compte', working: 'Un instant…',
     enter: 'Continuer avec Google',
+    sync: 'Synchroniser avec l’application',
   },
   es: {
     title: 'Tu biblioteca', words: 'Palabras', review: 'Repasar', goals: 'Logros',
     settings: 'Ajustes', search: 'Buscar en tus palabras', clear: 'Limpiar', all: 'Todas',
     active: 'Guardadas', learned: 'Aprendidas', refresh: 'Actualizar', signout: 'Cerrar sesión',
-    signin: 'Tus palabras, en cualquier ordenador.',
-    signinNote: 'Entra con la misma cuenta de Google del teléfono. No se instala nada y este navegador solo ve tu biblioteca.',
     empty: 'Aquí todavía no hay nada',
     emptyNote: 'Selecciona un subtítulo o cualquier texto de una página y la palabra aparecerá aquí.',
     ready: 'para repasar', reveal: 'Ver significado', again: 'Otra vez', knew: 'Lo sabía',
@@ -142,13 +135,12 @@ const SAY: Record<string, Record<string, string>> = {
     exportAnki: 'Exportar a Anki', exportNote: 'Un archivo con la palabra, su significado y la línea de origen.',
     deleteAccount: 'Eliminar cuenta', working: 'Un momento…',
     enter: 'Continuar con Google',
+    sync: 'Sincronizar con la aplicación',
   },
   it: {
     title: 'La tua raccolta', words: 'Parole', review: 'Ripasso', goals: 'Traguardi',
     settings: 'Impostazioni', search: 'Cerca fra le tue parole', clear: 'Pulisci', all: 'Tutte',
     active: 'Salvate', learned: 'Imparate', refresh: 'Aggiorna', signout: 'Esci',
-    signin: 'Le tue parole, su qualsiasi computer.',
-    signinNote: 'Accedi con lo stesso account Google del telefono. Non si installa nulla e questo browser vede solo la tua raccolta.',
     empty: 'Qui non c’è ancora niente',
     emptyNote: 'Seleziona un sottotitolo o del testo su una pagina: la parola compare qui.',
     ready: 'da ripassare', reveal: 'Mostra il significato', again: 'Ancora', knew: 'La sapevo',
@@ -165,13 +157,12 @@ const SAY: Record<string, Record<string, string>> = {
     exportAnki: 'Esporta per Anki', exportNote: 'Un file con la parola, il significato e la battuta di origine.',
     deleteAccount: 'Elimina account', working: 'Un attimo…',
     enter: 'Continua con Google',
+    sync: 'Sincronizza con l’app',
   },
   pt: {
     title: 'A sua biblioteca', words: 'Palavras', review: 'Rever', goals: 'Conquistas',
     settings: 'Definições', search: 'Procurar nas suas palavras', clear: 'Limpar', all: 'Todas',
     active: 'Guardadas', learned: 'Aprendidas', refresh: 'Atualizar', signout: 'Sair',
-    signin: 'As suas palavras, em qualquer computador.',
-    signinNote: 'Entre com a mesma conta Google do telemóvel. Nada é instalado e este navegador só vê a sua biblioteca.',
     empty: 'Ainda não há nada aqui',
     emptyNote: 'Selecione uma legenda ou texto numa página e a palavra aparece aqui.',
     ready: 'para rever', reveal: 'Mostrar significado', again: 'Outra vez', knew: 'Eu sabia',
@@ -188,13 +179,12 @@ const SAY: Record<string, Record<string, string>> = {
     exportAnki: 'Exportar para Anki', exportNote: 'Um ficheiro com a palavra, o significado e a fala de origem.',
     deleteAccount: 'Apagar conta', working: 'Um momento…',
     enter: 'Continuar com Google',
+    sync: 'Sincronizar com a aplicação',
   },
   pl: {
     title: 'Twoja biblioteka', words: 'Słowa', review: 'Powtórka', goals: 'Osiągnięcia',
     settings: 'Ustawienia', search: 'Szukaj w swoich słowach', clear: 'Wyczyść', all: 'Wszystkie',
     active: 'Zapisane', learned: 'Opanowane', refresh: 'Odśwież', signout: 'Wyloguj',
-    signin: 'Twoje słowa na każdym komputerze.',
-    signinNote: 'Zaloguj się tym samym kontem Google co w telefonie. Nic się nie instaluje, a przeglądarka widzi tylko twoją bibliotekę.',
     empty: 'Jeszcze nic tu nie ma',
     emptyNote: 'Zaznacz napis w odtwarzaczu albo tekst na stronie - słowo pojawi się tutaj.',
     ready: 'czeka na powtórkę', reveal: 'Pokaż znaczenie', again: 'Jeszcze raz', knew: 'Wiedziałem',
@@ -211,13 +201,12 @@ const SAY: Record<string, Record<string, string>> = {
     exportAnki: 'Eksport do Anki', exportNote: 'Plik ze słowem, znaczeniem i kwestią, z której pochodzi.',
     deleteAccount: 'Usuń konto', working: 'Chwileczkę…',
     enter: 'Kontynuuj z Google',
+    sync: 'Synchronizacja z aplikacją',
   },
   uk: {
     title: 'Ваша бібліотека', words: 'Слова', review: 'Повторення', goals: 'Досягнення',
     settings: 'Налаштування', search: 'Пошук за словами', clear: 'Очистити', all: 'Усі',
     active: 'Збережені', learned: 'Вивчені', refresh: 'Оновити', signout: 'Вийти',
-    signin: 'Ваші слова на будь-якому комп’ютері.',
-    signinNote: 'Увійдіть тим самим акаунтом Google, що й на телефоні. Нічого не встановлюється, а браузер бачить лише вашу бібліотеку.',
     empty: 'Тут поки порожньо',
     emptyNote: 'Виділіть субтитр у плеєрі або будь-який текст на сторінці - слово з’явиться тут.',
     ready: 'чекають повторення', reveal: 'Показати значення', again: 'Ще раз', knew: 'Згадав',
@@ -234,13 +223,12 @@ const SAY: Record<string, Record<string, string>> = {
     exportAnki: 'Вивантажити для Anki', exportNote: 'Файл зі словом, значенням і реплікою, з якої воно взяте.',
     deleteAccount: 'Видалити акаунт', working: 'Секунду…',
     enter: 'Увійти через Google',
+    sync: 'Синхронізація із застосунком',
   },
   nl: {
     title: 'Jouw bibliotheek', words: 'Woorden', review: 'Oefenen', goals: 'Prestaties',
     settings: 'Instellingen', search: 'Zoek in je woorden', clear: 'Wissen', all: 'Alle',
     active: 'Bewaard', learned: 'Geleerd', refresh: 'Vernieuwen', signout: 'Afmelden',
-    signin: 'Jouw woorden, op elke computer.',
-    signinNote: 'Meld je aan met hetzelfde Google-account als op je telefoon. Er wordt niets geïnstalleerd en deze browser ziet alleen jouw bibliotheek.',
     empty: 'Hier staat nog niets',
     emptyNote: 'Selecteer een ondertitel of tekst op een pagina en het woord verschijnt hier.',
     ready: 'klaar om te oefenen', reveal: 'Toon betekenis', again: 'Opnieuw', knew: 'Wist ik',
@@ -257,13 +245,12 @@ const SAY: Record<string, Record<string, string>> = {
     exportAnki: 'Exporteren naar Anki', exportNote: 'Een bestand met het woord, de betekenis en de zin waar het uit komt.',
     deleteAccount: 'Account verwijderen', working: 'Momentje…',
     enter: 'Doorgaan met Google',
+    sync: 'Synchroniseren met de app',
   },
   sv: {
     title: 'Ditt bibliotek', words: 'Ord', review: 'Öva', goals: 'Utmärkelser',
     settings: 'Inställningar', search: 'Sök bland dina ord', clear: 'Rensa', all: 'Alla',
     active: 'Sparade', learned: 'Inlärda', refresh: 'Uppdatera', signout: 'Logga ut',
-    signin: 'Dina ord, på vilken dator som helst.',
-    signinNote: 'Logga in med samma Google-konto som i telefonen. Inget installeras och den här webbläsaren ser bara ditt eget bibliotek.',
     empty: 'Här finns inget än',
     emptyNote: 'Markera en undertext eller text på en sida - ordet dyker upp här.',
     ready: 'väntar på repetition', reveal: 'Visa betydelse', again: 'Igen', knew: 'Jag kunde det',
@@ -280,13 +267,12 @@ const SAY: Record<string, Record<string, string>> = {
     exportAnki: 'Exportera till Anki', exportNote: 'En fil med ordet, betydelsen och repliken det kom ur.',
     deleteAccount: 'Radera konto', working: 'Ett ögonblick…',
     enter: 'Fortsätt med Google',
+    sync: 'Synkronisera med appen',
   },
   fi: {
     title: 'Oma kirjasto', words: 'Sanat', review: 'Kertaus', goals: 'Saavutukset',
     settings: 'Asetukset', search: 'Hae omista sanoista', clear: 'Tyhjennä', all: 'Kaikki',
     active: 'Tallennetut', learned: 'Opitut', refresh: 'Päivitä', signout: 'Kirjaudu ulos',
-    signin: 'Sanasi millä tahansa koneella.',
-    signinNote: 'Kirjaudu samalla Google-tilillä kuin puhelimessa. Mitään ei asenneta, ja selain näkee vain oman kirjastosi.',
     empty: 'Täällä ei ole vielä mitään',
     emptyNote: 'Maalaa tekstitys soittimessa tai mikä tahansa teksti sivulla - sana ilmestyy tänne.',
     ready: 'odottaa kertausta', reveal: 'Näytä merkitys', again: 'Uudelleen', knew: 'Muistin',
@@ -303,13 +289,12 @@ const SAY: Record<string, Record<string, string>> = {
     exportAnki: 'Vie Ankiin', exportNote: 'Tiedosto, jossa on sana, merkitys ja repliikki.',
     deleteAccount: 'Poista tili', working: 'Hetki…',
     enter: 'Jatka Google-tilillä',
+    sync: 'Synkronoi sovelluksen kanssa',
   },
   tr: {
     title: 'Kitaplığınız', words: 'Kelimeler', review: 'Tekrar', goals: 'Başarımlar',
     settings: 'Ayarlar', search: 'Kelimelerinizde arayın', clear: 'Temizle', all: 'Tümü',
     active: 'Kayıtlı', learned: 'Öğrenildi', refresh: 'Yenile', signout: 'Çıkış',
-    signin: 'Kelimeleriniz her bilgisayarda.',
-    signinNote: 'Telefonunuzdaki Google hesabıyla girin. Hiçbir şey kurulmaz ve bu tarayıcı yalnızca sizin kitaplığınızı görür.',
     empty: 'Burada henüz bir şey yok',
     emptyNote: 'Oynatıcıda bir altyazıyı ya da sayfadaki metni seçin - kelime burada belirir.',
     ready: 'tekrar bekliyor', reveal: 'Anlamı göster', again: 'Tekrar', knew: 'Biliyordum',
@@ -326,6 +311,7 @@ const SAY: Record<string, Record<string, string>> = {
     exportAnki: 'Anki için dışa aktar', exportNote: 'Kelimeyi, anlamını ve geldiği repliği içeren bir dosya.',
     deleteAccount: 'Hesabı sil', working: 'Bir saniye…',
     enter: 'Google ile devam et',
+    sync: 'Uygulamayla eşitle',
   },
 };
 
@@ -519,6 +505,7 @@ export const libraryPage = (lang: string, clientId: string) => {
 <nav id="tabs" hidden></nav>
 <main>
   <section id="login">
+    <p id="login-sync"></p>
     <div id="google"></div>
     <p id="login-note"></p>
   </section>
@@ -913,6 +900,7 @@ export const libraryPage = (lang: string, clientId: string) => {
     $('refresh').textContent = T.refresh;
     $('signout').textContent = T.signout;
     $('clear').textContent = T.clear;
+    $('login-sync').textContent = T.sync;
     $('search').placeholder = T.search;
     renderFilters();
 
@@ -929,7 +917,16 @@ export const libraryPage = (lang: string, clientId: string) => {
     var state = location.hash.match(/state=([^&]+)/);
     if (back && state && state[1] === sessionStorage.getItem('sn-state')) {
       sessionStorage.removeItem('sn-state');
-      history.replaceState(null, '', location.pathname);
+      var search = sessionStorage.getItem('sn-search') || '';
+      sessionStorage.removeItem('sn-search');
+      var wanted = (search.match(/lang=([A-Za-z_-]+)/) || [])[1];
+      if (wanted && wanted.slice(0, 2).toLowerCase() !== document.documentElement.lang) {
+        // Rendered in the browser's language, not the one asked for: load it
+        // again with the token still in hand.
+        location.replace(location.pathname + search + location.hash);
+        return;
+      }
+      history.replaceState(null, '', location.pathname + search);
       signedIn(decodeURIComponent(back[1]));
       return;
     }
@@ -965,6 +962,7 @@ export const libraryPage = (lang: string, clientId: string) => {
       // redirect always works.
       var state = Math.random().toString(36).slice(2);
       sessionStorage.setItem('sn-state', state);
+      sessionStorage.setItem('sn-search', location.search);
       location.href = 'https://accounts.google.com/o/oauth2/v2/auth' +
         '?client_id=' + encodeURIComponent(${JSON.stringify(clientId)}) +
         '&redirect_uri=' + encodeURIComponent(location.origin + '/library') +

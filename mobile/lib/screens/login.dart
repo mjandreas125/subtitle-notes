@@ -154,7 +154,7 @@ class _LoginPageState extends State<LoginPage> {
                       child: ConstrainedBox(
                         constraints: const BoxConstraints(maxWidth: 300),
                         child: Text(
-                          context.t('Every word you stop to look up, kept in one place and translated where you found it.'),
+                          context.t('Sync with the app'),
                           textAlign: TextAlign.center,
                           style: AppText.bodySoft(c.ink2),
                         ),
@@ -227,7 +227,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     const SizedBox(height: AppSpace.lg),
                     Text(
-                      context.t('One account connects your phone, computer and browser. No password to remember.'),
+                      context.t('One account for phone, computer and browser.'),
                       textAlign: TextAlign.center,
                       style: AppText.caption(c.ink3),
                     ),
