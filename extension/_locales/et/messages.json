@@ -3,7 +3,7 @@
     "message": "Subtitle Notes"
   },
   "appDescription": {
-    "message": "Märgi sõna ära kus tahes - lehel, PDF-is, filmi subtiitrites - ja hoia alles, mida see tegelikult tähendab."
+    "message": "Tõlgib valitud sõna, arvestades kogu lauset. Töötab subtiitrites, igal lehel ja PDF-is."
   },
   "menuSave": {
     "message": "Salvesta „%s“ Subtitle Notesi"

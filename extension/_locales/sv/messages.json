@@ -3,7 +3,7 @@
     "message": "Subtitle Notes"
   },
   "appDescription": {
-    "message": "Markera ett ord var som helst - en sida, en PDF, undertexterna i en film - och behåll vad det faktiskt betyder."
+    "message": "Översätter det markerade ordet utifrån hela meningen. Fungerar i undertexter, på vilken sida som helst och i PDF."
   },
   "menuSave": {
     "message": "Spara ”%s” i Subtitle Notes"

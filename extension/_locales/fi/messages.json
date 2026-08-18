@@ -3,7 +3,7 @@
     "message": "Subtitle Notes"
   },
   "appDescription": {
-    "message": "Maalaa sana missä tahansa - sivulla, PDF:ssä, elokuvan tekstityksessä - ja säilytä se, mitä se oikeasti tarkoittaa."
+    "message": "Kääntää valitun sanan koko lauseen perusteella. Toimii tekstityksissä, millä tahansa sivulla ja PDF-tiedostoissa."
   },
   "menuSave": {
     "message": "Tallenna ”%s” Subtitle Notesiin"

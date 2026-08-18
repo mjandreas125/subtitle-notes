@@ -3,7 +3,7 @@
     "message": "Subtitle Notes"
   },
   "appDescription": {
-    "message": "Herhangi bir yerde bir kelimeyi seç - bir sayfa, bir PDF, bir filmin altyazısı - ve gerçekte ne demek olduğunu sakla."
+    "message": "Seçtiğiniz kelimeyi cümlenin tamamını dikkate alarak çevirir. Altyazılarda, her sayfada ve PDF’lerde çalışır."
   },
   "menuSave": {
     "message": "“%s” ifadesini Subtitle Notes'a kaydet"
