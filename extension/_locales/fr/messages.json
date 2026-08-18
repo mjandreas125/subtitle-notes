@@ -94,7 +94,7 @@
     }
   },
   "popupConnectedPlain": {
-    "message": "Connecté. Surlignez du texte sur n'importe quelle page."
+    "message": "Votre bibliothèque"
   },
   "popupEmpty": {
     "message": "Rien d'enregistré pour l'instant. Surlignez un mot sur une page, dans un PDF ou dans des sous-titres."
@@ -334,5 +334,11 @@
   },
   "optCompactHelp": {
     "message": "Seulement le sens : ni synonymes ni notes."
+  },
+  "popupRecent": {
+    "message": "Récents"
+  },
+  "popupEmptyTitle": {
+    "message": "Encore vide"
   }
 }

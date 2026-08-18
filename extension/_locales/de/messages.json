@@ -94,7 +94,7 @@
     }
   },
   "popupConnectedPlain": {
-    "message": "Verbunden. Markiere Text auf einer beliebigen Seite."
+    "message": "Deine Sammlung"
   },
   "popupEmpty": {
     "message": "Noch nichts gespeichert. Markiere ein Wort auf einer Seite, in einem PDF oder in Untertiteln."
@@ -334,5 +334,11 @@
   },
   "optCompactHelp": {
     "message": "Nur die Bedeutung: keine Synonyme, keine Notizen."
+  },
+  "popupRecent": {
+    "message": "Zuletzt"
+  },
+  "popupEmptyTitle": {
+    "message": "Noch nichts"
   }
 }

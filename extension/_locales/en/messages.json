@@ -94,7 +94,7 @@
     }
   },
   "popupConnectedPlain": {
-    "message": "Connected. Highlight text on any page."
+    "message": "Your library"
   },
   "popupEmpty": {
     "message": "Nothing saved yet. Highlight a word on a page, in a PDF or in subtitles."
@@ -334,5 +334,11 @@
   },
   "optCompactHelp": {
     "message": "Only the meaning: no synonyms, no notes."
+  },
+  "popupRecent": {
+    "message": "Recently saved"
+  },
+  "popupEmptyTitle": {
+    "message": "Nothing here yet"
   }
 }

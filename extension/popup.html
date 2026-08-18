@@ -28,7 +28,7 @@
         font: 14px/1.5 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
         -webkit-font-smoothing: antialiased;
       }
-      .top { display: flex; align-items: center; gap: 9px; margin-bottom: 4px; }
+      .top { display: flex; align-items: center; gap: 9px; margin-bottom: 14px; }
       .top i { width: 16px; height: 16px; border-radius: 5px; background: var(--accent); position: relative; }
       .top i::after {
         content: ""; position: absolute; inset: 4px 3px auto 3px; height: 2px;
@@ -36,6 +36,34 @@
       }
       h1 { margin: 0; font-size: 15px; font-weight: 700; letter-spacing: -.012em; }
       p { margin: 0 0 13px; color: var(--soft); font-size: 13px; }
+
+      /* Who this library belongs to, said once and quietly. */
+      .who { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+      .who .face {
+        flex: 0 0 auto; width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center;
+        background: var(--wash); color: var(--accent); font-weight: 700; font-size: 14px; text-transform: uppercase;
+      }
+      .who .lines { min-width: 0; }
+      .who b { display: block; font-size: 13px; font-weight: 660; letter-spacing: -.008em; }
+      .who span {
+        display: block; font-size: 12px; color: var(--soft);
+        overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+      }
+
+      .empty {
+        display: grid; gap: 4px; justify-items: center; text-align: center;
+        padding: 20px 8px 18px; border: 1px dashed var(--hair); border-radius: 12px;
+      }
+      .empty b { font-size: 13px; font-weight: 660; }
+      .empty span { font-size: 12.5px; color: var(--soft); line-height: 1.45; }
+
+      .count {
+        display: flex; align-items: baseline; justify-content: space-between;
+        margin: 2px 0 6px; font-size: 11px; font-weight: 700;
+        letter-spacing: .1em; text-transform: uppercase; color: var(--soft);
+      }
+      .foot { display: flex; gap: 6px; margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--hair); }
+      .foot button { flex: 1; }
       button {
         width: 100%; padding: 10px 14px; border: 0; border-radius: 11px; cursor: pointer;
         background: var(--accent); color: #ffffff; font: 700 14px inherit; letter-spacing: -.005em;
@@ -43,25 +71,35 @@
       }
       button:hover { background: var(--accent-deep); }
       ul { list-style: none; margin: 0; padding: 0; }
-      ul:not(:empty) { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--hair); }
-      li { padding: 8px 0; }
-      li + li { border-top: 1px solid var(--hair); }
+      li { padding: 7px 10px; border-radius: 9px; }
+      li:nth-child(odd) { background: var(--wash); }
       li b { display: block; font-size: 13.5px; font-weight: 640; letter-spacing: -.008em; }
-      li span { color: var(--soft); font-size: 12.5px; }
+      li span {
+        display: block; color: var(--soft); font-size: 12.5px;
+        overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+      }
       .quiet {
-        display: block; width: 100%; margin-top: 10px; padding: 8px 0; border: 0; border-radius: 9px;
+        display: block; width: 100%; padding: 8px 0; border: 1px solid transparent; border-radius: 9px;
         background: transparent; color: var(--accent); font: 700 13px inherit; cursor: pointer; text-align: center;
       }
+      .quiet:hover { background: var(--wash); border-color: var(--hair); }
       .quiet:hover { background: var(--wash); }
     </style>
   </head>
   <body>
     <div class="top"><i></i><h1 id="title">Subtitle Notes</h1></div>
+    <div class="who" id="who" hidden>
+      <div class="face" id="face">·</div>
+      <div class="lines"><b id="whoTitle"></b><span id="whoMail"></span></div>
+    </div>
     <p id="state"></p>
     <button id="connect" hidden></button>
+    <div class="count" id="count" hidden></div>
     <ul id="recent"></ul>
-    <button class="quiet" id="export" hidden></button>
-    <button class="quiet" id="settings"></button>
+    <div class="foot">
+      <button class="quiet" id="export" hidden></button>
+      <button class="quiet" id="settings"></button>
+    </div>
     <script src="settings.js"></script>
     <script src="popup.js"></script>
   </body>

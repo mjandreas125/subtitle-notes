@@ -94,7 +94,7 @@
     }
   },
   "popupConnectedPlain": {
-    "message": "Conectado. Resalta texto en cualquier página."
+    "message": "Tu biblioteca"
   },
   "popupEmpty": {
     "message": "Aún no hay nada guardado. Resalta una palabra en una página, en un PDF o en los subtítulos."
@@ -334,5 +334,11 @@
   },
   "optCompactHelp": {
     "message": "Solo el significado: sin sinónimos ni notas."
+  },
+  "popupRecent": {
+    "message": "Recientes"
+  },
+  "popupEmptyTitle": {
+    "message": "Aún vacío"
   }
 }

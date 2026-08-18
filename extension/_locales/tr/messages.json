@@ -94,7 +94,7 @@
     }
   },
   "popupConnectedPlain": {
-    "message": "Bağlandı. Herhangi bir sayfada metin seç."
+    "message": "Kütüphaneniz"
   },
   "popupEmpty": {
     "message": "Henüz hiçbir şey kaydedilmedi. Bir sayfada, PDF'te ya da altyazıda bir kelime seç."
@@ -334,5 +334,11 @@
   },
   "optCompactHelp": {
     "message": "Sadece anlam: eş anlamlı ve not yok."
+  },
+  "popupRecent": {
+    "message": "Son eklenenler"
+  },
+  "popupEmptyTitle": {
+    "message": "Henüz boş"
   }
 }
