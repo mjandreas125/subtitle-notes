@@ -1,3 +1,5 @@
+import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart';
 
 import '../data.dart';
@@ -422,7 +424,10 @@ class _Sidebar extends StatelessWidget {
           ),
           const SizedBox(height: AppSpace.lg),
           Padding(
-            padding: const EdgeInsets.only(left: AppSpace.sm, bottom: AppSpace.sm),
+            padding: const EdgeInsets.only(
+              left: AppSpace.sm,
+              bottom: AppSpace.sm,
+            ),
             child: Text(
               'SOURCES',
               style: font(
@@ -461,10 +466,7 @@ class _Sidebar extends StatelessWidget {
                 ),
                 const SizedBox(height: AppSpace.md),
                 if (stats.nextUp == null)
-                  Text(
-                    'Everything unlocked.',
-                    style: AppText.caption(c.ink2),
-                  )
+                  Text('Everything unlocked.', style: AppText.caption(c.ink2))
                 else
                   AchievementRow(achievement: stats.nextUp!, dense: true),
               ],
@@ -508,7 +510,10 @@ class _Sidebar extends StatelessWidget {
               Container(
                 height: 9,
                 width: 9,
-                decoration: BoxDecoration(color: accent, shape: BoxShape.circle),
+                decoration: BoxDecoration(
+                  color: accent,
+                  shape: BoxShape.circle,
+                ),
               ),
               const SizedBox(width: AppSpace.md),
               Expanded(
@@ -558,73 +563,120 @@ class _WordCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = context.c;
-    return Squish(
-      onTap: onTap,
-      scale: .98,
-      semanticLabel: card.learningLabel,
-      child: Container(
-        decoration: BoxDecoration(
-          color: c.lip,
-          borderRadius: BorderRadius.circular(AppRadius.card),
-        ),
-        padding: const EdgeInsets.only(bottom: AppLip.card),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(AppRadius.card),
-          child: Container(
-            decoration: BoxDecoration(
-              color: c.surface,
-              borderRadius: BorderRadius.circular(AppRadius.card),
-              border: Border.all(
-                color: selected ? accent : c.line,
-                width: selected ? 2 : 1.5,
+    return TiltMedallion(
+      child: Squish(
+        onTap: onTap,
+        scale: .98,
+        semanticLabel: card.learningLabel,
+        child: Container(
+          decoration: BoxDecoration(
+            color: c.lip,
+            borderRadius: BorderRadius.circular(AppRadius.card),
+            boxShadow: [
+              BoxShadow(
+                color: c.ink.withValues(alpha: .16),
+                blurRadius: 24,
+                offset: const Offset(0, 13),
               ),
-            ),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Container(width: 6, color: accent),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(AppSpace.lg),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          card.learningLabel,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: AppText.word(c.ink),
-                        ),
-                        const SizedBox(height: AppSpace.xs),
-                        Expanded(
-                          child: Text(
-                            card.primaryMeaning,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            style: font(
-                              size: 14,
-                              weight: 600,
-                              color: c.ink2,
-                              height: 1.4,
+              BoxShadow(
+                color: Colors.white.withValues(alpha: .45),
+                blurRadius: 3,
+                offset: const Offset(0, 1),
+              ),
+            ],
+          ),
+          padding: const EdgeInsets.only(bottom: AppLip.card + 2),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(AppRadius.card),
+            child: BackdropFilter(
+              filter: ui.ImageFilter.blur(sigmaX: 16, sigmaY: 16),
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      c.surface.withValues(alpha: .87),
+                      c.surface.withValues(alpha: .68),
+                    ],
+                  ),
+                  border: Border.all(
+                    color: selected ? accent : c.line.withValues(alpha: .82),
+                    width: selected ? 2.2 : 1.5,
+                  ),
+                  borderRadius: BorderRadius.circular(AppRadius.card),
+                ),
+                child: Stack(
+                  children: [
+                    Positioned.fill(
+                      child: IgnorePointer(
+                        child: DecoratedBox(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(AppRadius.card),
+                            gradient: const LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.center,
+                              colors: [
+                                Color(0x54FFFFFF),
+                                Color(0x14FFFFFF),
+                                Color(0x00FFFFFF),
+                              ],
+                              stops: [0, .32, .78],
                             ),
                           ),
                         ),
-                        Text(
-                          card.mediaTitle,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: font(
-                            size: 12,
-                            weight: 700,
-                            color: c.ink3,
-                            height: 1.2,
+                      ),
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Container(width: 6, color: accent),
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.all(AppSpace.lg),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  card.learningLabel,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: AppText.word(c.ink),
+                                ),
+                                const SizedBox(height: AppSpace.xs),
+                                Expanded(
+                                  child: Text(
+                                    card.primaryMeaning,
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: font(
+                                      size: 14,
+                                      weight: 600,
+                                      color: c.ink2,
+                                      height: 1.4,
+                                    ),
+                                  ),
+                                ),
+                                Text(
+                                  card.mediaTitle,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: font(
+                                    size: 12,
+                                    weight: 700,
+                                    color: c.ink3,
+                                    height: 1.2,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ],
                     ),
-                  ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
         ),
@@ -688,37 +740,104 @@ class _DetailPanel extends StatelessWidget {
             ],
           ),
           const SizedBox(height: AppSpace.md),
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(AppSpace.xl),
-            decoration: BoxDecoration(
-              color: accent,
-              borderRadius: BorderRadius.circular(AppRadius.panel),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SelectableText(
-                  card.learningLabel,
-                  style: font(
-                    size: 26,
-                    weight: 900,
-                    color: c.onAccent(accent),
-                    height: 1.15,
-                    letterSpacing: -.5,
+          TiltMedallion(
+            radius: AppRadius.panel,
+            child: Container(
+              decoration: BoxDecoration(
+                color: accent.withValues(alpha: .78),
+                borderRadius: BorderRadius.circular(AppRadius.panel),
+                boxShadow: [
+                  BoxShadow(
+                    color: accent.withValues(alpha: .32),
+                    blurRadius: 26,
+                    offset: const Offset(0, 14),
+                  ),
+                  BoxShadow(
+                    color: Colors.white.withValues(alpha: .34),
+                    blurRadius: 3,
+                    offset: const Offset(0, 1),
+                  ),
+                ],
+              ),
+              padding: const EdgeInsets.only(bottom: AppLip.card + 3),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(AppRadius.panel),
+                child: BackdropFilter(
+                  filter: ui.ImageFilter.blur(sigmaX: 16, sigmaY: 16),
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          accent.withValues(alpha: .93),
+                          accent.withValues(alpha: .70),
+                        ],
+                      ),
+                      borderRadius: BorderRadius.circular(AppRadius.panel),
+                      border: Border.all(
+                        color: Colors.white.withValues(alpha: .44),
+                        width: 1.5,
+                      ),
+                    ),
+                    child: Stack(
+                      children: [
+                        Positioned.fill(
+                          child: IgnorePointer(
+                            child: DecoratedBox(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(
+                                  AppRadius.panel,
+                                ),
+                                gradient: const LinearGradient(
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.center,
+                                  colors: [
+                                    Color(0x5CFFFFFF),
+                                    Color(0x16FFFFFF),
+                                    Color(0x00FFFFFF),
+                                  ],
+                                  stops: [0, .32, .78],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(AppSpace.xl),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SelectableText(
+                                card.learningLabel,
+                                style: font(
+                                  size: 26,
+                                  weight: 900,
+                                  color: c.onAccent(accent),
+                                  height: 1.15,
+                                  letterSpacing: -.5,
+                                ),
+                              ),
+                              const SizedBox(height: AppSpace.sm),
+                              SelectableText(
+                                card.primaryMeaning,
+                                style: font(
+                                  size: 16,
+                                  weight: 700,
+                                  color: c
+                                      .onAccent(accent)
+                                      .withValues(alpha: .92),
+                                  height: 1.4,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-                const SizedBox(height: AppSpace.sm),
-                SelectableText(
-                  card.primaryMeaning,
-                  style: font(
-                    size: 16,
-                    weight: 700,
-                    color: c.onAccent(accent).withValues(alpha: .92),
-                    height: 1.4,
-                  ),
-                ),
-              ],
+              ),
             ),
           ),
           if (card.sourceChips.isNotEmpty) ...[
@@ -748,8 +867,7 @@ class _DetailPanel extends StatelessWidget {
                 for (final variant in item.variants)
                   StudyExample(text: variant),
               ]),
-            if (item.examples.isNotEmpty)
-              _list(c, 'Examples', item.examples),
+            if (item.examples.isNotEmpty) _list(c, 'Examples', item.examples),
           ],
         ],
       ),
@@ -758,56 +876,67 @@ class _DetailPanel extends StatelessWidget {
 
   Widget _block(AppColors c, String title, String value) => Padding(
     padding: const EdgeInsets.only(top: AppSpace.lg),
-    child: AppCard(
-      padding: const EdgeInsets.all(AppSpace.lg),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            title,
-            style: font(size: 12, weight: 800, color: c.ink3, height: 1.2),
-          ),
-          const SizedBox(height: AppSpace.sm),
-          SelectableText(
-            value,
-            style: font(size: 15, weight: 600, color: c.ink, height: 1.45),
-          ),
-        ],
+    child: TiltMedallion(
+      child: AppCard(
+        raised: true,
+        padding: const EdgeInsets.all(AppSpace.lg),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              title,
+              style: font(size: 12, weight: 800, color: c.ink3, height: 1.2),
+            ),
+            const SizedBox(height: AppSpace.sm),
+            SelectableText(
+              value,
+              style: font(size: 15, weight: 600, color: c.ink, height: 1.45),
+            ),
+          ],
+        ),
       ),
     ),
   );
 
   Widget _list(AppColors c, String title, List<StudyExample> values) => Padding(
     padding: const EdgeInsets.only(top: AppSpace.lg),
-    child: AppCard(
-      padding: const EdgeInsets.all(AppSpace.lg),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            title,
-            style: font(size: 12, weight: 800, color: c.ink3, height: 1.2),
-          ),
-          const SizedBox(height: AppSpace.md),
-          for (var index = 0; index < values.length; index++) ...[
-            if (index > 0)
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: AppSpace.md),
-                child: Divider(color: c.line, height: 1.5, thickness: 1.5),
-              ),
-            SelectableText(
-              values[index].text,
-              style: font(size: 15, weight: 600, color: c.ink, height: 1.45),
+    child: TiltMedallion(
+      child: AppCard(
+        raised: true,
+        padding: const EdgeInsets.all(AppSpace.lg),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              title,
+              style: font(size: 12, weight: 800, color: c.ink3, height: 1.2),
             ),
-            if (values[index].translation != null) ...[
-              const SizedBox(height: 2),
+            const SizedBox(height: AppSpace.md),
+            for (var index = 0; index < values.length; index++) ...[
+              if (index > 0)
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: AppSpace.md),
+                  child: Divider(color: c.line, height: 1.5, thickness: 1.5),
+                ),
               SelectableText(
-                values[index].translation!,
-                style: font(size: 13, weight: 600, color: c.ink3, height: 1.4),
+                values[index].text,
+                style: font(size: 15, weight: 600, color: c.ink, height: 1.45),
               ),
+              if (values[index].translation != null) ...[
+                const SizedBox(height: 2),
+                SelectableText(
+                  values[index].translation!,
+                  style: font(
+                    size: 13,
+                    weight: 600,
+                    color: c.ink3,
+                    height: 1.4,
+                  ),
+                ),
+              ],
             ],
           ],
-        ],
+        ),
       ),
     ),
   );

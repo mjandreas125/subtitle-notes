@@ -26,6 +26,7 @@ const SAY: Record<string, Record<string, string>> = {
     languageNote: 'New cards are written in this language. What is already saved stays as it is.',
     exportAnki: 'Export for Anki', exportNote: 'A file with the word, its meaning and the line it came from.',
     deleteAccount: 'Delete account', working: 'One moment…',
+    enter: 'Continue with Google',
   },
   ru: {
     title: 'Ваша библиотека', words: 'Слова', review: 'Повторение', goals: 'Достижения',
@@ -48,6 +49,7 @@ const SAY: Record<string, Record<string, string>> = {
     languageNote: 'На этом языке пишутся новые карточки. Сохранённое остаётся как есть.',
     exportAnki: 'Выгрузить для Anki', exportNote: 'Файл со словом, значением и репликой, из которой оно взято.',
     deleteAccount: 'Удалить аккаунт', working: 'Секунду…',
+    enter: 'Войти через Google',
   },
   et: {
     title: 'Sinu kogu', words: 'Sõnad', review: 'Kordamine', goals: 'Saavutused',
@@ -70,6 +72,7 @@ const SAY: Record<string, Record<string, string>> = {
     languageNote: 'Uued kaardid kirjutatakse selles keeles. Juba salvestatu jääb samaks.',
     exportAnki: 'Ekspordi Ankisse', exportNote: 'Fail sõna, tähenduse ja lausega, kust see pärineb.',
     deleteAccount: 'Kustuta konto', working: 'Hetk…',
+    enter: 'Jätka Google’iga',
   },
   de: {
     title: 'Deine Sammlung', words: 'Wörter', review: 'Üben', goals: 'Erfolge',
@@ -92,6 +95,7 @@ const SAY: Record<string, Record<string, string>> = {
     languageNote: 'Neue Karten entstehen in dieser Sprache. Gespeichertes bleibt, wie es ist.',
     exportAnki: 'Für Anki exportieren', exportNote: 'Eine Datei mit Wort, Bedeutung und der Zeile, aus der es stammt.',
     deleteAccount: 'Konto löschen', working: 'Einen Moment…',
+    enter: 'Mit Google fortfahren',
   },
   fr: {
     title: 'Votre bibliothèque', words: 'Mots', review: 'Réviser', goals: 'Réussites',
@@ -114,6 +118,7 @@ const SAY: Record<string, Record<string, string>> = {
     languageNote: 'Les nouvelles fiches seront dans cette langue. L’existant ne change pas.',
     exportAnki: 'Exporter vers Anki', exportNote: 'Un fichier avec le mot, le sens et la réplique d’où il vient.',
     deleteAccount: 'Supprimer le compte', working: 'Un instant…',
+    enter: 'Continuer avec Google',
   },
   es: {
     title: 'Tu biblioteca', words: 'Palabras', review: 'Repasar', goals: 'Logros',
@@ -136,6 +141,7 @@ const SAY: Record<string, Record<string, string>> = {
     languageNote: 'Las tarjetas nuevas se escriben en este idioma. Lo guardado no cambia.',
     exportAnki: 'Exportar a Anki', exportNote: 'Un archivo con la palabra, su significado y la línea de origen.',
     deleteAccount: 'Eliminar cuenta', working: 'Un momento…',
+    enter: 'Continuar con Google',
   },
   it: {
     title: 'La tua raccolta', words: 'Parole', review: 'Ripasso', goals: 'Traguardi',
@@ -158,6 +164,7 @@ const SAY: Record<string, Record<string, string>> = {
     languageNote: 'Le schede nuove saranno in questa lingua. Quelle salvate restano com’erano.',
     exportAnki: 'Esporta per Anki', exportNote: 'Un file con la parola, il significato e la battuta di origine.',
     deleteAccount: 'Elimina account', working: 'Un attimo…',
+    enter: 'Continua con Google',
   },
   pt: {
     title: 'A sua biblioteca', words: 'Palavras', review: 'Rever', goals: 'Conquistas',
@@ -180,6 +187,7 @@ const SAY: Record<string, Record<string, string>> = {
     languageNote: 'Os cartões novos ficam neste idioma. O que já está guardado mantém-se.',
     exportAnki: 'Exportar para Anki', exportNote: 'Um ficheiro com a palavra, o significado e a fala de origem.',
     deleteAccount: 'Apagar conta', working: 'Um momento…',
+    enter: 'Continuar com Google',
   },
   pl: {
     title: 'Twoja biblioteka', words: 'Słowa', review: 'Powtórka', goals: 'Osiągnięcia',
@@ -202,6 +210,7 @@ const SAY: Record<string, Record<string, string>> = {
     languageNote: 'Nowe fiszki powstają w tym języku. Zapisane zostają bez zmian.',
     exportAnki: 'Eksport do Anki', exportNote: 'Plik ze słowem, znaczeniem i kwestią, z której pochodzi.',
     deleteAccount: 'Usuń konto', working: 'Chwileczkę…',
+    enter: 'Kontynuuj z Google',
   },
   uk: {
     title: 'Ваша бібліотека', words: 'Слова', review: 'Повторення', goals: 'Досягнення',
@@ -224,6 +233,7 @@ const SAY: Record<string, Record<string, string>> = {
     languageNote: 'Цією мовою пишуться нові картки. Збережене лишається як є.',
     exportAnki: 'Вивантажити для Anki', exportNote: 'Файл зі словом, значенням і реплікою, з якої воно взяте.',
     deleteAccount: 'Видалити акаунт', working: 'Секунду…',
+    enter: 'Увійти через Google',
   },
   nl: {
     title: 'Jouw bibliotheek', words: 'Woorden', review: 'Oefenen', goals: 'Prestaties',
@@ -246,6 +256,7 @@ const SAY: Record<string, Record<string, string>> = {
     languageNote: 'Nieuwe kaarten komen in deze taal. Wat er staat blijft zoals het is.',
     exportAnki: 'Exporteren naar Anki', exportNote: 'Een bestand met het woord, de betekenis en de zin waar het uit komt.',
     deleteAccount: 'Account verwijderen', working: 'Momentje…',
+    enter: 'Doorgaan met Google',
   },
   sv: {
     title: 'Ditt bibliotek', words: 'Ord', review: 'Öva', goals: 'Utmärkelser',
@@ -268,6 +279,7 @@ const SAY: Record<string, Record<string, string>> = {
     languageNote: 'Nya kort skrivs på det här språket. Det som redan är sparat ändras inte.',
     exportAnki: 'Exportera till Anki', exportNote: 'En fil med ordet, betydelsen och repliken det kom ur.',
     deleteAccount: 'Radera konto', working: 'Ett ögonblick…',
+    enter: 'Fortsätt med Google',
   },
   fi: {
     title: 'Oma kirjasto', words: 'Sanat', review: 'Kertaus', goals: 'Saavutukset',
@@ -290,6 +302,7 @@ const SAY: Record<string, Record<string, string>> = {
     languageNote: 'Uudet kortit kirjoitetaan tällä kielellä. Tallennettu pysyy ennallaan.',
     exportAnki: 'Vie Ankiin', exportNote: 'Tiedosto, jossa on sana, merkitys ja repliikki.',
     deleteAccount: 'Poista tili', working: 'Hetki…',
+    enter: 'Jatka Google-tilillä',
   },
   tr: {
     title: 'Kitaplığınız', words: 'Kelimeler', review: 'Tekrar', goals: 'Başarımlar',
@@ -312,6 +325,7 @@ const SAY: Record<string, Record<string, string>> = {
     languageNote: 'Yeni kartlar bu dilde yazılır. Kayıtlı olanlar olduğu gibi kalır.',
     exportAnki: 'Anki için dışa aktar', exportNote: 'Kelimeyi, anlamını ve geldiği repliği içeren bir dosya.',
     deleteAccount: 'Hesabı sil', working: 'Bir saniye…',
+    enter: 'Google ile devam et',
   },
 };
 
@@ -505,8 +519,6 @@ export const libraryPage = (lang: string, clientId: string) => {
 <nav id="tabs" hidden></nav>
 <main>
   <section id="login">
-    <h2 id="login-title"></h2>
-    <p id="login-note-static"></p>
     <div id="google"></div>
     <p id="login-note"></p>
   </section>
@@ -888,10 +900,10 @@ export const libraryPage = (lang: string, clientId: string) => {
     }
   }
 
-  async function signedIn(response) {
+  async function signedIn(accessToken) {
     $('login-note').textContent = T.working;
     try {
-      var data = await request('/auth/google', 'POST', { id_token: response.credential });
+      var data = await request('/auth/google-access', 'POST', { access_token: accessToken });
       localStorage.setItem(KEY, data.token);
       await load();
     } catch (error) { $('login-note').textContent = error.message; }
@@ -902,16 +914,24 @@ export const libraryPage = (lang: string, clientId: string) => {
     $('signout').textContent = T.signout;
     $('clear').textContent = T.clear;
     $('search').placeholder = T.search;
-    $('login-title').textContent = T.signin;
-    $('login-note-static').textContent = T.signinNote;
     renderFilters();
 
     // The extension hands the token over in the fragment, so nobody has to sign
     // in twice for the same account. It never reaches the server.
-    var handover = location.hash.match(/t=([^&]+)/);
+    var handover = location.hash.match(/[#&]t=([^&]+)/);
     if (handover) {
       localStorage.setItem(KEY, decodeURIComponent(handover[1]));
       history.replaceState(null, '', location.pathname + location.search);
+    }
+
+    // Coming back from Google with a token in the fragment.
+    var back = location.hash.match(/access_token=([^&]+)/);
+    var state = location.hash.match(/state=([^&]+)/);
+    if (back && state && state[1] === sessionStorage.getItem('sn-state')) {
+      sessionStorage.removeItem('sn-state');
+      history.replaceState(null, '', location.pathname);
+      signedIn(decodeURIComponent(back[1]));
+      return;
     }
 
     $('search').oninput = function () {
@@ -937,17 +957,20 @@ export const libraryPage = (lang: string, clientId: string) => {
     });
 
     if (localStorage.getItem(KEY)) { load(); return; }
-    setTimeout(function () {
-      if (!window.google || !window.google.accounts || !window.google.accounts.id) {
-        $('login-note').textContent = 'Google sign-in could not load. Check your connection and reload.';
-        return;
-      }
-      google.accounts.id.initialize({
-        client_id: ${JSON.stringify(clientId)}, ux_mode: 'popup', callback: signedIn,
-      });
-      google.accounts.id.renderButton($('google'),
-        { theme: 'filled_black', size: 'large', shape: 'pill', text: 'continue_with', width: 300 });
-    }, 250);
+    $('google').innerHTML = '<button class="go" id="enter" style="padding:12px 22px;font-size:15px">' +
+      esc(T.enter) + '</button>';
+    $('enter').onclick = function () {
+      // Straight to Google and back. A popup can be blocked and the rendered
+      // Google button needs FedCM, which a browser may have switched off; a
+      // redirect always works.
+      var state = Math.random().toString(36).slice(2);
+      sessionStorage.setItem('sn-state', state);
+      location.href = 'https://accounts.google.com/o/oauth2/v2/auth' +
+        '?client_id=' + encodeURIComponent(${JSON.stringify(clientId)}) +
+        '&redirect_uri=' + encodeURIComponent(location.origin + '/library') +
+        '&response_type=token&scope=' + encodeURIComponent('openid email profile') +
+        '&include_granted_scopes=true&prompt=select_account&state=' + state;
+    };
   });
 </script></body></html>`;
 };
