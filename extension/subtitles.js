@@ -267,6 +267,12 @@
     document.documentElement.classList.toggle('sn-picking', value);
     mark(value);
     if (!value) {
+      // Letting go of the key must not hand the words back to the browser's
+      // own blue rectangle, so the selection goes with it.
+      const selection = window.getSelection();
+      if (selection && !selection.isCollapsed && insideCaption(selection.anchorNode)) {
+        selection.removeAllRanges();
+      }
       clearGlow();
       grip = null;
     }

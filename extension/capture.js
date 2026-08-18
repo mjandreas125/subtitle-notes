@@ -56,15 +56,38 @@
         width: 336px; max-width: calc(100vw - 24px); padding: 16px 18px 15px;
         border-radius: 16px; border-left: 3px solid var(--accent);
       }
-      /* Only the meaning: for people who want an answer, not a card. Narrower,
-         quieter, and everything that is not the answer is gone. */
-      .card.small { width: 238px; padding: 11px 13px 10px; border-radius: 13px; border-left-width: 2px; }
-      .card.small .head { font-size: 15.5px; line-height: 1.3; }
-      .card.small .term { margin-top: 8px; padding-top: 7px; font-size: 13px; }
-      .card.small .syn, .card.small .note, .card.small .seen { display: none; }
-      .card.small .row { margin-top: 9px; gap: 6px; }
-      .card.small button { padding: 6px 9px; font-size: 12.5px; }
-      .card.small .flag { margin-bottom: 6px; font-size: 10px; }
+      /* Only the meaning. Dark on purpose: it sits over a film, and a sheet of
+         white paper in the middle of a dark picture is a lamp in the face.
+         Everything that is not the answer is gone, buttons included - a word
+         picked out of a subtitle saves itself, so there is nothing to press. */
+      .card.small {
+        width: auto; min-width: 148px; max-width: 300px; padding: 9px 12px 10px;
+        border-radius: 11px; border: 1px solid rgba(255, 255, 255, .10); border-left: 2px solid #46d68f;
+        background: rgba(18, 22, 21, .94); color: #f2f7f4;
+        box-shadow: 0 8px 24px -10px rgba(0, 0, 0, .8);
+      }
+      .card.small .head { font-size: 14.5px; font-weight: 600; line-height: 1.35; color: #dbe6e0; }
+      .card.small .term {
+        margin: 0; padding: 0; border: 0; font-size: 17px; font-weight: 640;
+        letter-spacing: -.015em; color: #7fe3ab; line-height: 1.3;
+      }
+      .card.small .term b { color: #f2f7f4; font-weight: 600; font-size: 14px; }
+      .card.small .sentence {
+        margin-top: 5px; font-size: 12.5px; font-weight: 500; color: #93a49c; line-height: 1.35;
+      }
+      .card.small .syn, .card.small .note, .card.small .seen, .card.small .row { display: none; }
+      .card.small .row.keep { display: flex; margin-top: 9px; }
+      .card.small .row.keep button { padding: 7px 10px; font-size: 13px; background: #1e7a4c; color: #ffffff; }
+      .card.small .flag { margin-bottom: 5px; font-size: 9.5px; letter-spacing: .09em; color: #7fe3ab; }
+      .card.small .flag.grey { color: #8c9a93; }
+      .card.small .muted { font-size: 12.5px; color: #93a49c; }
+      .card.small .say { color: #93a49c; }
+      .card.small .say:hover { background: rgba(255, 255, 255, .08); }
+      /* The one control the short card keeps, because a save that happened by
+         accident has to be undoable. */
+      .card.small .row.thin { display: flex; margin-top: 8px; }
+      .card.small .row.thin button { padding: 4px 8px; font-size: 12px; color: #93a49c; }
+      .card.small .row.thin button:hover { background: rgba(255, 255, 255, .08); color: #f2f7f4; }
       .card.pinned { cursor: grab; }
       .card.dragging { cursor: grabbing; user-select: none; }
 
@@ -104,9 +127,10 @@
       button.ghost:hover { background: var(--wash); color: var(--ink); filter: none; }
       button[disabled] { opacity: .5; cursor: default; transform: none; }
       button.say {
-        flex: 0 0 auto; margin-left: auto; padding: 3px 6px; font-size: 14px;
-        background: transparent; color: var(--soft); border-radius: 7px; line-height: 1.3;
+        flex: 0 0 auto; margin-left: auto; padding: 3px 5px; background: transparent;
+        color: var(--soft); border-radius: 7px; line-height: 0;
       }
+      button.say svg { width: 15px; height: 15px; display: block; }
       button.say:hover { background: var(--wash); }
 
       .muted { font-size: 13.5px; color: var(--soft); line-height: 1.5; }
@@ -206,6 +230,15 @@
     return node;
   }
 
+  /// A speaker, drawn rather than borrowed from the emoji font - which renders
+  /// as a different picture on every machine and never matches the card.
+  const SPEAKER =
+    '<svg viewBox="0 0 20 20" fill="none" aria-hidden="true">' +
+    '<path d="M4 8v4h3l4 3V5L7 8H4z" fill="currentColor"/>' +
+    '<path d="M13.6 7.2a4 4 0 0 1 0 5.6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>' +
+    '<path d="M15.9 5a7 7 0 0 1 0 10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" opacity=".55"/>' +
+    '</svg>';
+
   const escape = (value) =>
     String(value).replace(/[&<>"]/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[character]));
 
@@ -283,7 +316,7 @@
   function notPairedHtml() {
     return `<div class="head">${t('connectTitle')}</div>
       <div class="muted" style="margin-top:8px">${t('connectBody')}</div>
-      <div class="row"><button id="connect">${t('connectAction')}</button></div>`;
+      <div class="row keep"><button id="connect">${t('connectAction')}</button></div>`;
   }
 
   function showChip(rect, text, context, title) {
@@ -379,7 +412,7 @@
           : `<div class="flag grey">${t('notSaved')}</div>
              <div class="head">${escape(text)}</div>
              <div class="muted" style="margin-top:8px">${escape(saved.error)}</div>
-             <div class="row"><button id="retry">${t('save')}</button><button class="ghost" id="close">${t('close')}</button></div>`;
+             ${compact() ? '' : `<div class="row"><button id="retry">${t('save')}</button><button class="ghost" id="close">${t('close')}</button></div>`}`;
       panel.querySelector('#retry')?.addEventListener('click', () => saveNow(rect, text, context, title, timecodeMs));
       panel.querySelector('#connect')?.addEventListener('click', () => ask({ type: 'options' }).then(close));
       panel.querySelector('#close')?.addEventListener('click', close);
