@@ -102,6 +102,10 @@
   "popupExport": {
     "message": "Anki için dışa aktar"
   },
+  "popupLibrary": {
+    "message": "Tüm kitaplık",
+    "description": "Popup button that opens the web library"
+  },
   "optTitle": {
     "message": "Tarayıcıda Subtitle Notes"
   },

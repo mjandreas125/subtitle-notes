@@ -102,6 +102,10 @@
   "popupExport": {
     "message": "Ekspordi Ankisse"
   },
+  "popupLibrary": {
+    "message": "Kogu kogu",
+    "description": "Popup button that opens the web library"
+  },
   "optTitle": {
     "message": "Subtitle Notes brauseris"
   },

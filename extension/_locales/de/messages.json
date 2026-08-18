@@ -102,6 +102,10 @@
   "popupExport": {
     "message": "Für Anki exportieren"
   },
+  "popupLibrary": {
+    "message": "Ganze Sammlung",
+    "description": "Popup button that opens the web library"
+  },
   "optTitle": {
     "message": "Subtitle Notes im Browser"
   },

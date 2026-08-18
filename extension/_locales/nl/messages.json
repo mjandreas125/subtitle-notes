@@ -102,6 +102,10 @@
   "popupExport": {
     "message": "Exporteren naar Anki"
   },
+  "popupLibrary": {
+    "message": "Hele bibliotheek",
+    "description": "Popup button that opens the web library"
+  },
   "optTitle": {
     "message": "Subtitle Notes in de browser"
   },

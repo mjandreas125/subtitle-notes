@@ -339,8 +339,89 @@ class _TopBar extends StatelessWidget {
   }
 }
 
-/// The achievement closest to its next level. No dates, no expiry — it only
-/// ever shows how far along something is.
+/// Every achievement, opened from the card on the library. Nothing here is
+/// news to the user - it is the same list the card summarises, in full.
+Future<void> showAchievements(BuildContext context, StudyStats stats) {
+  final c = context.c;
+  return showDialog<void>(
+    context: context,
+    builder: (context) => Dialog(
+      backgroundColor: c.surface,
+      insetPadding: const EdgeInsets.all(AppSpace.lg),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(AppRadius.sheet),
+        side: BorderSide(color: c.line, width: 1.5),
+      ),
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxHeight: MediaQuery.of(context).size.height * .82,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(
+                AppSpace.xxl, AppSpace.xxl, AppSpace.lg, AppSpace.md,
+              ),
+              child: Row(
+                children: [
+                  IconTile(
+                    icon: Icons.emoji_events_rounded,
+                    color: c.amber,
+                    background: c.amberWash,
+                    size: 44,
+                  ),
+                  const SizedBox(width: AppSpace.md),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(context.t('Achievements'), style: AppText.heading(c.ink)),
+                        const SizedBox(height: 2),
+                        Text(
+                          '${stats.unlocked} unlocked',
+                          style: AppText.caption(c.ink3),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Squish(
+                    onTap: () => Navigator.pop(context),
+                    child: IconTile(
+                      icon: Icons.close_rounded,
+                      color: c.ink3,
+                      background: c.surfaceAlt,
+                      size: 38,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Flexible(
+              child: ListView.separated(
+                shrinkWrap: true,
+                padding: const EdgeInsets.fromLTRB(
+                  AppSpace.xxl, 0, AppSpace.xxl, AppSpace.xxl,
+                ),
+                itemCount: stats.achievements.length,
+                separatorBuilder: (context, index) => Padding(
+                  padding: const EdgeInsets.symmetric(vertical: AppSpace.lg),
+                  child: Divider(color: c.line, height: 1.5, thickness: 1.5),
+                ),
+                itemBuilder: (context, index) =>
+                    AchievementRow(achievement: stats.achievements[index]),
+              ),
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
+}
+
+/// The achievement closest to its next level, and the way into all of them.
+/// No dates, no expiry - it only ever shows how far along something is.
 class _AchievementCard extends StatelessWidget {
   const _AchievementCard({required this.stats});
 
@@ -352,7 +433,9 @@ class _AchievementCard extends StatelessWidget {
     final next = stats.nextUp;
 
     if (next == null) {
-      return AppCard(
+      return Squish(
+        onTap: () => showAchievements(context, stats),
+        child: AppCard(
         raised: true,
         color: c.greenWash,
         borderColor: c.green.withValues(alpha: .35),
@@ -380,10 +463,13 @@ class _AchievementCard extends StatelessWidget {
             ),
           ],
         ),
+        ),
       );
     }
 
-    return AppCard(
+    return Squish(
+      onTap: () => showAchievements(context, stats),
+      child: AppCard(
       raised: true,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -410,6 +496,7 @@ class _AchievementCard extends StatelessWidget {
           const SizedBox(height: AppSpace.md),
           AchievementRow(achievement: next),
         ],
+      ),
       ),
     );
   }
