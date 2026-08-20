@@ -27,6 +27,10 @@ DEFAULTS = {
     "subtitle_language": "en",
     "vlc_port": DEFAULT_VLC_PORT,
     "popup_seconds": 6.5,
+    # What the arrow keys move by. VLC calls it the short jump and ships it at
+    # ten seconds, which is a whole exchange of dialogue.
+    "seek_seconds": 10,
+    "space_translates": True,
 }
 
 # Two-letter code -> the three-letter form ffmpeg and matroska tags use.
@@ -56,6 +60,11 @@ def load_player_prefs() -> dict[str, object]:
         values["popup_seconds"] = max(0.0, float(values["popup_seconds"]))
     except (TypeError, ValueError):
         values["popup_seconds"] = DEFAULTS["popup_seconds"]
+    try:
+        values["seek_seconds"] = max(1, int(values["seek_seconds"]))
+    except (TypeError, ValueError):
+        values["seek_seconds"] = DEFAULTS["seek_seconds"]
+    values["space_translates"] = bool(values["space_translates"])
     return values
 
 

@@ -339,6 +339,14 @@
   "optCompactHelp": {
     "message": "Solo il significato: niente sinonimi né note."
   },
+  "optSpaceLine": {
+    "message": "Spazio legge la battuta",
+    "description": "Options toggle for translating the caption with space"
+  },
+  "optSpaceLineHelp": {
+    "message": "Il sottotitolo viene tradotto, ma non salvato.",
+    "description": "Help under the space toggle"
+  },
   "popupRecent": {
     "message": "Recenti"
   },

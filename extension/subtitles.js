@@ -468,4 +468,25 @@
       .trim()
       .slice(0, 90) || 'Video';
   }
+
+  // Space is already the key for stopping to look at a line, so it also asks
+  // what the whole line means. Read, not kept: saving stays with the mouse.
+  document.addEventListener(
+    'keydown',
+    (event) => {
+      if (event.code !== 'Space' || event.ctrlKey || event.altKey || event.metaKey) return;
+      if (!(window.__subtitleNotes?.settings?.spaceLine ?? true)) return;
+      const target = event.target;
+      const typing =
+        target instanceof HTMLElement &&
+        (target.isContentEditable || ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName));
+      if (typing) return;
+      const caption = captionNodes()[0];
+      if (!caption) return;
+      const line = (caption.innerText || '').replace(/\s+/g, ' ').trim();
+      if (!line) return;
+      window.__subtitleNotes?.showCard(caption.getBoundingClientRect(), line, line, document.title);
+    },
+    true,
+  );
 })();

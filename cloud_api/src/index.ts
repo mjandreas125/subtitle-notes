@@ -10,10 +10,10 @@ const encoder = new TextEncoder();
 /// The program has no store to update it, so it asks here on startup and says
 /// when it is behind. Bump the version when a new installer is published.
 const DESKTOP_LATEST = {
-  version: '1.7.0',
+  version: '1.7.1',
   // Straight to the file: the button should start a download, not land
   // somebody on a page of assets to choose from.
-  url: 'https://github.com/mjandreas125/subtitle-notes/releases/latest/download/SubtitleNotesSetup-1.7.0.exe',
+  url: 'https://github.com/mjandreas125/subtitle-notes/releases/latest/download/SubtitleNotesSetup-1.7.1.exe',
   notes: '',
 };
 const json = (value: unknown, status = 200) => new Response(JSON.stringify(value), { status, headers: { ...cors, 'content-type': 'application/json; charset=utf-8' } });
@@ -882,6 +882,11 @@ async function upsertSelection(env: Env, owner: string, input: any, enriched?: a
     if (repairable) {
       await env.DB.prepare('UPDATE selections SET archived = 0, created_at = ?, seen_count = seen_count + 1, translation = ?, focus_word = ?, focus_phrase = ?, focus_translation = ?, synonyms_json = ?, sense_note = ?, variants_json = ?, examples_json = ? WHERE id = ?')
         .bind(now(), clean(data.translation), word || null, phrase || null, clean(data.focus_translation) || null, JSON.stringify(data.synonyms ?? []), clean(data.sense_note) || null, JSON.stringify(data.variants ?? []), JSON.stringify(data.examples ?? []), existing.id).run();
+    } else if (clean(input.client_key) && existing.client_key === clean(input.client_key) && selected && selected !== existing.selected_text) {
+      // The same save, refined: a selection caught in two goes arrives under
+      // the key of the first attempt, and the wider phrase is the one meant.
+      await env.DB.prepare('UPDATE selections SET archived = 0, created_at = ?, selected_text = ?, translation = ?, focus_word = ?, focus_phrase = ?, focus_translation = ?, synonyms_json = ?, sense_note = ?, variants_json = ?, examples_json = ?, context = ? WHERE id = ?')
+        .bind(now(), selected, clean(data.translation) || existing.translation, word || null, phrase || null, clean(data.focus_translation) || null, JSON.stringify(data.synonyms ?? []), clean(data.sense_note) || null, JSON.stringify(data.variants ?? []), JSON.stringify(data.examples ?? []), input.context ?? existing.context, existing.id).run();
     } else {
       await env.DB.prepare('UPDATE selections SET archived = 0, created_at = ?, seen_count = seen_count + 1 WHERE id = ?').bind(now(), existing.id).run();
     }

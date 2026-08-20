@@ -339,6 +339,14 @@
   "optCompactHelp": {
     "message": "Bara betydelsen: inga synonymer, inga noteringar."
   },
+  "optSpaceLine": {
+    "message": "Mellanslag läser repliken",
+    "description": "Options toggle for translating the caption with space"
+  },
+  "optSpaceLineHelp": {
+    "message": "Undertexten översätts men sparas inte.",
+    "description": "Help under the space toggle"
+  },
   "popupRecent": {
     "message": "Senaste"
   },

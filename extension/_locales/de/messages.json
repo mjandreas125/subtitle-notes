@@ -339,6 +339,14 @@
   "optCompactHelp": {
     "message": "Nur die Bedeutung: keine Synonyme, keine Notizen."
   },
+  "optSpaceLine": {
+    "message": "Leertaste liest die Zeile",
+    "description": "Options toggle for translating the caption with space"
+  },
+  "optSpaceLineHelp": {
+    "message": "Der Untertitel wird übersetzt, aber nicht gespeichert.",
+    "description": "Help under the space toggle"
+  },
   "popupRecent": {
     "message": "Zuletzt"
   },

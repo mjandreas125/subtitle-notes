@@ -339,6 +339,14 @@
   "optCompactHelp": {
     "message": "Só o significado: sem sinônimos nem notas."
   },
+  "optSpaceLine": {
+    "message": "Espaço lê a fala",
+    "description": "Options toggle for translating the caption with space"
+  },
+  "optSpaceLineHelp": {
+    "message": "A legenda é traduzida, mas não salva.",
+    "description": "Help under the space toggle"
+  },
   "popupRecent": {
     "message": "Recentes"
   },

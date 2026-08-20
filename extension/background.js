@@ -46,9 +46,27 @@ async function reading({ text, context }) {
 /// with its slower, better model while it stores the card, so anything sent
 /// from here would be thrown away — and waiting for it first would double how
 /// long an instant capture takes.
+/// A phrase is usually caught in two or three goes - a word, then the words
+/// around it. Sending each attempt under its own key left the library holding
+/// three pieces of one line, so an attempt that reaches for the same words
+/// within this window is sent under the first one's key and replaces it.
+const SETTLE_MS = 90000;
+let lastCapture = null;
+
+function sameThought(first, second) {
+  const left = String(first || '').toLowerCase().replace(/\s+/g, ' ').trim();
+  const right = String(second || '').toLowerCase().replace(/\s+/g, ' ').trim();
+  return Boolean(left) && Boolean(right) && (left.includes(right) || right.includes(left));
+}
+
 async function capture({ text, context, title, timecodeMs }) {
+  const fresh = await clientKey([title, String(timecodeMs ?? ''), text]);
+  const settling = lastCapture && Date.now() - lastCapture.at < SETTLE_MS
+    && sameThought(lastCapture.text, text) ? lastCapture.key : null;
+  const key = settling ?? fresh;
+  lastCapture = { key, text, at: Date.now() };
   const saved = await call('/captures', {
-    client_key: await clientKey([title, String(timecodeMs ?? ''), text]),
+    client_key: key,
     media_title: title || 'Web',
     season: null,
     episode: null,

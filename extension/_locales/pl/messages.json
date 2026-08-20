@@ -339,6 +339,14 @@
   "optCompactHelp": {
     "message": "Tylko znaczenie: bez synonimów i notatek."
   },
+  "optSpaceLine": {
+    "message": "Spacja czyta kwestię",
+    "description": "Options toggle for translating the caption with space"
+  },
+  "optSpaceLineHelp": {
+    "message": "Napis zostaje przetłumaczony, ale nie zapisany.",
+    "description": "Help under the space toggle"
+  },
   "popupRecent": {
     "message": "Ostatnie"
   },

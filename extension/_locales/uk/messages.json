@@ -339,6 +339,14 @@
   "optCompactHelp": {
     "message": "Лише значення: без синонімів і пояснень."
   },
+  "optSpaceLine": {
+    "message": "Пробіл читає рядок",
+    "description": "Options toggle for translating the caption with space"
+  },
+  "optSpaceLineHelp": {
+    "message": "Субтитр перекладається, але не зберігається.",
+    "description": "Help under the space toggle"
+  },
   "popupRecent": {
     "message": "Нещодавні"
   },

@@ -339,6 +339,14 @@
   "optCompactHelp": {
     "message": "Alleen de betekenis: geen synoniemen, geen notities."
   },
+  "optSpaceLine": {
+    "message": "Spatie leest de zin",
+    "description": "Options toggle for translating the caption with space"
+  },
+  "optSpaceLineHelp": {
+    "message": "De ondertitel wordt vertaald, maar niet bewaard.",
+    "description": "Help under the space toggle"
+  },
   "popupRecent": {
     "message": "Recent"
   },

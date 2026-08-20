@@ -339,6 +339,14 @@
   "optCompactHelp": {
     "message": "Ainult tähendus: ilma sünonüümide ja märkusteta."
   },
+  "optSpaceLine": {
+    "message": "Tühik loeb rea",
+    "description": "Options toggle for translating the caption with space"
+  },
+  "optSpaceLineHelp": {
+    "message": "Ekraanil olev subtiiter tõlgitakse, kuid ei salvestata.",
+    "description": "Help under the space toggle"
+  },
   "popupRecent": {
     "message": "Hiljutised"
   },
