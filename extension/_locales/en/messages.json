@@ -339,6 +339,14 @@
   "optCompactHelp": {
     "message": "Only the meaning: no synonyms, no notes."
   },
+  "optSpaceLine": {
+    "message": "Space reads the line",
+    "description": "Options toggle for translating the caption with space"
+  },
+  "optSpaceLineHelp": {
+    "message": "The caption on screen, translated but not saved.",
+    "description": "Help under the space toggle"
+  },
   "popupRecent": {
     "message": "Recently saved"
   },

@@ -339,6 +339,14 @@
   "optCompactHelp": {
     "message": "Seulement le sens : ni synonymes ni notes."
   },
+  "optSpaceLine": {
+    "message": "Espace lit la réplique",
+    "description": "Options toggle for translating the caption with space"
+  },
+  "optSpaceLineHelp": {
+    "message": "Le sous-titre est traduit, mais pas enregistré.",
+    "description": "Help under the space toggle"
+  },
   "popupRecent": {
     "message": "Récents"
   },

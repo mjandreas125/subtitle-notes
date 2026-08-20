@@ -262,6 +262,8 @@ def launch_vlc(vlc: str, media_path: str) -> None:
     # film without the wanted language still plays.
     if audio:
         command.append(f"--audio-language={audio}")
+    # VLC's "short jump" is what the arrow keys move by.
+    command.append(f"--short-jump-size={int(prefs['seek_seconds'])}")
     command.append(media_path)
     subprocess.Popen(command, close_fds=True)
 

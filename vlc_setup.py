@@ -24,12 +24,15 @@ VLC_PORT = player_prefs.vlc_port()
 
 # Section, key, value. `extraintf` and the address belong to VLC's core; the
 # password belongs to the Lua interface that actually serves the pages.
-SETTINGS = (
-    ("core", "extraintf", "http"),
-    ("core", "http-host", VLC_HOST),
-    ("core", "http-port", str(VLC_PORT)),
-    ("lua", "http-password", VLC_PASSWORD),
-)
+def settings() -> tuple[tuple[str, str, str], ...]:
+    prefs = player_prefs.load_player_prefs()
+    return (
+        ("core", "extraintf", "http"),
+        ("core", "http-host", VLC_HOST),
+        ("core", "http-port", str(VLC_PORT)),
+        ("core", "short-jump-size", str(int(prefs["seek_seconds"]))),
+        ("lua", "http-password", VLC_PASSWORD),
+    )
 
 
 def vlc_config_path() -> Path:
@@ -84,7 +87,7 @@ def configure_vlc_http() -> tuple[bool, str]:
     try:
         original = path.read_text(encoding="utf-8", errors="replace").splitlines() if path.exists() else []
         lines = list(original)
-        for section, key, value in SETTINGS:
+        for section, key, value in settings():
             lines = _apply(lines, section, key, value)
         if lines == original:
             return True, "already set"

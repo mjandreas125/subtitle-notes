@@ -339,6 +339,14 @@
   "optCompactHelp": {
     "message": "Vain merkitys: ei synonyymejä eikä huomioita."
   },
+  "optSpaceLine": {
+    "message": "Väli lukee repliikin",
+    "description": "Options toggle for translating the caption with space"
+  },
+  "optSpaceLineHelp": {
+    "message": "Tekstitys käännetään mutta ei tallenneta.",
+    "description": "Help under the space toggle"
+  },
   "popupRecent": {
     "message": "Viimeisimmät"
   },

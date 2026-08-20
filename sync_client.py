@@ -572,6 +572,16 @@ def open_setup_window() -> None:
         [(3.0, "3 s"), (5.0, "5 s"), (6.5, "6.5 s"), (10.0, "10 s"), (15.0, "15 s"),
          (0.0, tr("popup_until_next"))],
     )
+    option_row(
+        tr("seek_step"),
+        "seek_seconds",
+        [(1, "1 s"), (2, "2 s"), (3, "3 s"), (5, "5 s"), (10, "10 s"), (30, "30 s")],
+    )
+    option_row(
+        tr("space_line"),
+        "space_translates",
+        [(True, tr("space_on")), (False, tr("space_off"))],
+    )
 
     # A program with no store behind it has to say for itself when it is old.
     def offer_update() -> None:

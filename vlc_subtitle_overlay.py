@@ -779,6 +779,8 @@ class VlcSubtitleOverlay:
         self.pending_payload: tuple[str, TranslationResult] | None = None
         self.space_was_down = False
         self.vlc_hwnd = 0
+        # Answers that were only read out loud, never saved.
+        self.unsaved_jobs: set[int] = set()
         self.stop_status = threading.Event()
 
         self.root = tk.Tk()
@@ -984,9 +986,16 @@ class VlcSubtitleOverlay:
                     job_id, selected_text, result, anchor, final = value  # type: ignore[misc]
                     # Only the considered answer is kept and written down; the
                     # first one is there to be read, not to be saved.
-                    if final and isinstance(result, TranslationResult):
+                    keep = job_id not in self.unsaved_jobs
+                    if final:
+                        self.unsaved_jobs.discard(job_id)
+                    if final and keep and isinstance(result, TranslationResult):
                         self.cache[str(selected_text).lower()] = result
                         self._append_translation(str(selected_text), result)
+                    elif final and isinstance(result, TranslationResult):
+                        # Still worth remembering for the next time the same
+                        # line comes round; simply not written down.
+                        self.cache[str(selected_text).lower()] = result
                     if job_id == self.last_translation_job:
                         self._show_popup(self._popup_text(result, str(selected_text)), anchor)
         except queue.Empty:
@@ -1345,19 +1354,37 @@ class VlcSubtitleOverlay:
             # Only when the player has the keyboard: a space typed in a chat
             # window behind the film is not a request to translate anything.
             watching = self.vlc_hwnd and user32.GetForegroundWindow() == self.vlc_hwnd
-            if watching and self.root.state() != "withdrawn" and self.current_text.strip():
+            asked = bool(player_prefs.load_player_prefs()["space_translates"])
+            if asked and watching and self.root.state() != "withdrawn" and self.current_text.strip():
                 self._translate_whole_line()
         self.space_was_down = space_down
         self.root.after(35, self._watch_global_mouse)
 
     def _translate_whole_line(self) -> None:
-        """The line on screen, read as one - what space asks for."""
-        if not self.char_boxes:
+        """The line on screen, read as one - what space asks for.
+
+        Nothing is highlighted: the whole line is the subject, and painting it
+        all in mint only hides the film behind it.
+        """
+        line = self.current_text.strip()
+        if not line:
             return
-        self.selection_anchor = 0
-        self.selection_focus = len(self.current_text) - 1
-        self._redraw_selection()
-        self._translate_selection()
+        anchor = self._selection_anchor_screen()
+        key = line.lower()
+        if key in self.cache:
+            self._show_popup(self._popup_text(self.cache[key], line), anchor)
+            return
+        self.last_translation_job += 1
+        # Reading is not keeping: what goes into the library is what the viewer
+        # deliberately marked with the mouse.
+        self.unsaved_jobs.add(self.last_translation_job)
+        self._show_popup("...", anchor)
+        threading.Thread(
+            target=self._translate_in_background,
+            args=(self.last_translation_job, key, line, anchor, line),
+            name="vlc-subtitle-line",
+            daemon=True,
+        ).start()
 
     def _on_press(self, event: tk.Event[tk.Canvas]) -> str:
         char_index = self._char_at(event.x, event.y)

@@ -45,6 +45,9 @@ const SN_DEFAULTS = {
   speak: false,
   /// The short card: the meaning and nothing else.
   compactCard: true,
+  /// Space reads the caption that is on screen. Nothing is saved by it: what
+  /// goes into the library is what was deliberately selected.
+  spaceLine: true,
 };
 
 function snMatchesHotkey(event, hotkey) {

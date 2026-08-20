@@ -339,6 +339,14 @@
   "optCompactHelp": {
     "message": "Sadece anlam: eş anlamlı ve not yok."
   },
+  "optSpaceLine": {
+    "message": "Boşluk repliği okur",
+    "description": "Options toggle for translating the caption with space"
+  },
+  "optSpaceLineHelp": {
+    "message": "Altyazı çevrilir ama kaydedilmez.",
+    "description": "Help under the space toggle"
+  },
   "popupRecent": {
     "message": "Son eklenenler"
   },

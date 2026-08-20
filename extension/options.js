@@ -251,6 +251,7 @@ function paintSettings() {
   view('pauseVideo').checked = settings.pauseVideo !== false;
   view('speak').checked = Boolean(settings.speak);
   view('compactCard').checked = settings.compactCard !== false;
+  view('spaceLine').checked = settings.spaceLine !== false;
   view('hideAfter').value = settings.hideAfter ?? 6;
   view('blocked').value = (settings.blocked ?? []).join('\n');
   for (const button of view('positions').querySelectorAll('button')) {
@@ -312,6 +313,7 @@ view('subtitles').addEventListener('change', (event) => store({ subtitles: event
 view('pauseVideo').addEventListener('change', (event) => store({ pauseVideo: event.target.checked }));
 view('speak').addEventListener('change', (event) => store({ speak: event.target.checked }));
 view('compactCard').addEventListener('change', (event) => store({ compactCard: event.target.checked }));
+view('spaceLine').addEventListener('change', (event) => store({ spaceLine: event.target.checked }));
 view('hideAfter').addEventListener('change', (event) =>
   store({ hideAfter: Math.min(60, Math.max(2, Number(event.target.value) || 6)) }),
 );
