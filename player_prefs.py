@@ -21,7 +21,13 @@ DEFAULT_VLC_PORT = 8422
 FALLBACK_VLC_PORTS = (8080,)
 
 # Empty means "whatever the file opens with", which is what VLC does on its own.
-DEFAULTS = {"audio_language": "en", "subtitle_language": "en", "vlc_port": DEFAULT_VLC_PORT}
+# 0 keeps the answer up until the next selection or Escape.
+DEFAULTS = {
+    "audio_language": "en",
+    "subtitle_language": "en",
+    "vlc_port": DEFAULT_VLC_PORT,
+    "popup_seconds": 6.5,
+}
 
 # Two-letter code -> the three-letter form ffmpeg and matroska tags use.
 THREE_LETTER = {
@@ -46,6 +52,10 @@ def load_player_prefs() -> dict[str, object]:
         values["vlc_port"] = int(values["vlc_port"]) or DEFAULT_VLC_PORT
     except (TypeError, ValueError):
         values["vlc_port"] = DEFAULT_VLC_PORT
+    try:
+        values["popup_seconds"] = max(0.0, float(values["popup_seconds"]))
+    except (TypeError, ValueError):
+        values["popup_seconds"] = DEFAULTS["popup_seconds"]
     return values
 
 
