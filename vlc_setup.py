@@ -16,10 +16,11 @@ from __future__ import annotations
 import os
 from pathlib import Path
 
+import player_prefs
 from vlc_subtitle_overlay import VLC_PASSWORD
 
 VLC_HOST = "127.0.0.1"
-VLC_PORT = 8080
+VLC_PORT = player_prefs.vlc_port()
 
 # Section, key, value. `extraintf` and the address belong to VLC's core; the
 # password belongs to the Lua interface that actually serves the pages.

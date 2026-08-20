@@ -32,6 +32,7 @@ import tkinter as tk
 import tkinter.font as tkfont
 
 from desktop_i18n import tr
+import player_prefs
 from sync_client import cloud_reading, sync_selection_async
 
 
@@ -41,7 +42,10 @@ from sync_client import cloud_reading, sync_selection_async
 READING_TIMEOUT_SECONDS = 4.0
 
 VLC_PASSWORD = "quicktranslate"
-VLC_STATUS_URL = "http://127.0.0.1:8080/requests/status.json"
+# Which port VLC's interface is on is a setting, because 8080 - the port it
+# shipped with - is the first one any other local server takes.
+VLC_PORTS = (player_prefs.vlc_port(), *player_prefs.FALLBACK_VLC_PORTS)
+VLC_STATUS_URL = f"http://127.0.0.1:{VLC_PORTS[0]}/requests/status.json"
 # The window redraws on this tick. Asking VLC over HTTP is done on a worker
 # thread instead, because a blocking request on the UI thread is what made the
 # subtitles stutter between cues.
@@ -346,11 +350,21 @@ def find_subtitle_path(path: str) -> str | None:
             if lower.endswith(".srt") and lower.startswith(stem.lower()):
                 candidates.append(os.path.join(search_folder, name))
     if candidates:
-        # The previous preference for .en/.eng files made a matching French
-        # or Spanish subtitle invisible whenever both files were present.
-        # Keep the deterministic closest-name choice and let translation
-        # detect its language from the text instead.
-        return sorted(candidates, key=lambda item: (len(os.path.basename(item)), item.lower()))[0]
+        # With several files beside the video, the one in the language the
+        # viewer asked for wins; otherwise the closest name does, and the
+        # translation works out the language from the text.
+        wanted = player_prefs.language_codes(
+            player_prefs.load_player_prefs()["subtitle_language"]
+        )
+
+        def preferred(item: str) -> int:
+            name = os.path.basename(item).lower()
+            return 0 if any(f".{code}." in name for code in wanted) else 1
+
+        return sorted(
+            candidates,
+            key=lambda item: (preferred(item), len(os.path.basename(item)), item.lower()),
+        )[0]
     return None
 
 
@@ -913,13 +927,20 @@ class VlcSubtitleOverlay:
 
     def _read_vlc_status(self) -> dict[str, object] | None:
         token = base64.b64encode(f":{VLC_PASSWORD}".encode("utf-8")).decode("ascii")
-        url = f"{VLC_STATUS_URL}?_={time_module.time_ns()}"
-        request = urllib.request.Request(url, headers={"Authorization": f"Basic {token}"})
-        try:
-            with urllib.request.urlopen(request, timeout=0.3) as response:
-                return json.loads(response.read().decode("utf-8"))
-        except Exception:
-            return None
+        # The first port that answers is remembered, so the ones that do not
+        # are asked once rather than on every tick.
+        ports = (self._vlc_port,) if getattr(self, "_vlc_port", None) else VLC_PORTS
+        for port in ports:
+            url = f"http://127.0.0.1:{port}/requests/status.json?_={time_module.time_ns()}"
+            request = urllib.request.Request(url, headers={"Authorization": f"Basic {token}"})
+            try:
+                with urllib.request.urlopen(request, timeout=0.3) as response:
+                    answer = json.loads(response.read().decode("utf-8"))
+            except Exception:
+                continue
+            self._vlc_port = port
+            return answer
+        return None
 
     def _cues_for_time(self, current_ms: int) -> tuple[int, ...]:
         """Every cue covering this moment, earliest first.

@@ -10,10 +10,10 @@ const encoder = new TextEncoder();
 /// The program has no store to update it, so it asks here on startup and says
 /// when it is behind. Bump the version when a new installer is published.
 const DESKTOP_LATEST = {
-  version: '1.6.3',
+  version: '1.6.4',
   // Straight to the file: the button should start a download, not land
   // somebody on a page of assets to choose from.
-  url: 'https://github.com/mjandreas125/subtitle-notes/releases/latest/download/SubtitleNotesSetup-1.6.3.exe',
+  url: 'https://github.com/mjandreas125/subtitle-notes/releases/latest/download/SubtitleNotesSetup-1.6.4.exe',
   notes: '',
 };
 const json = (value: unknown, status = 200) => new Response(JSON.stringify(value), { status, headers: { ...cors, 'content-type': 'application/json; charset=utf-8' } });

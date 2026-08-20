@@ -13,6 +13,7 @@ import hashlib
 from tkinter import messagebox
 import tkinter as tk
 
+import player_prefs
 from vlc_subtitle_overlay import VLC_PASSWORD, find_subtitle_path
 
 
@@ -133,7 +134,7 @@ def probe_subtitle_stream(ffprobe: str, media_path: str) -> int | None:
             "-select_streams",
             "s",
             "-show_entries",
-            "stream=index:stream_tags=language,title",
+            "stream=index,codec_name:stream_tags=language,title",
             "-of",
             "json",
             media_path,
@@ -149,11 +150,25 @@ def probe_subtitle_stream(ffprobe: str, media_path: str) -> int | None:
     if not streams:
         return None
 
-    def rank(stream: dict[str, object]) -> int:
-        # Do not treat English as the one real subtitle language.  FFprobe
-        # supplies subtitle streams in the file's order, which is the only
-        # predictable choice without asking the viewer to choose a language.
-        return int(stream.get("index", 9999))
+    wanted = player_prefs.language_codes(
+        player_prefs.load_player_prefs()["subtitle_language"]
+    )
+
+    def rank(stream: dict[str, object]) -> tuple[int, int, int]:
+        """The asked-for language first, then anything that is really text.
+
+        Image subtitles (PGS, VobSub) cannot be turned into words, so a file
+        that carries both should give up its text track.
+        """
+        tags = stream.get("tags") if isinstance(stream.get("tags"), dict) else {}
+        language = str((tags or {}).get("language", "")).lower()
+        codec = str(stream.get("codec_name", "")).lower()
+        image = codec in {"hdmv_pgs_subtitle", "dvd_subtitle", "dvb_subtitle", "xsub"}
+        return (
+            0 if wanted and language in wanted else 1,
+            1 if image else 0,
+            int(stream.get("index", 9999)),
+        )
 
     selected = sorted(streams, key=rank)[0]
     try:
@@ -177,8 +192,15 @@ def extract_embedded_subtitle(media_path: str) -> tuple[str | None, str | None]:
     if stream_index is not None:
         commands.append([ffmpeg, "-y", "-i", media_path, "-map", f"0:{stream_index}", "-c:s", "srt", cached])
 
-    # A file without an ffprobe executable still gets its first subtitle
-    # stream; guessing `eng` here made non-English films look unsupported.
+    # Without ffprobe there is nothing to inspect, so ask ffmpeg for the
+    # language directly and fall back to the file's first subtitle track - a
+    # film that does not carry the wanted language still gets subtitles.
+    for code in player_prefs.language_codes(
+        player_prefs.load_player_prefs()["subtitle_language"]
+    ):
+        commands.append(
+            [ffmpeg, "-y", "-i", media_path, "-map", f"0:s:m:language:{code}", "-c:s", "srt", cached]
+        )
     commands.append([ffmpeg, "-y", "-i", media_path, "-map", "0:s:0", "-c:s", "srt", cached])
 
     last_error = ""
@@ -222,18 +244,22 @@ def show_error(text: str) -> None:
 
 
 def launch_vlc(vlc: str, media_path: str) -> None:
-    subprocess.Popen(
-        [
-            vlc,
-            "--extraintf=http",
-            "--http-host=127.0.0.1",
-            "--http-port=8080",
-            f"--http-password={VLC_PASSWORD}",
-            "--no-spu",
-            media_path,
-        ],
-        close_fds=True,
-    )
+    prefs = player_prefs.load_player_prefs()
+    audio = ",".join(player_prefs.language_codes(prefs["audio_language"]))
+    command = [
+        vlc,
+        "--extraintf=http",
+        "--http-host=127.0.0.1",
+        f"--http-port={prefs['vlc_port']}",
+        f"--http-password={VLC_PASSWORD}",
+        "--no-spu",
+    ]
+    # VLC falls back to the file's own first track when nothing matches, so a
+    # film without the wanted language still plays.
+    if audio:
+        command.append(f"--audio-language={audio}")
+    command.append(media_path)
+    subprocess.Popen(command, close_fds=True)
 
 
 def launch_overlay(subtitle_path: str, media_path: str) -> None:
