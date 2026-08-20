@@ -1,5 +1,5 @@
 ﻿#define AppName "Subtitle Notes"
-#define AppVersion "1.6.7"
+#define AppVersion "1.6.8"
 #define AppPublisher "Subtitle Notes"
 #define AppExe "TranslatedVLCSyncSetup.exe"
 
@@ -11,7 +11,7 @@ AppPublisher={#AppPublisher}
 DefaultDirName={autopf}\Subtitle Notes
 DefaultGroupName={#AppName}
 OutputDir=..\release_package
-OutputBaseFilename=SubtitleNotesSetup-1.6.7
+OutputBaseFilename=SubtitleNotesSetup-1.6.8
 Compression=lzma2
 SolidCompression=yes
 WizardStyle=modern
@@ -48,6 +48,14 @@ Name: "{group}\Browser Extension folder"; Filename: "{userdocs}\Subtitle Notes\B
 Name: "{group}\Android APK"; Filename: "{userdocs}\Subtitle Notes\Android\SubtitleNotes.apk"
 
 [Registry]
+; A development build used to register its own verb pointing at the folder it
+; was built in. Left behind, it shadows the installed program: the menu item
+; still works and still runs last month's code.
+Root: HKCU; Subkey: "Software\Classes\SystemFileAssociations\.mkv\shell\OpenWithTranslatedVLC"; Flags: deletekey
+Root: HKCU; Subkey: "Software\Classes\SystemFileAssociations\.mp4\shell\OpenWithTranslatedVLC"; Flags: deletekey
+Root: HKCU; Subkey: "Software\Classes\SystemFileAssociations\.avi\shell\OpenWithTranslatedVLC"; Flags: deletekey
+Root: HKCU; Subkey: "Software\Classes\SystemFileAssociations\.mov\shell\OpenWithTranslatedVLC"; Flags: deletekey
+Root: HKCU; Subkey: "Software\Classes\SystemFileAssociations\.webm\shell\OpenWithTranslatedVLC"; Flags: deletekey
 Root: HKCU; Subkey: "Software\Classes\SystemFileAssociations\.mkv\shell\OpenWithSubtitleNotes"; ValueType: string; ValueName: "MUIVerb"; ValueData: "Open with Subtitle Notes"; Flags: uninsdeletekey
 Root: HKCU; Subkey: "Software\Classes\SystemFileAssociations\.mp4\shell\OpenWithSubtitleNotes"; ValueType: string; ValueName: "MUIVerb"; ValueData: "Open with Subtitle Notes"; Flags: uninsdeletekey
 Root: HKCU; Subkey: "Software\Classes\SystemFileAssociations\.avi\shell\OpenWithSubtitleNotes"; ValueType: string; ValueName: "MUIVerb"; ValueData: "Open with Subtitle Notes"; Flags: uninsdeletekey
