@@ -748,6 +748,11 @@ class VlcSubtitleOverlay:
         self.empty_since: float | None = None
         self.status_lock = threading.Lock()
         self.status_sample: tuple[dict[str, object] | None, float] = (None, 0.0)
+        # The window starts withdrawn and is shown once there is a line to put
+        # in it; after that it stays up, empty between lines.
+        self.window_hidden = True
+        # The moment on screen, which only ever moves forward while playing.
+        self.display_ms = 0
         self.stop_status = threading.Event()
 
         self.root = tk.Tk()
@@ -858,7 +863,7 @@ class VlcSubtitleOverlay:
         self._drain_events()
         current_ms = self._playback_ms()
         if current_ms is None or not self._place_over_vlc():
-            self.root.withdraw()
+            self._hide_window()
             self._hide_popup()
             self.root.after(300, self._poll)
             return
@@ -876,8 +881,18 @@ class VlcSubtitleOverlay:
             self.subtitle_image_cache = {}
             self.canvas.delete("all")
             self._hide_popup()
+            self.display_ms = current_ms
 
-        active = self._cues_for_time(current_ms)
+        # While playing, the moment being displayed never moves backwards. The
+        # estimate can dip by a few milliseconds when VLC's own reading lags,
+        # and a dip across a boundary would put the finished line back on
+        # screen for one frame. Pausing or seeking sets it wherever it lands.
+        if self.clock_running:
+            self.display_ms = max(current_ms, self.display_ms)
+        else:
+            self.display_ms = current_ms
+
+        active = self._cues_for_time(self.display_ms)
         if not active and self.active_cues and self.clock_running:
             # Hold the previous line briefly instead of blinking across the
             # one-frame gap between consecutive cues. Only while playing:
@@ -902,8 +917,10 @@ class VlcSubtitleOverlay:
                 self.render_parts = []
                 self.subtitle_images = []
                 self.subtitle_image_cache = {}
+                # Cleared, not hidden: an empty canvas is already invisible and
+                # click-through, and unmapping the window is what made the
+                # finished line flash back when the next one arrived.
                 self.canvas.delete("all")
-                self.root.withdraw()
             else:
                 # Two speakers talking at once are two cues covering the same
                 # moment. Both belong on screen, stacked, rather than one of
@@ -911,8 +928,23 @@ class VlcSubtitleOverlay:
                 self.current_text = "\n".join(self.cues[index].text for index in active)
                 self._layout_words()
                 self._draw_subtitles()
-                self.root.deiconify()
+                self._show_window()
         self.root.after(POLL_MS, self._poll)
+
+    def _show_window(self) -> None:
+        if self.window_hidden:
+            self.root.deiconify()
+            self.window_hidden = False
+
+    def _hide_window(self) -> None:
+        """Only for states that last: no player, or the viewer pressed Escape.
+
+        Never between two lines - see the note on the class about the frame
+        Windows keeps.
+        """
+        if not self.window_hidden:
+            self.root.withdraw()
+            self.window_hidden = True
 
     def _drain_events(self) -> None:
         try:
@@ -977,7 +1009,7 @@ class VlcSubtitleOverlay:
                 # the rest of the session, and the next film started with two
                 # of them on screen.
                 self.stop_status.set()
-                self.after(0, self.destroy)
+                self.root.after(0, self.root.destroy)
                 return
             with self.status_lock:
                 self.status_sample = (status, time_module.monotonic())
@@ -1207,7 +1239,7 @@ class VlcSubtitleOverlay:
             self._hide_popup()
             self._redraw_selection()
         else:
-            self.root.withdraw()
+            self._hide_window()
         return "break"
 
     def _char_at(self, x: int, y: int) -> int | None:
