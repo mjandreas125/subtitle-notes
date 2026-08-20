@@ -304,6 +304,7 @@ def open_setup_window() -> None:
     import webbrowser
     from tkinter import font as tkfont
 
+    import player_prefs
     from vlc_setup import configure_vlc_http
 
     config = load_sync_config()
@@ -462,6 +463,49 @@ def open_setup_window() -> None:
             poll(pairing_id, secret)
 
         threading.Thread(target=ask, daemon=True, name="subtitle-notes-pair").start()
+
+    # ---- what the player should open with -----------------------------------
+    # VLC picks the file's first track, which on a two-language release is
+    # rarely the one being learned. Chosen once here, applied every time.
+    prefs = player_prefs.load_player_prefs()
+    choices = [("", tr("track_as_file"))] + [
+        (code, name) for code, name in (
+            ("en", "English"), ("ru", "Русский"), ("et", "Eesti"), ("de", "Deutsch"),
+            ("fr", "Français"), ("es", "Español"), ("it", "Italiano"), ("pt", "Português"),
+            ("pl", "Polski"), ("uk", "Українська"), ("nl", "Nederlands"), ("sv", "Svenska"),
+            ("fi", "Suomi"), ("tr", "Türkçe"), ("ja", "日本語"), ("ko", "한국어"), ("zh", "中文"),
+        )
+    ]
+    names = [name for _, name in choices]
+    by_name = {name: code for code, name in choices}
+    named = {code: name for code, name in choices}
+
+    player = tk.Frame(frame, bg=PAPER)
+    player.pack(fill="x", pady=(20, 0))
+    tk.Label(
+        player, text=tr("track_section"), font=small, fg=SOFT, bg=PAPER, anchor="w",
+    ).pack(fill="x", pady=(0, 8))
+
+    def track_row(label: str, key: str) -> None:
+        row = tk.Frame(player, bg=PAPER)
+        row.pack(fill="x", pady=(0, 6))
+        tk.Label(row, text=label, font=body, fg=INK, bg=PAPER, anchor="w", width=12).pack(side="left")
+        current = tk.StringVar(value=named.get(str(prefs.get(key, "")), names[0]))
+        picker = tk.OptionMenu(row, current, *names)
+        picker.configure(
+            font=small, bg=WASH, fg=INK, activebackground=WASH, activeforeground=INK,
+            relief="flat", highlightthickness=1, highlightbackground=HAIR, bd=0,
+            anchor="w", cursor="hand2",
+        )
+        picker["menu"].configure(font=small, bg=PAPER, fg=INK, activebackground=WASH, bd=0)
+        picker.pack(side="left", fill="x", expand=True)
+        current.trace_add(
+            "write",
+            lambda *_: player_prefs.save_player_prefs({key: by_name.get(current.get(), "")}),
+        )
+
+    track_row(tr("track_audio"), "audio_language")
+    track_row(tr("track_subs"), "subtitle_language")
 
     # A program with no store behind it has to say for itself when it is old.
     def offer_update() -> None:
