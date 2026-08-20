@@ -275,12 +275,18 @@ def parse_timecode(label: str) -> int | None:
 # and a click on the button end up in the same place.
 LINK_PAGE = DEFAULT_API_URL.replace("/v1", "/link")
 
-PAPER = "#faf8f4"
-INK = "#14201c"
-SOFT = "#6b7a74"
-HAIR = "#e2ddd3"
-ACCENT = "#1e7a4c"
-WASH = "#e7f2ea"
+# The phone app's dark palette, name for name, so the window on the computer
+# and the app in the pocket are one product rather than two.
+PAPER = "#101a1e"     # bg
+INK = "#eaf3f0"       # ink
+SOFT = "#92a7ad"      # ink2
+HAIR = "#2c4149"      # line
+ACCENT = "#35be58"    # green
+ACCENT_LIP = "#1d7c37"
+ON_ACCENT = "#081410"
+WASH = "#18262b"      # surface
+SURFACE_ALT = "#1e3038"
+LIP = "#0c161a"
 
 
 def _qr_squares(text: str) -> list[list[bool]] | None:
@@ -336,7 +342,7 @@ def open_setup_window() -> None:
         canvas.create_rectangle(118, 91, 186, 113, fill="#2e9668", outline="")
         canvas.create_text(122, 102, anchor="w", text="a record", fill="#ffffff", font=("Segoe UI", 9, "bold"))
         # The answer, in the shape the real window uses.
-        canvas.create_rectangle(266, 22, 430, 104, fill="#ffffff", outline=HAIR)
+        canvas.create_rectangle(266, 22, 430, 104, fill=WASH, outline=HAIR)
         canvas.create_rectangle(266, 22, 269, 104, fill=ACCENT, outline="")
         canvas.create_text(282, 44, anchor="w", text=tr("tour_line"), fill=INK, font=("Segoe UI", 9, "bold"))
         canvas.create_line(282, 62, 414, 62, fill=HAIR)
@@ -362,12 +368,23 @@ def open_setup_window() -> None:
     waiting = tk.Frame(frame, bg=PAPER)
 
     def button(parent: Any, text: str, command: Any, primary: bool = True) -> Any:
-        return tk.Button(
-            parent, text=text, command=command, font=body, relief="flat", cursor="hand2",
-            bg=ACCENT if primary else PAPER, fg="#ffffff" if primary else SOFT,
-            activebackground=ACCENT if primary else WASH, activeforeground="#ffffff" if primary else INK,
-            highlightthickness=0 if primary else 1, highlightbackground=HAIR, bd=0, padx=18, pady=9,
+        """A button with a lip: the app's raised surface, done with two frames.
+
+        Tk cannot round a corner or cast a shadow, but the app's buttons read
+        the way they do mostly because of the darker strip underneath.
+        """
+        holder = tk.Frame(parent, bg=ACCENT_LIP if primary else HAIR)
+        face = tk.Button(
+            holder, text=text, command=command, font=body, relief="flat", cursor="hand2",
+            bg=ACCENT if primary else WASH, fg=ON_ACCENT if primary else INK,
+            activebackground=ACCENT if primary else SURFACE_ALT,
+            activeforeground=ON_ACCENT if primary else INK,
+            highlightthickness=0, bd=0, padx=18, pady=9,
         )
+        face.pack(fill="x", padx=0, pady=(0, 3))
+        holder.button = face  # type: ignore[attr-defined]
+        holder.configure_face = face.configure  # type: ignore[attr-defined]
+        return holder
 
     # ---- already connected --------------------------------------------------
     account = tk.StringVar(value="")
@@ -389,7 +406,7 @@ def open_setup_window() -> None:
         lambda: webbrowser.open(f"{LINK_PAGE}?code={code_text.get()}&lang={system_language()}"),
     )
     # Nothing to sign in against until the server has issued a code.
-    google.configure(state="disabled")
+    google.button.configure(state="disabled")
     google.pack(fill="x")
     ways = tk.Frame(waiting, bg=PAPER)
     ways.pack(fill="x", pady=(16, 0))
@@ -398,7 +415,12 @@ def open_setup_window() -> None:
     beside = tk.Frame(ways, bg=PAPER)
     beside.pack(side="left", fill="both", expand=True, padx=(16, 0))
     tk.Label(beside, text=tr("scan_hint"), font=small, fg=SOFT, bg=PAPER, anchor="w", justify="left", wraplength=250).pack(fill="x")
-    tk.Label(beside, textvariable=code_text, font=code_font, fg=ACCENT, bg=WASH, anchor="w", padx=10, pady=6).pack(fill="x", pady=(10, 0))
+    code_holder = tk.Frame(beside, bg=HAIR)
+    code_holder.pack(fill="x", pady=(10, 0))
+    tk.Label(
+        code_holder, textvariable=code_text, font=code_font, fg=ACCENT, bg=WASH,
+        anchor="w", padx=10, pady=6,
+    ).pack(fill="x", padx=1, pady=1)
     tk.Label(waiting, textvariable=status, font=small, fg=SOFT, bg=PAPER, anchor="w", justify="left", wraplength=430).pack(fill="x", pady=(14, 0))
 
     def draw_code(value: str) -> None:
@@ -459,7 +481,7 @@ def open_setup_window() -> None:
             if not (pairing_id and secret and value):
                 root.after(0, lambda: status.set(tr("no_server")))
                 return
-            root.after(0, lambda: (code_text.set(value), draw_code(value), google.configure(state="normal")))
+            root.after(0, lambda: (code_text.set(value), draw_code(value), google.button.configure(state="normal")))
             poll(pairing_id, secret)
 
         threading.Thread(target=ask, daemon=True, name="subtitle-notes-pair").start()
@@ -569,8 +591,8 @@ def open_setup_window() -> None:
             ).pack(side="left", fill="x", expand=True)
             tk.Button(
                 bar, text=tr("update_open"), command=lambda: webbrowser.open(url), font=small,
-                relief="flat", cursor="hand2", bg=ACCENT, fg="#ffffff", bd=0, padx=12, pady=7,
-                activebackground=ACCENT, activeforeground="#ffffff", highlightthickness=0,
+                relief="flat", cursor="hand2", bg=ACCENT, fg=ON_ACCENT, bd=0, padx=12, pady=7,
+                activebackground=ACCENT, activeforeground=ON_ACCENT, highlightthickness=0,
             ).pack(side="right", padx=(0, 10))
 
         root.after(0, show)
