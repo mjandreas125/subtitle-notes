@@ -483,26 +483,57 @@ def open_setup_window() -> None:
     player = tk.Frame(frame, bg=PAPER)
     player.pack(fill="x", pady=(20, 0))
     tk.Label(
-        player, text=tr("track_section"), font=small, fg=SOFT, bg=PAPER, anchor="w",
-    ).pack(fill="x", pady=(0, 8))
+        player, text=tr("track_section").upper(), font=small, fg=SOFT, bg=PAPER, anchor="w",
+    ).pack(fill="x", pady=(0, 10))
 
     def track_row(label: str, key: str) -> None:
         row = tk.Frame(player, bg=PAPER)
-        row.pack(fill="x", pady=(0, 6))
-        tk.Label(row, text=label, font=body, fg=INK, bg=PAPER, anchor="w", width=12).pack(side="left")
-        current = tk.StringVar(value=named.get(str(prefs.get(key, "")), names[0]))
-        picker = tk.OptionMenu(row, current, *names)
-        picker.configure(
-            font=small, bg=WASH, fg=INK, activebackground=WASH, activeforeground=INK,
-            relief="flat", highlightthickness=1, highlightbackground=HAIR, bd=0,
-            anchor="w", cursor="hand2",
+        row.pack(fill="x", pady=(0, 8))
+        tk.Label(
+            row, text=label, font=body, fg=INK, bg=PAPER, anchor="w", width=11,
+        ).pack(side="left")
+
+        # A one pixel frame behind the button is the hairline border; Tk's own
+        # borders are bevelled and grey whatever you ask for.
+        edge = tk.Frame(row, bg=HAIR)
+        edge.pack(side="left", fill="x", expand=True)
+        face = tk.Frame(edge, bg=PAPER)
+        face.pack(fill="x", padx=1, pady=1)
+
+        picked = tk.StringVar(value=named.get(str(prefs.get(key, "")), names[0]))
+        chosen = tk.Label(
+            face, textvariable=picked, font=body, fg=INK, bg=PAPER,
+            anchor="w", padx=11, pady=7,
         )
-        picker["menu"].configure(font=small, bg=PAPER, fg=INK, activebackground=WASH, bd=0)
-        picker.pack(side="left", fill="x", expand=True)
-        current.trace_add(
-            "write",
-            lambda *_: player_prefs.save_player_prefs({key: by_name.get(current.get(), "")}),
+        chosen.pack(side="left", fill="x", expand=True)
+        arrow = tk.Label(face, text="\u25be", font=small, fg=SOFT, bg=PAPER, padx=10)
+        arrow.pack(side="right")
+
+        menu = tk.Menu(
+            root, tearoff=0, font=body, bg=PAPER, fg=INK,
+            activebackground=WASH, activeforeground=INK, bd=0, relief="flat",
+            activeborderwidth=0,
         )
+        for code, name in choices:
+            menu.add_radiobutton(
+                label=name, value=name, variable=picked, indicatoron=False,
+                font=body, background=PAPER, foreground=INK,
+                activebackground=WASH, activeforeground=INK, selectcolor=ACCENT,
+                command=lambda code=code: player_prefs.save_player_prefs({key: code}),
+            )
+
+        def open_menu(event: Any) -> None:
+            menu.tk_popup(edge.winfo_rootx(), edge.winfo_rooty() + edge.winfo_height())
+
+        def lit(on: bool) -> None:
+            for widget in (face, chosen, arrow):
+                widget.configure(bg=WASH if on else PAPER)
+
+        for widget in (face, chosen, arrow):
+            widget.configure(cursor="hand2")
+            widget.bind("<Button-1>", open_menu)
+            widget.bind("<Enter>", lambda event: lit(True))
+            widget.bind("<Leave>", lambda event: lit(False))
 
     track_row(tr("track_audio"), "audio_language")
     track_row(tr("track_subs"), "subtitle_language")

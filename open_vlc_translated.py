@@ -182,7 +182,13 @@ def extract_embedded_subtitle(media_path: str) -> tuple[str | None, str | None]:
     if not ffmpeg:
         return None, "No .srt file found, and ffmpeg.exe was not found for embedded subtitle extraction."
 
-    cached = subtitle_cache_path(media_path)
+    wanted = player_prefs.language_codes(
+        player_prefs.load_player_prefs()["subtitle_language"]
+    )
+    # The language is part of the key. Otherwise the first extraction wins
+    # forever - and on a release whose first subtitle track is the local
+    # signs-only one, that is five lines for a whole episode.
+    cached = subtitle_cache_path(media_path, "embedded-" + (wanted[0] if wanted else "file"))
     if os.path.exists(cached) and os.path.getsize(cached) > 0:
         return cached, None
 
@@ -195,9 +201,7 @@ def extract_embedded_subtitle(media_path: str) -> tuple[str | None, str | None]:
     # Without ffprobe there is nothing to inspect, so ask ffmpeg for the
     # language directly and fall back to the file's first subtitle track - a
     # film that does not carry the wanted language still gets subtitles.
-    for code in player_prefs.language_codes(
-        player_prefs.load_player_prefs()["subtitle_language"]
-    ):
+    for code in wanted:
         commands.append(
             [ffmpeg, "-y", "-i", media_path, "-map", f"0:s:m:language:{code}", "-c:s", "srt", cached]
         )

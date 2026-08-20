@@ -52,6 +52,9 @@ VLC_STATUS_URL = f"http://127.0.0.1:{VLC_PORTS[0]}/requests/status.json"
 POLL_MS = 40
 # Tight enough that a play/pause is noticed within about one video frame.
 STATUS_POLL_SECONDS = 0.08
+# How long VLC may stay silent before the overlay accepts that it was closed.
+# Long enough to sit through a stall or a file being swapped in the playlist.
+CLOSED_PLAYER_SECONDS = 25.0
 # Nothing on screen is a single cue for longer than this, so the search for
 # overlapping cues never has to walk the whole file.
 MAX_CUE_MS = 15000
@@ -964,8 +967,18 @@ class VlcSubtitleOverlay:
         """Talks to VLC off the UI thread. A slow or missing answer must never
         hold up a redraw."""
         previous_state = ""
+        last_answer = time_module.monotonic()
         while not self.stop_status.is_set():
             status = self._read_vlc_status()
+            if status is not None:
+                last_answer = time_module.monotonic()
+            elif time_module.monotonic() - last_answer > CLOSED_PLAYER_SECONDS:
+                # VLC has gone. Without this the overlay stayed in memory for
+                # the rest of the session, and the next film started with two
+                # of them on screen.
+                self.stop_status.set()
+                self.after(0, self.destroy)
+                return
             with self.status_lock:
                 self.status_sample = (status, time_module.monotonic())
             state = str((status or {}).get("state", "")).lower()
