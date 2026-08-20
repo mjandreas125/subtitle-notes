@@ -54,6 +54,11 @@ VLC_STATUS_URL = f"http://127.0.0.1:{VLC_PORTS[0]}/requests/status.json"
 POLL_MS = 40
 # Tight enough that a play/pause is noticed within about one video frame.
 STATUS_POLL_SECONDS = 0.08
+# A phrase is usually caught in two or three goes: a word, then the words
+# around it. Saving each attempt filled the library with fragments of one line,
+# so the save waits this long and a later selection that overlaps the pending
+# one takes its place.
+SAVE_SETTLE_MS = 1500
 # How long VLC may stay silent before the overlay accepts that it was closed.
 # Long enough to sit through a stall or a file being swapped in the playlist.
 CLOSED_PLAYER_SECONDS = 25.0
@@ -70,6 +75,12 @@ MIN_WIDTH = 520
 MAX_WIDTH = 1800
 SIDE_MARGIN = 44
 TRANSPARENT_COLOR = "#010203"
+# The phone app's dark palette, so the answer over a film and the card in the
+# pocket are recognisably the same thing.
+APP_SURFACE = "#18262b"
+APP_LINE = "#2c4149"
+APP_INK = "#eaf3f0"
+APP_GREEN = "#35be58"
 SELECTION_FILL = "#236f62"
 SUBTITLE_FILL = "#ffffff"
 SUBTITLE_OUTLINE = "#000000"
@@ -763,6 +774,11 @@ class VlcSubtitleOverlay:
         # The moment on screen, which only ever moves forward while playing.
         self.display_ms = 0
         self.popup_timer: str | None = None
+        # A save waiting to see whether the viewer is still adjusting.
+        self.pending_save: tuple[str, str] | None = None
+        self.pending_payload: tuple[str, TranslationResult] | None = None
+        self.space_was_down = False
+        self.vlc_hwnd = 0
         self.stop_status = threading.Event()
 
         self.root = tk.Tk()
@@ -818,19 +834,23 @@ class VlcSubtitleOverlay:
         self.canvas.bind("<Control-Z>", self._undo_last_translation)
         self.canvas.bind("<Control-X>", self._undo_last_translation)
 
+        # The app's dark surface, with its line colour as a hairline and its
+        # lip under the card. Nothing else: the film is what is being watched.
         self.popup = tk.Toplevel(self.root)
         self.popup.withdraw()
         self.popup.overrideredirect(True)
         self.popup.attributes("-topmost", True)
-        self.popup.attributes("-alpha", 0.94)
-        self.popup.configure(bg="#07100e")
+        self.popup.attributes("-alpha", 0.97)
+        self.popup.configure(bg=APP_LINE)
+        self.popup_body = tk.Frame(self.popup, bg=APP_SURFACE)
+        self.popup_body.pack(fill="both", expand=True, padx=1, pady=(1, 3))
         self.popup_label = tk.Label(
-            self.popup,
-            bg="#07100e",
-            fg="#eaf3f0",
-            padx=16,
+            self.popup_body,
+            bg=APP_SURFACE,
+            fg=APP_INK,
+            padx=18,
             pady=(0),
-            font=("Segoe UI", 16, "bold"),
+            font=("Segoe UI", 15, "bold"),
             justify="center",
             wraplength=760,
         )
@@ -838,11 +858,11 @@ class VlcSubtitleOverlay:
         # The key word sits under the sentence, quieter, so the thing that was
         # actually selected reads first.
         self.popup_support = tk.Label(
-            self.popup,
-            bg="#07100e",
-            fg="#7fd7b4",
-            padx=16,
-            font=("Segoe UI", 13),
+            self.popup_body,
+            bg=APP_SURFACE,
+            fg=APP_GREEN,
+            padx=18,
+            font=("Segoe UI", 11),
             justify="center",
             wraplength=760,
         )
@@ -1316,7 +1336,28 @@ class VlcSubtitleOverlay:
         if undo_down and not self.undo_combo_was_down and self.root.state() != "withdrawn":
             self._undo_last_translation()
         self.undo_combo_was_down = undo_down
+
+        # Space is what a viewer already presses to stop and look at a line, so
+        # it also asks what the whole line means. No modifier: the player takes
+        # the key as well, which is the pause the viewer wanted anyway.
+        space_down = bool(user32.GetAsyncKeyState(0x20) & 0x8000)
+        if space_down and not self.space_was_down and not ctrl_down and self.active_cues:
+            # Only when the player has the keyboard: a space typed in a chat
+            # window behind the film is not a request to translate anything.
+            watching = self.vlc_hwnd and user32.GetForegroundWindow() == self.vlc_hwnd
+            if watching and self.root.state() != "withdrawn" and self.current_text.strip():
+                self._translate_whole_line()
+        self.space_was_down = space_down
         self.root.after(35, self._watch_global_mouse)
+
+    def _translate_whole_line(self) -> None:
+        """The line on screen, read as one - what space asks for."""
+        if not self.char_boxes:
+            return
+        self.selection_anchor = 0
+        self.selection_focus = len(self.current_text) - 1
+        self._redraw_selection()
+        self._translate_selection()
 
     def _on_press(self, event: tk.Event[tk.Canvas]) -> str:
         char_index = self._char_at(event.x, event.y)
@@ -1486,6 +1527,35 @@ class VlcSubtitleOverlay:
         return result.text, support
 
     def _append_translation(self, selected_text: str, result: TranslationResult) -> None:
+        """Hold the save briefly; see SAVE_SETTLE_MS."""
+        if self.pending_save is not None:
+            waiting_text, timer = self.pending_save
+            if self._same_thought(waiting_text, selected_text):
+                self.root.after_cancel(timer)
+            else:
+                self.root.after_cancel(timer)
+                self._commit_translation(*self.pending_payload)
+            self.pending_save = None
+        self.pending_payload = (selected_text, result)
+        self.pending_save = (
+            selected_text,
+            self.root.after(SAVE_SETTLE_MS, self._commit_pending),
+        )
+
+    @staticmethod
+    def _same_thought(first: str, second: str) -> bool:
+        """One selection reaching for the same words as the other."""
+        left = " ".join(first.lower().split())
+        right = " ".join(second.lower().split())
+        return bool(left) and bool(right) and (left in right or right in left)
+
+    def _commit_pending(self) -> None:
+        self.pending_save = None
+        if self.pending_payload:
+            self._commit_translation(*self.pending_payload)
+            self.pending_payload = None
+
+    def _commit_translation(self, selected_text: str, result: TranslationResult) -> None:
         primary = self.active_cues[0] if self.active_cues else -1
         cue = self.cues[primary] if 0 <= primary < len(self.cues) else None
         cue_label = cue_time_label(cue.start_ms) if cue else "--:--:--"
@@ -1666,6 +1736,7 @@ class VlcSubtitleOverlay:
             rect = RECT()
             if user32.GetWindowRect(hwnd, ctypes.byref(rect)):
                 windows.append((rect.left, rect.top, rect.right, rect.bottom))
+                self.vlc_hwnd = int(hwnd)
             return True
 
         user32.EnumWindows(callback, 0)
