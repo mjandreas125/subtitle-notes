@@ -486,11 +486,15 @@ def open_setup_window() -> None:
         player, text=tr("track_section").upper(), font=small, fg=SOFT, bg=PAPER, anchor="w",
     ).pack(fill="x", pady=(0, 10))
 
-    def track_row(label: str, key: str) -> None:
+    def option_row(label: str, key: str, options: list[tuple[object, str]]) -> None:
+        names = [name for _, name in options]
+        by_name = {name: value for value, name in options}
+        named = {value: name for value, name in options}
+
         row = tk.Frame(player, bg=PAPER)
         row.pack(fill="x", pady=(0, 8))
         tk.Label(
-            row, text=label, font=body, fg=INK, bg=PAPER, anchor="w", width=11,
+            row, text=label, font=body, fg=INK, bg=PAPER, anchor="w", width=17,
         ).pack(side="left")
 
         # A one pixel frame behind the button is the hairline border; Tk's own
@@ -500,7 +504,10 @@ def open_setup_window() -> None:
         face = tk.Frame(edge, bg=PAPER)
         face.pack(fill="x", padx=1, pady=1)
 
-        picked = tk.StringVar(value=named.get(str(prefs.get(key, "")), names[0]))
+        stored = prefs.get(key, "")
+        if isinstance(stored, str) and stored.replace('.', '', 1).isdigit():
+            stored = float(stored)
+        picked = tk.StringVar(value=named.get(stored, names[0]))
         chosen = tk.Label(
             face, textvariable=picked, font=body, fg=INK, bg=PAPER,
             anchor="w", padx=11, pady=7,
@@ -514,12 +521,12 @@ def open_setup_window() -> None:
             activebackground=WASH, activeforeground=INK, bd=0, relief="flat",
             activeborderwidth=0,
         )
-        for code, name in choices:
+        for value, name in options:
             menu.add_radiobutton(
                 label=name, value=name, variable=picked, indicatoron=False,
                 font=body, background=PAPER, foreground=INK,
                 activebackground=WASH, activeforeground=INK, selectcolor=ACCENT,
-                command=lambda code=code: player_prefs.save_player_prefs({key: code}),
+                command=lambda value=value: player_prefs.save_player_prefs({key: value}),
             )
 
         def open_menu(event: Any) -> None:
@@ -535,8 +542,14 @@ def open_setup_window() -> None:
             widget.bind("<Enter>", lambda event: lit(True))
             widget.bind("<Leave>", lambda event: lit(False))
 
-    track_row(tr("track_audio"), "audio_language")
-    track_row(tr("track_subs"), "subtitle_language")
+    option_row(tr("track_audio"), "audio_language", choices)
+    option_row(tr("track_subs"), "subtitle_language", choices)
+    option_row(
+        tr("popup_life"),
+        "popup_seconds",
+        [(3.0, "3 s"), (5.0, "5 s"), (6.5, "6.5 s"), (10.0, "10 s"), (15.0, "15 s"),
+         (0.0, tr("popup_until_next"))],
+    )
 
     # A program with no store behind it has to say for itself when it is old.
     def offer_update() -> None:

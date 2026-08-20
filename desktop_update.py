@@ -15,7 +15,7 @@ from sync_client import DEFAULT_API_URL, USER_AGENT, log_sync
 
 # Bumped with the installer version in installer/SubtitleNotes.iss; a stale
 # value here tells everyone to install the version they are already running.
-VERSION = "1.6.8"
+VERSION = "1.6.9"
 LATEST_URL = DEFAULT_API_URL.replace("/v1", "/desktop/latest")
 
 

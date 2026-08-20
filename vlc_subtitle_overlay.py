@@ -7,6 +7,8 @@ Russian translation popup.
 
 from __future__ import annotations
 
+from typing import Callable
+
 import base64
 import bisect
 import ctypes
@@ -494,7 +496,9 @@ def choose_focus_phrase(text: str) -> tuple[str, str]:
     return focus_word, focus_phrase
 
 
-def translate_selection_smart(text: str, context: str = "") -> TranslationResult:
+def translate_selection_smart(
+    text: str, context: str = "", preview: Callable[[TranslationResult], None] | None = None
+) -> TranslationResult:
     # The server's reading of the line and the dictionary lookups do not depend
     # on each other, so they run together and the popup waits for the slower of
     # the two rather than for both in turn.
@@ -508,6 +512,11 @@ def translate_selection_smart(text: str, context: str = "") -> TranslationResult
     reader.start()
 
     phrase_result = translate_text(text)
+    # The dictionary is back in a moment; reading the whole line takes a beat
+    # longer. Put the first answer on screen instead of leaving a row of dots
+    # there until the better one is written.
+    if preview is not None:
+        preview(phrase_result)
     focus_word, focus_phrase = choose_focus_phrase(text)
     phrase_focus_result = phrase_result
     word_focus_result = phrase_result
@@ -753,6 +762,7 @@ class VlcSubtitleOverlay:
         self.window_hidden = True
         # The moment on screen, which only ever moves forward while playing.
         self.display_ms = 0
+        self.popup_timer: str | None = None
         self.stop_status = threading.Event()
 
         self.root = tk.Tk()
@@ -951,8 +961,10 @@ class VlcSubtitleOverlay:
             while True:
                 kind, value = self.events.get_nowait()
                 if kind == "translation":
-                    job_id, selected_text, result, anchor = value  # type: ignore[misc]
-                    if isinstance(result, TranslationResult):
+                    job_id, selected_text, result, anchor, final = value  # type: ignore[misc]
+                    # Only the considered answer is kept and written down; the
+                    # first one is there to be read, not to be saved.
+                    if final and isinstance(result, TranslationResult):
                         self.cache[str(selected_text).lower()] = result
                         self._append_translation(str(selected_text), result)
                     if job_id == self.last_translation_job:
@@ -1434,12 +1446,15 @@ class VlcSubtitleOverlay:
         return cue.text if cue else self.current_text
 
     def _translate_in_background(self, job_id: int, key: str, selected_text: str, anchor: tuple[int, int], context: str = "") -> None:
+        def preview(first: TranslationResult) -> None:
+            self.events.put(("translation", (job_id, selected_text, first, anchor, False)))
+
         try:
-            result = translate_selection_smart(selected_text, context)
+            result = translate_selection_smart(selected_text, context, preview)
         except Exception:
             result = TranslationResult("\u043d\u0435\u0442 \u0441\u0432\u044f\u0437\u0438")
         self.cache[key] = result
-        self.events.put(("translation", (job_id, selected_text, result, anchor)))
+        self.events.put(("translation", (job_id, selected_text, result, anchor, True)))
 
     def _popup_text(self, result: object, selected_text: str = "") -> tuple[str, str]:
         """Returns the headline and the supporting line for the popup.
@@ -1588,9 +1603,19 @@ class VlcSubtitleOverlay:
         self.popup.geometry(f"{width}x{height}+{x}+{y}")
         self.popup.deiconify()
         self.popup.lift()
-        self.popup.after(6500, self._hide_popup)
+        # One timer at a time: the old one belonged to the answer that has just
+        # been replaced, and letting it run would take this one down early.
+        if self.popup_timer is not None:
+            self.popup.after_cancel(self.popup_timer)
+            self.popup_timer = None
+        seconds = float(player_prefs.load_player_prefs()["popup_seconds"])
+        if seconds > 0:
+            self.popup_timer = self.popup.after(int(seconds * 1000), self._hide_popup)
 
     def _hide_popup(self) -> None:
+        if self.popup_timer is not None:
+            self.popup.after_cancel(self.popup_timer)
+            self.popup_timer = None
         self.popup.withdraw()
 
     def _place_over_vlc(self) -> bool:
