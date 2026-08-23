@@ -10,10 +10,10 @@ const encoder = new TextEncoder();
 /// The program has no store to update it, so it asks here on startup and says
 /// when it is behind. Bump the version when a new installer is published.
 const DESKTOP_LATEST = {
-  version: '1.7.5',
+  version: '1.7.7',
   // Straight to the file: the button should start a download, not land
   // somebody on a page of assets to choose from.
-  url: 'https://github.com/mjandreas125/subtitle-notes/releases/latest/download/SubtitleNotesSetup-1.7.5.exe',
+  url: 'https://github.com/mjandreas125/subtitle-notes/releases/latest/download/SubtitleNotesSetup-1.7.7.exe',
   notes: '',
 };
 const json = (value: unknown, status = 200) => new Response(JSON.stringify(value), { status, headers: { ...cors, 'content-type': 'application/json; charset=utf-8' } });
@@ -594,6 +594,13 @@ const linkPage = (code: string, lang: string) => {
   input { width:100%; padding:12px; margin-bottom:14px; border:1px solid var(--hair); border-radius:11px;
           background:transparent; color:var(--ink); text-align:center; text-transform:uppercase;
           font:640 19px ui-monospace, Consolas, monospace; letter-spacing:.18em; }
+  /* The way to the eight-character code: a quiet line of text, not a grey
+     system button sitting in the middle of the page. */
+  .asCode { display:block; width:100%; margin:0 0 16px; padding:0; border:0; background:none;
+            color:var(--soft); font:inherit; font-size:13.5px; text-align:center; cursor:pointer;
+            text-decoration:underline; text-underline-offset:3px; text-decoration-color:var(--hair);
+            transition:color .15s ease, text-decoration-color .15s ease; }
+  .asCode:hover { color:var(--ink); text-decoration-color:var(--accent); }
   #button { display:flex; justify-content:center; min-height:44px; }
   .enter { border:0; border-radius:999px; padding:13px 26px; font:inherit; font-weight:700;
            color:#fff; background:var(--accent); cursor:pointer;
@@ -677,6 +684,13 @@ const linkPage = (code: string, lang: string) => {
         '&include_granted_scopes=true&prompt=select_account&state=' +
         encodeURIComponent(code + '.' + document.documentElement.lang);
     });
+
+    // Opened by a button that already said "sign in with Google": going
+    // through a page with a single button on it is one click too many.
+    if (new URLSearchParams(location.search).get('straight') === '1' && !location.hash) {
+      document.getElementById('enter')?.click();
+      return;
+    }
 
     const back = location.hash.match(/access_token=([^&]+)/);
     const state = location.hash.match(/state=([^&]+)/);

@@ -47,8 +47,23 @@ class DesktopConfig {
 
   static Session? load() {
     final config = _read();
-    final base = (config['api_url'] as String? ?? '').trim();
+    var base = (config['api_url'] as String? ?? '').trim();
     final token = (config['token'] as String? ?? '').trim();
+    // The Workers subdomain used to carry the owner's e-mail; that host no
+    // longer resolves, and a settings file written before the move points at
+    // it. Only the address changed.
+    if (base.contains('andreas-sultseng228.workers.dev')) {
+      base = defaultApiBase;
+      final updated = _read()..['api_url'] = defaultApiBase;
+      try {
+        folder.createSync(recursive: true);
+        file.writeAsStringSync(
+          const JsonEncoder.withIndent('  ').convert(updated),
+        );
+      } catch (_) {
+        // A read-only settings file is not worth failing the window over.
+      }
+    }
     if (base.isEmpty || isLegacy(base) || token.isEmpty) return null;
     return Session(
       baseUrl: base,

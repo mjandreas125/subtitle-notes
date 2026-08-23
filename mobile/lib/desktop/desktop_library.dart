@@ -6,6 +6,7 @@ import '../data.dart';
 import '../design/components.dart';
 import '../design/tokens.dart';
 import 'desktop_updates.dart';
+import 'player_settings.dart';
 
 /// The library on a wide screen: sources down the left, cards in the middle,
 /// and the selected word opened beside them instead of on a pushed page.
@@ -325,6 +326,13 @@ class _TopBar extends StatelessWidget {
             icon: Icons.refresh_rounded,
             tooltip: 'Refresh',
             onTap: onReload,
+          ),
+          // What the player should do with a film: the settings the VLC
+          // overlay reads. They used to live in a separate little window.
+          _BarAction(
+            icon: Icons.play_circle_rounded,
+            tooltip: 'Films in VLC',
+            onTap: () => showPlayerSettings(context),
           ),
           const SizedBox(width: AppSpace.md),
           Text(

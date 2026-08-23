@@ -73,20 +73,17 @@ class SessionStore {
       await data.remove(_tokenKey);
       return null;
     }
-    // The Workers subdomain used to carry the owner's e-mail. The session was
-    // issued by the Worker, not by the hostname, so moving the address over
-    // costs nobody a sign-in.
-    if (base.contains('andreas-sultseng228.workers.dev')) {
-      await data.setString(_baseKey, defaultApiBase);
-      return Session(
-        baseUrl: defaultApiBase,
-        token: token,
-        email: data.getString(_emailKey) ?? '',
-      );
-    }
-    if (base.isEmpty || token.isEmpty) return null;
+    // The Workers subdomain used to carry the owner's e-mail. Only the address
+    // moved; the address is rewritten here and whether there is a session at
+    // all is decided below, as for anyone else. Handing back a session with an
+    // empty token made the app believe it was signed in and refuse every
+    // request it then made.
+    final resolved =
+        base.contains('andreas-sultseng228.workers.dev') ? defaultApiBase : base;
+    if (resolved != base) await data.setString(_baseKey, resolved);
+    if (resolved.isEmpty || token.isEmpty) return null;
     return Session(
-      baseUrl: base,
+      baseUrl: resolved,
       token: token,
       email: data.getString(_emailKey) ?? '',
     );

@@ -347,8 +347,21 @@
     place(panel, rect);
     makeDraggable(panel);
 
+    // The dictionary answers in a moment and the reading of the whole line
+    // takes a beat longer. Show the first one rather than a row of dots, and
+    // let the considered answer replace it when it lands.
+    const mine = panel;
+    ask({ type: 'quick', text }).then((quick) => {
+      if (panel !== mine || mine.dataset.read || !quick.ok) return;
+      if (!hasTranslation(quick.data?.translation)) return;
+      mine.innerHTML = compact()
+        ? `<div class="term">${escape(quick.data.translation)}</div>`
+        : `<div class="head">${escape(quick.data.translation)}</div>`;
+    });
+
     const reply = await ask({ type: 'reading', text, context });
-    if (!panel) return;
+    if (!panel || panel !== mine) return;
+    mine.dataset.read = '1';
 
     if (!reply.ok) {
       panel.innerHTML =

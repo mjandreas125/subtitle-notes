@@ -86,7 +86,11 @@ async function connect({ withGoogle }) {
   // errand, and it should not bury the page that is waiting for it.
   let signInWindow = null;
   if (withGoogle) {
-    signInWindow = await chrome.windows.create({ url: link, type: 'popup', width: 460, height: 660 });
+    // straight=1: the page has one button on it and the person has already
+    // pressed one to get here, so it goes to Google itself.
+    signInWindow = await chrome.windows.create({
+      url: `${link}&straight=1`, type: 'popup', width: 460, height: 660,
+    });
   }
 
   // The code is good for ten minutes; the server says so and we do not outlast it.

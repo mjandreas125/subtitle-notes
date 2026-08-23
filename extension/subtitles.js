@@ -71,7 +71,7 @@
       /* Faint enough that the letters keep their own colour — a mark under the
          words, not paint over them. */
       .pane {
-        position: fixed; border-radius: 8px; pointer-events: none;
+        position: fixed; border-radius: 10px; pointer-events: none;
         background: linear-gradient(180deg, rgba(96, 232, 166, .26), rgba(44, 180, 122, .20));
         box-shadow: 0 0 0 1px rgba(140, 245, 197, .30);
       }
@@ -113,15 +113,16 @@
     for (const [index, rect] of visible.entries()) {
       // Trimmed top and bottom: a line box is taller than the letters in it,
       // and a highlight that fills it looks like a bar rather than a mark.
-      const inset = Math.min(7, Math.max(2, rect.height * 0.17));
+      // Less trimming than before, though - it was sitting on the letters.
+      const inset = Math.min(4, Math.max(1, rect.height * 0.09));
       const pane = panes[index] ?? document.createElement('div');
       if (!panes[index]) {
         pane.className = 'pane enter';
         glowRoot.appendChild(pane);
       }
-      pane.style.left = `${Math.round(rect.left - 3)}px`;
+      pane.style.left = `${Math.round(rect.left - 7)}px`;
       pane.style.top = `${Math.round(rect.top + inset)}px`;
-      pane.style.width = `${Math.round(rect.width + 6)}px`;
+      pane.style.width = `${Math.round(rect.width + 14)}px`;
       pane.style.height = `${Math.round(rect.height - inset * 2)}px`;
     }
     for (let index = visible.length; index < panes.length; index += 1) panes[index].remove();
