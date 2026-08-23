@@ -17,6 +17,10 @@
   "translating": {
     "message": "tõlgin…"
   },
+  "pendingLater": {
+    "message": "Praegu vastust ei tulnud — tõlge ilmub rakendusse.",
+    "description": "Shown when no provider answered; the server retries later."
+  },
   "listen": {
     "message": "Kuula"
   },

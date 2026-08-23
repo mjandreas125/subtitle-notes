@@ -1,7 +1,7 @@
 ﻿#define AppName "Subtitle Notes"
-#define AppVersion "1.7.7"
+#define AppVersion "1.8.0"
 #define AppPublisher "Subtitle Notes"
-#define AppExe "TranslatedVLCSyncSetup.exe"
+#define AppExe "Library\translated_vlc_mobile.exe"
 
 [Setup]
 AppId={{A03E1A9D-F90C-43A2-BE25-5305B716ABC7}
@@ -11,7 +11,7 @@ AppPublisher={#AppPublisher}
 DefaultDirName={autopf}\Subtitle Notes
 DefaultGroupName={#AppName}
 OutputDir=..\release_package
-OutputBaseFilename=SubtitleNotesSetup-1.7.7
+OutputBaseFilename=SubtitleNotesSetup-1.8.0
 Compression=lzma2
 SolidCompression=yes
 WizardStyle=modern
@@ -41,11 +41,25 @@ Source: "..\mobile\build\app\outputs\flutter-apk\app-release.apk"; DestDir: "{us
 Source: "..\README.md"; DestDir: "{userdocs}\Subtitle Notes"; DestName: "README.txt"; Flags: ignoreversion
 
 [Icons]
-Name: "{group}\Subtitle Notes - account setup"; Filename: "{app}\TranslatedVLCSyncSetup.exe"
-Name: "{group}\Subtitle Notes - capture selected text"; Filename: "{app}\SubtitleNotesQuickCapture.exe"
-Name: "{group}\Subtitle Notes - library"; Filename: "{app}\Library\translated_vlc_mobile.exe"
+; One program. Signing in, the words themselves and what the player should do
+; with a film are all in it; there used to be a separate "account setup" entry,
+; and a person who opened the program instead of that one found a screen asking
+; for a phone and no way to sign in with Google at all.
+Name: "{group}\Subtitle Notes"; Filename: "{app}\Library\translated_vlc_mobile.exe"
+Name: "{autodesktop}\Subtitle Notes"; Filename: "{app}\Library\translated_vlc_mobile.exe"; Tasks: desktopicon
 Name: "{group}\Browser Extension folder"; Filename: "{userdocs}\Subtitle Notes\Browser Extension"
 Name: "{group}\Android APK"; Filename: "{userdocs}\Subtitle Notes\Android\SubtitleNotes.apk"
+
+[Tasks]
+Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"
+
+[InstallDelete]
+; The three entries this replaces. Inno leaves shortcuts it made last time,
+; and a Start menu offering "account setup" would still send people to a
+; program that no longer has a window.
+Type: files; Name: "{group}\Subtitle Notes - account setup.lnk"
+Type: files; Name: "{group}\Subtitle Notes - capture selected text.lnk"
+Type: files; Name: "{group}\Subtitle Notes - library.lnk"
 
 [Registry]
 ; A development build used to register its own verb pointing at the folder it
@@ -75,8 +89,10 @@ Root: HKCU; Subkey: "Software\Microsoft\Windows\CurrentVersion\Run"; ValueType: 
 ; Switching it on by hand means finding a checkbox three dialogs deep, so the
 ; installer writes the setting itself.
 Filename: "{app}\TranslatedVLCSyncSetup.exe"; Parameters: "--configure-vlc"; Flags: runhidden waituntilterminated
-Filename: "{app}\TranslatedVLCSyncSetup.exe"; Description: "Set up your account"; Flags: nowait postinstall skipifsilent
-Filename: "{app}\SubtitleNotesQuickCapture.exe"; Description: "Start the Ctrl+Alt+S capture helper"; Flags: nowait postinstall skipifsilent
+; The Ctrl+Alt+S helper has no window and nothing to decide, so it is simply
+; started rather than offered as a choice nobody can evaluate.
+Filename: "{app}\SubtitleNotesQuickCapture.exe"; Flags: nowait runhidden
+Filename: "{app}\Library\translated_vlc_mobile.exe"; Description: "Open Subtitle Notes"; Flags: nowait postinstall skipifsilent
 
 [Code]
 // Anything of ours that may still be running: the background capture helper,

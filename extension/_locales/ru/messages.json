@@ -17,6 +17,10 @@
   "translating": {
     "message": "перевожу…"
   },
+  "pendingLater": {
+    "message": "Сейчас ответа нет — перевод появится в приложении.",
+    "description": "Shown when no provider answered; the server retries later."
+  },
   "listen": {
     "message": "Послушать"
   },

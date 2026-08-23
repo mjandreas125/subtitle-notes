@@ -446,7 +446,11 @@
         rect,
         text,
         line,
-        pageTitle(),
+        // The name of the film and, for a series, which episode of it. The
+        // player was asked at the moment of the selection: an episode chosen
+        // half an hour ago is still the one on screen, and reading it now
+        // costs nothing.
+        snMediaInfo(),
         video ? Math.round(video.currentTime * 1000) : null,
       );
     },
@@ -473,22 +477,6 @@
     return range;
   }
 
-  /// The film's name, with the site's own furniture trimmed off.
-  function pageTitle() {
-    const candidates = [
-      document.querySelector('[data-uia="video-title"]')?.innerText,
-      document.querySelector('#above-the-fold #title h1')?.innerText,
-      document.querySelector('h1')?.innerText,
-      document.title,
-    ];
-    const found = candidates.map((value) => flat(value)).find(Boolean) ?? 'Video';
-    return found
-      .split('\n')[0]
-      .replace(/\s*[-–—|]\s*(YouTube|Netflix|смотреть онлайн|HD 720|HDrezka).*$/i, '')
-      .trim()
-      .slice(0, 90) || 'Video';
-  }
-
   // Space is already the key for stopping to look at a line, so it also asks
   // what the whole line means. Read, not kept: saving stays with the mouse.
   document.addEventListener(
@@ -505,7 +493,7 @@
       if (!caption) return;
       const line = (caption.innerText || '').replace(/\s+/g, ' ').trim();
       if (!line) return;
-      window.__subtitleNotes?.showCard(caption.getBoundingClientRect(), line, line, document.title);
+      window.__subtitleNotes?.showCard(caption.getBoundingClientRect(), line, line, snMediaInfo());
     },
     true,
   );

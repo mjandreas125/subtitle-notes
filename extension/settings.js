@@ -119,3 +119,155 @@ function snBlocked(settings, host) {
     return site === rule || site.endsWith('.' + rule);
   });
 }
+
+// ---- which film, and which episode of it ------------------------------------
+//
+// A card that says only "Silo" is a card you cannot place: the same word turns
+// up in the second episode and in the sixth, and the library shows one line for
+// both. The player on screen always knows which episode is playing — it is what
+// the viewer just clicked — so the page is asked rather than guessed at.
+
+const SN_SEASON_WORD = '(?:seasons?|сезон[а-яё]*|hooaeg|staffel|saison|temporada|stagione|sezon[ua]?|säsong|kausi)';
+const SN_EPISODE_WORD = '(?:episodes?|épisode|episodio|epizod|odcinek|сери[яию]|серій?|серія|folge|osa|avsnitt|jakso|bölüm|aflevering)';
+
+/// The number a word like "season" is talking about, on whichever side of it
+/// the language happens to put the digits: "Season 2", "2 сезон", "Сезон №2".
+function snNumberNear(text, word) {
+  const after = text.match(new RegExp(word + '\\s*[№#:.]?\\s*(\\d{1,3})\\b', 'i'));
+  if (after) return after[1];
+  const before = text.match(new RegExp('\\b(\\d{1,3})\\s*[-–]?\\s*(?:[а-яё]{1,2}\\s*)?' + word, 'i'));
+  return before ? before[1] : '';
+}
+
+/// Season and episode read out of a piece of text, in the notations players
+/// and file names actually use.
+function snEpisodeFromText(value) {
+  const text = String(value || '').replace(/\s+/g, ' ');
+  const number = (raw) => (raw ? String(parseInt(raw, 10)) : '');
+  let found = text.match(/\bS\s?(\d{1,2})\s*[:.\-\s]?\s*E\s?(\d{1,3})\b/i);
+  if (found) return { season: number(found[1]), episode: number(found[2]) };
+  found = text.match(/\b(\d{1,2})\s*[x×х]\s*(\d{1,3})\b/i);
+  if (found) return { season: number(found[1]), episode: number(found[2]) };
+  return {
+    season: number(snNumberNear(text, SN_SEASON_WORD)),
+    episode: number(snNumberNear(text, SN_EPISODE_WORD)),
+  };
+}
+
+const SN_CHOSEN = '.active, .selected, .current, .is-active, [aria-selected="true"], [aria-current="true"], [aria-current="page"]';
+
+/// What the page itself says is playing.
+///
+/// Three ways, in order of how much each can be trusted: the attributes the
+/// common player shells put on the episode they highlighted, the item marked as
+/// chosen inside a list that calls itself seasons or episodes, and finally the
+/// words on screen.
+function snEpisodeFromPage() {
+  // Playerjs shells — rezka and the sites that borrowed its markup — mark the
+  // chosen episode with the numbers themselves, which beats reading labels.
+  for (const node of document.querySelectorAll('[data-episode_id]')) {
+    if (!node.matches(SN_CHOSEN)) continue;
+    const episode = node.getAttribute('data-episode_id') || '';
+    if (!episode) continue;
+    const season =
+      node.getAttribute('data-season_id') ||
+      document.querySelector('[data-tab_id].active')?.getAttribute('data-tab_id') ||
+      '';
+    return {
+      season: season ? String(parseInt(season, 10)) : '',
+      episode: String(parseInt(episode, 10)),
+    };
+  }
+
+  const result = { season: '', episode: '' };
+  const naming = (node) =>
+    `${node.id || ''} ${typeof node.className === 'string' ? node.className : ''} ${node.getAttribute('aria-label') || ''}`;
+  const seasonWord = new RegExp(SN_SEASON_WORD, 'i');
+  const episodeWord = new RegExp(SN_EPISODE_WORD, 'i');
+
+  // A dropdown says what is chosen without any highlighting to interpret.
+  for (const select of document.querySelectorAll('select')) {
+    const label = `${naming(select)} ${select.name || ''}`;
+    const text = `${select.selectedOptions?.[0]?.textContent || ''} ${select.value || ''}`;
+    const digits = text.match(/\d{1,3}/);
+    if (!digits) continue;
+    if (!result.season && seasonWord.test(label)) result.season = String(parseInt(digits[0], 10));
+    if (!result.episode && episodeWord.test(label)) result.episode = String(parseInt(digits[0], 10));
+  }
+
+  // A list of episodes with one of them highlighted. The item carries the
+  // number and the list itself says whether it holds seasons or episodes.
+  const lists = document.querySelectorAll(
+    'ul, ol, nav, [class*="season" i], [class*="episode" i], [class*="serii" i], [id*="season" i], [id*="episode" i]',
+  );
+  for (const list of lists) {
+    if (result.season && result.episode) break;
+    const label = naming(list);
+    const wantsSeason = !result.season && seasonWord.test(label);
+    const wantsEpisode = !result.episode && episodeWord.test(label);
+    if (!wantsSeason && !wantsEpisode) continue;
+    const chosen = list.querySelector(SN_CHOSEN);
+    const text = (chosen?.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 60);
+    const digits = text.match(/\d{1,3}/);
+    if (!digits) continue;
+    if (wantsSeason) result.season = String(parseInt(digits[0], 10));
+    if (wantsEpisode) result.episode = String(parseInt(digits[0], 10));
+  }
+  return result;
+}
+
+/// The name of what is playing, with the site's own furniture trimmed off.
+function snMediaTitle() {
+  const flat = (value) => String(value || '').replace(/\s+/g, ' ').trim();
+  const candidates = [
+    // Netflix names the block; its first line is the series and the rest is
+    // the episode, which is why the whole block is not the title.
+    document.querySelector('[data-uia="video-title"] h4')?.textContent,
+    document.querySelector('[data-uia="video-title"]')?.textContent,
+    document.querySelector('#above-the-fold #title h1')?.textContent,
+    document.querySelector('h1')?.textContent,
+    document.title,
+  ];
+  const found = candidates.map(flat).find(Boolean) || 'Video';
+  return (
+    found
+      .replace(/\s*[-–—|]\s*(YouTube|Netflix|смотреть онлайн|HD 720|HDrezka).*$/i, '')
+      // The episode is kept in a field of its own, so repeating it here would
+      // file the same series under a different heading every week.
+      .replace(/\bS\s?\d{1,2}\s*[:.\-\s]?\s*E\s?\d{1,3}\b/i, '')
+      .replace(/\s*[|·—–-]\s*$/, '')
+      .trim()
+      .slice(0, 90) || 'Video'
+  );
+}
+
+/// An element's words with its parts kept apart.
+///
+/// Netflix writes the title, the episode and its name as three spans in one
+/// block, and `textContent` glues them into "SeveranceS2:E5Trojan's Horse" -
+/// where "S2:E5" no longer starts a word and no pattern can find it.
+function snSpacedText(node) {
+  if (!node) return '';
+  const parts = node.children.length
+    ? Array.from(node.children).map((child) => child.textContent || '')
+    : [node.textContent || ''];
+  return parts.join(' ').replace(/\s+/g, ' ').trim();
+}
+
+/// Everything a saved card needs in order to say where it came from.
+function snMediaInfo() {
+  const page = snEpisodeFromPage();
+  // Nothing usable in the markup: the words on screen are the last resort, and
+  // the page title is where a series usually spells the episode out.
+  const spelled =
+    page.season && page.episode
+      ? page
+      : snEpisodeFromText(
+          `${snSpacedText(document.querySelector('[data-uia="video-title"]'))} ${document.title}`,
+        );
+  return {
+    title: snMediaTitle(),
+    season: page.season || spelled.season || null,
+    episode: page.episode || spelled.episode || null,
+  };
+}

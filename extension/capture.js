@@ -77,6 +77,7 @@
       }
       .card.small .syn, .card.small .note, .card.small .seen,
       .card.small .row, .card.small .say, .card.small .sentence { display: none; }
+      .card.small .wait span { background: #46d68f; }
       .card.small .head.keep { display: block; font-size: 14px; color: #f2f7f4; }
       .card.small .row.keep { display: flex; margin-top: 9px; }
       .card.small .row.keep button { padding: 7px 10px; font-size: 13px; background: #1e7a4c; color: #ffffff; }
@@ -103,6 +104,21 @@
       }
       .term b { color: var(--ink); font-weight: 650; }
       .note { margin-top: 9px; font-size: 12.5px; font-style: italic; color: var(--soft); line-height: 1.45; }
+      /* The whole line, under the meaning of the part that was picked out of
+         it. Small and quiet: it is there to place the answer, not to be read. */
+      .sentence { margin-top: 8px; font-size: 13px; font-weight: 500; color: var(--soft); line-height: 1.4; }
+      /* Waiting for the answer, drawn as the shape the answer will have. An
+         echo of the English that is still highlighted on screen was worse than
+         nothing: it looked like a result, and it was one the reader already had. */
+      .wait { display: flex; flex-direction: column; gap: 7px; padding: 3px 0 2px; }
+      .wait span {
+        display: block; height: 11px; border-radius: 5px; background: var(--accent);
+        opacity: .22; animation: sn-breathe 1.15s ease-in-out infinite;
+      }
+      .wait span:first-child { width: 132px; }
+      .wait span:last-child { width: 78px; animation-delay: .18s; }
+      @keyframes sn-breathe { 50% { opacity: .42; } }
+      @media (prefers-reduced-motion: reduce) { .wait span { animation: none; } }
       .seen { margin-top: 8px; font-size: 12px; font-weight: 600; color: #8a6d2f; letter-spacing: .01em; }
 
       .syn { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 5px; }
@@ -292,15 +308,30 @@
     }
   }
 
-  function readingHtml(info, text) {
-    const term = info.term_en && info.term_en.toLowerCase() !== text.toLowerCase() ? info.term_en : '';
-    const spoken = term || text;
+  /// What the card says: what the selected words mean, and nothing else.
+  ///
+  /// Synonyms, the note on why an idiom means what it does and the English
+  /// term repeated back all belong to a card being studied, in the app, with
+  /// the film stopped. Over a running film they are three things to read
+  /// before the one thing that was asked for.
+  function meaningHtml(info, text) {
+    const meaning = info.focus_translation || info.translation || '';
+    // The whole line, only when it is a different sentence from the answer -
+    // which it is not when the whole line is what was selected.
+    const line = info.translation && info.translation !== meaning ? info.translation : '';
+    const spoken = info.term_en && info.term_en.toLowerCase() !== text.toLowerCase() ? info.term_en : text;
+    if (compact()) return `<div class="term">${escape(meaning)}</div>`;
     return `
-      <div class="head">${escape(info.translation || '')}<button class="say" id="say" title="${escape(t('listen'))}" data-say="${escape(spoken)}" data-say-lang="${escape(info.source_language || '')}">🔊</button></div>
-      ${info.focus_translation ? `<div class="term">${term ? `<b>${escape(term)}</b> — ` : ''}${escape(info.focus_translation)}</div>` : ''}
-      ${(info.synonyms || []).length ? `<div class="syn">${info.synonyms.map((word) => `<span>${escape(word)}</span>`).join('')}</div>` : ''}
-      ${info.sense_note ? `<div class="note">${escape(info.sense_note)}</div>` : ''}`;
+      <div class="head">${escape(meaning)}<button class="say" id="say" title="${escape(t('listen'))}" data-say="${escape(spoken)}" data-say-lang="${escape(info.source_language || '')}">🔊</button></div>
+      ${line ? `<div class="sentence">${escape(line)}</div>` : ''}`;
   }
+
+  /// The dictionary's answer, in the same shape, so that what appears first is
+  /// replaced in place rather than by a differently built card.
+  const quickHtml = (translation) => meaningHtml({ focus_translation: translation }, '');
+
+  /// The shape of an answer that has not arrived yet.
+  const waitingHtml = () => '<div class="wait"><span></span><span></span></div>';
 
   /// Wires up whatever optional controls the freshly written card contains.
   function activate(node, { spokenText, seen } = {}) {
@@ -326,7 +357,7 @@
       <div class="row keep"><button id="connect">${t('connectAction')}</button></div>`;
   }
 
-  function showChip(rect, text, context, title) {
+  function showChip(rect, text, context, media) {
     close();
     reparent();
     panel = element('chip', `<span>✦</span><span>${t('chipAsk')}</span>`);
@@ -335,14 +366,16 @@
     panel.addEventListener('mousedown', (event) => {
       event.preventDefault();
       event.stopPropagation();
-      showCard(rect, text, context, title);
+      showCard(rect, text, context, media);
     });
   }
 
-  async function showCard(rect, text, context, title, timecodeMs = null) {
+  /// Reading without keeping: what space does to the line on screen, and what
+  /// the chip offers. Nothing is saved unless the button is pressed.
+  async function showCard(rect, text, context, media, timecodeMs = null) {
     close();
     reparent();
-    panel = element(`card${compact() ? ' small' : ''}`, `<div class="muted">${t('reading')}</div>`);
+    panel = element(`card${compact() ? ' small' : ''}`, waitingHtml());
     layer.appendChild(panel);
     place(panel, rect);
     makeDraggable(panel);
@@ -354,9 +387,7 @@
     ask({ type: 'quick', text }).then((quick) => {
       if (panel !== mine || mine.dataset.read || !quick.ok) return;
       if (!hasTranslation(quick.data?.translation)) return;
-      mine.innerHTML = compact()
-        ? `<div class="term">${escape(quick.data.translation)}</div>`
-        : `<div class="head">${escape(quick.data.translation)}</div>`;
+      mine.innerHTML = quickHtml(quick.data.translation);
     });
 
     const reply = await ask({ type: 'reading', text, context });
@@ -374,7 +405,7 @@
       return;
     }
 
-    panel.innerHTML = `${readingHtml(reply.data, text)}
+    panel.innerHTML = `${meaningHtml(reply.data, text)}
       <div class="row"><button id="save">${t('save')}</button><button class="ghost" id="close">${t('close')}</button></div>`;
     activate(panel, { spokenText: true });
     place(panel, rect);
@@ -384,7 +415,7 @@
     save.addEventListener('click', async () => {
       save.disabled = true;
       save.textContent = t('saving');
-      const saved = await ask({ type: 'capture', text, context, title, timecodeMs });
+      const saved = await ask({ type: 'capture', text, context, ...where(media), timecodeMs });
       if (!panel) return;
       save.textContent = saved.ok ? (saved.data.reused ? t('savedAlready') : t('saved')) : t('failed');
       if (saved.ok) setTimeout(close, 900);
@@ -392,66 +423,55 @@
     });
   }
 
+  /// Where a selection came from, in the shape the worker wants it. Callers
+  /// hand over whatever they know - a whole media description from the player,
+  /// or nothing at all on an ordinary web page.
+  function where(media) {
+    if (typeof media === 'string') return { title: media, season: null, episode: null };
+    return {
+      title: media?.title || document.title,
+      season: media?.season || null,
+      episode: media?.episode || null,
+    };
+  }
+
   /// The whole point of the hotkey: no button, no confirmation. Which is
   /// exactly why the card that appears offers to undo — a stray drag with the
   /// keys held should not quietly cost you a card you have to hunt down later.
-  async function saveNow(rect, text, context, title, timecodeMs = null) {
+  async function saveNow(rect, text, context, media, timecodeMs = null) {
     close();
     reparent();
-    // The translation is what you are waiting for; the save is bookkeeping.
-    // Leading with "Сохраняю…" made the card look stuck for the second before
-    // the reading landed, so the word itself sits there instead and the save
-    // only announces itself once it is done.
-    panel = element(`card${compact() ? ' small' : ''}`, `<div class="head">${escape(text)}</div><div class="note">${t('translating')}</div>`);
+    // The answer is the only thing anyone is waiting for, so the card opens as
+    // the shape of the answer. It used to open with the selected English and
+    // "translating…" under it, which read as a result - and one the reader
+    // already had, still highlighted two centimetres away.
+    panel = element(`card${compact() ? ' small' : ''}`, waitingHtml());
     layer.appendChild(panel);
     place(panel, rect);
     makeDraggable(panel);
 
-    // Two requests, shown as they land. The reading comes back in about a
-    // second; the save takes longer because the server re-reads the line with
-    // its slower model. Waiting for both would leave you staring at
-    // "Сохраняю…" long after the answer was ready.
+    // Two requests, not three. The dictionary answers in a fraction of a
+    // second and goes on screen the moment it does; saving now answers with
+    // the reading as well, so there is nothing left for a separate one to do.
+    // The card used to wait for the slow model before it settled, which is
+    // why an instant capture did not feel instant.
     const mine = panel;
-    const saving = ask({ type: 'capture', text, context, title, timecodeMs });
-    ask({ type: 'quick', text }).then((quick) => {
+    const quick = ask({ type: 'quick', text });
+    const saving = ask({ type: 'capture', text, context, ...where(media), timecodeMs });
+    quick.then((answer) => {
       // Only until something better arrives, and never over the top of it.
-      if (
-        panel !== mine ||
-        !quick.ok ||
-        !hasTranslation(quick.data?.translation) ||
-        mine.dataset.read ||
-        mine.dataset.settled
-      ) return;
-      mine.innerHTML = compact()
-        ? `<div class="term">${escape(quick.data.translation)}</div>`
-        : `<div class="head">${escape(quick.data.translation)}</div>`;
-    });
-    ask({ type: 'reading', text, context }).then((reading) => {
-      if (
-        panel !== mine ||
-        !reading.ok ||
-        !hasTranslation(reading.data?.translation) ||
-        mine.dataset.settled
-      ) return;
-      mine.innerHTML = readingHtml(reading.data, text);
-      mine.dataset.read = '1';
-      activate(mine, { spokenText: true });
+      if (panel !== mine || mine.dataset.settled || !answer.ok) return;
+      if (!hasTranslation(answer.data?.translation)) return;
+      mine.innerHTML = quickHtml(answer.data.translation);
     });
 
     const saved = await saving;
     if (panel !== mine) return;
     // A refused save carries no data - the session expiring is the usual
     // reason - and reading through it threw before the error could be shown.
-    const storedTranslation = saved.ok && saved.data
+    const stored = saved.ok && saved.data
       ? saved.data.focus_translation || saved.data.translation
       : '';
-    // Leave the request alive when saving got a temporary unavailable response:
-    // the contextual reading can still replace the original text with the real
-    // translation a moment later.
-    const waitingForReading = !mine.dataset.read && !hasTranslation(storedTranslation);
-    if (!waitingForReading) mine.dataset.settled = '1';
-    // Placed once, when it appeared. Everything after that only changes what
-    // is written inside it.
 
     if (!saved.ok) {
       panel.innerHTML =
@@ -461,7 +481,7 @@
              <div class="head">${escape(text)}</div>
              <div class="muted" style="margin-top:8px">${escape(saved.error)}</div>
              ${compact() ? '' : `<div class="row"><button id="retry">${t('save')}</button><button class="ghost" id="close">${t('close')}</button></div>`}`;
-      panel.querySelector('#retry')?.addEventListener('click', () => saveNow(rect, text, context, title, timecodeMs));
+      panel.querySelector('#retry')?.addEventListener('click', () => saveNow(rect, text, context, media, timecodeMs));
       panel.querySelector('#connect')?.addEventListener('click', () => ask({ type: 'options' }).then(close));
       panel.querySelector('#close')?.addEventListener('click', close);
       place(panel, rect);
@@ -469,15 +489,30 @@
     }
 
     const reused = Boolean(saved.data.reused);
-    // Whatever the fast reading already drew stays; the badge is added above
-    // it. If the reading has not landed yet, the saved card carries a
-    // translation of its own to show instead.
-    const safeStoredTranslation = hasTranslation(storedTranslation) ? storedTranslation : text;
-    const body = mine.dataset.read
-      ? [...mine.children].map((node) => node.outerHTML).join('')
-      : compact()
-        ? `<div class="term">${escape(safeStoredTranslation)}</div>`
-        : `<div class="head">${escape(safeStoredTranslation)}</div>`;
+    // The saved card is the better answer, so it replaces the dictionary's.
+    // When every provider was down it has nothing to say: the server has
+    // marked the card as still owing a translation and will finish it later,
+    // so whatever the dictionary managed stays on screen instead.
+    const settled = hasTranslation(stored) && !saved.data.pending_translation;
+    if (settled) mine.dataset.settled = '1';
+    // Nothing from the dictionary either: every provider was unreachable in
+    // that one moment. The card is kept and flagged on the server, which comes
+    // back to it later, so this says what will happen rather than showing the
+    // English back as though it were an answer.
+    const drawn = [...mine.children].filter((node) => !node.classList.contains('wait'));
+    const body = settled
+      ? meaningHtml(
+          {
+            focus_translation: saved.data.focus_translation,
+            translation: saved.data.translation,
+            term_en: saved.data.focus_phrase || saved.data.focus_word,
+            source_language: saved.data.source_lang,
+          },
+          text,
+        )
+      : drawn.length
+        ? drawn.map((node) => node.outerHTML).join('')
+        : `<div class="muted">${t('pendingLater')}</div>`;
     panel.innerHTML = `
       ${compact() ? '' : `<div class="flag${reused ? ' grey' : ''}">${reused ? t('inLibrary') : t('saved')}</div>`}
       ${body}
@@ -503,13 +538,11 @@
         return;
       }
       mine.innerHTML = `<div class="flag">${t('saved')}</div>` +
-        readingHtml(
+        meaningHtml(
           {
             translation: fresh.data.translation,
             term_en: fresh.data.focus_phrase || fresh.data.focus_word,
             focus_translation: fresh.data.focus_translation,
-            synonyms: fresh.data.synonyms,
-            sense_note: fresh.data.sense_note,
           },
           text,
         );
@@ -600,7 +633,7 @@
       const instant = snMatchesHotkey(event, settings.hotkey);
       // A plain browser selection belongs to the page. Reading, saving and
       // network requests begin only with the configured Ctrl+Alt shortcut.
-      if (instant) saveNow(found.rect, found.text, found.context, document.title);
+      if (instant) saveNow(found.rect, found.text, found.context, snMediaInfo());
     }, 10);
   });
 
@@ -622,7 +655,7 @@
     if (!found) return;
     armed = false;
     event.preventDefault();
-    saveNow(found.rect, found.text, found.context, document.title);
+    saveNow(found.rect, found.text, found.context, snMediaInfo());
   });
   document.addEventListener('keyup', () => {
     armed = true;

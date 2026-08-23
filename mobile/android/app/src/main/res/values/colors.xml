@@ -16,5 +16,5 @@
     <!-- Adaptive-icon background. Defined only here, never in values-night: a
          launcher icon that changes colour with the system theme looks like a
          different app. -->
-    <color name="ic_launcher_background">#FF0B3A26</color>
+    <color name="ic_launcher_background">#FF2BA84A</color>
 </resources>

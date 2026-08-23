@@ -17,6 +17,10 @@
   "translating": {
     "message": "çevriliyor…"
   },
+  "pendingLater": {
+    "message": "Şu an yanıt yok — çeviri uygulamada görünecek.",
+    "description": "Shown when no provider answered; the server retries later."
+  },
   "listen": {
     "message": "Dinle"
   },

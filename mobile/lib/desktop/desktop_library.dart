@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import '../data.dart';
 import '../design/components.dart';
 import '../design/tokens.dart';
+import '../i18n.dart';
 import 'desktop_updates.dart';
 import 'player_settings.dart';
 
@@ -165,11 +166,11 @@ class _DesktopLibraryState extends State<DesktopLibrary> {
     if (_error != null && _cards.isEmpty) {
       return EmptyState(
         icon: Icons.cloud_off_rounded,
-        title: 'No connection',
-        message: 'Subtitle Notes could not reach the cloud library.',
+        title: context.t('No connection'),
+        message: context.t('Subtitle Notes could not reach the cloud library.'),
         tone: c.blue,
         action: PushButton(
-          label: 'Try again',
+          label: context.t('Try again'),
           icon: Icons.refresh_rounded,
           tone: PushTone.blue,
           expand: false,
@@ -183,10 +184,10 @@ class _DesktopLibraryState extends State<DesktopLibrary> {
         icon: _search.isEmpty
             ? Icons.subtitles_rounded
             : Icons.search_off_rounded,
-        title: _search.isEmpty ? 'Nothing saved here yet' : 'No matches',
+        title: context.t(_search.isEmpty ? 'Nothing saved here yet' : 'No matches'),
         message: _search.isEmpty
-            ? 'Select a subtitle line in VLC and it appears here.'
-            : 'Try a different word.',
+            ? context.t('Select a subtitle line in VLC and it appears here.')
+            : context.t('Try a different word.'),
       );
     }
 
@@ -263,7 +264,7 @@ class _TopBar extends StatelessWidget {
           const SizedBox(width: AppSpace.md),
           Text('Subtitle Notes', style: AppText.word(c.ink)),
           const SizedBox(width: AppSpace.md),
-          Pill(label: '$total words', color: c.ink3, background: c.surfaceAlt),
+          Pill(label: '$total ${context.t('words')}', color: c.ink3, background: c.surfaceAlt),
           const SizedBox(width: AppSpace.xxl),
           SizedBox(
             width: 280,
@@ -276,7 +277,7 @@ class _TopBar extends StatelessWidget {
                 isDense: true,
                 filled: true,
                 fillColor: c.surfaceAlt,
-                hintText: 'Search your words',
+                hintText: context.t('Search your words'),
                 hintStyle: font(
                   size: 14,
                   weight: 600,
@@ -307,7 +308,7 @@ class _TopBar extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(right: AppSpace.sm),
               child: PushButton(
-                label: 'Update ${update!.version}',
+                label: '${context.t('Update')} ${update!.version}',
                 icon: Icons.system_update_rounded,
                 tone: PushTone.blue,
                 expand: false,
@@ -319,19 +320,19 @@ class _TopBar extends StatelessWidget {
             icon: themeMode == ThemeMode.dark
                 ? Icons.light_mode_rounded
                 : Icons.dark_mode_rounded,
-            tooltip: 'Switch theme',
+            tooltip: context.t('Switch theme'),
             onTap: onToggleTheme,
           ),
           _BarAction(
             icon: Icons.refresh_rounded,
-            tooltip: 'Refresh',
+            tooltip: context.t('Refresh'),
             onTap: onReload,
           ),
           // What the player should do with a film: the settings the VLC
           // overlay reads. They used to live in a separate little window.
           _BarAction(
             icon: Icons.play_circle_rounded,
-            tooltip: 'Films in VLC',
+            tooltip: context.t('Films in VLC'),
             onTap: () => showPlayerSettings(context),
           ),
           const SizedBox(width: AppSpace.md),
@@ -341,7 +342,7 @@ class _TopBar extends StatelessWidget {
           ),
           const SizedBox(width: AppSpace.md),
           PushButton(
-            label: 'Disconnect',
+            label: context.t('Disconnect'),
             tone: PushTone.neutral,
             expand: false,
             compact: true,
@@ -349,12 +350,13 @@ class _TopBar extends StatelessWidget {
               final confirmed = await confirmDestructive(
                 context,
                 icon: Icons.link_off_rounded,
-                title: 'Disconnect this computer?',
-                message:
-                    'VLC will stop sending selections until you pair again. '
-                    'Nothing already saved is removed.',
-                confirmLabel: 'Disconnect',
-                cancelLabel: 'Stay connected',
+                title: context.t('Disconnect this computer?'),
+                message: context.t(
+                  'VLC will stop sending selections until you pair again. '
+                  'Nothing already saved is removed.',
+                ),
+                confirmLabel: context.t('Disconnect'),
+                cancelLabel: context.t('Stay connected'),
               );
               if (confirmed) onDisconnect();
             },
@@ -424,7 +426,7 @@ class _Sidebar extends StatelessWidget {
         children: [
           _row(
             context,
-            label: 'All words',
+            label: context.t('All words'),
             count: cards.length,
             accent: c.green,
             active: selected == null,
@@ -738,7 +740,7 @@ class _DetailPanel extends StatelessWidget {
               ),
               Squish(
                 onTap: onClose,
-                semanticLabel: 'Close',
+                semanticLabel: context.t('Close'),
                 child: SizedBox(
                   height: 34,
                   width: 34,
@@ -866,16 +868,16 @@ class _DetailPanel extends StatelessWidget {
             if (item.selectedText.trim().isNotEmpty &&
                 StudyCard.bare(item.selectedText) !=
                     StudyCard.bare(card.learningLabel))
-              _block(c, 'Selected subtitle', item.selectedText),
+              _block(c, context.t('Selected subtitle'), item.selectedText),
             if (StudyCard.bare(item.translation) !=
                 StudyCard.bare(card.primaryMeaning))
-              _block(c, 'Full translation', item.translation),
+              _block(c, context.t('Full translation'), item.translation),
             if (item.variants.isNotEmpty)
-              _list(c, 'Other meanings', [
+              _list(c, context.t('Other meanings'), [
                 for (final variant in item.variants)
                   StudyExample(text: variant),
               ]),
-            if (item.examples.isNotEmpty) _list(c, 'Examples', item.examples),
+            if (item.examples.isNotEmpty) _list(c, context.t('Examples'), item.examples),
           ],
         ],
       ),

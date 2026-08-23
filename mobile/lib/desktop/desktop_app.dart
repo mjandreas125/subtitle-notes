@@ -76,6 +76,7 @@ class _DesktopAppState extends State<DesktopApp> {
         final session = _session;
         if (session == null) {
           return PairingScreen(
+            language: resolvedInterfaceLanguage(_settings.interfaceLanguage),
             onConnected: (value) => setState(() => _session = value),
           );
         }

@@ -6,7 +6,7 @@ import hashlib
 import json
 import os
 import re
-import socket
+import sys
 import threading
 import time
 import urllib.error
@@ -14,7 +14,7 @@ import urllib.request
 from pathlib import Path
 from typing import Any
 
-from desktop_i18n import system_language, tr
+from desktop_i18n import tr
 
 
 APP_FOLDER = Path(os.environ.get("APPDATA", Path.home())) / "Translated VLC"
@@ -345,264 +345,56 @@ def parse_timecode(label: str) -> int | None:
         return None
 
 
-# The page that signs a computer in. It is the same address the browser
-# extension opens and the same one the square below encodes, so a phone camera
-# and a click on the button end up in the same place.
-LINK_PAGE = DEFAULT_API_URL.replace("/v1", "/link")
-
-# The phone app's dark palette, name for name, so the window on the computer
-# and the app in the pocket are one product rather than two.
-PAPER = "#101a1e"     # bg
-INK = "#eaf3f0"       # ink
-SOFT = "#92a7ad"      # ink2
-HAIR = "#2c4149"      # line
-ACCENT = "#35be58"    # green
-ACCENT_LIP = "#1d7c37"
-ON_ACCENT = "#081410"
-WASH = "#18262b"      # surface
-SURFACE_ALT = "#1e3038"
-LIP = "#0c161a"
+# ---- the one program --------------------------------------------------------
+#
+# Connecting used to be a program of its own: a window with a code in it, a
+# separate entry in the Start menu, and no way in from the program people
+# actually opened. Somebody who installed Subtitle Notes and opened Subtitle
+# Notes found a screen asking for a phone and no mention of Google, because the
+# Google button was in the other program.
+#
+# So there is one window now — the library — and it signs itself in. What is
+# left here is what the player and the capture helper import, plus a small
+# executable the installer runs to switch VLC's web interface on. Started by
+# hand, from a shortcut left over from before, it opens the program.
 
 
-def _qr_squares(text: str) -> list[list[bool]] | None:
-    """The pairing link as a grid of dark and light squares, or nothing at all
-    if the encoder is missing — the code underneath still works."""
+def app_executable() -> Path | None:
+    """The Subtitle Notes window, wherever this helper happens to be running."""
+    roots = []
     try:
-        import segno
-    except ImportError:
-        return None
+        # Beside this helper: how the installer lays the folder out.
+        roots.append(Path(sys.executable).resolve().parent)
+    except OSError:
+        pass
+    roots.append(Path(__file__).resolve().parent)
+    roots.append(Path(os.environ.get("ProgramFiles", r"C:\Program Files")) / "Subtitle Notes")
+    # Running from a checkout, where Flutter leaves its build.
+    roots.append(Path(__file__).resolve().parent / "mobile" / "build" / "windows" / "x64" / "runner" / "Release")
+    for root in roots:
+        for candidate in (root / "Library" / "translated_vlc_mobile.exe", root / "translated_vlc_mobile.exe"):
+            if candidate.exists():
+                return candidate
+    return None
+
+
+def open_the_app() -> bool:
+    """Starts the program. False when it is not installed beside this helper."""
+    import subprocess
+
+    found = app_executable()
+    if not found:
+        log_sync("no Subtitle Notes window found to open")
+        return False
     try:
-        return [[bool(cell) for cell in row] for row in segno.make(text, error="l", micro=False).matrix]
-    except Exception:
-        return None
-
-
-def open_setup_window() -> None:
-    """One window with three ways in: sign in with Google in the browser, scan
-    the square with the phone, or type the code into the app. All three approve
-    the same request, so the window waits the same way whichever is used."""
-    import tkinter as tk
-    import webbrowser
-    from tkinter import font as tkfont
-
-    import player_prefs
-    from vlc_setup import configure_vlc_http
-
-    config = load_sync_config()
-    base_url = str(config.get("api_url", "")).strip().rstrip("/") or DEFAULT_API_URL
-    if is_legacy_api_url(base_url):
-        base_url = DEFAULT_API_URL
-
-    root = tk.Tk()
-    root.title(tr("connect_title"))
-    root.configure(bg=PAPER)
-    root.resizable(False, False)
-    body = tkfont.Font(family="Segoe UI", size=10)
-    title_font = tkfont.Font(family="Segoe UI", size=17, weight="bold")
-    code_font = tkfont.Font(family="Consolas", size=19, weight="bold")
-    small = tkfont.Font(family="Segoe UI", size=9)
-
-    frame = tk.Frame(root, bg=PAPER, padx=26, pady=24)
-    frame.pack(fill="both", expand=True)
-
-    def draw_tour(parent: Any) -> None:
-        """A small still of what the program does: a film frame, a caption with
-        one word picked out of it, and the answer beside it."""
-        canvas = tk.Canvas(parent, width=430, height=132, bg=PAPER, highlightthickness=0)
-        canvas.pack(fill="x", pady=(0, 16))
-        canvas.create_rectangle(0, 0, 250, 132, fill="#18201f", outline="")
-        # The caption, with the picked word on a mint wash.
-        canvas.create_rectangle(24, 88, 226, 116, fill="#0b0b0b", outline="")
-        canvas.create_text(36, 102, anchor="w", text="No one wants", fill="#ffffff", font=("Segoe UI", 9, "bold"))
-        canvas.create_rectangle(118, 91, 186, 113, fill="#2e9668", outline="")
-        canvas.create_text(122, 102, anchor="w", text="a record", fill="#ffffff", font=("Segoe UI", 9, "bold"))
-        # The answer, in the shape the real window uses.
-        canvas.create_rectangle(266, 22, 430, 104, fill=WASH, outline=HAIR)
-        canvas.create_rectangle(266, 22, 269, 104, fill=ACCENT, outline="")
-        canvas.create_text(282, 44, anchor="w", text=tr("tour_line"), fill=INK, font=("Segoe UI", 9, "bold"))
-        canvas.create_line(282, 62, 414, 62, fill=HAIR)
-        canvas.create_text(282, 78, anchor="w", text=tr("tour_meaning"), fill=ACCENT, font=("Segoe UI", 9, "bold"))
-        tk.Label(
-            parent, text=tr("tour_steps"), font=small, fg=SOFT, bg=PAPER,
-            anchor="w", justify="left", wraplength=430,
-        ).pack(fill="x", pady=(0, 18))
-
-    # Shown until the computer is connected: after that the person plainly
-    # knows what this is.
-    if not str(config.get("token", "")).strip():
-        draw_tour(frame)
-    tk.Label(frame, text=tr("connect_title"), font=title_font, fg=INK, bg=PAPER, anchor="w").pack(fill="x")
-    tk.Label(frame, text=tr("connect_intro"), font=body, fg=SOFT, bg=PAPER, anchor="w", justify="left", wraplength=430).pack(fill="x", pady=(6, 18))
-
-    # Empty to start with: the waiting line belongs to the waiting panel,
-    # and a computer that is already connected must not be told to wait.
-    status = tk.StringVar(value="")
-    code_text = tk.StringVar(value="········")
-
-    connected = tk.Frame(frame, bg=PAPER)
-    waiting = tk.Frame(frame, bg=PAPER)
-
-    def button(parent: Any, text: str, command: Any, primary: bool = True) -> Any:
-        """A button with a lip: the app's raised surface, done with two frames.
-
-        Tk cannot round a corner or cast a shadow, but the app's buttons read
-        the way they do mostly because of the darker strip underneath.
-        """
-        holder = tk.Frame(parent, bg=ACCENT_LIP if primary else HAIR)
-        face = tk.Button(
-            holder, text=text, command=command, font=body, relief="flat", cursor="hand2",
-            bg=ACCENT if primary else WASH, fg=ON_ACCENT if primary else INK,
-            activebackground=ACCENT if primary else SURFACE_ALT,
-            activeforeground=ON_ACCENT if primary else INK,
-            highlightthickness=0, bd=0, padx=18, pady=9,
-        )
-        face.pack(fill="x", padx=0, pady=(0, 3))
-        holder.button = face  # type: ignore[attr-defined]
-        holder.configure_face = face.configure  # type: ignore[attr-defined]
-        return holder
-
-    # ---- already connected --------------------------------------------------
-    account = tk.StringVar(value="")
-    tk.Label(connected, textvariable=account, font=body, fg=ACCENT, bg=PAPER, anchor="w").pack(fill="x", pady=(0, 6))
-    tk.Label(connected, textvariable=status, font=small, fg=SOFT, bg=PAPER, anchor="w", justify="left", wraplength=430).pack(fill="x", pady=(0, 14))
-
-    def forget() -> None:
-        save_sync_config({"api_url": base_url})
-        connected.pack_forget()
-        start_pairing()
-
-    button(connected, tr("disconnect"), forget, primary=False).pack(anchor="w")
-
-    # ---- waiting for approval ----------------------------------------------
-    # The page opens in the language Windows is set to, like the rest of this.
-    google = button(
-        waiting,
-        tr("continue_google"),
-        lambda: webbrowser.open(f"{LINK_PAGE}?code={code_text.get()}&lang={system_language()}"),
-    )
-    # Nothing to sign in against until the server has issued a code.
-    google.button.configure(state="disabled")
-    google.pack(fill="x")
-    ways = tk.Frame(waiting, bg=PAPER)
-    ways.pack(fill="x", pady=(16, 0))
-    canvas = tk.Canvas(ways, width=140, height=140, bg="#ffffff", highlightthickness=1, highlightbackground=HAIR)
-    canvas.pack(side="left")
-    beside = tk.Frame(ways, bg=PAPER)
-    beside.pack(side="left", fill="both", expand=True, padx=(16, 0))
-    tk.Label(beside, text=tr("scan_hint"), font=small, fg=SOFT, bg=PAPER, anchor="w", justify="left", wraplength=250).pack(fill="x")
-    code_holder = tk.Frame(beside, bg=HAIR)
-    code_holder.pack(fill="x", pady=(10, 0))
-    tk.Label(
-        code_holder, textvariable=code_text, font=code_font, fg=ACCENT, bg=WASH,
-        anchor="w", padx=10, pady=6,
-    ).pack(fill="x", padx=1, pady=1)
-    tk.Label(waiting, textvariable=status, font=small, fg=SOFT, bg=PAPER, anchor="w", justify="left", wraplength=430).pack(fill="x", pady=(14, 0))
-
-    def draw_code(value: str) -> None:
-        canvas.delete("all")
-        squares = _qr_squares(f"{LINK_PAGE}?code={value}")
-        if not squares:
-            return
-        size = len(squares)
-        scale = 132 / (size + 6)
-        for row, line in enumerate(squares):
-            for column, dark in enumerate(line):
-                if not dark:
-                    continue
-                x = (column + 3) * scale + 4
-                y = (row + 3) * scale + 4
-                canvas.create_rectangle(x, y, x + scale, y + scale, fill="#101a16", width=0)
-
-    def finish(token: str, email: str) -> None:
-        save_sync_config({"api_url": base_url, "email": email, "token": token})
-        recovered = flush_outbox(base_url, token)
-        # A computer that is connected should also be able to see what VLC is
-        # playing, whoever started VLC. It is the same setup step either way.
-        vlc_done, _ = configure_vlc_http()
-        note = " " + tr("queued_sent", count=recovered) if recovered else ""
-        vlc_note = " " + tr("vlc_configured") if vlc_done else ""
-        account.set(tr("connected_as", email=email or "?"))
-        status.set(tr("pairing_done") + note + vlc_note)
-        waiting.pack_forget()
-        connected.pack(fill="x")
-
-    def poll(pairing_id: str, secret: str) -> None:
-        for _ in range(300):
-            time.sleep(2)
-            try:
-                result = api_call(base_url, "/pairings/poll", {"pairing_id": pairing_id, "request_secret": secret})
-            except RuntimeError:
-                continue
-            if result.get("status") != "connected":
-                continue
-            token = str(result.get("token", ""))
-            user = result.get("user") if isinstance(result.get("user"), dict) else {}
-            if token:
-                root.after(0, lambda: finish(token, str(user.get("email", ""))))
-                return
-        root.after(0, lambda: status.set(tr("code_expired")))
-
-    def start_pairing() -> None:
-        waiting.pack(fill="x")
-        status.set(tr("waiting_confirm"))
-
-        def ask() -> None:
-            try:
-                pairing = api_call(base_url, "/pairings/start", {"device_name": socket.gethostname()[:80] or "Windows computer"})
-            except RuntimeError as error:
-                root.after(0, lambda: status.set(str(error)))
-                return
-            pairing_id, secret, value = (str(pairing.get(key, "")) for key in ("pairing_id", "request_secret", "code"))
-            if not (pairing_id and secret and value):
-                root.after(0, lambda: status.set(tr("no_server")))
-                return
-            root.after(0, lambda: (code_text.set(value), draw_code(value), google.button.configure(state="normal")))
-            poll(pairing_id, secret)
-
-        threading.Thread(target=ask, daemon=True, name="subtitle-notes-pair").start()
-
-    # What the player should do with a film is set in the library window that
-    # ships with this program - one place for settings, and one that can draw
-    # a proper list.
-
-    # A program with no store behind it has to say for itself when it is old.
-    def offer_update() -> None:
-        from desktop_update import newer_version
-
-        found = newer_version()
-        if not found:
-            return
-        version, url = found
-
-        def show() -> None:
-            bar = tk.Frame(frame, bg=WASH)
-            bar.pack(fill="x", pady=(16, 0))
-            tk.Label(
-                bar, text=tr("update_ready", version=version), font=small, fg=ACCENT, bg=WASH,
-                anchor="w", justify="left", wraplength=300, padx=12, pady=9,
-            ).pack(side="left", fill="x", expand=True)
-            tk.Button(
-                bar, text=tr("update_open"), command=lambda: webbrowser.open(url), font=small,
-                relief="flat", cursor="hand2", bg=ACCENT, fg=ON_ACCENT, bd=0, padx=12, pady=7,
-                activebackground=ACCENT, activeforeground=ON_ACCENT, highlightthickness=0,
-            ).pack(side="right", padx=(0, 10))
-
-        root.after(0, show)
-
-    threading.Thread(target=offer_update, daemon=True, name="subtitle-notes-update").start()
-
-    if str(config.get("token", "")).strip():
-        account.set(tr("connected_as", email=str(config.get("email", "")) or "?"))
-        status.set(tr("pairing_done"))
-        connected.pack(fill="x")
-    else:
-        start_pairing()
-    root.mainloop()
+        subprocess.Popen([str(found)], cwd=str(found.parent), close_fds=True)
+        return True
+    except OSError as error:
+        log_sync(f"could not start the app: {error}")
+        return False
 
 
 if __name__ == "__main__":
-    import sys
-
     # The installer runs this once with no window, so VLC is ready before the
     # first film is opened.
     if "--configure-vlc" in sys.argv:
@@ -611,4 +403,4 @@ if __name__ == "__main__":
         done, detail = configure_vlc_http()
         print(("VLC configured: " if done else "Could not configure VLC: ") + detail)
     else:
-        open_setup_window()
+        open_the_app()

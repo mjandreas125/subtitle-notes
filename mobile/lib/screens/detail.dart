@@ -110,7 +110,7 @@ class _DetailPageState extends State<DetailPage> {
       });
       _tell(
         answer.votes >= answer.quorum
-            ? context.t('Saved — enough people agree, so this is the default now.')
+            ? context.t('Saved - enough people agree, so this is the default now.')
             : context.t('Saved. If others write the same, it becomes the default.'),
       );
     } on ApiException catch (error) {
@@ -137,7 +137,7 @@ class _DetailPageState extends State<DetailPage> {
     } on ApiException catch (error) {
       _report(error.message);
     } catch (_) {
-      _report('No connection — try again later.');
+      _report(context.t('No connection — try again later.'));
     } finally {
       if (mounted) setState(() => _rereading = false);
     }

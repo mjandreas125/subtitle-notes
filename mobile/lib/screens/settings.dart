@@ -59,6 +59,9 @@ class _SettingsTabState extends State<SettingsTab> {
   Future<void> _setLanguage(String code) async {
     if (code == (widget.profile?.language ?? 'ru')) return;
     setState(() => _languageBusy = true);
+    // Read before the request: the failure message is needed after it, and by
+    // then this screen may already be gone.
+    final offline = context.t('No connection — the language was not changed.');
     try {
       widget.onProfileChanged(
         await widget.api.updateProfile(language: code),
@@ -67,7 +70,7 @@ class _SettingsTabState extends State<SettingsTab> {
     } on ApiException catch (error) {
       _toast(error.message, error: true);
     } catch (_) {
-      _toast('No connection — the language was not changed.', error: true);
+      _toast(offline, error: true);
     } finally {
       if (mounted) setState(() => _languageBusy = false);
     }

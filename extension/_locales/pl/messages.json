@@ -17,6 +17,10 @@
   "translating": {
     "message": "tłumaczę…"
   },
+  "pendingLater": {
+    "message": "Teraz brak odpowiedzi — tłumaczenie pojawi się w aplikacji.",
+    "description": "Shown when no provider answered; the server retries later."
+  },
   "listen": {
     "message": "Posłuchaj"
   },

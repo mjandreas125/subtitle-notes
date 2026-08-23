@@ -102,8 +102,10 @@ function sameThought(first, second) {
   return Boolean(left) && Boolean(right) && (left.includes(right) || right.includes(left));
 }
 
-async function capture({ text, context, title, timecodeMs }) {
-  const fresh = await clientKey([title, String(timecodeMs ?? ''), text]);
+async function capture({ text, context, title, season, episode, timecodeMs }) {
+  // The episode belongs in the key as well: the same word in the same minute
+  // of two different episodes is two cards, not one seen twice.
+  const fresh = await clientKey([title, season, episode, String(timecodeMs ?? ''), text]);
   const settling = lastCapture && Date.now() - lastCapture.at < SETTLE_MS
     && sameThought(lastCapture, { text, context }) ? lastCapture.key : null;
   const key = settling ?? fresh;
@@ -111,8 +113,11 @@ async function capture({ text, context, title, timecodeMs }) {
   const saved = await call('/captures', {
     client_key: key,
     media_title: title || 'Web',
-    season: null,
-    episode: null,
+    // Which episode the line came from, as the page on screen has it. It used
+    // to be sent as null from here whatever the player showed, so every
+    // series arrived in the library as one undifferentiated pile.
+    season: season || null,
+    episode: episode || null,
     timecode_ms: timecodeMs ?? null,
     selected_text: text,
     context: context || null,

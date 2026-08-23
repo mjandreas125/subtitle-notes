@@ -10,10 +10,10 @@ const encoder = new TextEncoder();
 /// The program has no store to update it, so it asks here on startup and says
 /// when it is behind. Bump the version when a new installer is published.
 const DESKTOP_LATEST = {
-  version: '1.7.7',
+  version: '1.8.0',
   // Straight to the file: the button should start a download, not land
   // somebody on a page of assets to choose from.
-  url: 'https://github.com/mjandreas125/subtitle-notes/releases/latest/download/SubtitleNotesSetup-1.7.7.exe',
+  url: 'https://github.com/mjandreas125/subtitle-notes/releases/latest/download/SubtitleNotesSetup-1.8.0.exe',
   notes: '',
 };
 const json = (value: unknown, status = 200) => new Response(JSON.stringify(value), { status, headers: { ...cors, 'content-type': 'application/json; charset=utf-8' } });
@@ -137,6 +137,18 @@ function headwords(word: string): string[] {
 // come back as English sentences with the term wrapped in <b> tags.
 const UNAVAILABLE = 'Translation unavailable';
 
+/// Whether a card was left without a translation.
+///
+/// Three shapes of the same failure: nothing at all, the English marker an
+/// older build stored as if it were a result, and the selected words handed
+/// back unchanged because every provider was down when they were saved. None
+/// of them is a translation, and all three used to be permanent.
+function missingTranslation(value: unknown, selected = ''): boolean {
+  const text = clean(value).toLowerCase();
+  if (!text || text === UNAVAILABLE.toLowerCase()) return true;
+  return Boolean(selected) && text === clean(selected).toLowerCase();
+}
+
 type Translation = {
   text: string;
   variants: string[];
@@ -181,14 +193,18 @@ function translationFromGoogle(payload: any, sourceLanguage: string): Translatio
   };
 }
 
-async function googleTranslation(text: string, withExamples: boolean, language: string, sourceLanguage: string): Promise<Translation | null> {
-  const query = new URLSearchParams([['client','gtx'],['sl',sourceLanguage || 'auto'],['tl',language],['dt','t'],['dt','bd'],['dj','1'],['q',text]]);
+async function googleTranslation(text: string, withExamples: boolean, language: string, sourceLanguage: string, hurry = false): Promise<Translation | null> {
+  const fields = hurry ? [['dt','t']] : [['dt','t'],['dt','bd']];
+  const query = new URLSearchParams([['client','gtx'],['sl',sourceLanguage || 'auto'],['tl',language],...fields,['dj','1'],['q',text]] as [string, string][]);
   if (withExamples) query.append('dt', 'ex');
   for (const host of GOOGLE_TRANSLATE_HOSTS) {
     const url = `${host}/translate_a/single?${query}`;
     // A short retry clears a transient rate limit. The second host is useful
     // when one edge is sick, not just when the first response is slow.
-    for (let attempt = 0; attempt < 2; attempt += 1) {
+    // Somebody is watching a paused film wait for this, so the hurried path
+    // moves straight on to the next host rather than sitting out the pause.
+    const attempts = hurry ? 1 : 2;
+    for (let attempt = 0; attempt < attempts; attempt += 1) {
       try {
         const response = await fetch(url);
         if (response.ok) {
@@ -199,7 +215,7 @@ async function googleTranslation(text: string, withExamples: boolean, language: 
         // Try the next attempt/provider. This function is intentionally a
         // provider probe; the caller owns the final fallback.
       }
-      if (attempt === 0) await pause(350);
+      if (attempt === 0 && attempts > 1) await pause(350);
     }
   }
   return null;
@@ -254,8 +270,8 @@ async function aiTranslation(env: Env, text: string, language: string, sourceLan
   }
 }
 
-async function translate(env: Env, text: string, withExamples = false, language = 'ru', sourceLanguage = 'auto'): Promise<Translation> {
-  const google = await googleTranslation(text, withExamples, language, sourceLanguage);
+async function translate(env: Env, text: string, withExamples = false, language = 'ru', sourceLanguage = 'auto', hurry = false): Promise<Translation> {
+  const google = await googleTranslation(text, withExamples, language, sourceLanguage, hurry);
   if (google) return google;
 
   const memory = await memoryTranslation(text, language, sourceLanguage);
@@ -569,80 +585,156 @@ function linkLanguage(url: URL, request: Request): string {
 /// session back through the pairing code they already hold. Scanning the same
 /// link with a phone works too — the camera opens this page, and the phone's
 /// own scanner reads the code out of the address.
+///
+/// It is opened from a program that has just said "Continue with Google", so
+/// with `straight=1` it does not draw at all: the redirect happens in the head,
+/// before the first paint, and the only part of this page the reader ever sees
+/// is the line saying they are connected.
 const linkPage = (code: string, lang: string) => {
   const say = LINK_TEXT[lang] ?? LINK_TEXT.en;
+  const authorise = `'https://accounts.google.com/o/oauth2/v2/auth' +
+        '?client_id=' + encodeURIComponent(${JSON.stringify(CLIENT_ID)}) +
+        '&redirect_uri=' + encodeURIComponent(location.origin + '/link') +
+        '&response_type=token&scope=' + encodeURIComponent('openid email profile') +
+        '&include_granted_scopes=true&prompt=select_account&state=' +
+        encodeURIComponent(code + '.' + lang)`;
   return `<!doctype html>
 <html lang="${lang}"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Subtitle Notes — connect</title>
-<script src="https://accounts.google.com/gsi/client" async></script>
+<title>Subtitle Notes</title>
+<script>
+  // Sent here by a button that already said "Continue with Google". Going
+  // through a page with a single button on it is one click too many, and a
+  // page that flashes past on the way is worse than one that never draws.
+  (function () {
+    var params = new URLSearchParams(location.search);
+    if (params.get('straight') !== '1' || location.hash) return;
+    var code = (params.get('code') || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
+    var lang = ${JSON.stringify(lang)};
+    if (!code) return;
+    location.replace(${authorise});
+  })();
+</script>
 <style>
-  :root { --paper:#faf8f4; --ink:#14201c; --soft:#6b7a74; --hair:#e2ddd3; --accent:#1e7a4c; --wash:#e7f2ea; }
-  @media (prefers-color-scheme: dark) {
-    :root { --paper:#151b19; --ink:#eaf1ed; --soft:#93a49c; --hair:#2a3733; --accent:#64c795; --wash:#1d2a25; }
+  :root {
+    --paper:#f7f5f0; --card:#ffffff; --ink:#14201c; --soft:#6b7a74; --faint:#93a49c;
+    --hair:#e6e1d7; --accent:#1e7a4c; --accentInk:#ffffff; --wash:#e8f3ec; --shade:12 32 24;
   }
-  * { box-sizing: border-box; }
-  body { margin:0; min-height:100dvh; display:flex; align-items:center; justify-content:center;
-         padding:24px; background:var(--paper); color:var(--ink);
-         font:16px/1.55 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
-  main { width:100%; max-width:26rem; }
-  h1 { margin:0 0 6px; font-size:1.5rem; line-height:1.2; letter-spacing:-.02em; font-weight:640; text-wrap:balance; }
-  p { margin:0 0 18px; color:var(--soft); font-size:14.5px; }
-  .code { margin:0 0 20px; padding:13px; border:1px solid var(--hair); border-left:3px solid var(--accent);
-          border-radius:12px; text-align:center; font:640 25px/1.1 ui-monospace, Consolas, monospace;
-          letter-spacing:.24em; text-indent:.24em; }
-  input { width:100%; padding:12px; margin-bottom:14px; border:1px solid var(--hair); border-radius:11px;
-          background:transparent; color:var(--ink); text-align:center; text-transform:uppercase;
-          font:640 19px ui-monospace, Consolas, monospace; letter-spacing:.18em; }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper:#0f1513; --card:#171f1c; --ink:#eaf1ed; --soft:#93a49c; --faint:#6d7f78;
+      --hair:#27332f; --accent:#4bb87f; --accentInk:#06170f; --wash:#18241f; --shade:0 0 0;
+    }
+  }
+  * { box-sizing:border-box; }
+  html, body { height:100%; }
+  body { margin:0; display:grid; place-items:center; padding:24px;
+         background:var(--paper); color:var(--ink);
+         font:16px/1.55 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+         -webkit-font-smoothing:antialiased; }
+  /* The window this opens in can be a tall narrow strip - a browser told to
+     show one page and nothing else - or a full screen. A card of its own size,
+     centred, reads as deliberate in both, where a page-wide column looked
+     abandoned in one and stretched in the other. */
+  main { width:100%; max-width:23.5rem; padding:30px 28px 26px; border-radius:20px;
+         background:var(--card); border:1px solid var(--hair);
+         box-shadow:0 1px 2px rgb(var(--shade)/.06), 0 22px 48px -26px rgb(var(--shade)/.35); }
+  .mark { width:46px; height:46px; margin-bottom:18px; border-radius:14px;
+          display:grid; place-items:center; background:var(--accent); color:var(--accentInk); }
+  .mark svg { width:26px; height:26px; display:block; }
+  h1 { margin:0 0 7px; font-size:1.4rem; line-height:1.22; letter-spacing:-.021em;
+       font-weight:650; text-wrap:balance; }
+  .lede { margin:0 0 22px; color:var(--soft); font-size:14.5px; line-height:1.5; text-wrap:pretty; }
+  .enter { display:flex; align-items:center; justify-content:center; gap:10px;
+           width:100%; border:0; border-radius:13px; padding:14px 20px;
+           font:inherit; font-size:15px; font-weight:670; letter-spacing:-.008em;
+           color:var(--accentInk); background:var(--accent); cursor:pointer;
+           transition:filter .16s ease, box-shadow .16s ease, transform .1s ease; }
+  .enter:hover { filter:brightness(1.06); box-shadow:0 12px 26px -12px rgb(20 90 60/.6); }
+  .enter:active { transform:translateY(1px); }
+  .enter:focus-visible { outline:2px solid var(--accent); outline-offset:3px; }
+  .enter svg { width:18px; height:18px; flex:0 0 auto; }
   /* The way to the eight-character code: a quiet line of text, not a grey
      system button sitting in the middle of the page. */
-  .asCode { display:block; width:100%; margin:0 0 16px; padding:0; border:0; background:none;
-            color:var(--soft); font:inherit; font-size:13.5px; text-align:center; cursor:pointer;
+  .asCode { display:block; width:100%; margin:14px 0 0; padding:0; border:0; background:none;
+            color:var(--faint); font:inherit; font-size:13px; text-align:center; cursor:pointer;
             text-decoration:underline; text-underline-offset:3px; text-decoration-color:var(--hair);
             transition:color .15s ease, text-decoration-color .15s ease; }
   .asCode:hover { color:var(--ink); text-decoration-color:var(--accent); }
-  #button { display:flex; justify-content:center; min-height:44px; }
-  .enter { border:0; border-radius:999px; padding:13px 26px; font:inherit; font-weight:700;
-           color:#fff; background:var(--accent); cursor:pointer;
-           transition:transform .12s, filter .16s, box-shadow .16s; }
-  .enter:hover { filter:brightness(1.07); box-shadow:0 10px 24px rgb(20 60 40/.18); }
-  .enter:active { transform:translateY(1px) scale(.985); }
-  .note { margin:18px 0 0; font-size:13px; color:var(--soft); }
-  .done { padding:16px; border-radius:12px; background:var(--wash); color:var(--accent); font-weight:640; text-align:center; }
-  .fail { color:#c0453f; font-weight:600; font-size:14px; }
+  .code { margin:16px 0 0; padding:13px; border:1px solid var(--hair); border-radius:13px;
+          background:var(--wash); text-align:center;
+          font:660 24px/1.1 ui-monospace, Consolas, monospace;
+          letter-spacing:.22em; text-indent:.22em; }
+  .field { margin:0 0 4px; font-size:13px; color:var(--soft); }
+  input { width:100%; margin:8px 0 16px; padding:13px; border:1px solid var(--hair);
+          border-radius:13px; background:var(--paper); color:var(--ink); text-align:center;
+          text-transform:uppercase; font:660 20px ui-monospace, Consolas, monospace;
+          letter-spacing:.18em; }
+  input:focus { outline:2px solid var(--accent); outline-offset:1px; }
+  .note { margin:14px 0 0; font-size:13px; text-align:center; color:var(--soft); min-height:1.2em; }
+  .note.fail { color:#c0453f; font-weight:600; }
+  .fine { margin:20px 0 0; padding-top:16px; border-top:1px solid var(--hair);
+          font-size:12.5px; line-height:1.5; color:var(--faint); }
+  .done { display:flex; align-items:flex-start; gap:12px; }
+  .tick { flex:0 0 auto; width:30px; height:30px; border-radius:50%; display:grid; place-items:center;
+          background:var(--wash); color:var(--accent); }
+  .tick svg { width:17px; height:17px; }
+  .done p { margin:3px 0 0; font-size:15px; font-weight:600; line-height:1.45; }
+  .spin { width:16px; height:16px; border-radius:50%; border:2px solid rgb(255 255 255/.35);
+          border-top-color:currentColor; animation:turn .7s linear infinite; }
+  @keyframes turn { to { transform:rotate(360deg); } }
+  @media (prefers-reduced-motion:reduce) { .spin { animation-duration:2.4s; } }
   [hidden] { display:none !important; }
 </style></head><body><main>
   <div id="ask">
-    <h1>Subtitle Notes</h1>
-    <p>${say.sync}</p>
+    <div class="mark" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none"><rect x="2.5" y="5" width="19" height="14" rx="4" fill="currentColor" opacity=".2"/><rect x="2.5" y="5" width="19" height="14" rx="4" stroke="currentColor" stroke-width="1.7"/><path d="M6.5 11h11M6.5 14.5h6.5" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>
+    </div>
+    <h1>${say.title}</h1>
+    <p class="lede">${say.intro}</p>
     ${code
       // The code belongs to the other way in. This page was opened by a
       // button that already carries it, so it stays out of sight unless
       // the reader asks for it.
-      ? `<div class="code" id="codeBox" hidden>${code}</div>
-         <button class="asCode" id="showCode">${say.type}</button>`
-      : `<p style="margin-bottom:8px">${say.type}</p><input id="typed" maxlength="8" autocomplete="off" spellcheck="false" placeholder="ABCD2345">`}
-    <div id="button"></div>
+      ? `<div id="button"></div>
+         <button class="asCode" id="showCode">${say.type}</button>
+         <div class="code" id="codeBox" hidden>${code}</div>`
+      : `<p class="field">${say.type}</p>
+         <input id="typed" maxlength="8" autocomplete="off" spellcheck="false" placeholder="ABCD2345">
+         <div id="button"></div>`}
     <p class="note" id="note"></p>
+    <p class="fine">${say.note}</p>
   </div>
-  <div id="ok" hidden><div class="done">${say.done}</div></div>
+  <div id="ok" hidden>
+    <div class="done">
+      <span class="tick"><svg viewBox="0 0 20 20" fill="none"><path d="M4.5 10.5l3.5 3.5 7.5-8" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <p>${say.done}</p>
+    </div>
+  </div>
 </main>
 <script>
   const CODE = ${JSON.stringify(code)};
   const SAY = ${JSON.stringify(LINK_TEXT[lang] ?? LINK_TEXT.en)};
+  const LANG = ${JSON.stringify(lang)};
+  const GOOGLE_MARK = '<svg viewBox="0 0 18 18" aria-hidden="true"><path fill="#4285F4" d="M17.64 9.2c0-.64-.06-1.25-.16-1.84H9v3.48h4.84a4.14 4.14 0 0 1-1.8 2.72v2.26h2.92c1.7-1.57 2.68-3.88 2.68-6.62z"/><path fill="#34A853" d="M9 18c2.43 0 4.47-.8 5.96-2.18l-2.92-2.26c-.8.54-1.84.86-3.04.86-2.34 0-4.32-1.58-5.03-3.7H.96v2.33A9 9 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.97 10.72a5.4 5.4 0 0 1 0-3.44V4.95H.96a9 9 0 0 0 0 8.1l3.01-2.33z"/><path fill="#EA4335" d="M9 3.58c1.32 0 2.5.45 3.44 1.35l2.58-2.58C13.46.9 11.43 0 9 0A9 9 0 0 0 .96 4.95l3.01 2.33C4.68 5.16 6.66 3.58 9 3.58z"/></svg>';
   const note = document.getElementById('note');
   const codeNow = () => (CODE || (document.getElementById('typed')?.value ?? '')).trim().toUpperCase();
 
+  function tell(message, failed) {
+    note.className = failed ? 'note fail' : 'note';
+    note.textContent = message;
+  }
+
   async function connect(credential) {
     const code = codeNow();
-    if (!code) { note.className = 'note fail'; note.textContent = SAY.needCode; return; }
-    note.className = 'note'; note.textContent = SAY.connecting;
+    if (!code) return tell(SAY.needCode, true);
+    tell(SAY.connecting);
     const reply = await fetch('/v1/pairings/approve-google', {
       method: 'POST', headers: { 'content-type': 'application/json' },
       body: JSON.stringify({ code, access_token: credential }),
     });
     const body = await reply.json().catch(() => ({}));
-    if (!reply.ok) { note.className = 'note fail'; note.textContent = body.detail || SAY.failed; return; }
+    if (!reply.ok) return tell(body.detail || SAY.failed, true);
     document.getElementById('ask').hidden = true;
     document.getElementById('ok').hidden = false;
   }
@@ -652,56 +744,35 @@ const linkPage = (code: string, lang: string) => {
     event.target.hidden = true;
   });
 
-  window.addEventListener('load', () => {
-    // The library loads from Google; if it is blocked, say so rather than
-    // leaving an empty space where a button should be.
-    if (!window.google?.accounts?.id) {
-      setTimeout(() => {
-        if (window.google?.accounts?.id) return start();
-        note.className = 'note fail';
-        note.textContent = SAY.blocked;
-      }, 2500);
-    }
-    start();
+  // Straight to Google and back, carrying the pairing code in the state:
+  // popups get blocked, and Google's own rendered button rides on FedCM, which
+  // a browser may perfectly well have switched off - and then it does nothing
+  // at all when clicked, without so much as an error.
+  const holder = document.getElementById('button');
+  holder.innerHTML = '<button class="enter" id="enter"></button>';
+  const enter = document.getElementById('enter');
+  enter.innerHTML = GOOGLE_MARK + '<span>' + SAY.button + '</span>';
+  enter.addEventListener('click', () => {
+    const code = codeNow();
+    if (!code) return tell(SAY.needCode, true);
+    tell(SAY.connecting);
+    enter.innerHTML = '<span class="spin"></span><span>' + SAY.connecting + '</span>';
+    const lang = LANG;
+    location.href = ${authorise};
+  });
+  document.getElementById('typed')?.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') enter.click();
   });
 
-  function start() {
-    // Straight to Google and back, carrying the pairing code in the state:
-    // popups get blocked and the rendered Google button needs FedCM, which a
-    // browser may have switched off.
-    const holder = document.getElementById('button');
-    holder.innerHTML = '<button class="enter" id="enter"></button>';
-    document.getElementById('enter').textContent = SAY.button;
-    document.getElementById('enter').addEventListener('click', () => {
-      const code = codeNow();
-      if (!code) { note.className = 'note fail'; note.textContent = SAY.needCode; return; }
-      note.className = 'note';
-      note.textContent = SAY.connecting;
-      location.href = 'https://accounts.google.com/o/oauth2/v2/auth' +
-        '?client_id=' + encodeURIComponent(${JSON.stringify(CLIENT_ID)}) +
-        '&redirect_uri=' + encodeURIComponent(location.origin + '/link') +
-        '&response_type=token&scope=' + encodeURIComponent('openid email profile') +
-        '&include_granted_scopes=true&prompt=select_account&state=' +
-        encodeURIComponent(code + '.' + document.documentElement.lang);
-    });
-
-    // Opened by a button that already said "sign in with Google": going
-    // through a page with a single button on it is one click too many.
-    if (new URLSearchParams(location.search).get('straight') === '1' && !location.hash) {
-      document.getElementById('enter')?.click();
-      return;
-    }
-
-    const back = location.hash.match(/access_token=([^&]+)/);
-    const state = location.hash.match(/state=([^&]+)/);
-    if (back && state) {
-      const [code, lang] = decodeURIComponent(state[1]).split('.');
-      if (lang && lang !== document.documentElement.lang) {
-        // Google hands the page back without the query, so it arrives in the
-        // browser's language; load the asked-for one, token and all.
-        location.replace(location.pathname + '?code=' + code + '&lang=' + lang + location.hash);
-        return;
-      }
+  const back = location.hash.match(/access_token=([^&]+)/);
+  const state = location.hash.match(/state=([^&]+)/);
+  if (back && state) {
+    const [code, lang] = decodeURIComponent(state[1]).split('.');
+    if (lang && lang !== document.documentElement.lang) {
+      // Google hands the page back without the query, so it arrives in the
+      // browser's language; load the asked-for one, token and all.
+      location.replace(location.pathname + '?code=' + code + '&lang=' + lang + location.hash);
+    } else {
       history.replaceState(null, '', location.pathname + '?code=' + code);
       const field = document.getElementById('typed');
       if (field) field.value = code;
@@ -800,7 +871,7 @@ from the email address you signed in with. The account is deleted within 30 days
 of the request, and usually the same week.</p>
 </body></html>`;
 
-async function card(row: any) { return { ...row, archived: Boolean(row.archived), synonyms: JSON.parse(row.synonyms_json ?? '[]'), sense_note: row.sense_note ?? null, variants: undefined, examples: undefined, created_at: row.created_at }; }
+async function card(row: any) { return { ...row, archived: Boolean(row.archived), pending_translation: Boolean(row.needs_translation), synonyms: JSON.parse(row.synonyms_json ?? '[]'), sense_note: row.sense_note ?? null, variants: undefined, examples: undefined, created_at: row.created_at }; }
 
 /// Days until a word is shown again, by how many times in a row it has been
 /// remembered. The last rung is nearly half a year, which is the point at which
@@ -944,7 +1015,18 @@ async function agreedCorrection(env: Env, term: string, language: string) {
   return row && Number(row.votes) >= CORRECTION_QUORUM ? String(row.suggestion) : null;
 }
 
-async function enrich(env: Env, selected: string, context = '', language = 'ru') {
+/// How thoroughly a card is worked out, and who is waiting for it.
+///
+/// `quick` is what the browser waits on while the film is paused: detect the
+/// language, read the line with the fast model, stop. `full` is the version
+/// worth keeping — the slower model that reads idioms properly, plus the
+/// dictionary's base form, its usage examples and their translations. The
+/// browser gets the first and the card is quietly replaced by the second, so
+/// nobody waits four seconds for examples they are not looking at yet.
+type Depth = 'quick' | 'full';
+
+async function enrich(env: Env, selected: string, context = '', language = 'ru', depth: Depth = 'full') {
+  const full = depth === 'full';
   // Detect first.  The old order treated a Spanish line as English in both
   // the model prompt and the dictionary, so neither answer was trustworthy.
   const main = await translate(env, selected, false, language);
@@ -953,7 +1035,7 @@ async function enrich(env: Env, selected: string, context = '', language = 'ru')
     env,
     selected,
     context,
-    SMART_MODEL_DEEP,
+    full ? SMART_MODEL_DEEP : SMART_MODEL_FAST,
     language,
     sourceLanguage,
   );
@@ -969,19 +1051,27 @@ async function enrich(env: Env, selected: string, context = '', language = 'ru')
   // word can be a noun in the dictionary and a verb in the line, and the
   // reader deserves to see both. Neither lookup depends on the other, so they
   // go out together rather than one after the other.
-  const baseForm = (sourceLanguage === 'en' ? headwords(item.word) : [])
+  const baseForm = (full && sourceLanguage === 'en' ? headwords(item.word) : [])
     .slice(1)
     .find((form) => form !== phraseTerm.toLowerCase());
+  // The dictionary is the fallback for a model that did not answer, and the
+  // source of the examples. When the model did answer and nobody is waiting on
+  // examples, that round trip buys nothing, so it is not made.
+  const needDictionary = full || !smart?.term;
   const [inflected, base] = await Promise.all([
-    translate(env, phraseTerm, true, language, sourceLanguage),
+    needDictionary
+      ? translate(env, phraseTerm, full, language, sourceLanguage)
+      : Promise.resolve(null),
     baseForm ? translate(env, baseForm, true, language, sourceLanguage) : Promise.resolve(null),
   ]);
   const focusResult = {
-    text: inflected.text,
-    variants: mergeVariants(inflected.variants, base?.variants ?? []),
-    examples: inflected.examples.length ? inflected.examples : (base?.examples ?? []),
+    text: inflected?.text ?? '',
+    variants: mergeVariants(inflected?.variants ?? [], base?.variants ?? []),
+    examples: inflected?.examples.length ? inflected.examples : (base?.examples ?? []),
   };
-  const examples = await translateExamples(env, focusResult.examples, language, sourceLanguage);
+  const examples: { text: string; translation: string | null }[] = full
+    ? await translateExamples(env, focusResult.examples, language, sourceLanguage)
+    : [];
   // The selected line itself is worth keeping as the first example when it is
   // a phrase rather than a bare word.
   const isSentence = wordsIn(selected).length > 1;
@@ -1035,23 +1125,33 @@ async function upsertSelection(env: Env, owner: string, input: any, enriched?: a
     (!hasUsefulContext(row.context, row.selected_text) &&
       focusKey(row.focus_phrase, row.focus_word, row.selected_text) === focusKey(phrase, word, selected)),
   );
+  // Nothing usable came back from any provider. The card is still worth
+  // keeping — the words were deliberately selected — but it is marked as owing
+  // a translation, so the server can come back to it once the providers answer
+  // again instead of leaving English text sitting where the meaning belongs.
+  const pending = missingTranslation(data.translation, selected) ? 1 : 0;
+  // Which episode the line came from, when the caller knows. The browser
+  // learns it from the page it is watching; a card saved before it did should
+  // pick it up the next time the same line is selected.
+  const season = clean(input.season) || null;
+  const episode = clean(input.episode) || null;
   if (existing) {
-    const repairable = String(existing.translation ?? '') === UNAVAILABLE && clean(data.translation) && clean(data.translation) !== UNAVAILABLE;
+    const repairable = missingTranslation(existing.translation, existing.selected_text) && !pending;
     const contextChanged = Boolean(usefulContext && usefulContext !== clean(existing.context));
     if (repairable || contextChanged) {
       // Re-selecting an older one-word card with its subtitle line repairs
       // both its stored sense and the practice prompt. This is deliberately
       // not limited to a matching client key: an old capture made before the
       // browser supplied context must be repairable from the library itself.
-      await env.DB.prepare('UPDATE selections SET archived = 0, created_at = ?, seen_count = seen_count + 1, translation = ?, focus_word = ?, focus_phrase = ?, focus_translation = ?, synonyms_json = ?, sense_note = ?, variants_json = ?, examples_json = ?, context = ? WHERE id = ?')
-        .bind(now(), clean(data.translation) || existing.translation, word || null, phrase || null, clean(data.focus_translation) || null, JSON.stringify(data.synonyms ?? []), clean(data.sense_note) || null, JSON.stringify(data.variants ?? []), JSON.stringify(data.examples ?? []), usefulContext || existing.context, existing.id).run();
+      await env.DB.prepare('UPDATE selections SET archived = 0, created_at = ?, seen_count = seen_count + 1, translation = ?, focus_word = ?, focus_phrase = ?, focus_translation = ?, synonyms_json = ?, sense_note = ?, variants_json = ?, examples_json = ?, context = ?, season = COALESCE(?, season), episode = COALESCE(?, episode), needs_translation = ? WHERE id = ?')
+        .bind(now(), clean(data.translation) || existing.translation, word || null, phrase || null, clean(data.focus_translation) || null, JSON.stringify(data.synonyms ?? []), clean(data.sense_note) || null, JSON.stringify(data.variants ?? []), JSON.stringify(data.examples ?? []), usefulContext || existing.context, season, episode, pending, existing.id).run();
     } else if (clean(input.client_key) && existing.client_key === clean(input.client_key) && selected && selected !== existing.selected_text) {
       // The same save, refined: a selection caught in two goes arrives under
       // the key of the first attempt, and the wider phrase is the one meant.
-      await env.DB.prepare('UPDATE selections SET archived = 0, created_at = ?, selected_text = ?, translation = ?, focus_word = ?, focus_phrase = ?, focus_translation = ?, synonyms_json = ?, sense_note = ?, variants_json = ?, examples_json = ?, context = ? WHERE id = ?')
-        .bind(now(), selected, clean(data.translation) || existing.translation, word || null, phrase || null, clean(data.focus_translation) || null, JSON.stringify(data.synonyms ?? []), clean(data.sense_note) || null, JSON.stringify(data.variants ?? []), JSON.stringify(data.examples ?? []), usefulContext || existing.context, existing.id).run();
+      await env.DB.prepare('UPDATE selections SET archived = 0, created_at = ?, selected_text = ?, translation = ?, focus_word = ?, focus_phrase = ?, focus_translation = ?, synonyms_json = ?, sense_note = ?, variants_json = ?, examples_json = ?, context = ?, season = COALESCE(?, season), episode = COALESCE(?, episode), needs_translation = ? WHERE id = ?')
+        .bind(now(), selected, clean(data.translation) || existing.translation, word || null, phrase || null, clean(data.focus_translation) || null, JSON.stringify(data.synonyms ?? []), clean(data.sense_note) || null, JSON.stringify(data.variants ?? []), JSON.stringify(data.examples ?? []), usefulContext || existing.context, season, episode, pending, existing.id).run();
     } else {
-      await env.DB.prepare('UPDATE selections SET archived = 0, created_at = ?, seen_count = seen_count + 1 WHERE id = ?').bind(now(), existing.id).run();
+      await env.DB.prepare('UPDATE selections SET archived = 0, created_at = ?, seen_count = seen_count + 1, season = COALESCE(season, ?), episode = COALESCE(episode, ?) WHERE id = ?').bind(now(), season, episode, existing.id).run();
     }
     // Marked so a caller that saved without asking — the browser extension's
     // instant capture — can offer to undo a card it created without offering
@@ -1060,12 +1160,92 @@ async function upsertSelection(env: Env, owner: string, input: any, enriched?: a
     return { ...row, reused: true };
   }
   const id = uid();
-  await env.DB.prepare(`INSERT INTO selections (id, owner_id, client_key, media_title, season, episode, timecode_ms, selected_text, translation, focus_word, focus_phrase, focus_translation, synonyms_json, sense_note, variants_json, examples_json, context, created_at, source_lang) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
-    .bind(id, owner, clean(input.client_key), clean(input.media_title) || 'Unknown title', input.season ?? null, input.episode ?? null, input.timecode_ms ?? null, selected, clean(data.translation) || selected, word || null, phrase || null, clean(data.focus_translation) || null, JSON.stringify(data.synonyms ?? []), clean(data.sense_note) || null, JSON.stringify(data.variants ?? []), JSON.stringify(data.examples ?? []), usefulContext || null, now(), clean(data.source_lang) || null).run();
+  await env.DB.prepare(`INSERT INTO selections (id, owner_id, client_key, media_title, season, episode, timecode_ms, selected_text, translation, focus_word, focus_phrase, focus_translation, synonyms_json, sense_note, variants_json, examples_json, context, created_at, source_lang, needs_translation) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
+    .bind(id, owner, clean(input.client_key), clean(input.media_title) || 'Unknown title', season, episode, input.timecode_ms ?? null, selected, clean(data.translation) || selected, word || null, phrase || null, clean(data.focus_translation) || null, JSON.stringify(data.synonyms ?? []), clean(data.sense_note) || null, JSON.stringify(data.variants ?? []), JSON.stringify(data.examples ?? []), usefulContext || null, now(), clean(data.source_lang) || null, pending).run();
   return env.DB.prepare('SELECT * FROM selections WHERE id = ?').bind(id).first();
 }
 
-export default { async fetch(request: Request, env: Env): Promise<Response> {
+/// Writes a finished reading over a card that already exists.
+///
+/// Used twice: by the slow second pass that follows every capture, and by the
+/// repair run that goes back to cards saved while the providers were down.
+async function applyReading(env: Env, row: any, data: any) {
+  if (missingTranslation(data.translation, row.selected_text)) return false;
+  await env.DB.prepare(
+    `UPDATE selections SET translation = ?, focus_word = ?, focus_phrase = ?, focus_translation = ?,
+            synonyms_json = ?, sense_note = ?, variants_json = ?, examples_json = ?,
+            source_lang = COALESCE(?, source_lang), needs_translation = 0
+      WHERE id = ?`
+  ).bind(
+    clean(data.translation),
+    clean(data.focus_word) || null,
+    clean(data.focus_phrase) || null,
+    clean(data.focus_translation) || null,
+    JSON.stringify(data.synonyms ?? []),
+    clean(data.sense_note) || null,
+    JSON.stringify(data.variants ?? []),
+    JSON.stringify(data.examples ?? []),
+    clean(data.source_lang) || null,
+    row.id,
+  ).run();
+  return true;
+}
+
+/// The second look at a card that was just saved.
+///
+/// The browser is answered by the fast model so that a paused film does not
+/// wait four seconds. The card, though, is read for weeks: this runs after the
+/// reply has already gone out and quietly replaces it with the slower model's
+/// reading, the dictionary's base form and its examples.
+async function refineCapture(env: Env, id: string, language: string) {
+  try {
+    const row = await env.DB.prepare('SELECT * FROM selections WHERE id = ?').bind(id).first<any>();
+    if (!row) return;
+    const data = await enrich(env, clean(row.selected_text), String(row.context ?? ''), language, 'full');
+    await applyReading(env, row, data);
+  } catch {
+    // The card the reader already has is fine. A failed second opinion is not
+    // worth an error anybody sees, and the pending flag keeps whatever still
+    // needs fixing on the repair list.
+  }
+}
+
+/// Cards that never got a translation, tried again.
+///
+/// Every provider goes down sometimes, and a card saved in that minute used to
+/// stay broken forever. Opening the library is the natural moment to retry: it
+/// costs the reader nothing, because it happens after the answer has been sent
+/// and only for a couple of cards at a time.
+const REPAIR_BATCH = 3;
+
+/// The column doubles as a count of how many times the retry has been tried,
+/// so a card that no provider will ever manage — a whole Wikipedia paragraph
+/// caught by a stray drag — stops costing a translation on every library load.
+/// Re-selecting it in a player sets the flag back to one and starts again.
+const REPAIR_TRIES = 8;
+
+async function repairPending(env: Env, owner: string, language: string) {
+  try {
+    const rows = await env.DB.prepare(
+      `SELECT * FROM selections WHERE owner_id = ? AND needs_translation BETWEEN 1 AND ?
+        ORDER BY needs_translation ASC, created_at DESC LIMIT ?`
+    ).bind(owner, REPAIR_TRIES, REPAIR_BATCH).all<any>();
+    let repaired = 0;
+    for (const row of rows.results) {
+      const data = await enrich(env, clean(row.selected_text), String(row.context ?? ''), language, 'full');
+      if (await applyReading(env, row, data)) {
+        repaired += 1;
+      } else {
+        await env.DB.prepare('UPDATE selections SET needs_translation = needs_translation + 1 WHERE id = ?').bind(row.id).run();
+      }
+    }
+    return repaired;
+  } catch {
+    return 0;
+  }
+}
+
+export default { async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
   if (request.method === 'OPTIONS') return new Response(null, { headers: cors });
   const url = new URL(request.url); const path = url.pathname;
   try {
@@ -1145,6 +1325,9 @@ export default { async fetch(request: Request, env: Env): Promise<Response> {
           ORDER BY (r.due_at IS NULL) DESC, r.due_at ASC, s.created_at ASC
           LIMIT 20`
       ).bind(user.id, now()).all<any>();
+      // Practising a card that never got its translation is practising
+      // nothing, so this is the other good moment to go back to them.
+      ctx.waitUntil(repairPending(env, user.id, user.language || 'ru'));
       return json(await Promise.all(rows.results.map(card)));
     }
 
@@ -1293,9 +1476,25 @@ export default { async fetch(request: Request, env: Env): Promise<Response> {
       return json({ like_count: Number(count?.total ?? 0), liked: request.method === 'POST' });
     }
     if (path === '/v1/pairings/approve' && request.method === 'POST') { const body: any = await request.json(); const row = await env.DB.prepare('SELECT * FROM device_pairings WHERE code = ?').bind(clean(body.code).toUpperCase()).first<any>(); if (!row || row.expires_at < Date.now() || row.user_id) throw new Error('Pairing code expired'); await env.DB.prepare('UPDATE device_pairings SET user_id = ?, token = ? WHERE id = ?').bind(user.id, await token(user, env.TOKEN_SECRET), row.id).run(); return json({ status: 'approved', device_name: row.device_name }); }
-    if (path === '/v1/selections' && request.method === 'GET') { const archived = url.searchParams.get('archived') === 'true' ? 1 : 0; const rows = await env.DB.prepare('SELECT * FROM selections WHERE owner_id = ? AND archived = ? ORDER BY created_at DESC LIMIT 100').bind(user.id, archived).all<any>(); return json(await Promise.all(rows.results.map(card))); }
+    if (path === '/v1/selections' && request.method === 'GET') {
+      const archived = url.searchParams.get('archived') === 'true' ? 1 : 0;
+      const rows = await env.DB.prepare('SELECT * FROM selections WHERE owner_id = ? AND archived = ? ORDER BY created_at DESC LIMIT 100').bind(user.id, archived).all<any>();
+      // Opening the library retries whatever is still owed a translation. It
+      // runs after this reply has gone, so the list is no slower for it.
+      ctx.waitUntil(repairPending(env, user.id, user.language || 'ru'));
+      return json(await Promise.all(rows.results.map(card)));
+    }
     if (path === '/v1/selections' && request.method === 'POST') { const input: any = await request.json(); const row = await upsertSelection(env, user.id, input); return json(await detail(row), 201); }
-    if (path === '/v1/captures' && request.method === 'POST') { const input: any = await request.json(); const row = await upsertSelection(env, user.id, input, await enrich(env, clean(input.selected_text), String(input.context ?? ''), user.language || 'ru')); return json(await detail(row), 201); }
+    // Saving is also what the browser waits on to show the meaning, so it
+    // answers with the fast model and then improves itself. Waiting for the
+    // slow one here is what made a capture feel like it had hung.
+    if (path === '/v1/captures' && request.method === 'POST') {
+      const input: any = await request.json();
+      const language = user.language || 'ru';
+      const row: any = await upsertSelection(env, user.id, input, await enrich(env, clean(input.selected_text), String(input.context ?? ''), language, 'quick'));
+      ctx.waitUntil(refineCapture(env, String(row.id), language));
+      return json(await detail(row), 201);
+    }
     // The dictionary alone, as fast as the network allows. The model reads the
     // line better, but it takes a second or two, and a person who paused a film
     // wants something on screen now. The card shows this first and replaces it
@@ -1305,7 +1504,7 @@ export default { async fetch(request: Request, env: Env): Promise<Response> {
       const input: any = await request.json();
       const text = clean(input.text);
       if (!text) throw new Error('Nothing to read');
-      const answer = await translate(env, text, false, user.language || 'ru');
+      const answer = await translate(env, text, false, user.language || 'ru', 'auto', true);
       return json({ translation: answer.text, source_lang: answer.source });
     }
 
@@ -1367,24 +1566,20 @@ export default { async fetch(request: Request, env: Env): Promise<Response> {
       return json({ ...(await detail(updated)), votes: Number(agreed?.votes ?? 1), quorum: CORRECTION_QUORUM });
     }
 
+    // The same retry, asked for out loud. The app calls it when it notices a
+    // card that is still waiting, and reports how many are left.
+    if (path === '/v1/repair' && request.method === 'POST') {
+      const done = await repairPending(env, user.id, user.language || 'ru');
+      const left = await env.DB.prepare('SELECT COUNT(*) AS waiting FROM selections WHERE owner_id = ? AND needs_translation BETWEEN 1 AND ?').bind(user.id, REPAIR_TRIES).first<any>();
+      return json({ repaired: done, waiting: Number(left?.waiting ?? 0) });
+    }
+
     const reenrich = path.match(/^\/v1\/selections\/([^/]+)\/reenrich$/);
     if (reenrich && request.method === 'POST') {
       const row = await env.DB.prepare('SELECT * FROM selections WHERE id = ? AND owner_id = ?').bind(reenrich[1], user.id).first<any>();
       if (!row) throw new Error('Selection not found');
       const data = await enrich(env, clean(row.selected_text), String(row.context ?? ''), user.language || 'ru');
-      if (!clean(data.translation)) throw new Error('No translation answer yet, card was not changed');
-      await env.DB.prepare('UPDATE selections SET translation = ?, focus_word = ?, focus_phrase = ?, focus_translation = ?, synonyms_json = ?, sense_note = ?, variants_json = ?, examples_json = ? WHERE id = ?')
-        .bind(
-          clean(data.translation),
-          clean(data.focus_word) || null,
-          clean(data.focus_phrase) || null,
-          clean(data.focus_translation) || null,
-          JSON.stringify(data.synonyms ?? []),
-          clean(data.sense_note) || null,
-          JSON.stringify(data.variants ?? []),
-          JSON.stringify(data.examples ?? []),
-          row.id,
-        ).run();
+      if (!(await applyReading(env, row, data))) throw new Error('No translation answer yet, card was not changed');
       const updated = await env.DB.prepare('SELECT * FROM selections WHERE id = ?').bind(row.id).first<any>();
       return json(await detail(updated));
     }

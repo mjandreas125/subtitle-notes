@@ -9,14 +9,26 @@ import 'package:qr_flutter/qr_flutter.dart';
 import '../data.dart';
 import '../design/components.dart';
 import '../design/tokens.dart';
+import '../i18n.dart';
 import 'desktop_config.dart';
 
-/// First run on Windows: show a QR, wait for the phone to approve it, then
-/// write the session where the VLC helper will find it.
+/// First run on Windows: sign in, then write the session where the VLC helper
+/// will find it.
+///
+/// There used to be a second program for this — a small window of its own that
+/// showed a code and waited for the phone to approve it. A person who had just
+/// installed one program and opened it found no way in at all, because the way
+/// in was in the other program. So the sign-in lives here, where the library
+/// is, and it leads with Google: a phone is a fine second route, not a
+/// requirement for using a computer.
 class PairingScreen extends StatefulWidget {
-  const PairingScreen({required this.onConnected, super.key});
+  const PairingScreen({required this.onConnected, this.language = 'en', super.key});
 
   final ValueChanged<Session> onConnected;
+
+  /// Which language to open the sign-in page in, so it is not a jolt of
+  /// English in the middle of a translated program.
+  final String language;
 
   @override
   State<PairingScreen> createState() => _PairingScreenState();
@@ -28,6 +40,7 @@ class _PairingScreenState extends State<PairingScreen> {
   String? _error;
   bool _busy = false;
   bool _expired = false;
+  bool _sentToBrowser = false;
   int _secondsLeft = 0;
 
   @override
@@ -48,6 +61,7 @@ class _PairingScreenState extends State<PairingScreen> {
       _busy = true;
       _error = null;
       _expired = false;
+      _sentToBrowser = false;
       _request = null;
     });
     try {
@@ -73,6 +87,29 @@ class _PairingScreenState extends State<PairingScreen> {
     }
   }
 
+  /// Signing in with Google, from a program that cannot show Google's dialog.
+  ///
+  /// The browser can, so it is sent to the page that does it, carrying the
+  /// pairing code this window is already waiting on. `straight=1` means the
+  /// page redirects before it draws: the reader sees Google, not a web page
+  /// with one button on it.
+  Future<void> _openBrowser() async {
+    final request = _request;
+    if (request == null) return;
+    final page =
+        '${defaultApiBase.replaceFirst('/v1', '')}/link'
+        '?code=${request.code}&lang=${widget.language}&straight=1';
+    try {
+      // Not `cmd /c start`: the address carries `&`, which the shell would
+      // read as its own and cut the address in half.
+      await Process.run('rundll32', ['url.dll,FileProtocolHandler', page]);
+      if (mounted) setState(() => _sentToBrowser = true);
+    } catch (_) {
+      // No browser we can start. The code beside the button still works.
+      if (mounted) setState(() => _sentToBrowser = false);
+    }
+  }
+
   Future<void> _tick() async {
     final request = _request;
     if (request == null) return;
@@ -88,6 +125,7 @@ class _PairingScreenState extends State<PairingScreen> {
       _poll?.cancel();
       DesktopConfig.save(session);
       await _flushOutbox(session);
+      await _switchOnVlcInterface();
       widget.onConnected(session);
     } on ApiException catch (error) {
       // A pairing that the server has forgotten cannot recover by polling.
@@ -95,6 +133,26 @@ class _PairingScreenState extends State<PairingScreen> {
         _poll?.cancel();
         if (mounted) setState(() => _expired = true);
       }
+    }
+  }
+
+  /// VLC answers the translation window only when its small web interface is
+  /// switched on. The installer writes that setting, but VLC may have been
+  /// installed afterwards or had its settings reset - and the symptom is an
+  /// empty window over the film, with nothing to suggest why. This is the same
+  /// one-line helper the installer runs, so connecting also repairs it.
+  Future<void> _switchOnVlcInterface() async {
+    final beside = File(Platform.resolvedExecutable).parent;
+    for (final folder in [beside.parent, beside]) {
+      final helper = File('${folder.path}${Platform.pathSeparator}TranslatedVLCSyncSetup.exe');
+      if (!helper.existsSync()) continue;
+      try {
+        await Process.run(helper.path, ['--configure-vlc']);
+      } catch (_) {
+        // VLC not installed, or its settings file is not ours to write. The
+        // sign-in itself is what matters here.
+      }
+      return;
     }
   }
 
@@ -138,13 +196,31 @@ class _PairingScreenState extends State<PairingScreen> {
           padding: const EdgeInsets.all(AppSpace.h2),
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 940),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(child: _explanation(c, pending)),
-                const SizedBox(width: AppSpace.h2),
-                SizedBox(width: 360, child: _codePanel(c)),
-              ],
+            child: LayoutBuilder(
+              builder: (context, space) {
+                final explanation = _explanation(context, c, pending);
+                final panel = SizedBox(width: 360, child: _signInPanel(context, c));
+                // A narrow window stacks the two rather than squeezing them:
+                // the sign-in is the part that must stay usable.
+                if (space.maxWidth < 780) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      explanation,
+                      const SizedBox(height: AppSpace.h1),
+                      panel,
+                    ],
+                  );
+                }
+                return Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(child: explanation),
+                    const SizedBox(width: AppSpace.h2),
+                    panel,
+                  ],
+                );
+              },
             ),
           ),
         ),
@@ -152,7 +228,7 @@ class _PairingScreenState extends State<PairingScreen> {
     );
   }
 
-  Widget _explanation(AppColors c, int pending) => Column(
+  Widget _explanation(BuildContext context, AppColors c, int pending) => Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       Row(
@@ -168,17 +244,19 @@ class _PairingScreenState extends State<PairingScreen> {
         ],
       ),
       const SizedBox(height: AppSpace.xxl),
-      Text('Connect this computer', style: AppText.display(c.ink)),
+      Text(context.t('Connect this computer'), style: AppText.display(c.ink)),
       const SizedBox(height: AppSpace.md),
       Text(
-        'Words you select in VLC land in the same library as the ones you save '
-        'on your phone. Scan the code once and this computer stays connected.',
+        context.t(
+          'Words you select in VLC land in the same library as the ones you save on your phone.',
+        ),
         style: AppText.body(c.ink2),
       ),
-      const SizedBox(height: AppSpace.h1),
-      _step(c, 1, 'Open Subtitle Notes on your phone'),
-      _step(c, 2, 'Go to You → Connected devices → Connect a device'),
-      _step(c, 3, 'Point the camera at the code, or type it in'),
+      const SizedBox(height: AppSpace.sm),
+      Text(
+        context.t('One account for phone, computer and browser.'),
+        style: AppText.bodySoft(c.ink3),
+      ),
       if (pending > 0) ...[
         const SizedBox(height: AppSpace.xxl),
         AppCard(
@@ -190,17 +268,8 @@ class _PairingScreenState extends State<PairingScreen> {
               const SizedBox(width: AppSpace.md),
               Expanded(
                 child: Text(
-                  pending == 1
-                      ? '1 selection is waiting to be sent. It will go up as '
-                            'soon as you connect.'
-                      : '$pending selections are waiting to be sent. They will '
-                            'go up as soon as you connect.',
-                  style: font(
-                    size: 14,
-                    weight: 700,
-                    color: c.ink2,
-                    height: 1.4,
-                  ),
+                  '${context.t('Waiting to be sent')}: $pending',
+                  style: font(size: 14, weight: 700, color: c.ink2, height: 1.4),
                 ),
               ),
             ],
@@ -210,49 +279,22 @@ class _PairingScreenState extends State<PairingScreen> {
     ],
   );
 
-  Widget _step(AppColors c, int number, String text) => Padding(
-    padding: const EdgeInsets.only(bottom: AppSpace.md),
-    child: Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          height: 26,
-          width: 26,
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: c.greenWash,
-            shape: BoxShape.circle,
-            border: Border.all(color: c.green.withValues(alpha: .4), width: 1.5),
-          ),
-          child: Text(
-            '$number',
-            style: font(size: 13, weight: 900, color: c.green, height: 1),
-          ),
-        ),
-        const SizedBox(width: AppSpace.md),
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.only(top: 3),
-            child: Text(text, style: AppText.bodySoft(c.ink)),
-          ),
-        ),
-      ],
-    ),
-  );
-
-  Widget _codePanel(AppColors c) {
+  Widget _signInPanel(BuildContext context, AppColors c) {
     final request = _request;
     return AppCard(
       raised: true,
       padding: const EdgeInsets.all(AppSpace.xxl),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           if (_error != null) ...[
-            IconTile(
-              icon: Icons.cloud_off_rounded,
-              color: c.red,
-              background: c.redWash,
-              size: 56,
+            Center(
+              child: IconTile(
+                icon: Icons.cloud_off_rounded,
+                color: c.red,
+                background: c.redWash,
+                size: 56,
+              ),
             ),
             const SizedBox(height: AppSpace.lg),
             Text(
@@ -262,7 +304,7 @@ class _PairingScreenState extends State<PairingScreen> {
             ),
             const SizedBox(height: AppSpace.xl),
             PushButton(
-              label: 'Try again',
+              label: context.t('Try again'),
               icon: Icons.refresh_rounded,
               onPressed: _start,
             ),
@@ -270,128 +312,144 @@ class _PairingScreenState extends State<PairingScreen> {
             const SizedBox(height: 90),
             Center(child: CircularProgressIndicator(color: c.green)),
             const SizedBox(height: AppSpace.lg),
-            Text('Creating a code…', style: AppText.bodySoft(c.ink3)),
+            Center(
+              child: Text(
+                context.t('Creating a code…'),
+                style: AppText.bodySoft(c.ink3),
+              ),
+            ),
             const SizedBox(height: 90),
           ] else ...[
-            // The QR always sits on white: a dark surface behind the modules
-            // is the classic reason a scanner refuses to lock on.
-            Container(
-              padding: const EdgeInsets.all(AppSpace.lg),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(AppRadius.panel),
-                border: Border.all(color: c.line, width: 1.5),
+            // The way in that needs nothing but this computer.
+            PushButton(
+              label: context.t('Continue with Google'),
+              icon: Icons.open_in_new_rounded,
+              onPressed: _openBrowser,
+            ),
+            const SizedBox(height: AppSpace.md),
+            Text(
+              context.t(
+                _sentToBrowser
+                    ? 'Waiting for the phone…'
+                    : 'A browser window opens for the sign-in.',
               ),
-              child: QrImageView(
-                data: request.qrPayload,
-                version: QrVersions.auto,
-                size: 216,
-                gapless: true,
-                backgroundColor: Colors.white,
-                eyeStyle: const QrEyeStyle(
-                  eyeShape: QrEyeShape.square,
-                  color: Color(0xff20302a),
-                ),
-                dataModuleStyle: const QrDataModuleStyle(
-                  dataModuleShape: QrDataModuleShape.square,
-                  color: Color(0xff20302a),
-                ),
-              ),
+              textAlign: TextAlign.center,
+              style: font(size: 12.5, weight: 600, color: c.ink3, height: 1.35),
             ),
             const SizedBox(height: AppSpace.xl),
+            _divider(context, c),
+            const SizedBox(height: AppSpace.xl),
             Text(
-              'OR TYPE THIS CODE',
-              style: font(
-                size: 11,
-                weight: 800,
-                color: c.ink3,
-                height: 1.2,
-                letterSpacing: 1.2,
-              ),
+              context.t('Or approve the code in the phone app'),
+              textAlign: TextAlign.center,
+              style: font(size: 13, weight: 700, color: c.ink2, height: 1.35),
             ),
-            const SizedBox(height: AppSpace.sm),
-            SelectableText(
-              request.code,
-              style: font(
-                size: 30,
-                weight: 900,
-                color: c.ink,
-                height: 1.2,
-                letterSpacing: 6,
-                tabular: true,
+            const SizedBox(height: AppSpace.lg),
+            // The QR always sits on white: a dark surface behind the modules
+            // is the classic reason a scanner refuses to lock on.
+            Center(
+              child: Container(
+                padding: const EdgeInsets.all(AppSpace.md),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(AppRadius.panel),
+                  border: Border.all(color: c.line, width: 1.5),
+                ),
+                child: QrImageView(
+                  data: request.qrPayload,
+                  version: QrVersions.auto,
+                  size: 152,
+                  gapless: true,
+                  backgroundColor: Colors.white,
+                  eyeStyle: const QrEyeStyle(
+                    eyeShape: QrEyeShape.square,
+                    color: Color(0xff20302a),
+                  ),
+                  dataModuleStyle: const QrDataModuleStyle(
+                    dataModuleShape: QrDataModuleShape.square,
+                    color: Color(0xff20302a),
+                  ),
+                ),
               ),
             ),
             const SizedBox(height: AppSpace.lg),
+            Center(
+              child: SelectableText(
+                request.code,
+                style: font(
+                  size: 26,
+                  weight: 900,
+                  color: c.ink,
+                  height: 1.2,
+                  letterSpacing: 5,
+                  tabular: true,
+                ),
+              ),
+            ),
+            const SizedBox(height: AppSpace.sm),
             if (_expired)
               PushButton(
-                label: 'Create a new code',
+                label: context.t('Try again'),
                 icon: Icons.refresh_rounded,
                 onPressed: _start,
               )
             else
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    height: 14,
-                    width: 14,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      color: c.green,
-                    ),
-                  ),
-                  const SizedBox(width: AppSpace.sm),
-                  Text(
-                    'Waiting for your phone · ${_clock(_secondsLeft)}',
-                    style: font(
-                      size: 13,
-                      weight: 700,
-                      color: c.ink3,
-                      height: 1.2,
-                    ),
-                  ),
-                ],
-              ),
-            const SizedBox(height: AppSpace.sm),
-            Squish(
-              onTap: () {
-                Clipboard.setData(ClipboardData(text: request.code));
-                ScaffoldMessenger.of(context)
-                  ..hideCurrentSnackBar()
-                  ..showSnackBar(
-                    SnackBar(
-                      backgroundColor: c.ink,
-                      content: Text(
-                        'Code copied',
-                        style: font(
-                          size: 15,
-                          weight: 700,
-                          color: c.surface,
-                          height: 1.3,
+              Center(
+                child: Squish(
+                  onTap: () {
+                    Clipboard.setData(ClipboardData(text: request.code));
+                    ScaffoldMessenger.of(context)
+                      ..hideCurrentSnackBar()
+                      ..showSnackBar(
+                        SnackBar(
+                          backgroundColor: c.ink,
+                          content: Text(
+                            context.t('Code copied'),
+                            style: font(
+                              size: 15,
+                              weight: 700,
+                              color: c.surface,
+                              height: 1.3,
+                            ),
+                          ),
                         ),
-                      ),
+                      );
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(AppSpace.sm),
+                    child: Text(
+                      context.t('Copy code'),
+                      style: font(size: 13, weight: 800, color: c.blue, height: 1.2),
                     ),
-                  );
-              },
-              child: Padding(
-                padding: const EdgeInsets.all(AppSpace.sm),
-                child: Text(
-                  'Copy code',
-                  style: font(
-                    size: 13,
-                    weight: 800,
-                    color: c.blue,
-                    height: 1.2,
                   ),
                 ),
               ),
-            ),
+            if (_expired) ...[
+              const SizedBox(height: AppSpace.sm),
+              Text(
+                context.t('The code expired. Ask for a new one.'),
+                textAlign: TextAlign.center,
+                style: font(size: 12.5, weight: 600, color: c.ink3, height: 1.35),
+              ),
+            ],
           ],
         ],
       ),
     );
   }
 
-  String _clock(int seconds) =>
-      '${seconds ~/ 60}:${(seconds % 60).toString().padLeft(2, '0')}';
+  /// A hairline with a word in it, for the choice between the two ways in.
+  Widget _divider(BuildContext context, AppColors c) => Row(
+    children: [
+      Expanded(child: Container(height: 1, color: c.line)),
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: AppSpace.md),
+        child: Text(
+          context.t('or'),
+          style: font(size: 11, weight: 800, color: c.ink3, height: 1, letterSpacing: 1.1),
+        ),
+      ),
+      Expanded(child: Container(height: 1, color: c.line)),
+    ],
+  );
 }

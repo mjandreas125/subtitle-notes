@@ -17,6 +17,10 @@
   "translating": {
     "message": "käännetään…"
   },
+  "pendingLater": {
+    "message": "Ei vastausta juuri nyt — käännös ilmestyy sovellukseen.",
+    "description": "Shown when no provider answered; the server retries later."
+  },
   "listen": {
     "message": "Kuuntele"
   },

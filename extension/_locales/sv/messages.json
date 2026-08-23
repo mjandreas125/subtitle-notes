@@ -17,6 +17,10 @@
   "translating": {
     "message": "översätter…"
   },
+  "pendingLater": {
+    "message": "Inget svar just nu — översättningen dyker upp i appen.",
+    "description": "Shown when no provider answered; the server retries later."
+  },
   "listen": {
     "message": "Lyssna"
   },
