@@ -188,6 +188,10 @@
 
       /* Connecting */
       .account { display: flex; align-items: center; gap: 13px; }
+      /* The address and the word "connected" are two facts, not one sentence.
+         Side by side with nothing between them they read as one run-on line. */
+      .account .text b { display: block; }
+      .account .text span { display: block; margin-top: 1px; font-size: 12.5px; color: var(--soft); }
       .avatar {
         flex: 0 0 auto; width: 38px; height: 38px; border-radius: 50%; background: var(--wash); color: var(--accent);
         display: grid; place-items: center; font-weight: 700; font-size: 15px; text-transform: uppercase;

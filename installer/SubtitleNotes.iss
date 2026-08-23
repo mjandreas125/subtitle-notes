@@ -1,5 +1,5 @@
 ﻿#define AppName "Subtitle Notes"
-#define AppVersion "1.8.0"
+#define AppVersion "1.8.1"
 #define AppPublisher "Subtitle Notes"
 #define AppExe "Library\translated_vlc_mobile.exe"
 
@@ -11,7 +11,7 @@ AppPublisher={#AppPublisher}
 DefaultDirName={autopf}\Subtitle Notes
 DefaultGroupName={#AppName}
 OutputDir=..\release_package
-OutputBaseFilename=SubtitleNotesSetup-1.8.0
+OutputBaseFilename=SubtitleNotesSetup-1.8.1
 Compression=lzma2
 SolidCompression=yes
 WizardStyle=modern
@@ -60,6 +60,11 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Type: files; Name: "{group}\Subtitle Notes - account setup.lnk"
 Type: files; Name: "{group}\Subtitle Notes - capture selected text.lnk"
 Type: files; Name: "{group}\Subtitle Notes - library.lnk"
+; Older still: the words went to a small server run on the same computer,
+; before the account moved to the cloud. Nothing has used it for months, and it
+; sat in the Start menu offering to start something that leads nowhere.
+Type: files; Name: "{group}\Subtitle Notes - local sync server.lnk"
+Type: files; Name: "{app}\SubtitleNotesServer.exe"
 
 [Registry]
 ; A development build used to register its own verb pointing at the folder it

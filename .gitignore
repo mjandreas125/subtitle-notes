@@ -1,5 +1,9 @@
 # Signing material and anything else that must never leave this machine.
 mobile/android/key.properties
+# Worker secrets for `wrangler dev`. The real ones live in Cloudflare; this
+# file is whatever a developer needs locally, and it is not the repository's
+# business either way.
+cloud_api/.dev.vars
 *.jks
 *.keystore
 

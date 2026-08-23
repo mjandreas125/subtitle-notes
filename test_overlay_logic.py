@@ -232,5 +232,28 @@ class PlaybackClock(unittest.TestCase):
         self.assertGreater(ahead, 40_000)
 
 
+class MediaName(unittest.TestCase):
+    """What a card says it came from, read out of the file name."""
+
+    def name(self, value):
+        return sync_client.clean_media_name(value)
+
+    def test_season_and_episode_in_the_usual_notations(self):
+        self.assertEqual(self.name("Severance.S02E05.1080p.WEB-DL.mkv"), ("Severance", "2", "5"))
+        self.assertEqual(self.name("13.Reasons.Why.2x12.WEBRip.mp4"), ("13 Reasons Why", "2", "12"))
+
+    def test_a_year_in_brackets_keeps_both_brackets(self):
+        # Cutting "2160p BluRay" off used to take the closing bracket with it,
+        # and the library listed the film as "The Menu (2022".
+        self.assertEqual(self.name("The Menu (2022) 2160p BluRay.mkv")[0], "The Menu (2022)")
+        self.assertEqual(self.name("Arrival (2016).mkv")[0], "Arrival (2016)")
+
+    def test_a_bracket_with_nothing_to_close_is_dropped(self):
+        self.assertEqual(self.name("Some Film (extended 1080p.mkv")[0], "Some Film extended")
+
+    def test_a_film_without_an_episode_reports_none(self):
+        self.assertEqual(self.name("Dune.Part.Two.2024.1080p.mkv"), ("Dune Part Two 2024", None, None))
+
+
 if __name__ == "__main__":
     unittest.main()

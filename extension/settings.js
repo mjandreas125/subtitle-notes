@@ -130,13 +130,46 @@ function snBlocked(settings, host) {
 const SN_SEASON_WORD = '(?:seasons?|сезон[а-яё]*|hooaeg|staffel|saison|temporada|stagione|sezon[ua]?|säsong|kausi)';
 const SN_EPISODE_WORD = '(?:episodes?|épisode|episodio|epizod|odcinek|сери[яию]|серій?|серія|folge|osa|avsnitt|jakso|bölüm|aflevering)';
 
-/// The number a word like "season" is talking about, on whichever side of it
-/// the language happens to put the digits: "Season 2", "2 сезон", "Сезон №2".
-function snNumberNear(text, word) {
-  const after = text.match(new RegExp(word + '\\s*[№#:.]?\\s*(\\d{1,3})\\b', 'i'));
-  if (after) return after[1];
-  const before = text.match(new RegExp('\\b(\\d{1,3})\\s*[-–]?\\s*(?:[а-яё]{1,2}\\s*)?' + word, 'i'));
-  return before ? before[1] : '';
+/// Season and episode read off a line of words, by pairing each number with
+/// the unit word next to it.
+///
+/// Anything simpler gets one of these wrong. Taking the number after the word
+/// makes "2 сезон 5 серия" season five; taking the number before it makes
+/// "Staffel 2 Folge 6" episode two. A number belongs to one unit, so each is
+/// claimed once: whichever word reaches it first keeps it.
+///
+/// Word matching is fenced with letter lookarounds rather than `\b`, because
+/// word boundaries are defined on the Latin alphabet — `\bсезон` never matches
+/// at all — while a bare "osa" would otherwise be found inside "Rosa".
+function snUnitNumbers(value) {
+  const season = new RegExp('^' + SN_SEASON_WORD + '$', 'iu');
+  const episode = new RegExp('^' + SN_EPISODE_WORD + '$', 'iu');
+  const tokens = String(value || '').match(/\d{1,3}|[\p{L}]+/gu) ?? [];
+  const claimed = new Set();
+  const found = { season: '', episode: '' };
+
+  /// The number beside this word, looking behind first — most languages that
+  /// put the digits in front are the ones where the word carries a suffix, so
+  /// a one- or two-letter token in between ("2-й сезон") is stepped over.
+  const beside = (at) => {
+    for (const step of [-1, 1]) {
+      let index = at + step;
+      if (step === -1 && /^[\p{L}]{1,2}$/u.test(tokens[index] ?? '')) index -= 1;
+      const token = tokens[index];
+      if (!token || claimed.has(index) || !/^\d{1,3}$/.test(token)) continue;
+      const number = parseInt(token, 10);
+      if (number <= 0) continue;
+      claimed.add(index);
+      return String(number);
+    }
+    return '';
+  };
+
+  tokens.forEach((token, index) => {
+    if (!found.season && season.test(token)) found.season = beside(index);
+    else if (!found.episode && episode.test(token)) found.episode = beside(index);
+  });
+  return found;
 }
 
 /// Season and episode read out of a piece of text, in the notations players
@@ -148,13 +181,33 @@ function snEpisodeFromText(value) {
   if (found) return { season: number(found[1]), episode: number(found[2]) };
   found = text.match(/\b(\d{1,2})\s*[x×х]\s*(\d{1,3})\b/i);
   if (found) return { season: number(found[1]), episode: number(found[2]) };
-  return {
-    season: number(snNumberNear(text, SN_SEASON_WORD)),
-    episode: number(snNumberNear(text, SN_EPISODE_WORD)),
-  };
+  return snUnitNumbers(text);
 }
 
 const SN_CHOSEN = '.active, .selected, .current, .is-active, [aria-selected="true"], [aria-current="true"], [aria-current="page"]';
+
+/// The number a chosen item stands for, or nothing.
+///
+/// "5 серия", "Episode 7", "S2" and a bare "3" are episode numbers. "1080p" is
+/// not, and neither is "Sound: 2 tracks" — a list that merely has the word
+/// "episode" somewhere in its class name will happily hand over the digits of
+/// whatever else is highlighted inside it, and a card filed under episode 108
+/// is worse than a card filed under no episode at all.
+function snChosenNumber(value) {
+  const text = String(value || '').replace(/\s+/g, ' ').trim();
+  if (!text || text.length > 40) return '';
+  const bare = text
+    .replace(new RegExp(SN_SEASON_WORD + '|' + SN_EPISODE_WORD, 'ig'), ' ')
+    .replace(/[№#:.,\-–—]/g, ' ')
+    .replace(/\b[se]\s*(?=\d)/i, '')
+    .replace(/\s+/g, '')
+    .trim();
+  if (!/^\d{1,3}$/.test(bare)) return '';
+  const number = parseInt(bare, 10);
+  // Seasons and episodes are counted from one; a zero here is a page element
+  // that happens to contain a digit.
+  return number > 0 ? String(number) : '';
+}
 
 /// What the page itself says is playing.
 ///
@@ -167,16 +220,12 @@ function snEpisodeFromPage() {
   // chosen episode with the numbers themselves, which beats reading labels.
   for (const node of document.querySelectorAll('[data-episode_id]')) {
     if (!node.matches(SN_CHOSEN)) continue;
-    const episode = node.getAttribute('data-episode_id') || '';
+    const episode = snChosenNumber(node.getAttribute('data-episode_id'));
     if (!episode) continue;
     const season =
-      node.getAttribute('data-season_id') ||
-      document.querySelector('[data-tab_id].active')?.getAttribute('data-tab_id') ||
-      '';
-    return {
-      season: season ? String(parseInt(season, 10)) : '',
-      episode: String(parseInt(episode, 10)),
-    };
+      snChosenNumber(node.getAttribute('data-season_id')) ||
+      snChosenNumber(document.querySelector('[data-tab_id].active')?.getAttribute('data-tab_id'));
+    return { season, episode };
   }
 
   const result = { season: '', episode: '' };
@@ -188,11 +237,11 @@ function snEpisodeFromPage() {
   // A dropdown says what is chosen without any highlighting to interpret.
   for (const select of document.querySelectorAll('select')) {
     const label = `${naming(select)} ${select.name || ''}`;
-    const text = `${select.selectedOptions?.[0]?.textContent || ''} ${select.value || ''}`;
-    const digits = text.match(/\d{1,3}/);
-    if (!digits) continue;
-    if (!result.season && seasonWord.test(label)) result.season = String(parseInt(digits[0], 10));
-    if (!result.episode && episodeWord.test(label)) result.episode = String(parseInt(digits[0], 10));
+    const number =
+      snChosenNumber(select.selectedOptions?.[0]?.textContent) || snChosenNumber(select.value);
+    if (!number) continue;
+    if (!result.season && seasonWord.test(label)) result.season = number;
+    if (!result.episode && episodeWord.test(label)) result.episode = number;
   }
 
   // A list of episodes with one of them highlighted. The item carries the
@@ -207,13 +256,79 @@ function snEpisodeFromPage() {
     const wantsEpisode = !result.episode && episodeWord.test(label);
     if (!wantsSeason && !wantsEpisode) continue;
     const chosen = list.querySelector(SN_CHOSEN);
-    const text = (chosen?.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 60);
-    const digits = text.match(/\d{1,3}/);
-    if (!digits) continue;
-    if (wantsSeason) result.season = String(parseInt(digits[0], 10));
-    if (wantsEpisode) result.episode = String(parseInt(digits[0], 10));
+    if (!chosen) continue;
+    // The highlighted item may belong to a nested list of the other kind - a
+    // wrapper called "seasons" that holds the episodes inside it. Only the
+    // list closest to the item may speak for it, or the episode number gets
+    // filed as the season.
+    const owner = chosen.parentElement?.closest(
+      'ul, ol, nav, [class*="season" i], [class*="episode" i], [id*="season" i], [id*="episode" i]',
+    );
+    if (owner && owner !== list) continue;
+    const number = snChosenNumber(chosen.textContent);
+    if (!number) continue;
+    if (wantsSeason) result.season = number;
+    if (wantsEpisode) result.episode = number;
   }
   return result;
+}
+
+/// What a site writes around the name of what you are watching.
+///
+/// Letter lookarounds, not `\b`: word boundaries are defined on the Latin
+/// alphabet, so `\bонлайн` never matches and the advertisement stays in the
+/// name of every card.
+const SN_TITLE_TAIL = new RegExp(
+  '\\s*[-–—|]?\\s*(?<!\\p{L})(?:youtube|netflix|hdrezka|hd 720|watch online|watch free|' +
+    'смотреть онлайн|онлайн бесплатно|в хорошем качестве|бесплатно|ver online|online ansehen)' +
+    '(?!\\p{L}).*$',
+  'iu',
+);
+const SN_TITLE_LEAD = /^\s*(?:смотреть|дивитися|watch|ver|regarder|assistir)\s+/iu;
+
+/// The same name every week.
+///
+/// A page title is usually the series, the episode and an advertisement for
+/// the site, in some order. The episode is kept in a field of its own, so
+/// leaving it in the name as well files "Разделение (2 сезон 5 серия)" and
+/// "Разделение (2 сезон 6 серия)" as two different programmes.
+///
+/// Only a unit word with a number attached is removed. "Osa" is a word in its
+/// own right, and a film may be called it.
+function snWithoutEpisode(value) {
+  const unit = '(?:' + SN_SEASON_WORD + '|' + SN_EPISODE_WORD + ')';
+  const numbered = new RegExp(
+    '(?:(\\d{1,3})\\s*[.)\\-–]?\\s*(?:[а-яё]{1,2}\\s*)?)?' +
+      '(?<!\\p{L})' + unit + '(?!\\p{L})' +
+      '(?:\\s*[№#:.]?\\s*(\\d{1,3}))?',
+    'giu',
+  );
+  const bracketed = new RegExp('[([][^)\\]]*' + unit + '[^)\\]]*[)\\]]', 'giu');
+  const marker = /\bS\s?\d{1,2}\s*[:.\-\s]?\s*E\s?\d{1,3}\b|\b\d{1,2}\s*[x×х]\s*\d{1,3}\b/gi;
+  const text = String(value || '');
+
+  // Where the episode is first mentioned, however it is written.
+  let cut = -1;
+  const note = (index) => {
+    if (index >= 0 && (cut < 0 || index < cut)) cut = index;
+  };
+  note(text.search(bracketed));
+  note(text.search(marker));
+  for (const match of text.matchAll(numbered)) {
+    if (match[1] || match[2]) {
+      note(match.index);
+      break;
+    }
+  }
+
+  // A series writes its name first and the episode after it, so everything
+  // from the episode onwards is the episode. When there is nothing in front —
+  // "5 серия Разделение" — the mention is cut out instead of the name.
+  if (cut > 0 && (text.slice(0, cut).match(/\p{L}/gu) ?? []).length >= 2) return text.slice(0, cut);
+  return text
+    .replace(bracketed, ' ')
+    .replace(numbered, (match, before, after) => (before || after ? ' ' : match))
+    .replace(marker, ' ');
 }
 
 /// The name of what is playing, with the site's own furniture trimmed off.
@@ -230,12 +345,11 @@ function snMediaTitle() {
   ];
   const found = candidates.map(flat).find(Boolean) || 'Video';
   return (
-    found
-      .replace(/\s*[-–—|]\s*(YouTube|Netflix|смотреть онлайн|HD 720|HDrezka).*$/i, '')
-      // The episode is kept in a field of its own, so repeating it here would
-      // file the same series under a different heading every week.
-      .replace(/\bS\s?\d{1,2}\s*[:.\-\s]?\s*E\s?\d{1,3}\b/i, '')
-      .replace(/\s*[|·—–-]\s*$/, '')
+    flat(snWithoutEpisode(found.replace(SN_TITLE_TAIL, '')))
+      .replace(SN_TITLE_LEAD, '')
+      // Separators left facing each other where something was cut out.
+      .replace(/\s*([-–—|·:])\s*(?=[-–—|·:])/g, ' ')
+      .replace(/^[\s|·—–\-:]+|[\s|·—–\-:]+$/g, '')
       .trim()
       .slice(0, 90) || 'Video'
   );

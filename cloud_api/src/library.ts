@@ -596,6 +596,16 @@ export const libraryPage = (lang: string, clientId: string) => {
 
   function renderWords() {
     var shown = shownCards();
+    // Where the line came from. The episode is worth the four characters: the
+    // same word turns up in the second episode and the sixth, and a list that
+    // says only the name of the series cannot tell them apart.
+    function source(card) {
+      var name = card.media_title || 'Subtitle';
+      if (card.season == null && card.episode == null) return name;
+      var mark = 'S' + (card.season == null ? '?' : card.season) +
+                 'E' + (card.episode == null ? '?' : card.episode);
+      return name + ' · ' + mark;
+    }
     $('count').textContent = cards.length + ' ' + T.saved +
       (learned.length ? ' · ' + learned.length + ' ' + T.learnedCount : '');
     $('grid').innerHTML = shown.map(function (card) {
@@ -604,7 +614,7 @@ export const libraryPage = (lang: string, clientId: string) => {
         '<div><span class="word">' + esc(label(card)) + '</span></div>' +
         '<div class="meaning">' + esc(meaning(card)) + '</div>' +
         (contextLine(card) ? '<div class="context">' + contextHtml(card) + '</div>' : '') +
-        '<div class="source">' + esc(card.media_title || 'Subtitle') + '</div></article>';
+        '<div class="source">' + esc(source(card)) + '</div></article>';
     }).join('');
     $('empty').hidden = shown.length !== 0;
     $('empty').querySelector('h2').textContent = T.empty;

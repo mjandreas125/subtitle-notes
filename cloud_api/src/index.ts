@@ -10,10 +10,10 @@ const encoder = new TextEncoder();
 /// The program has no store to update it, so it asks here on startup and says
 /// when it is behind. Bump the version when a new installer is published.
 const DESKTOP_LATEST = {
-  version: '1.8.0',
+  version: '1.8.1',
   // Straight to the file: the button should start a download, not land
   // somebody on a page of assets to choose from.
-  url: 'https://github.com/mjandreas125/subtitle-notes/releases/latest/download/SubtitleNotesSetup-1.8.0.exe',
+  url: 'https://github.com/mjandreas125/subtitle-notes/releases/latest/download/SubtitleNotesSetup-1.8.1.exe',
   notes: '',
 };
 const json = (value: unknown, status = 200) => new Response(JSON.stringify(value), { status, headers: { ...cors, 'content-type': 'application/json; charset=utf-8' } });
@@ -1104,6 +1104,9 @@ async function enrich(env: Env, selected: string, context = '', language = 'ru',
     source_language: sourceLanguage,
   };
 }
+/// Names a capture carries when it has nothing better to say.
+const PLACEHOLDER_TITLES = new Set(['web', 'video', 'unknown title']);
+
 async function upsertSelection(env: Env, owner: string, input: any, enriched?: any) {
   const selected = clean(input.selected_text); const data = enriched ?? input; const word = clean(data.focus_word); const phrase = clean(data.focus_phrase);
   const incomingContext = clean(input.context);
@@ -1114,7 +1117,14 @@ async function upsertSelection(env: Env, owner: string, input: any, enriched?: a
     ? incomingContext
     : '';
   const selectedSense = senseKey(phrase, word, selected, usefulContext);
-  const rows = await env.DB.prepare('SELECT * FROM selections WHERE owner_id = ?').bind(owner).all<any>();
+  // Only the columns the three tests below read. Matching has to happen in
+  // JavaScript — the keys are normalised in ways SQL does not share — but
+  // there is no reason to drag every card's synonyms, examples and variants
+  // across the wire to decide whether one of them is this one. A library of a
+  // few thousand words is a few thousand rows on every single capture.
+  const rows = await env.DB.prepare(
+    'SELECT id, client_key, focus_word, focus_phrase, selected_text, translation, context FROM selections WHERE owner_id = ?'
+  ).bind(owner).all<any>();
   const clientKey = clean(input.client_key);
   const existing = rows.results.find((row) =>
     (clientKey && row.client_key === clientKey) ||
@@ -1130,11 +1140,15 @@ async function upsertSelection(env: Env, owner: string, input: any, enriched?: a
   // a translation, so the server can come back to it once the providers answer
   // again instead of leaving English text sitting where the meaning belongs.
   const pending = missingTranslation(data.translation, selected) ? 1 : 0;
-  // Which episode the line came from, when the caller knows. The browser
-  // learns it from the page it is watching; a card saved before it did should
-  // pick it up the next time the same line is selected.
+  // Where the line was met. A card remembers the first place it was seen, so
+  // meeting the same line again never rewrites its origin — but a card saved
+  // before the browser knew how to read the episode has blanks, and those get
+  // filled in. `Web` and `Unknown title` are placeholders, not titles, and
+  // count as blank for the same reason.
   const season = clean(input.season) || null;
   const episode = clean(input.episode) || null;
+  const incomingTitle = clean(input.media_title);
+  const title = incomingTitle && !PLACEHOLDER_TITLES.has(incomingTitle.toLowerCase()) ? incomingTitle : null;
   if (existing) {
     const repairable = missingTranslation(existing.translation, existing.selected_text) && !pending;
     const contextChanged = Boolean(usefulContext && usefulContext !== clean(existing.context));
@@ -1143,15 +1157,15 @@ async function upsertSelection(env: Env, owner: string, input: any, enriched?: a
       // both its stored sense and the practice prompt. This is deliberately
       // not limited to a matching client key: an old capture made before the
       // browser supplied context must be repairable from the library itself.
-      await env.DB.prepare('UPDATE selections SET archived = 0, created_at = ?, seen_count = seen_count + 1, translation = ?, focus_word = ?, focus_phrase = ?, focus_translation = ?, synonyms_json = ?, sense_note = ?, variants_json = ?, examples_json = ?, context = ?, season = COALESCE(?, season), episode = COALESCE(?, episode), needs_translation = ? WHERE id = ?')
-        .bind(now(), clean(data.translation) || existing.translation, word || null, phrase || null, clean(data.focus_translation) || null, JSON.stringify(data.synonyms ?? []), clean(data.sense_note) || null, JSON.stringify(data.variants ?? []), JSON.stringify(data.examples ?? []), usefulContext || existing.context, season, episode, pending, existing.id).run();
+      await env.DB.prepare('UPDATE selections SET archived = 0, created_at = ?, seen_count = seen_count + 1, translation = ?, focus_word = ?, focus_phrase = ?, focus_translation = ?, synonyms_json = ?, sense_note = ?, variants_json = ?, examples_json = ?, context = ?, media_title = COALESCE(NULLIF(NULLIF(NULLIF(NULLIF(media_title, \'\'), \'Web\'), \'Video\'), \'Unknown title\'), ?, media_title), season = COALESCE(season, ?), episode = COALESCE(episode, ?), needs_translation = ? WHERE id = ?')
+        .bind(now(), clean(data.translation) || existing.translation, word || null, phrase || null, clean(data.focus_translation) || null, JSON.stringify(data.synonyms ?? []), clean(data.sense_note) || null, JSON.stringify(data.variants ?? []), JSON.stringify(data.examples ?? []), usefulContext || existing.context, title, season, episode, pending, existing.id).run();
     } else if (clean(input.client_key) && existing.client_key === clean(input.client_key) && selected && selected !== existing.selected_text) {
       // The same save, refined: a selection caught in two goes arrives under
       // the key of the first attempt, and the wider phrase is the one meant.
-      await env.DB.prepare('UPDATE selections SET archived = 0, created_at = ?, selected_text = ?, translation = ?, focus_word = ?, focus_phrase = ?, focus_translation = ?, synonyms_json = ?, sense_note = ?, variants_json = ?, examples_json = ?, context = ?, season = COALESCE(?, season), episode = COALESCE(?, episode), needs_translation = ? WHERE id = ?')
-        .bind(now(), selected, clean(data.translation) || existing.translation, word || null, phrase || null, clean(data.focus_translation) || null, JSON.stringify(data.synonyms ?? []), clean(data.sense_note) || null, JSON.stringify(data.variants ?? []), JSON.stringify(data.examples ?? []), usefulContext || existing.context, season, episode, pending, existing.id).run();
+      await env.DB.prepare('UPDATE selections SET archived = 0, created_at = ?, selected_text = ?, translation = ?, focus_word = ?, focus_phrase = ?, focus_translation = ?, synonyms_json = ?, sense_note = ?, variants_json = ?, examples_json = ?, context = ?, media_title = COALESCE(NULLIF(NULLIF(NULLIF(NULLIF(media_title, \'\'), \'Web\'), \'Video\'), \'Unknown title\'), ?, media_title), season = COALESCE(season, ?), episode = COALESCE(episode, ?), needs_translation = ? WHERE id = ?')
+        .bind(now(), selected, clean(data.translation) || existing.translation, word || null, phrase || null, clean(data.focus_translation) || null, JSON.stringify(data.synonyms ?? []), clean(data.sense_note) || null, JSON.stringify(data.variants ?? []), JSON.stringify(data.examples ?? []), usefulContext || existing.context, title, season, episode, pending, existing.id).run();
     } else {
-      await env.DB.prepare('UPDATE selections SET archived = 0, created_at = ?, seen_count = seen_count + 1, season = COALESCE(season, ?), episode = COALESCE(episode, ?) WHERE id = ?').bind(now(), season, episode, existing.id).run();
+      await env.DB.prepare('UPDATE selections SET archived = 0, created_at = ?, seen_count = seen_count + 1, media_title = COALESCE(NULLIF(NULLIF(NULLIF(NULLIF(media_title, \'\'), \'Web\'), \'Video\'), \'Unknown title\'), ?, media_title), season = COALESCE(season, ?), episode = COALESCE(episode, ?) WHERE id = ?').bind(now(), title, season, episode, existing.id).run();
     }
     // Marked so a caller that saved without asking — the browser extension's
     // instant capture — can offer to undo a card it created without offering
@@ -1161,7 +1175,7 @@ async function upsertSelection(env: Env, owner: string, input: any, enriched?: a
   }
   const id = uid();
   await env.DB.prepare(`INSERT INTO selections (id, owner_id, client_key, media_title, season, episode, timecode_ms, selected_text, translation, focus_word, focus_phrase, focus_translation, synonyms_json, sense_note, variants_json, examples_json, context, created_at, source_lang, needs_translation) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
-    .bind(id, owner, clean(input.client_key), clean(input.media_title) || 'Unknown title', season, episode, input.timecode_ms ?? null, selected, clean(data.translation) || selected, word || null, phrase || null, clean(data.focus_translation) || null, JSON.stringify(data.synonyms ?? []), clean(data.sense_note) || null, JSON.stringify(data.variants ?? []), JSON.stringify(data.examples ?? []), usefulContext || null, now(), clean(data.source_lang) || null, pending).run();
+    .bind(id, owner, clean(input.client_key), incomingTitle || 'Unknown title', season, episode, input.timecode_ms ?? null, selected, clean(data.translation) || selected, word || null, phrase || null, clean(data.focus_translation) || null, JSON.stringify(data.synonyms ?? []), clean(data.sense_note) || null, JSON.stringify(data.variants ?? []), JSON.stringify(data.examples ?? []), usefulContext || null, now(), clean(data.source_lang) || null, pending).run();
   return env.DB.prepare('SELECT * FROM selections WHERE id = ?').bind(id).first();
 }
 

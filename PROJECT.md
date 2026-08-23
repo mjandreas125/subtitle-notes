@@ -22,9 +22,9 @@
 | Часть | Где | Версия | Что делает |
 |---|---|---|---|
 | Сервер | `cloud_api/` | задеплоен | Cloudflare Worker + D1: аккаунты, карточки, разбор строки, повторение, веб-библиотека |
-| Расширение | `extension/` | 2.7.0 | Chrome/Edge/Opera: субтитры в веб-плеерах, выделение на сайтах и в PDF |
+| Расширение | `extension/` | 2.7.1 | Chrome/Edge/Opera: субтитры в веб-плеерах, выделение на сайтах и в PDF |
 | Приложение | `mobile/` | 1.6.4+5 | Flutter: библиотека, поиск, повторение, достижения, виджет |
-| Программа | `mobile/lib/desktop/` + корень, `installer/` | 1.8.0 | Одно окно (Flutter под Windows): вход через Google, библиотека, настройки VLC. Рядом — фоновые помощники на Python: оверлей субтитров, Ctrl+Alt+S, запуск VLC |
+| Программа | `mobile/lib/desktop/` + корень, `installer/` | 1.8.1 | Одно окно (Flutter под Windows): вход через Google, библиотека, настройки VLC. Рядом — фоновые помощники на Python: оверлей субтитров, Ctrl+Alt+S, запуск VLC |
 
 Репозиторий: <https://github.com/mjandreas125/subtitle-notes>.
 Локально это отдельный git-репозиторий внутри `D:\LiisbetSystem`; ветка
@@ -194,7 +194,7 @@ VLC по `--configure-vlc`, а запущенный руками просто о
 1. **Название на экране входа Google** — сейчас показывает домен. Поле *App name*
    на <https://console.cloud.google.com/auth/branding?project=151185018789>.
 2. **Chrome Web Store**: версия 2.6.1 на проверке с 18 августа. Когда пройдёт —
-   залить 2.7.0 (`release_package/subtitle-notes-extension-2.7.0.zip`) и удалить
+   залить 2.7.1 (`release_package/subtitle-notes-extension-2.7.1.zip`) и удалить
    лишний черновик со старой 2.6.0. Пока идёт проверка, новую версию не
    отправлять: она заменит ту, что стоит в очереди.
 3. **Google Play** — $25, порядок в `PLAY-RELEASE.md`, перед сборкой вернуть
@@ -207,6 +207,45 @@ VLC по `--configure-vlc`, а запущенный руками просто о
 6. **Подпись установщика** — без сертификата SmartScreen предупреждает.
 7. **Анимация первого запуска в приложении** — в расширении и программе есть.
 8. **iOS** — отложено сознательно.
+
+## 8а. Как это проверить
+
+Четыре проверки, все быстрые и все без «а посмотри глазами».
+
+```
+python test_overlay_logic.py                     # оверлей, часы плеера, имя фильма
+node extension/check-locales.mjs                 # каждая строка расширения в 15 языках
+node extension/check-episode-parsing.mjs         # сезон/серия и имя сериала из текста
+node cloud_api/scripts/check.mjs <адрес> [токен]  # весь сервер, как его видят клиенты
+```
+
+`check.mjs` без токена проверяет только публичную половину (страницы, версия,
+что приватное действительно приватно) — так его можно наводить прямо на
+`https://app.subtitlenotes.workers.dev`. С токеном он проходит весь путь
+выделения: словарь, разбор строки, сохранение, повтор, починка непереведённых,
+повторение, экспорт — и удаляет за собой карточки, которые создал.
+
+Токен для локального сервера:
+
+```
+cd cloud_api
+printf 'TOKEN_SECRET=whatever\n' > .dev.vars      # файл в .gitignore
+npx wrangler d1 migrations apply subtitle-notes-production --local
+npx wrangler d1 execute subtitle-notes-production --local --command "INSERT OR REPLACE INTO users (id, email, display_name, language, created_at) VALUES ('local-user','you@example.com','Local','ru','2026-01-01T00:00:00.000Z')"
+npx wrangler dev --port 8799
+node scripts/check.mjs http://127.0.0.1:8799 $(node scripts/local-token.mjs)
+```
+
+Расширение целиком проверяется в браузере: скопировать `extension/` куда-нибудь,
+заменить в копии `API_HOSTS` на локальный адрес, запустить Edge с
+`--load-extension` и `--disable-features=DisableLoadExtensionCommandLineSwitch`,
+положить токен в `chrome.storage.local` через DevTools-протокол и выделить слово
+на странице. Обычный Chrome под корпоративной политикой `--load-extension`
+игнорирует.
+
+**Почему это важно.** Ошибку в SQL внутри `prepare('…')` не видит ни компилятор,
+ни `wrangler deploy --dry-run` — она появляется только когда запрос выполняется.
+Одна такая (незакрытая кавычка в строке) уже уезжала в деплой.
 
 ## 9. Что стоит знать, прежде чем чинить
 

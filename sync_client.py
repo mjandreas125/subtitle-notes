@@ -204,6 +204,29 @@ def cloud_reading(text: str, context: str = "", timeout: float = 6.0) -> dict[st
     return value
 
 
+def drop_orphan_brackets(text: str) -> str:
+    """Bracket characters whose partner was cut away with the release tags.
+
+    Cutting "2160p BluRay" off "The Menu (2022) 2160p BluRay" leaves the name
+    intact, but trimming the leftover punctuation used to take the closing
+    bracket with it and file the film as "The Menu (2022".
+    """
+    keep = [True] * len(text)
+    for opener, closer in (("(", ")"), ("[", "]")):
+        waiting: list[int] = []
+        for index, character in enumerate(text):
+            if character == opener:
+                waiting.append(index)
+            elif character == closer:
+                if waiting:
+                    waiting.pop()
+                else:
+                    keep[index] = False
+        for index in waiting:
+            keep[index] = False
+    return "".join(character for character, wanted in zip(text, keep) if wanted)
+
+
 def clean_media_name(source_label: str) -> tuple[str, str | None, str | None]:
     stem = os.path.splitext(os.path.basename(source_label))[0]
     stem = re.sub(r"[._-]+", " ", stem)
@@ -215,7 +238,7 @@ def clean_media_name(source_label: str) -> tuple[str, str | None, str | None]:
     if match:
         stem = stem[: match.start()]
     stem = re.sub(r"\b(2160p|1080p|720p|480p|web[ -]?dl|webrip|bluray|brrip|x264|x265|h\.?264|h\.?265|hevc|aac|ddp\d*|proper|repack)\b.*$", "", stem, flags=re.IGNORECASE)
-    title = re.sub(r"\s+", " ", stem).strip(" .-_()[]")
+    title = re.sub(r"\s+", " ", drop_orphan_brackets(stem)).strip(" .-_")
     return title or tr("unknown_film"), season, episode
 
 
