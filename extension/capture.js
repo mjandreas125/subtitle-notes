@@ -427,7 +427,11 @@
 
     const saved = await saving;
     if (panel !== mine) return;
-    const storedTranslation = saved.data.focus_translation || saved.data.translation;
+    // A refused save carries no data - the session expiring is the usual
+    // reason - and reading through it threw before the error could be shown.
+    const storedTranslation = saved.ok && saved.data
+      ? saved.data.focus_translation || saved.data.translation
+      : '';
     // Leave the request alive when saving got a temporary unavailable response:
     // the contextual reading can still replace the original text with the real
     // translation a moment later.

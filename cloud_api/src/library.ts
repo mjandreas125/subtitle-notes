@@ -903,6 +903,7 @@ export const libraryPage = (lang: string, clientId: string) => {
       localStorage.removeItem(KEY);
       $('login').hidden = false;
       $('tabs').hidden = true;
+      showSignIn();
       ['words', 'review', 'goals', 'settings'].forEach(function (name) { $('view-' + name).hidden = true; });
       $('login-note').textContent = error.message === 'Unauthorized' ? '' : error.message;
     }
@@ -975,7 +976,15 @@ export const libraryPage = (lang: string, clientId: string) => {
       }
     });
 
-    if (localStorage.getItem(KEY)) { load(); return; }
+    showSignIn();
+    if (localStorage.getItem(KEY)) load();
+  });
+
+  // Built whether or not there is a token: a token from a previous life of the
+  // Worker fails on the first request, and the sign-in screen it falls back to
+  // has to have a button on it.
+  function showSignIn() {
+    if (document.getElementById('enter')) return;
     $('google').innerHTML = '<button class="go" id="enter" style="padding:12px 22px;font-size:15px">' +
       esc(T.enter) + '</button>';
     $('enter').onclick = function () {
@@ -991,6 +1000,6 @@ export const libraryPage = (lang: string, clientId: string) => {
         '&response_type=token&scope=' + encodeURIComponent('openid email profile') +
         '&include_granted_scopes=true&prompt=select_account&state=' + state;
     };
-  });
+  }
 </script></body></html>`;
 };

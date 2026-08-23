@@ -156,13 +156,15 @@ chrome.runtime.onInstalled.addListener((details) => {
   // The right-click route is the one that survives everywhere: it still gives
   // us the selected text inside Chrome's built-in PDF viewer, where an ordinary
   // content script cannot reach the page at all.
-  chrome.contextMenus.create({
+  // Chrome keeps the item across updates, and creating it again fails with
+  // "duplicate id" - which is only ever seen as an unchecked runtime error.
+  chrome.contextMenus.removeAll(() => chrome.contextMenus.create({
     id: MENU_ID,
     // %s is the context menu's own placeholder for the selected text, filled
     // in by Chrome — it survives translation untouched.
     title: chrome.i18n.getMessage('menuSave'),
     contexts: ['selection'],
-  });
+  }));
 });
 
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
