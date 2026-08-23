@@ -727,9 +727,16 @@ class SyncApi {
 
   /// Posts an already-prepared selection payload. Used to drain the desktop
   /// outbox; the server deduplicates by client key, so a resend is harmless.
+  /// Sends a selection the VLC helper parked while this computer was offline.
+  ///
+  /// `/captures`, not `/selections`: the cloud detects which language the
+  /// subtitle was in and derives the card itself, where `/selections` would
+  /// store whatever the local dictionary made of it — which is how an English
+  /// line could end up filed as its own translation. The Python side has sent
+  /// these to `/captures` for a while; this one had not caught up.
   Future<void> postSelection(Map<String, dynamic> payload) async {
     final response = await http
-        .post(_uri('/selections'), headers: _headers, body: jsonEncode(payload))
+        .post(_uri('/captures'), headers: _headers, body: jsonEncode(payload))
         .timeout(const Duration(seconds: 15));
     if (response.statusCode < 200 || response.statusCode >= 300) {
       throw _fail(_readMap(response), response.statusCode);
