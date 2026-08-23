@@ -7,6 +7,7 @@ StudyCard card({
   String? episode,
   String text = 'word',
   String? phrase,
+  String? context,
 }) => StudyCard(
   id: '$source-$season-$episode-$text-$phrase',
   mediaTitle: source,
@@ -22,6 +23,7 @@ StudyCard card({
   senseNote: null,
   archived: false,
   createdAt: DateTime.now(),
+  context: context,
 );
 
 /// Mirrors ClozeGamePage._prompt so the blanking rule is covered by a test.
@@ -105,6 +107,16 @@ void main() {
 
     test('falls back to a trailing gap when the word is absent', () {
       expect(cloze('Totally different line', 'bias', 'bias').endsWith('_____'), isTrue);
+    });
+  });
+
+  group('practice context', () {
+    test('uses the saved subtitle line instead of an isolated word', () {
+      final made = card(
+        text: 'made',
+        context: 'They made her out to be a hero.',
+      );
+      expect(made.contextLine, 'They made her out to be a hero.');
     });
   });
 

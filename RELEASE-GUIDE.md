@@ -12,7 +12,7 @@
 2. Раздел **OAuth 2.0 Client IDs** -> клиент типа **Web application**
    (`151185018789-tjda40ks...`).
 3. **Authorized JavaScript origins** -> **ADD URI** ->
-   `https://subtitle-notes-api.andreas-sultseng228.workers.dev` (без слэша).
+   `https://app.subtitlenotes.workers.dev` (без слэша).
 4. **Save**, подождать пару минут.
 
 ## 1. Телефон: Google Play, $25 разово
@@ -44,7 +44,7 @@ signingConfig = signingConfigs.getByName("release")
    Google не будет работать у тех, кто установил приложение из магазина.
 7. Заполнить карточку: описание, иконка 512x512, баннер 1024x500, минимум два
    скриншота телефона, политика конфиденциальности
-   <https://subtitle-notes-api.andreas-sultseng228.workers.dev/privacy>,
+   <https://app.subtitlenotes.workers.dev/privacy>,
    разделы Data safety и Content rating.
 8. Личный аккаунт: закрытый тест на 12 человек 14 дней подряд, потом можно
    просить Production. Аккаунт организации (на OU) от этого освобождён.

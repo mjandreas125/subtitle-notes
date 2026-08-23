@@ -404,7 +404,7 @@ export const libraryPage = (lang: string, clientId: string) => {
   .chip.on { background:var(--wash); color:var(--accent); border-color:color-mix(in srgb,var(--accent) 55%,var(--hair)) }
 
   .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(238px,1fr)); gap:13px }
-  .card { position:relative; min-height:146px; padding:16px; border:1px solid var(--hair); border-radius:14px;
+  .card { position:relative; min-height:178px; padding:16px; border:1px solid var(--hair); border-radius:14px;
           background:var(--card); cursor:pointer; overflow:hidden;
           transition:transform .16s cubic-bezier(.2,.7,.3,1), box-shadow .16s, border-color .16s }
   .card:hover { transform:translateY(-3px); border-color:color-mix(in srgb,var(--accent) 50%,var(--hair));
@@ -418,6 +418,10 @@ export const libraryPage = (lang: string, clientId: string) => {
           transition:background-size .28s cubic-bezier(.2,.7,.3,1) }
   .card:hover .word { background-size:100% .62em }
   .meaning { margin-top:7px; color:var(--accent); font-weight:650; overflow-wrap:anywhere }
+  .context { display:-webkit-box; margin-top:10px; color:var(--soft); font-size:12.5px; font-weight:580;
+             font-style:italic; line-height:1.4; overflow:hidden; -webkit-line-clamp:2; -webkit-box-orient:vertical }
+  mark { padding:0 2px; border-radius:3px; background:color-mix(in srgb,var(--accent) 22%,transparent); color:inherit;
+         font-weight:780; font-style:normal }
   .source { position:absolute; left:16px; right:16px; bottom:14px; color:var(--soft); font-size:12px;
             font-weight:650; white-space:nowrap; overflow:hidden; text-overflow:ellipsis }
   .card .badge { position:absolute; top:14px; right:14px; width:8px; height:8px; border-radius:50%;
@@ -547,6 +551,23 @@ export const libraryPage = (lang: string, clientId: string) => {
     return card.focus_phrase || card.focus_word || card.selected_text || '';
   };
   var meaning = function (card) { return card.focus_translation || card.translation || ''; };
+  // A word alone cannot be practised honestly when it has several meanings.
+  // Prefer the subtitle line captured with it; older cards fall back to the
+  // selected text so they remain readable.
+  var contextLine = function (card) {
+    var candidate = String(card.context || card.selected_text || '').trim();
+    return candidate && candidate.toLowerCase() !== String(label(card)).trim().toLowerCase()
+      ? candidate
+      : '';
+  };
+  var contextHtml = function (card) {
+    var line = contextLine(card);
+    var phrase = String(label(card)).trim();
+    var start = line.toLowerCase().indexOf(phrase.toLowerCase());
+    if (!line || !phrase || start < 0) return esc(line);
+    return esc(line.slice(0, start)) + '<mark>' + esc(line.slice(start, start + phrase.length)) +
+      '</mark>' + esc(line.slice(start + phrase.length));
+  };
 
   var request = async function (path, method, body) {
     var token = localStorage.getItem(KEY);
@@ -568,7 +589,7 @@ export const libraryPage = (lang: string, clientId: string) => {
     var pool = filter === 'learned' ? learned : filter === 'all' ? cards.concat(learned) : cards;
     if (!query) return pool;
     return pool.filter(function (card) {
-      return [label(card), meaning(card), card.selected_text, card.media_title]
+      return [label(card), meaning(card), card.selected_text, card.context, card.media_title]
         .some(function (value) { return String(value || '').toLowerCase().indexOf(query) >= 0; });
     });
   }
@@ -582,6 +603,7 @@ export const libraryPage = (lang: string, clientId: string) => {
         (card.archived ? '<div class="badge"></div>' : '') +
         '<div><span class="word">' + esc(label(card)) + '</span></div>' +
         '<div class="meaning">' + esc(meaning(card)) + '</div>' +
+        (contextLine(card) ? '<div class="context">' + contextHtml(card) + '</div>' : '') +
         '<div class="source">' + esc(card.media_title || 'Subtitle') + '</div></article>';
     }).join('');
     $('empty').hidden = shown.length !== 0;
@@ -629,7 +651,7 @@ export const libraryPage = (lang: string, clientId: string) => {
         synonyms.map(function (word) { return '<span class="tag">' + esc(word) + '</span>'; }).join('') +
         '</div></section>' : '') +
       part(T.literal, item.sense_note) +
-      part(T.context, item.selected_text === label(item) ? '' : item.selected_text) +
+      part(T.context, contextLine(item)) +
       part(T.full, item.translation) +
       part(T.variants, (item.variants || []).join('\\n')) +
       part(T.examples, examples) +
@@ -705,8 +727,7 @@ export const libraryPage = (lang: string, clientId: string) => {
       '<div class="bar"><span style="width:' + Math.round((session / total) * 100) + '%"></span></div>' +
       '<div class="ask">' +
         '<div class="prompt">' + esc(label(item)) + '</div>' +
-        (item.selected_text && item.selected_text !== label(item)
-          ? '<div class="line">' + esc(item.selected_text) + '</div>' : '') +
+        (contextLine(item) ? '<div class="line">' + contextHtml(item) + '</div>' : '') +
         (revealed ? '<div class="answer">' + esc(meaning(item)) + '</div>' : '') +
         '<div class="row">' + (revealed
           ? '<button class="ghost" data-result="again">' + esc(T.again) + '</button>' +

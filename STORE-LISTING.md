@@ -59,7 +59,7 @@ Opera и Edge ставят расширения из того же магази�
 **Язык:** English (основной), остальные подтянутся из `_locales`.
 
 **Политика конфиденциальности:**
-<https://subtitle-notes-api.andreas-sultseng228.workers.dev/privacy>
+<https://app.subtitlenotes.workers.dev/privacy>
 
 ## Разрешения — что писать в обосновании
 

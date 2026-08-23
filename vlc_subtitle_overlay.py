@@ -35,13 +35,14 @@ import tkinter.font as tkfont
 
 from desktop_i18n import tr
 import player_prefs
-from sync_client import cloud_reading, sync_selection_async
+from sync_client import cloud_quick_translation, cloud_reading, sync_selection_async
 
 
-# How long the popup waits for the server's reading of the line before showing
-# the dictionary answer instead. Long enough for a normal reply, short enough
-# that a dead connection does not leave "..." on screen.
-READING_TIMEOUT_SECONDS = 4.0
+# A contextual reading is a second request to the model and can take six to
+# eight seconds. It runs in the background, so wait long enough to replace the
+# fast but contextless dictionary preview instead of permanently freezing it as
+# the answer. A genuinely dead connection still falls back after this bound.
+READING_TIMEOUT_SECONDS = 12.0
 
 VLC_PASSWORD = "quicktranslate"
 # Which port VLC's interface is on is a setting, because 8080 - the port it
@@ -384,7 +385,13 @@ def find_subtitle_path(path: str) -> str | None:
     return None
 
 
-def translate_text(text: str) -> TranslationResult:
+GOOGLE_TRANSLATE_ENDPOINTS = (
+    "https://translate.googleapis.com/translate_a/single",
+    "https://translate.google.com/translate_a/single",
+)
+
+
+def _google_translate_text(text: str, endpoint: str) -> TranslationResult:
     params = urllib.parse.urlencode(
         [
             ("client", "gtx"),
@@ -400,11 +407,8 @@ def translate_text(text: str) -> TranslationResult:
             ("q", text),
         ]
     )
-    request = urllib.request.Request(
-        f"https://translate.googleapis.com/translate_a/single?{params}",
-        headers={"User-Agent": "VlcSubtitleOverlay/2.0"},
-    )
-    with urllib.request.urlopen(request, timeout=5) as response:
+    request = urllib.request.Request(f"{endpoint}?{params}", headers={"User-Agent": "VlcSubtitleOverlay/2.0"})
+    with urllib.request.urlopen(request, timeout=2.5) as response:
         payload = json.loads(response.read().decode("utf-8"))
     if isinstance(payload, dict):
         translated = "".join(
@@ -426,8 +430,41 @@ def translate_text(text: str) -> TranslationResult:
             for item in examples_payload.get("example", []):
                 if isinstance(item, dict) and item.get("text"):
                     examples.append(clean_plain_text(item["text"]))
-        return TranslationResult(translated, tuple(variants[:4]), tuple(examples[:4]))
-    return TranslationResult("".join(part[0] for part in payload[0] if part[0]).strip())
+        if translated:
+            return TranslationResult(translated, tuple(variants[:4]), tuple(examples[:4]))
+        raise RuntimeError("Google returned an empty translation")
+    translated = "".join(part[0] for part in payload[0] if part[0]).strip()
+    if not translated:
+        raise RuntimeError("Google returned an empty translation")
+    return TranslationResult(translated)
+
+
+def translate_text(text: str) -> TranslationResult:
+    """Translate one selection without trusting a single public endpoint.
+
+    Google occasionally rate-limits the direct desktop request. The alternate
+    host catches a bad edge. The contextual Worker is asked in parallel by the
+    caller, so it remains fast and is not delayed behind this local probe.
+    """
+    last_error: Exception | None = None
+    for endpoint in GOOGLE_TRANSLATE_ENDPOINTS:
+        try:
+            return _google_translate_text(text, endpoint)
+        except Exception as error:
+            last_error = error
+    raise RuntimeError("Google translation did not answer") from last_error
+
+
+def translation_cache_key(text: str, context: str = "") -> str:
+    """A word only has a stable answer inside the subtitle that used it.
+
+    Reusing the cached dictionary result for `cane` from one scene in another
+    was exactly the same loss of context as asking a dictionary first. Keep the
+    cache fast, but include the full on-screen dialogue in its identity.
+    """
+    selected = " ".join(text.split()).casefold()
+    line = " ".join(context.split()).casefold()
+    return f"{selected}\x1f{line}"
 
 
 # A highlighted run of up to this many words is treated as one expression.
@@ -514,6 +551,7 @@ def translate_selection_smart(
     # on each other, so they run together and the popup waits for the slower of
     # the two rather than for both in turn.
     reading: dict[str, object] | None = None
+    has_context = bool(" ".join(context.split()) and " ".join(context.split()).casefold() != " ".join(text.split()).casefold())
 
     def fetch_reading() -> None:
         nonlocal reading
@@ -522,54 +560,75 @@ def translate_selection_smart(
     reader = threading.Thread(target=fetch_reading, name="vlc-subtitle-reading", daemon=True)
     reader.start()
 
-    phrase_result = translate_text(text)
+    phrase_result: TranslationResult | None = None
+    try:
+        phrase_result = translate_text(text)
+    except Exception:
+        # The Worker is already reading this exact selection in parallel. Do
+        # not turn a temporary direct-Google limit into a visible translation
+        # error before that contextual answer has had a chance to arrive.
+        pass
     # The dictionary is back in a moment; reading the whole line takes a beat
     # longer. Put the first answer on screen instead of leaving a row of dots
     # there until the better one is written.
-    if preview is not None:
+    # A dictionary preview is useful for a lone word. In a full subtitle it is
+    # often exactly the wrong sense ("cane — трость"), so keep the popup in its
+    # neutral loading state until the contextual reading can replace it.
+    if phrase_result is not None and preview is not None and not has_context:
         preview(phrase_result)
     focus_word, focus_phrase = choose_focus_phrase(text)
     phrase_focus_result = phrase_result
     word_focus_result = phrase_result
-    if focus_phrase and focus_phrase.lower() != text.lower():
+    if phrase_result is not None and focus_phrase and focus_phrase.lower() != text.lower():
         try:
             phrase_focus_result = translate_text(focus_phrase)
         except Exception:
             phrase_focus_result = phrase_result
-    if focus_word and focus_word.lower() not in {text.lower(), focus_phrase.lower()}:
+    if phrase_result is not None and focus_word and focus_word.lower() not in {text.lower(), focus_phrase.lower()}:
         try:
             word_focus_result = translate_text(focus_word)
         except Exception:
             word_focus_result = phrase_focus_result
-    else:
+    elif phrase_result is not None:
         word_focus_result = phrase_focus_result
 
-    headline = phrase_result.text
-    meaning = phrase_focus_result.text
-    variants = list(phrase_result.variants)
-
     reader.join(timeout=READING_TIMEOUT_SECONDS)
+    line = ""
+    term = ""
+    synonyms: list[str] = []
+    note = ""
     if isinstance(reading, dict):
         line = str(reading.get("translation") or "").strip()
         term = str(reading.get("focus_translation") or "").strip()
         english = str(reading.get("term_en") or "").strip()
         synonyms = [str(word).strip() for word in (reading.get("synonyms") or []) if str(word).strip()]
         note = str(reading.get("sense_note") or "").strip()
-        if line:
-            headline = line
-        if term:
-            meaning = term
         # The server may pick a better thing to learn out of a whole sentence,
         # but only ever something that is really in it.
         if english and english.lower() in text.lower() and len(WORD_RE.findall(english)) <= PHRASE_MAX_WORDS:
             focus_phrase = english
             focus_word = (WORD_RE.findall(english) or [focus_word])[0]
-        extra = []
-        if synonyms:
-            extra.append(tr("more_prefix") + ", ".join(synonyms))
-        if note:
-            extra.append(note)
-        variants = extra + variants
+
+    if phrase_result is None:
+        # The contextual reading may have needed too long for the direct probe,
+        # but a `/quick` call does not wait for the language model and has a
+        # separate multi-provider fallback on the Worker.
+        fallback = "" if line else cloud_quick_translation(text, timeout=4.0)
+        phrase_result = TranslationResult(fallback or line or tr("no_connection"))
+        phrase_focus_result = phrase_result
+        word_focus_result = phrase_result
+        if preview is not None and fallback:
+            preview(phrase_result)
+
+    headline = line or phrase_result.text
+    meaning = term or phrase_focus_result.text
+    variants = list(phrase_result.variants)
+    extra = []
+    if synonyms:
+        extra.append(tr("more_prefix") + ", ".join(synonyms))
+    if note:
+        extra.append(note)
+    variants = extra + variants
 
     return TranslationResult(
         headline,
@@ -1370,7 +1429,7 @@ class VlcSubtitleOverlay:
         if not line:
             return
         anchor = self._selection_anchor_screen()
-        key = line.lower()
+        key = translation_cache_key(line, line)
         if key in self.cache:
             self._show_popup(self._popup_text(self.cache[key], line), anchor)
             return
@@ -1486,7 +1545,8 @@ class VlcSubtitleOverlay:
         selected_text = self._selected_text()
         if not selected_text:
             return
-        key = selected_text.lower()
+        context = self._current_context()
+        key = translation_cache_key(selected_text, context)
         anchor = self._selection_anchor_screen()
         if key in self.cache:
             result = self.cache[key]
@@ -1498,7 +1558,7 @@ class VlcSubtitleOverlay:
         self._show_popup("...", anchor)
         threading.Thread(
             target=self._translate_in_background,
-            args=(job_id, key, selected_text, anchor, self._current_context()),
+            args=(job_id, key, selected_text, anchor, context),
             name="vlc-subtitle-translate",
             daemon=True,
         ).start()
@@ -1509,9 +1569,12 @@ class VlcSubtitleOverlay:
         "record" is a criminal record in a police station and a vinyl one in a
         music shop; the surrounding line is what tells the two apart.
         """
-        primary = self.active_cues[0] if self.active_cues else -1
-        cue = self.cues[primary] if 0 <= primary < len(self.cues) else None
-        return cue.text if cue else self.current_text
+        visible = [
+            self.cues[index].text
+            for index in self.active_cues
+            if 0 <= index < len(self.cues) and self.cues[index].text.strip()
+        ]
+        return "\n".join(visible) if visible else self.current_text
 
     def _translate_in_background(self, job_id: int, key: str, selected_text: str, anchor: tuple[int, int], context: str = "") -> None:
         def preview(first: TranslationResult) -> None:
@@ -1596,7 +1659,7 @@ class VlcSubtitleOverlay:
                 file.write("VLC subtitle selections\n")
                 file.write("selected text - Russian translation | variants\n\n")
             file.write(line)
-        self._append_word_translation(selected_text, result, cue_label, cue.text if cue else self.current_text)
+        self._append_word_translation(selected_text, result, cue_label, self._current_context())
 
     def _append_word_translation(
         self,

@@ -52,7 +52,7 @@
 
 ### 1.1 Проверить вход через Google своими глазами
 Страница `/link` открывается, кнопка Google рисуется — значит домен
-`subtitle-notes-api.andreas-sultseng228.workers.dev` в Google Cloud Console
+`app.subtitlenotes.workers.dev` в Google Cloud Console
 разрешён. Но сам вход я завершить не могу: нужен твой аккаунт. Нажми
 «Continue with Google» в расширении и в Windows-программе и скажи, если что-то
 пойдёт не так. Если Google ответит «origin is not allowed», нужно один раз

@@ -17,7 +17,7 @@
   субтитры в VLC и текст в любой программе по Ctrl+Alt+S.
 
 Вход везде через один аккаунт Google. Библиотека доступна и в браузере:
-<https://subtitle-notes-api.andreas-sultseng228.workers.dev/library>
+<https://app.subtitlenotes.workers.dev/library>
 
 Руководство для обычного пользователя: `release_package/guide/Subtitle-Notes.pdf`.
 

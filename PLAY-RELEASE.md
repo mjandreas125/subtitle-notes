@@ -61,8 +61,8 @@ works alongside a media player is fine; putting their trademark in the title is
 not.
 
 **Category**: Education
-**Privacy policy URL**: `https://subtitle-notes-api.andreas-sultseng228.workers.dev/privacy`
-**Account deletion URL**: `https://subtitle-notes-api.andreas-sultseng228.workers.dev/delete-account`
+**Privacy policy URL**: `https://app.subtitlenotes.workers.dev/privacy`
+**Account deletion URL**: `https://app.subtitlenotes.workers.dev/delete-account`
 
 ## Data safety form
 

@@ -74,8 +74,8 @@
         position: fixed; border-radius: 8px; pointer-events: none;
         background: linear-gradient(180deg, rgba(96, 232, 166, .26), rgba(44, 180, 122, .20));
         box-shadow: 0 0 0 1px rgba(140, 245, 197, .30);
-        animation: in .13s ease-out;
       }
+      .pane.enter { animation: in .13s ease-out; }
       @keyframes in { from { opacity: 0; transform: scaleX(.97); } to { opacity: 1; transform: none; } }
     </style>`;
   document.documentElement.appendChild(glow);
@@ -91,31 +91,40 @@
   let frozen = null;
 
   function drawGlow() {
-    clearGlow();
-    if (!armed) return;
+    if (!armed) {
+      clearGlow();
+      return;
+    }
     const selection = window.getSelection();
     const live = selection && !selection.isCollapsed && selection.rangeCount
       ? selection.getRangeAt(0)
       : null;
     if (!live && frozen) return paintPanes(frozen);
-    if (!live || !insideCaption(live.startContainer)) return;
+    if (!live || !insideCaption(live.startContainer)) {
+      clearGlow();
+      return;
+    }
     paintPanes([...live.getClientRects()]);
   }
 
   function paintPanes(rects) {
-    for (const rect of rects) {
-      if (rect.width < 1 || rect.height < 1) continue;
+    const visible = rects.filter((rect) => rect.width >= 1 && rect.height >= 1);
+    const panes = [...glowRoot.querySelectorAll('.pane')];
+    for (const [index, rect] of visible.entries()) {
       // Trimmed top and bottom: a line box is taller than the letters in it,
       // and a highlight that fills it looks like a bar rather than a mark.
       const inset = Math.min(7, Math.max(2, rect.height * 0.17));
-      const pane = document.createElement('div');
-      pane.className = 'pane';
+      const pane = panes[index] ?? document.createElement('div');
+      if (!panes[index]) {
+        pane.className = 'pane enter';
+        glowRoot.appendChild(pane);
+      }
       pane.style.left = `${Math.round(rect.left - 3)}px`;
       pane.style.top = `${Math.round(rect.top + inset)}px`;
       pane.style.width = `${Math.round(rect.width + 6)}px`;
       pane.style.height = `${Math.round(rect.height - inset * 2)}px`;
-      glowRoot.appendChild(pane);
     }
+    for (let index = visible.length; index < panes.length; index += 1) panes[index].remove();
   }
 
   /// Text offsets within a caption, counted across all its text nodes, so the
@@ -324,8 +333,9 @@
   document.addEventListener('mousemove', armFrom, true);
   window.addEventListener('blur', () => setArmed(false));
   // Players rebuild the caption for every line, so the marking is refreshed
-  // while the key stays held. Nothing runs when it is not.
-  setInterval(() => refresh(true), 300);
+  // while the key stays held. A drag must remain untouched: forcing a new scan
+  // here was enough to make Playerjs redraw the highlight on every character.
+  setInterval(() => refresh(), 300);
 
   const insideCaption = (node) => {
     const element = node?.nodeType === Node.TEXT_NODE ? node.parentElement : node;
@@ -390,9 +400,17 @@
       const selection = window.getSelection();
       let text = flat(selection?.toString());
       let rect = null;
+      let caption = null;
 
       if (text && selection.rangeCount) {
-        rect = selection.getRangeAt(0).getBoundingClientRect();
+        const range = selection.getRangeAt(0);
+        rect = range.getBoundingClientRect();
+        // Read the source line before clearing the native selection. Clearing
+        // it first also clears anchorNode, which reduced every Rezka capture
+        // to one word and left the translator without its context.
+        caption = marked.find((node) =>
+          node.contains(range.startContainer) || node.contains(range.endContainer),
+        );
       } else {
         // A click rather than a drag: take the word it landed on and show it
         // selected, so what was picked is never a guess.
@@ -402,7 +420,10 @@
         selection?.addRange(range);
         text = flat(range.toString());
         rect = range.getBoundingClientRect();
+        caption = marked.find((node) => node.contains(range.startContainer));
       }
+
+      const line = flat(caption?.innerText) || text;
 
       // The words stay marked, but the browser's own selection goes: that is
       // the blue rectangle, and it has no business staying behind.
@@ -416,8 +437,6 @@
 
       const api = window.__subtitleNotes;
       if (!api) return;
-      const caption = marked.find((node) => node.contains(selection?.anchorNode?.parentElement ?? null));
-      const line = flat(caption?.innerText) || text;
       const video = currentVideo();
       // Subtitles always save themselves: you paused a film and dragged across
       // a word on purpose, and a "Save" button after that is a question with

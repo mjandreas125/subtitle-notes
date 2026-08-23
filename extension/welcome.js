@@ -12,7 +12,7 @@ document.getElementById('connect').addEventListener('click', () => {
   window.close();
 });
 document.getElementById('desktop').addEventListener('click', async () => {
-  const reply = await fetch('https://subtitle-notes-api.andreas-sultseng228.workers.dev/desktop/latest');
+  const reply = await fetch('https://app.subtitlenotes.workers.dev/desktop/latest');
   const latest = await reply.json();
   window.open(latest.url, '_blank');
 });

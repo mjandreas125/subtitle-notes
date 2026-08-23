@@ -3,103 +3,100 @@
   <head>
     <meta charset="utf-8" />
     <style>
-      /* The same warm paper and single accent as the reading panel and the
-         settings page; a popup that looks like a different product is a
-         different product as far as anyone can tell. */
       :root {
         color-scheme: light dark;
-        --paper: #ffffff; --raised: #ffffff; --ink: #14201c; --soft: #6b7a74;
-        --hair: #e2ddd3; --accent: #1e7a4c; --accent-deep: #17603b; --wash: #e7f2ea;
+        --paper: #fbfcf9; --raised: #ffffff; --ink: #13231c; --muted: #66776f;
+        --line: #dce6df; --accent: #168653; --accent-deep: #0f6940; --wash: #ebf7ef;
+        --shadow: 0 12px 30px rgba(16, 47, 31, .12), 0 2px 5px rgba(16, 47, 31, .06);
       }
       @media (prefers-color-scheme: dark) {
         :root {
-          --paper: #121816; --raised: #182020; --ink: #eaf1ed; --soft: #93a49c;
-          --hair: #2a3733; --accent: #64c795; --accent-deep: #7ad6a8; --wash: #1d2a25;
+          --paper: #111a16; --raised: #19241e; --ink: #f2f8f4; --muted: #a6b7ad;
+          --line: #2c3d34; --accent: #58cf94; --accent-deep: #79e1aa; --wash: #1c3126;
+          --shadow: 0 14px 30px rgba(0, 0, 0, .27), 0 2px 5px rgba(0, 0, 0, .16);
         }
       }
       * { box-sizing: border-box; }
-      /* Nothing is shown until the text is in place. The popup used to paint
-         its English skeleton first and swap the words a moment later, which
-         read as a flicker every time it opened. */
       body { visibility: hidden; }
       body.ready { visibility: visible; }
       body {
-        width: 300px; margin: 0; padding: 16px; background: var(--paper); color: var(--ink);
-        font: 14px/1.5 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-        -webkit-font-smoothing: antialiased;
+        width: 340px; margin: 0; padding: 18px; background: var(--paper); color: var(--ink);
+        font-family: "Segoe UI Variable Text", "Segoe UI", Inter, ui-sans-serif, system-ui, sans-serif;
+        font-size: 14px; line-height: 1.35; -webkit-font-smoothing: antialiased;
       }
-      .top { display: flex; align-items: center; gap: 9px; margin-bottom: 14px; }
-      .top i { width: 16px; height: 16px; border-radius: 5px; background: var(--accent); position: relative; }
-      .top i::after {
-        content: ""; position: absolute; inset: 4px 3px auto 3px; height: 2px;
-        background: var(--paper); box-shadow: 0 4px 0 var(--paper);
+      [hidden] { display: none !important; }
+      .top { display: flex; align-items: center; gap: 10px; margin: 0 0 16px; }
+      .mark {
+        width: 30px; height: 30px; border-radius: 10px; display: grid; place-items: center;
+        color: #fff; background: linear-gradient(145deg, #27a96d, #087040);
+        box-shadow: 0 6px 14px rgba(22, 134, 83, .25);
       }
-      h1 { margin: 0; font-size: 15px; font-weight: 700; letter-spacing: -.012em; }
-      p { margin: 0 0 13px; color: var(--soft); font-size: 13px; }
-
-      /* Who this library belongs to, said once and quietly. */
-      .who { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
-      .who .face {
-        flex: 0 0 auto; width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center;
-        background: var(--wash); color: var(--accent); font-weight: 700; font-size: 14px; text-transform: uppercase;
+      .mark svg { width: 17px; height: 17px; stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; }
+      h1 { margin: 0; font-size: 16px; line-height: 1; font-weight: 780; letter-spacing: -.025em; }
+      #state { margin: 0 0 14px; color: var(--muted); font-size: 13.5px; font-weight: 560; line-height: 1.45; }
+      #connect {
+        width: 100%; min-height: 52px; margin-bottom: 12px; border: 0; border-radius: 14px; cursor: pointer;
+        background: linear-gradient(135deg, #20a765, #087442); color: #fff; box-shadow: 0 9px 18px rgba(17, 132, 78, .22);
+        font-family: inherit; font-size: 14px; font-weight: 760; line-height: 1; letter-spacing: -.01em;
+        transition: filter .15s ease, transform .1s ease;
       }
-      .who .lines { min-width: 0; }
-      .who b { display: block; font-size: 13px; font-weight: 660; letter-spacing: -.008em; }
-      .who span {
-        display: block; font-size: 12px; color: var(--soft);
-        overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+      #connect:hover { filter: brightness(1.06); }
+      #connect:active { transform: scale(.985); }
+      .foot { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
+      .action {
+        position: relative; min-height: 56px; display: flex; align-items: center; gap: 9px; min-width: 0; padding: 9px 10px;
+        border: 1px solid var(--line); border-radius: 14px; cursor: pointer; text-align: left; color: var(--ink); background: var(--raised);
+        box-shadow: 0 3px 8px rgba(17, 43, 28, .035); font-family: inherit; font-size: 12.5px; font-weight: 740; line-height: 1.15; letter-spacing: -.012em;
+        /* Colour and press only. A button that moves on hover slides its own
+           edge out from under the cursor and flickers there. */
+        transition: background-color .15s ease, border-color .15s ease, transform .1s ease;
       }
-
-      .empty {
-        display: grid; gap: 4px; justify-items: center; text-align: center;
-        padding: 20px 8px 18px; border: 1px dashed var(--hair); border-radius: 12px;
+      /* The lift is a layer that fades in, not a shadow being re-blurred on
+         every frame. */
+      .action::after {
+        content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+        box-shadow: var(--shadow); opacity: 0; transition: opacity .16s ease;
       }
-      .empty b { font-size: 13px; font-weight: 660; }
-      .empty span { font-size: 12.5px; color: var(--soft); line-height: 1.45; }
-
-      .count {
-        display: flex; align-items: baseline; justify-content: space-between;
-        margin: 2px 0 6px; font-size: 11px; font-weight: 700;
-        letter-spacing: .1em; text-transform: uppercase; color: var(--soft);
+      .action:hover::after { opacity: 1; }
+      .action:hover { border-color: #a9d4ba; background: var(--wash); }
+      .action:active { transform: scale(.985); }
+      .action:active::after { opacity: 0; }
+      button:focus-visible { outline: 3px solid color-mix(in srgb, var(--accent) 42%, transparent); outline-offset: 2px; }
+      .action.primary {
+        grid-column: 1 / -1; min-height: 60px; border-color: transparent; color: #fff;
+        background: linear-gradient(135deg, #1ca461, #087141); box-shadow: 0 10px 20px rgba(15, 120, 69, .24);
+        transition: filter .15s ease, transform .1s ease;
       }
-      .foot { display: flex; gap: 6px; margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--hair); }
-      .foot button { flex: 1; }
-      button {
-        width: 100%; padding: 10px 14px; border: 0; border-radius: 11px; cursor: pointer;
-        background: var(--accent); color: #ffffff; font: 700 14px inherit; letter-spacing: -.005em;
-        transition: background-color .14s ease;
-      }
-      button:hover { background: var(--accent-deep); }
-      ul { list-style: none; margin: 0; padding: 0; }
-      li { padding: 7px 10px; border-radius: 9px; }
-      li:nth-child(odd) { background: var(--wash); }
-      li b { display: block; font-size: 13.5px; font-weight: 640; letter-spacing: -.008em; }
-      li span {
-        display: block; color: var(--soft); font-size: 12.5px;
-        overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-      }
-      .quiet {
-        display: block; width: 100%; padding: 8px 0; border: 1px solid transparent; border-radius: 9px;
-        background: transparent; color: var(--accent); font: 700 13px inherit; cursor: pointer; text-align: center;
-      }
-      .quiet:hover { background: var(--wash); border-color: var(--hair); }
-      .quiet:hover { background: var(--wash); }
+      .action.primary:hover { filter: brightness(1.06); border-color: transparent; }
+      .action.primary::after { display: none; }
+      .action-icon { width: 31px; height: 31px; flex: 0 0 auto; display: grid; place-items: center; border-radius: 10px; color: var(--accent); background: var(--wash); }
+      .action.primary .action-icon { color: #fff; background: rgba(255, 255, 255, .16); }
+      .action-icon svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+      .action-label { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+      .action-arrow { margin-left: auto; color: var(--muted); font-size: 18px; font-weight: 500; line-height: 1; }
+      .action.primary .action-arrow { color: rgba(255, 255, 255, .82); }
     </style>
   </head>
   <body>
-    <div class="top"><i></i><h1 id="title">Subtitle Notes</h1></div>
-    <div class="who" id="who" hidden>
-      <div class="face" id="face">·</div>
-      <div class="lines"><b id="whoTitle"></b><span id="whoMail"></span></div>
+    <div class="top">
+      <div class="mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 5.5h9.5a2.5 2.5 0 0 1 2.5 2.5v10H8.5A2.5 2.5 0 0 0 6 20.5z"/><path d="M6 5.5v15"/><path d="M9.5 10h5"/></svg></div>
+      <h1 id="title">Subtitle Notes</h1>
     </div>
     <p id="state"></p>
     <button id="connect" hidden></button>
-    <div class="count" id="count" hidden></div>
-    <ul id="recent"></ul>
     <div class="foot">
-      <button class="quiet" id="library" hidden></button>
-      <button class="quiet" id="export" hidden></button>
-      <button class="quiet" id="settings"></button>
+      <button class="action primary" id="library" hidden>
+        <span class="action-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H11v16H6.5A2.5 2.5 0 0 0 4 21z"/><path d="M20 5.5A2.5 2.5 0 0 0 17.5 3H13v16h4.5A2.5 2.5 0 0 1 20 21z"/></svg></span>
+        <span class="action-label"></span><span class="action-arrow" aria-hidden="true">→</span>
+      </button>
+      <button class="action" id="export" hidden>
+        <span class="action-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3v11"/><path d="m8 10 4 4 4-4"/><path d="M5 15.5V20h14v-4.5"/></svg></span>
+        <span class="action-label"></span>
+      </button>
+      <button class="action" id="settings">
+        <span class="action-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06-2.1 2.1-.06-.06a1.7 1.7 0 0 0-1.88-.34 1.7 1.7 0 0 0-1.03 1.56v.1h-3v-.1A1.7 1.7 0 0 0 10.7 18.64a1.7 1.7 0 0 0-1.88.34l-.06.06-2.1-2.1.06-.06A1.7 1.7 0 0 0 7.06 15 1.7 1.7 0 0 0 5.5 14H5.4v-3h.1A1.7 1.7 0 0 0 7.06 10a1.7 1.7 0 0 0-.34-1.88l-.06-.06 2.1-2.1.06.06A1.7 1.7 0 0 0 10.7 6.36a1.7 1.7 0 0 0 1.03-1.56V4.7h3v.1a1.7 1.7 0 0 0 1.03 1.56 1.7 1.7 0 0 0 1.88-.34l.06-.06 2.1 2.1-.06.06A1.7 1.7 0 0 0 19.4 10a1.7 1.7 0 0 0 1.56 1h.1v3h-.1A1.7 1.7 0 0 0 19.4 15z"/></svg></span>
+        <span class="action-label"></span>
+      </button>
     </div>
     <script src="settings.js"></script>
     <script src="popup.js"></script>

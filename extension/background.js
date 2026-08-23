@@ -4,8 +4,42 @@
 // anything its scripts can reach. So the pairing token lives here, in the
 // extension's own world, and pages only ever receive the finished translation.
 
-const API_BASE = 'https://subtitle-notes-api.andreas-sultseng228.workers.dev/v1';
+// The one address. It was briefly two, while the account subdomain still
+// carried the owner's e-mail; that one is gone.
+const API_HOSTS = ['https://app.subtitlenotes.workers.dev/v1'];
+let apiBase = API_HOSTS[0];
+
+async function pickHost() {
+  const remembered = (await chrome.storage.local.get('apiBase')).apiBase;
+  if (remembered && API_HOSTS.includes(remembered)) {
+    apiBase = remembered;
+    return;
+  }
+  for (const host of API_HOSTS) {
+    try {
+      const answer = await fetch(host.replace('/v1', '/desktop/latest'));
+      if (!answer.ok) continue;
+      apiBase = host;
+      await chrome.storage.local.set({ apiBase: host });
+      return;
+    } catch (_) {
+      // try the next one
+    }
+  }
+}
+pickHost();
 const MENU_ID = 'subtitle-notes-save';
+
+// Banking pages must be completely left alone. Content scripts are excluded
+// in manifest.json; this guard also prevents saving from the right-click menu.
+function isProtectedSite(url) {
+  try {
+    const host = new URL(url || '').hostname.toLowerCase().replace(/^www\./, '');
+    return host === 'bank.ee' || host.endsWith('.bank.ee');
+  } catch (_) {
+    return false;
+  }
+}
 
 async function session() {
   const stored = await chrome.storage.local.get(['token', 'email']);
@@ -15,7 +49,7 @@ async function session() {
 async function call(path, payload) {
   const auth = await session();
   if (!auth) throw new Error('not-paired');
-  const response = await fetch(API_BASE + path, {
+  const response = await fetch(apiBase + path, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${auth.token}` },
     body: JSON.stringify(payload),
@@ -54,17 +88,26 @@ const SETTLE_MS = 90000;
 let lastCapture = null;
 
 function sameThought(first, second) {
-  const left = String(first || '').toLowerCase().replace(/\s+/g, ' ').trim();
-  const right = String(second || '').toLowerCase().replace(/\s+/g, ' ').trim();
+  const flat = (value) => String(value || '').toLowerCase().replace(/\s+/g, ' ').trim();
+  const left = flat(first.text);
+  const right = flat(second.text);
+  const firstLine = flat(first.context);
+  const secondLine = flat(second.context);
+  // A word and a wider phrase from the same subtitle are one selection. The
+  // same word from the next subtitle is a different sense until proven
+  // otherwise, even when the two clicks happen within the settling window.
+  if (firstLine && secondLine && firstLine !== left && secondLine !== right) {
+    return firstLine === secondLine;
+  }
   return Boolean(left) && Boolean(right) && (left.includes(right) || right.includes(left));
 }
 
 async function capture({ text, context, title, timecodeMs }) {
   const fresh = await clientKey([title, String(timecodeMs ?? ''), text]);
   const settling = lastCapture && Date.now() - lastCapture.at < SETTLE_MS
-    && sameThought(lastCapture.text, text) ? lastCapture.key : null;
+    && sameThought(lastCapture, { text, context }) ? lastCapture.key : null;
   const key = settling ?? fresh;
-  lastCapture = { key, text, at: Date.now() };
+  lastCapture = { key, text, context, at: Date.now() };
   const saved = await call('/captures', {
     client_key: key,
     media_title: title || 'Web',
@@ -74,10 +117,6 @@ async function capture({ text, context, title, timecodeMs }) {
     selected_text: text,
     context: context || null,
   });
-  const recent = (await chrome.storage.local.get('recent')).recent ?? [];
-  const label = saved.focus_phrase || saved.focus_word || saved.selected_text;
-  recent.unshift({ id: saved.id, label, meaning: saved.focus_translation || saved.translation, at: Date.now() });
-  await chrome.storage.local.set({ recent: recent.slice(0, 12) });
   await badge('ok');
   return saved;
 }
@@ -87,13 +126,11 @@ async function capture({ text, context, title, timecodeMs }) {
 async function undo(id) {
   const auth = await session();
   if (!auth) throw new Error('not-paired');
-  const response = await fetch(`${API_BASE}/selections/${id}`, {
+  const response = await fetch(`${apiBase}/selections/${id}`, {
     method: 'DELETE',
     headers: { Authorization: `Bearer ${auth.token}` },
   });
   if (!response.ok && response.status !== 404) throw new Error(`Server error ${response.status}`);
-  const recent = (await chrome.storage.local.get('recent')).recent ?? [];
-  await chrome.storage.local.set({ recent: recent.filter((item) => item.id !== id) });
   return {};
 }
 
@@ -108,6 +145,9 @@ async function badge(state) {
 }
 
 chrome.runtime.onInstalled.addListener((details) => {
+  // The popup no longer has a local "recent" list. Clear the old cache once
+  // so an update also removes this data from existing browsers.
+  if (details.reason === 'update') chrome.storage.local.remove('recent');
   // Shown once, when the extension is first added. An update must not reopen
   // it: nobody wants a tutorial for something they already use.
   if (details.reason === 'install') {
@@ -127,6 +167,7 @@ chrome.runtime.onInstalled.addListener((details) => {
 
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   if (info.menuItemId !== MENU_ID) return;
+  if (isProtectedSite(info.pageUrl || tab?.url)) return;
   const text = (info.selectionText || '').trim();
   if (!text) return;
   await badge('busy');

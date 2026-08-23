@@ -21,7 +21,11 @@ APP_FOLDER = Path(os.environ.get("APPDATA", Path.home())) / "Translated VLC"
 CONFIG_PATH = APP_FOLDER / "sync_config.json"
 OUTBOX_PATH = APP_FOLDER / "sync_outbox.jsonl"
 SYNC_LOG_PATH = APP_FOLDER / "sync.log"
-DEFAULT_API_URL = "https://subtitle-notes-api.andreas-sultseng228.workers.dev/v1"
+DEFAULT_API_URL = "https://app.subtitlenotes.workers.dev/v1"
+# The address the product used while the Workers subdomain still carried the
+# owner's e-mail. It no longer resolves; it is kept only to recognise it in a
+# settings file written before the move.
+PREVIOUS_API_URL = "https://subtitle-notes-api.andreas-sultseng228.workers.dev/v1"
 
 # Anything that is not the permanent cloud service. Sessions issued by these
 # hosts cannot be used by the Worker, so the address is reset and the computer
@@ -31,6 +35,25 @@ LEGACY_HOST_MARKERS = (".trycloudflare.com", "127.0.0.1", "localhost", ":8088")
 
 def is_legacy_api_url(value: str) -> bool:
     return any(marker in value for marker in LEGACY_HOST_MARKERS)
+
+
+def reachable_api_url() -> str:
+    """Whichever of the two addresses answers, new one first.
+
+    The token is issued by the Worker, not by the hostname, so a session made
+    on one address keeps working on the other.
+    """
+    for candidate in (DEFAULT_API_URL,):
+        try:
+            request = urllib.request.Request(
+                candidate.replace("/v1", "/desktop/latest"),
+                headers={"User-Agent": USER_AGENT},
+            )
+            with urllib.request.urlopen(request, timeout=4):
+                return candidate
+        except Exception:
+            continue
+    return DEFAULT_API_URL
 
 
 def load_sync_config() -> dict[str, str]:
@@ -44,6 +67,12 @@ def load_sync_config() -> dict[str, str]:
         if is_legacy_api_url(str(value.get("api_url", ""))):
             value["api_url"] = DEFAULT_API_URL
             value.pop("token", None)
+            save_sync_config(value)
+            return value
+        # The address moved off the owner's e-mail. Same Worker, same session:
+        # only the hostname is different, so the token is kept.
+        if PREVIOUS_API_URL.rsplit("/", 1)[0] in str(value.get("api_url", "")):
+            value["api_url"] = reachable_api_url()
             save_sync_config(value)
         return value
     except (OSError, json.JSONDecodeError):
@@ -72,15 +101,31 @@ def save_sync_config(config: dict[str, str]) -> None:
 # error the user could see. Identify the app properly instead.
 USER_AGENT = "TranslatedVLC/1.3 (Windows; Subtitle Notes desktop)"
 
+# An older Worker could send this literal string in a successful JSON response.
+# It is an error marker, not Russian text, and must never replace the result the
+# VLC popup already has from another provider.
+UNAVAILABLE_TRANSLATIONS = {"translation unavailable"}
 
-def api_call(base_url: str, path: str, payload: dict[str, Any] | None = None, token: str = "") -> dict[str, Any]:
+
+def has_translation(value: object) -> bool:
+    text = " ".join(str(value or "").split()).strip().lower()
+    return bool(text and text not in UNAVAILABLE_TRANSLATIONS)
+
+
+def api_call(
+    base_url: str,
+    path: str,
+    payload: dict[str, Any] | None = None,
+    token: str = "",
+    timeout: float = 6.0,
+) -> dict[str, Any]:
     body = json.dumps(payload, ensure_ascii=False).encode("utf-8") if payload is not None else None
     headers = {"Content-Type": "application/json", "User-Agent": USER_AGENT, "Accept": "application/json"}
     if token:
         headers["Authorization"] = f"Bearer {token}"
     request = urllib.request.Request(f"{base_url.rstrip('/')}{path}", data=body, headers=headers, method="POST" if body is not None else "GET")
     try:
-        with urllib.request.urlopen(request, timeout=6) as response:
+        with urllib.request.urlopen(request, timeout=timeout) as response:
             value = json.loads(response.read().decode("utf-8"))
             return value if isinstance(value, dict) else {}
     except urllib.error.HTTPError as error:
@@ -91,6 +136,28 @@ def api_call(base_url: str, path: str, payload: dict[str, Any] | None = None, to
         raise RuntimeError(str(detail or tr("server_returned", code=error.code))) from error
     except urllib.error.URLError as error:
         raise RuntimeError(tr("no_server")) from error
+
+
+def cloud_quick_translation(text: str, timeout: float = 5.0) -> str:
+    """A paired Worker is the fallback for the desktop's direct dictionary.
+
+    The player normally receives a local Google result first because that is
+    fast. When that undocumented endpoint rate-limits the computer, the Worker
+    retries through its independent providers instead of leaving an English
+    ``Translation unavailable`` marker in the popup.
+    """
+    config = load_sync_config()
+    base_url = str(config.get("api_url", "")).strip()
+    token = str(config.get("token", "")).strip()
+    if not text.strip() or not base_url or not token or is_legacy_api_url(base_url):
+        return ""
+    try:
+        answer = api_call(base_url, "/quick", {"text": text}, token, timeout=timeout)
+    except RuntimeError as error:
+        log_sync(f"quick translation failed: {error}")
+        return ""
+    translation = str(answer.get("translation") or "").strip()
+    return translation if has_translation(translation) else ""
 
 
 def cloud_reading(text: str, context: str = "", timeout: float = 6.0) -> dict[str, Any] | None:
@@ -126,7 +193,15 @@ def cloud_reading(text: str, context: str = "", timeout: float = 6.0) -> dict[st
     except Exception as error:
         log_sync(f"reading failed: {error}")
         return None
-    return value if isinstance(value, dict) else None
+    if not isinstance(value, dict):
+        return None
+    # Do not let an error phrase from a cached or just-deployed older Worker
+    # overwrite the local dictionary result. Empty fields mean "keep the answer
+    # already on screen" to the overlay.
+    for field in ("translation", "focus_translation"):
+        if not has_translation(value.get(field)):
+            value[field] = ""
+    return value
 
 
 def clean_media_name(source_label: str) -> tuple[str, str | None, str | None]:

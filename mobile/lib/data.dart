@@ -15,7 +15,7 @@ const googleServerClientId =
 // Permanent public API. This is a Cloudflare Worker, so it does not depend on
 // the creator's computer, a home IP address, or a short-lived tunnel.
 const defaultApiBase =
-    'https://subtitle-notes-api.andreas-sultseng228.workers.dev/v1';
+    'https://app.subtitlenotes.workers.dev/v1';
 
 class IncomingText {
   static const _channel = MethodChannel(
@@ -72,6 +72,17 @@ class SessionStore {
       await data.setString(_baseKey, defaultApiBase);
       await data.remove(_tokenKey);
       return null;
+    }
+    // The Workers subdomain used to carry the owner's e-mail. The session was
+    // issued by the Worker, not by the hostname, so moving the address over
+    // costs nobody a sign-in.
+    if (base.contains('andreas-sultseng228.workers.dev')) {
+      await data.setString(_baseKey, defaultApiBase);
+      return Session(
+        baseUrl: defaultApiBase,
+        token: token,
+        email: data.getString(_emailKey) ?? '',
+      );
     }
     if (base.isEmpty || token.isEmpty) return null;
     return Session(
@@ -874,6 +885,7 @@ class StudyCard {
     required this.senseNote,
     required this.archived,
     required this.createdAt,
+    this.context,
   });
   final String id, mediaTitle, selectedText, translation;
   final String? season, episode, focusWord, focusPhrase, focusTranslation;
@@ -887,6 +899,9 @@ class StudyCard {
   final int? timecodeMs;
   final bool archived;
   final DateTime createdAt;
+  /// The complete subtitle line, when the source sent one. It keeps a
+  /// polysemous word tied to the meaning that is actually practised.
+  final String? context;
 
   factory StudyCard.fromJson(Map<String, dynamic> json) => StudyCard(
     id: json['id'] as String,
@@ -910,6 +925,9 @@ class StudyCard {
     createdAt:
         DateTime.tryParse(json['created_at'] as String? ?? '')?.toLocal() ??
         DateTime.now(),
+    context: (json['context'] as String?)?.trim().isNotEmpty == true
+        ? (json['context'] as String).trim()
+        : null,
   );
 
   Map<String, dynamic> toJson() => {
@@ -927,6 +945,7 @@ class StudyCard {
     'sense_note': senseNote,
     'archived': archived,
     'created_at': createdAt.toIso8601String(),
+    'context': context,
   };
 
   /// Season/episode/timecode as separate chips rather than one pipe-joined
@@ -973,7 +992,9 @@ class StudyCard {
   /// in the comparison so a card does not quote "Explicitly." back at a
   /// headword that already reads "Explicitly".
   String? get contextLine {
-    final text = selectedText.trim();
+    final text = (context?.trim().isNotEmpty == true ? context : selectedText)
+            ?.trim() ??
+        '';
     if (text.isEmpty) return null;
     if (bare(text) == bare(learningLabel)) return null;
     return text;
@@ -1146,13 +1167,12 @@ class StudyDetail extends StudyCard {
     required super.senseNote,
     required super.archived,
     required super.createdAt,
+    super.context,
     required this.variants,
     required this.examples,
-    required this.context,
   });
   final List<String> variants;
   final List<StudyExample> examples;
-  final String? context;
 
   factory StudyDetail.fromJson(Map<String, dynamic> json) {
     final card = StudyCard.fromJson(json);
@@ -1171,6 +1191,7 @@ class StudyDetail extends StudyCard {
       senseNote: card.senseNote,
       archived: card.archived,
       createdAt: card.createdAt,
+      context: card.context,
       variants: (json['variants'] as List? ?? [])
           .map((e) => e.toString())
           .toList(),
@@ -1178,7 +1199,6 @@ class StudyDetail extends StudyCard {
           .map(StudyExample.fromJson)
           .where((example) => example.text.isNotEmpty)
           .toList(),
-      context: json['context'] as String?,
     );
   }
 }

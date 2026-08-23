@@ -7,7 +7,9 @@ subtitle is on screen.
 from __future__ import annotations
 
 import unittest
+from unittest.mock import patch
 
+import sync_client
 import vlc_subtitle_overlay as ov
 
 
@@ -55,6 +57,79 @@ class PhraseSelection(unittest.TestCase):
     def test_long_selection_is_reduced(self):
         self.assertEqual(
             self.phrase("I am chanting the right words"), "chanting"
+        )
+
+
+class TranslationFallback(unittest.TestCase):
+    """A provider failure must not turn into the old English error marker."""
+
+    def test_old_server_error_is_not_considered_a_translation(self):
+        self.assertFalse(sync_client.has_translation("Translation unavailable"))
+        self.assertTrue(sync_client.has_translation("Я испекла торт."))
+
+    def test_contextual_worker_answer_survives_direct_google_failure(self):
+        with (
+            patch.object(ov, "translate_text", side_effect=RuntimeError("429")),
+            patch.object(
+                ov,
+                "cloud_reading",
+                return_value={
+                    "translation": "испекла",
+                    "focus_translation": "испекла",
+                    "term_en": "made",
+                    "synonyms": [],
+                    "sense_note": "",
+                },
+            ),
+            patch.object(ov, "cloud_quick_translation", return_value=""),
+        ):
+            result = ov.translate_selection_smart("made", "Yesterday I made a cake.")
+
+        self.assertEqual(result.text, "испекла")
+        self.assertEqual(result.focus_translation, "испекла")
+
+    def test_contextual_selection_returns_only_the_selected_word(self):
+        previews: list[ov.TranslationResult] = []
+        with (
+            patch.object(ov, "translate_text", return_value=ov.TranslationResult("трость")),
+            patch.object(
+                ov,
+                "cloud_reading",
+                return_value={
+                    "translation": "трость",
+                    "focus_translation": "трость",
+                    "term_en": "cane",
+                    "synonyms": [],
+                    "sense_note": "",
+                },
+            ),
+        ):
+            result = ov.translate_selection_smart(
+                "cane", "How did you get that out of Ms. Douglas? It is the cane, dude.", previews.append
+            )
+
+        self.assertEqual(previews, [])
+        self.assertEqual(result.text, "трость")
+
+    def test_same_word_in_another_subtitle_does_not_reuse_dictionary_cache(self):
+        first = ov.translation_cache_key("cane", "It is the cane, dude.")
+        second = ov.translation_cache_key("cane", "He cut the cane into strips.")
+        self.assertNotEqual(first, second)
+
+
+class SubtitleContext(unittest.TestCase):
+    def test_all_simultaneous_cues_reach_the_contextual_translator(self):
+        overlay = object.__new__(ov.VlcSubtitleOverlay)
+        overlay.cues = [
+            ov.Cue(1000, 4000, "How did you get that out of Ms. Douglas?"),
+            ov.Cue(1000, 4000, "It is the cane, dude."),
+        ]
+        overlay.active_cues = (0, 1)
+        overlay.current_text = "How did you get that out of Ms. Douglas?\nIt is the cane, dude."
+
+        self.assertEqual(
+            ov.VlcSubtitleOverlay._current_context(overlay),
+            "How did you get that out of Ms. Douglas?\nIt is the cane, dude.",
         )
 
 

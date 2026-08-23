@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "__MSG_appName__",
-  "version": "2.6.4",
+  "version": "2.6.11",
   "description": "__MSG_appDescription__",
   "default_locale": "en",
   "permissions": [
@@ -9,7 +9,7 @@
     "contextMenus"
   ],
   "host_permissions": [
-    "https://subtitle-notes-api.andreas-sultseng228.workers.dev/*"
+    "https://app.subtitlenotes.workers.dev/*"
   ],
   "background": {
     "service_worker": "background.js"
@@ -32,6 +32,10 @@
     {
       "matches": [
         "<all_urls>"
+      ],
+      "exclude_matches": [
+        "*://bank.ee/*",
+        "*://*.bank.ee/*"
       ],
       "js": [
         "settings.js",

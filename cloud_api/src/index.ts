@@ -10,10 +10,10 @@ const encoder = new TextEncoder();
 /// The program has no store to update it, so it asks here on startup and says
 /// when it is behind. Bump the version when a new installer is published.
 const DESKTOP_LATEST = {
-  version: '1.7.1',
+  version: '1.7.5',
   // Straight to the file: the button should start a download, not land
   // somebody on a page of assets to choose from.
-  url: 'https://github.com/mjandreas125/subtitle-notes/releases/latest/download/SubtitleNotesSetup-1.7.1.exe',
+  url: 'https://github.com/mjandreas125/subtitle-notes/releases/latest/download/SubtitleNotesSetup-1.7.5.exe',
   notes: '',
 };
 const json = (value: unknown, status = 200) => new Response(JSON.stringify(value), { status, headers: { ...cors, 'content-type': 'application/json; charset=utf-8' } });
@@ -89,11 +89,10 @@ function focus(text: string, sourceLanguage = 'en') {
   return { word, phrase };
 }
 
-/// A reader who deliberately selected a compact phrase already told us exactly
-/// what should be translated. The language model is useful for a whole
-/// subtitle line, but asking it to reinterpret a name-heavy phrase such as
-/// "beaches of Tennessee" can turn a reliable dictionary answer into a made-up
-/// sense. Keep these selections literal and deterministic.
+/// A reader who deliberately selected a compact phrase already told us what the
+/// learning target is. We keep that target literal and ask the model to use a
+/// supplied subtitle only to resolve its sense; a contextual `cane` must not
+/// degenerate into a bare dictionary entry or into the entire dialogue.
 function isDeliberatePhrase(text: string) {
   const words = wordsIn(text);
   return (
@@ -101,6 +100,15 @@ function isDeliberatePhrase(text: string) {
     words.length <= PHRASE_MAX_WORDS &&
     !looksLikeSentence(text, words.map((word) => word.toLowerCase()))
   );
+}
+
+/// Context is the complete subtitle currently on screen. It is input for
+/// choosing the sense of a selected word, never text that replaces that word
+/// in the translation returned to the learner.
+function hasSubtitleContext(text: string, context: unknown) {
+  const around = clean(context).replace(/\s+/g, ' ').toLowerCase();
+  const highlighted = clean(text).replace(/\s+/g, ' ').toLowerCase();
+  return Boolean(around && around !== highlighted);
 }
 
 /// The dictionary only carries examples for headwords: "brag" has them,
@@ -141,46 +149,140 @@ type Translation = {
 
 /// Translate from whatever language the highlighted subtitle actually uses.
 ///
-/// `sl=en` was baked into the first version of Subtitle Notes.  It works for
-/// an English show, but turns every French, Spanish or Finnish line into a
-/// malformed "English" word before it reaches the dictionary or speech
-/// engine.  Google detects the source reliably here and returns it as `src`.
-async function translate(text: string, withExamples = false, language = 'ru', sourceLanguage = 'auto'): Promise<Translation> {
-  const query = new URLSearchParams([['client','gtx'],['sl',sourceLanguage || 'auto'],['tl',language],['dt','t'],['dt','bd'],['dj','1'],['q',text]]);
-  if (withExamples) query.append('dt', 'ex');
-  const url = `https://translate.googleapis.com/translate_a/single?${query}`;
-  // Saving several words in a row can trip rate limiting, and a card with no
-  // translation is worse than a slightly slower save. One retry clears it.
-  let response = await fetch(url);
-  if (!response.ok) {
-    await new Promise((resolve) => setTimeout(resolve, 400));
-    response = await fetch(url);
-  }
-  if (!response.ok) return { text: UNAVAILABLE, variants: [], examples: [], source: sourceLanguage || 'auto' };
-  const payload: any = await response.json();
-  const result = (payload.sentences ?? []).map((item: any) => item.trans ?? '').join('').trim() || 'Translation unavailable';
-  const variants = (payload.dict ?? []).flatMap((item: any) => item.terms?.length ? [`${item.pos ?? 'meaning'}: ${item.terms.slice(0, 8).join(', ')}`] : []).slice(0, 6);
+/// Google is deliberately only the first provider here. Its undocumented
+/// `gtx` endpoint intermittently returns 429/5xx responses, especially when a
+/// viewer selects several words in one subtitle. Returning its English error
+/// text as if it were a translation made a temporary provider hiccup look like
+/// a broken player. A different Google host, MyMemory and Workers AI form a
+/// real fallback chain, so one provider cannot blank the VLC popup or a card.
+const GOOGLE_TRANSLATE_HOSTS = [
+  'https://translate.googleapis.com',
+  'https://translate.google.com',
+];
+
+const pause = (milliseconds: number) => new Promise<void>((resolve) => setTimeout(resolve, milliseconds));
+
+function translationFromGoogle(payload: any, sourceLanguage: string): Translation | null {
+  if (!payload || typeof payload !== 'object') return null;
+  const text = (payload.sentences ?? []).map((item: any) => item?.trans ?? '').join('').trim();
+  if (!text) return null;
+  const variants = (payload.dict ?? [])
+    .flatMap((item: any) => item?.terms?.length ? [`${item.pos ?? 'meaning'}: ${item.terms.slice(0, 8).join(', ')}`] : [])
+    .slice(0, 6);
   const examples = (payload.examples?.example ?? [])
     .map((item: any) => String(item.text ?? '').replace(/<\/?b>/g, '').trim())
     .filter((value: string) => value.length > 0)
     .slice(0, 4);
-  const source = clean(payload.src).toLowerCase().split('-')[0] || sourceLanguage || 'auto';
-  return { text: result, variants, examples, source };
+  return {
+    text,
+    variants,
+    examples,
+    source: clean(payload.src).toLowerCase().split('-')[0] || sourceLanguage || 'auto',
+  };
+}
+
+async function googleTranslation(text: string, withExamples: boolean, language: string, sourceLanguage: string): Promise<Translation | null> {
+  const query = new URLSearchParams([['client','gtx'],['sl',sourceLanguage || 'auto'],['tl',language],['dt','t'],['dt','bd'],['dj','1'],['q',text]]);
+  if (withExamples) query.append('dt', 'ex');
+  for (const host of GOOGLE_TRANSLATE_HOSTS) {
+    const url = `${host}/translate_a/single?${query}`;
+    // A short retry clears a transient rate limit. The second host is useful
+    // when one edge is sick, not just when the first response is slow.
+    for (let attempt = 0; attempt < 2; attempt += 1) {
+      try {
+        const response = await fetch(url);
+        if (response.ok) {
+          const answer = translationFromGoogle(await response.json(), sourceLanguage);
+          if (answer) return answer;
+        }
+      } catch {
+        // Try the next attempt/provider. This function is intentionally a
+        // provider probe; the caller owns the final fallback.
+      }
+      if (attempt === 0) await pause(350);
+    }
+  }
+  return null;
+}
+
+function usefulFallback(text: string, language: string): string {
+  const value = clean(text)
+    .replace(/^```(?:text)?\s*/i, '')
+    .replace(/```$/i, '')
+    .replace(/^['"«]\s*|\s*['"»]$/g, '')
+    .trim();
+  if (!value || value.length > 1_000 || !/\p{L}/u.test(value)) return '';
+  // A Russian/Ukrainian reader must not receive the original English phrase
+  // when the fallback model failed to follow its one-line instruction.
+  if (CYRILLIC_LANGUAGES.has(language) && !/\p{Script=Cyrillic}/u.test(value)) return '';
+  return value;
+}
+
+async function memoryTranslation(text: string, language: string, sourceLanguage: string): Promise<string> {
+  // MyMemory accepts at most 500 UTF-8 bytes. Subtitle selections are normally
+  // tiny, but skipping a too-long request avoids turning a malformed selection
+  // into another provider error.
+  if (new TextEncoder().encode(text).byteLength > 500) return '';
+  const source = sourceLanguage && sourceLanguage !== 'auto' ? sourceLanguage : 'autodetect';
+  const query = new URLSearchParams({ q: text, langpair: `${source}|${language}`, mt: '1' });
+  try {
+    const response = await fetch(`https://api.mymemory.translated.net/get?${query}`);
+    if (!response.ok) return '';
+    const payload: any = await response.json();
+    return usefulFallback(String(payload?.responseData?.translatedText ?? '').replace(/<[^>]*>/g, ''), language);
+  } catch {
+    return '';
+  }
+}
+
+async function aiTranslation(env: Env, text: string, language: string, sourceLanguage: string): Promise<string> {
+  try {
+    const reply = await env.AI.run(SMART_MODEL_FAST, {
+      messages: [
+        {
+          role: 'system',
+          content: `Translate subtitle text from ${languageName(sourceLanguage)} to ${languageName(language)}. Reply with only the natural ${languageName(language)} translation, without labels, quotes, explanations, or Markdown.`,
+        },
+        { role: 'user', content: text },
+      ],
+      max_tokens: 600,
+      temperature: 0,
+    });
+    return usefulFallback(smartText(reply), language);
+  } catch {
+    return '';
+  }
+}
+
+async function translate(env: Env, text: string, withExamples = false, language = 'ru', sourceLanguage = 'auto'): Promise<Translation> {
+  const google = await googleTranslation(text, withExamples, language, sourceLanguage);
+  if (google) return google;
+
+  const memory = await memoryTranslation(text, language, sourceLanguage);
+  if (memory) return { text: memory, variants: [], examples: [], source: sourceLanguage || 'auto' };
+
+  const ai = await aiTranslation(env, text, language, sourceLanguage);
+  if (ai) return { text: ai, variants: [], examples: [], source: sourceLanguage || 'auto' };
+
+  // Empty means "no answer" to callers; it is deliberately never the English
+  // phrase `Translation unavailable`, which old desktop builds displayed as a
+  // genuine translation.
+  return { text: '', variants: [], examples: [], source: sourceLanguage || 'auto' };
 }
 
 /// Translates each example sentence so the card can show both halves. The
 /// requests run together: four short sentences should not add four round trips
 /// to a capture that the player is waiting on.
-async function translateExamples(sentences: string[], language = 'ru', sourceLanguage = 'auto') {
+async function translateExamples(env: Env, sentences: string[], language = 'ru', sourceLanguage = 'auto') {
   // Three short sentences, asked for at once rather than one after the other:
   // a card should not cost three round trips in a row.
   return Promise.all(
     sentences.slice(0, 3).map(async (sentence) => {
       try {
-        const result = await translate(sentence, false, language, sourceLanguage);
+        const result = await translate(env, sentence, false, language, sourceLanguage);
         return {
           text: sentence,
-          translation: result.text === UNAVAILABLE ? null : result.text,
+          translation: !result.text || result.text === UNAVAILABLE ? null : result.text,
         };
       } catch {
         return { text: sentence, translation: null };
@@ -235,6 +337,12 @@ Highlighted: to be exclusive
 Highlighted: The kid doesn't need any more static.
 {"term_source":"static","line":"Парню и без того хватает нотаций.","term":"нотации","synonyms":["придирки","нравоучения","упрёки"],"note":"буквально: помехи в эфире"}`;
 
+const CONTEXTUAL_RUSSIAN_EXAMPLES = `
+
+Context: How did you get that out of Ms. Douglas? It's the cane, dude.
+Highlighted: cane
+{"term_source":"cane","line":"трость","term":"трость","synonyms":["палка для ходьбы","опора"],"note":""}`;
+
 const smartPrompt = (code: string, sourceCode = 'auto') => `You are a $LANG$ dubbing translator. A $LANG$ learner highlighted $SOURCE$ text in a line of film dialogue and wants to learn from it.
 
 Render the line as a $LANG$ dub would speak it: a grammatical, natural sentence a person would really say. Never translate word for word.
@@ -243,12 +351,13 @@ Dialogue leans on figurative language. When the literal reading would puzzle a $
 Reply with one JSON object and nothing else:
 {"term_source": "...", "line": "...", "term": "...", "synonyms": ["...", "..."], "note": "..."}
 
-A Context line may come first: the rest of the subtitle around the highlighted text. Use it to decide which sense is meant - "No one wants a record." is about a criminal record when the scene is a police station. Never translate the context itself.
+A Context line may come first. It is the complete subtitle currently on screen and can contain more than one sentence or speaker turn. Context is evidence for choosing the sense only; it is never part of the answer. Translate only the exact Highlighted text in both line and term. Never repeat, translate, summarize, or add words from Context to line. Thus if Context says "It's the cane, dude" and Highlighted is "cane", line must be only the contextual Russian word "трость", not the surrounding reply. If Highlighted itself is a whole sentence, translate that selected sentence only. Use Context to decide the sense: "No one wants a record." is about a criminal record when the scene is a police station.
 
 term_source - the expression to learn, copied exactly from the highlighted $SOURCE$ text.
   If the highlighted text is a whole sentence, choose the one expression in it a Russian learner would gain most from: the idiom, the phrasal verb, or the least predictable word. Never choose a name, a pronoun, or an everyday word such as "kid", "need", "go", "want".
   If the highlighted text is shorter than a sentence, repeat it unchanged - the learner chose it deliberately.
-line - the highlighted text as natural spoken $LANG$. It must read as correct Russian on its own.
+line - when Context is present, the entire Context; otherwise the highlighted text. Render it as natural spoken $LANG$, keep all dialogue turns, and make it read as a complete subtitle on its own.
+  A terse answer such as "It's the X" often names the cause, tool, or trick asked about in the preceding sentence. Translate that relationship naturally ("Дело в X", "Всё из-за X", "С помощью X" when appropriate), never as a flat and ungrammatical "Это X".
   Brand names are not translated and never turned into a Russian pet name: a Coke machine is "автомат с газировкой", never "автомат с Кокой". Either keep the brand as it is written, or use the ordinary Russian word for the thing itself.
 term - what term_source means in THIS line: 1-4 words, the words a $LANG$ speaker would use here, in the same part of speech. No explanation, no quotes.
   Give it as a dictionary entry, not as it would be inflected in the sentence: a noun in its base form ("судимость", not "судимая"), an adjective in the masculine nominative, a verb in the aspect and tense the line uses.
@@ -256,7 +365,7 @@ term - what term_source means in THIS line: 1-4 words, the words a $LANG$ speake
 synonyms - 2 to 4 other $LANG$ words for that same sense, in the same part of speech, commonest first. Not repetitions of term, not near-spellings of the English word.
 note - up to 8 $LANG$ words naming the literal image behind a figurative expression, e.g. "буквально: бросили под автобус". Leave it "" unless the expression really is figurative. Never write a label such as "идиома", "игра слов" or "фигуральное выражение" - name the image or say nothing.
 
-`.replace(/\$LANG\$/g, languageName(code)).replace(/\$SOURCE\$/g, languageName(sourceCode)) + (code === 'ru' ? RUSSIAN_EXAMPLES : '');
+`.replace(/\$LANG\$/g, languageName(code)).replace(/\$SOURCE\$/g, languageName(sourceCode)) + (code === 'ru' ? `${RUSSIAN_EXAMPLES}${CONTEXTUAL_RUSSIAN_EXAMPLES}` : '');
 
 /// Labels rather than meanings: the prompt forbids them, and a model that
 /// slips one in has said nothing worth showing.
@@ -329,7 +438,7 @@ function isBorrowing(russian: string, english: string): boolean {
 
 async function smartReading(env: Env, line: string, context = '', model = SMART_MODEL_FAST, language = 'ru', sourceLanguage = 'auto') {
   const around = clean(context);
-  const question = around && around.toLowerCase() !== line.toLowerCase()
+  const question = hasSubtitleContext(line, around)
     ? `Context: ${around}\nHighlighted: ${line}`
     : `Highlighted: ${line}`;
   try {
@@ -787,6 +896,24 @@ function narrowed(selected: string, suggestion: string | undefined): string | nu
 /// punctuated, are the same correction.
 const termKey = (value: string) => value.trim().toLowerCase().replace(/[^\p{L}\p{N}\s'-]/gu, '').replace(/\s+/g, ' ');
 
+/// The same spelling can carry different lessons. "Made" in "made her out"
+/// and "made a cake" must therefore stay as two cards, each with the line
+/// that supplied its meaning. A bare selection has no scene to distinguish it,
+/// so it falls back to the selected expression itself.
+function contextKey(context: unknown, selected: string) {
+  const line = clean(context);
+  return termKey(line && termKey(line) !== termKey(selected) ? line : selected);
+}
+
+function hasUsefulContext(context: unknown, selected: string) {
+  const line = clean(context);
+  return Boolean(line && termKey(line) !== termKey(selected));
+}
+
+function senseKey(phrase: string, word: string, selected: string, context: unknown) {
+  return `${focusKey(phrase, word, selected)}|${contextKey(context, selected)}`;
+}
+
 /// How many different people have to write the same correction before it
 /// becomes the answer everybody gets. Two is a coincidence; three is a
 /// dictionary.
@@ -806,7 +933,7 @@ async function agreedCorrection(env: Env, term: string, language: string) {
 async function enrich(env: Env, selected: string, context = '', language = 'ru') {
   // Detect first.  The old order treated a Spanish line as English in both
   // the model prompt and the dictionary, so neither answer was trustworthy.
-  const main = await translate(selected, false, language);
+  const main = await translate(env, selected, false, language);
   const sourceLanguage = main.source;
   const smart = await smartReading(
     env,
@@ -832,15 +959,15 @@ async function enrich(env: Env, selected: string, context = '', language = 'ru')
     .slice(1)
     .find((form) => form !== phraseTerm.toLowerCase());
   const [inflected, base] = await Promise.all([
-    translate(phraseTerm, true, language, sourceLanguage),
-    baseForm ? translate(baseForm, true, language, sourceLanguage) : Promise.resolve(null),
+    translate(env, phraseTerm, true, language, sourceLanguage),
+    baseForm ? translate(env, baseForm, true, language, sourceLanguage) : Promise.resolve(null),
   ]);
   const focusResult = {
     text: inflected.text,
     variants: mergeVariants(inflected.variants, base?.variants ?? []),
     examples: inflected.examples.length ? inflected.examples : (base?.examples ?? []),
   };
-  const examples = await translateExamples(focusResult.examples, language, sourceLanguage);
+  const examples = await translateExamples(env, focusResult.examples, language, sourceLanguage);
   // The selected line itself is worth keeping as the first example when it is
   // a phrase rather than a bare word.
   const isSentence = wordsIn(selected).length > 1;
@@ -853,40 +980,62 @@ async function enrich(env: Env, selected: string, context = '', language = 'ru')
   return {
     source_lang: main.source || '',
     corrected: Boolean(agreed),
-    translation: deliberatePhrase ? main.text : (smart?.line || main.text),
+    // Context chooses the sense, while the answer always stays scoped to the
+    // exact selected word or phrase.
+    translation: (deliberatePhrase ? smart?.term : smart?.line) || main.text,
     focus_word: item.word,
     focus_phrase: item.phrase,
     // The reading of the line wins; the dictionary is what is left when the
     // model could not be reached. For a word picked out of a sentence, the
     // sense used in that sentence still beats the dictionary's first entry.
     focus_translation:
-      agreed ??
-      (deliberatePhrase
-        ? main.text
-        : (smart?.term ??
-            ((isSingleWord ? null : contextualSense(variants, main.text)) ??
-                focusResult.text))),
-    synonyms: deliberatePhrase ? variants : (smart?.synonyms ?? []),
-    sense_note: deliberatePhrase ? null : (smart?.note ?? null),
+      agreed ||
+      (smart?.term ||
+        ((isSingleWord ? null : contextualSense(variants, main.text)) ??
+            focusResult.text)),
+    synonyms: smart?.synonyms ?? variants,
+    sense_note: smart?.note ?? null,
     variants,
     examples: examples.slice(0, 5),
     source_language: sourceLanguage,
   };
 }
 async function upsertSelection(env: Env, owner: string, input: any, enriched?: any) {
-  const selected = clean(input.selected_text); const data = enriched ?? input; const word = clean(data.focus_word); const phrase = clean(data.focus_phrase); const key = focusKey(phrase, word, selected);
+  const selected = clean(input.selected_text); const data = enriched ?? input; const word = clean(data.focus_word); const phrase = clean(data.focus_phrase);
+  const incomingContext = clean(input.context);
+  // A line that repeats the highlighted word tells the model nothing new. A
+  // longer line is what disambiguates "made" (created, forced, presented,
+  // etc.), and is also the prompt that practice must show beside the word.
+  const usefulContext = incomingContext && termKey(incomingContext) !== termKey(selected)
+    ? incomingContext
+    : '';
+  const selectedSense = senseKey(phrase, word, selected, usefulContext);
   const rows = await env.DB.prepare('SELECT * FROM selections WHERE owner_id = ?').bind(owner).all<any>();
-  const existing = rows.results.find(row => row.client_key === clean(input.client_key) || focusKey(row.focus_phrase, row.focus_word, row.selected_text) === key);
+  const clientKey = clean(input.client_key);
+  const existing = rows.results.find((row) =>
+    (clientKey && row.client_key === clientKey) ||
+    senseKey(row.focus_phrase, row.focus_word, row.selected_text, row.context) === selectedSense ||
+    // A card saved by an old extension contains no scene at all, so it cannot
+    // represent a distinct sense yet. The next contextual capture repairs it
+    // in place; cards that already have lines are never merged this way.
+    (!hasUsefulContext(row.context, row.selected_text) &&
+      focusKey(row.focus_phrase, row.focus_word, row.selected_text) === focusKey(phrase, word, selected)),
+  );
   if (existing) {
     const repairable = String(existing.translation ?? '') === UNAVAILABLE && clean(data.translation) && clean(data.translation) !== UNAVAILABLE;
-    if (repairable) {
-      await env.DB.prepare('UPDATE selections SET archived = 0, created_at = ?, seen_count = seen_count + 1, translation = ?, focus_word = ?, focus_phrase = ?, focus_translation = ?, synonyms_json = ?, sense_note = ?, variants_json = ?, examples_json = ? WHERE id = ?')
-        .bind(now(), clean(data.translation), word || null, phrase || null, clean(data.focus_translation) || null, JSON.stringify(data.synonyms ?? []), clean(data.sense_note) || null, JSON.stringify(data.variants ?? []), JSON.stringify(data.examples ?? []), existing.id).run();
+    const contextChanged = Boolean(usefulContext && usefulContext !== clean(existing.context));
+    if (repairable || contextChanged) {
+      // Re-selecting an older one-word card with its subtitle line repairs
+      // both its stored sense and the practice prompt. This is deliberately
+      // not limited to a matching client key: an old capture made before the
+      // browser supplied context must be repairable from the library itself.
+      await env.DB.prepare('UPDATE selections SET archived = 0, created_at = ?, seen_count = seen_count + 1, translation = ?, focus_word = ?, focus_phrase = ?, focus_translation = ?, synonyms_json = ?, sense_note = ?, variants_json = ?, examples_json = ?, context = ? WHERE id = ?')
+        .bind(now(), clean(data.translation) || existing.translation, word || null, phrase || null, clean(data.focus_translation) || null, JSON.stringify(data.synonyms ?? []), clean(data.sense_note) || null, JSON.stringify(data.variants ?? []), JSON.stringify(data.examples ?? []), usefulContext || existing.context, existing.id).run();
     } else if (clean(input.client_key) && existing.client_key === clean(input.client_key) && selected && selected !== existing.selected_text) {
       // The same save, refined: a selection caught in two goes arrives under
       // the key of the first attempt, and the wider phrase is the one meant.
       await env.DB.prepare('UPDATE selections SET archived = 0, created_at = ?, selected_text = ?, translation = ?, focus_word = ?, focus_phrase = ?, focus_translation = ?, synonyms_json = ?, sense_note = ?, variants_json = ?, examples_json = ?, context = ? WHERE id = ?')
-        .bind(now(), selected, clean(data.translation) || existing.translation, word || null, phrase || null, clean(data.focus_translation) || null, JSON.stringify(data.synonyms ?? []), clean(data.sense_note) || null, JSON.stringify(data.variants ?? []), JSON.stringify(data.examples ?? []), input.context ?? existing.context, existing.id).run();
+        .bind(now(), selected, clean(data.translation) || existing.translation, word || null, phrase || null, clean(data.focus_translation) || null, JSON.stringify(data.synonyms ?? []), clean(data.sense_note) || null, JSON.stringify(data.variants ?? []), JSON.stringify(data.examples ?? []), usefulContext || existing.context, existing.id).run();
     } else {
       await env.DB.prepare('UPDATE selections SET archived = 0, created_at = ?, seen_count = seen_count + 1 WHERE id = ?').bind(now(), existing.id).run();
     }
@@ -898,7 +1047,7 @@ async function upsertSelection(env: Env, owner: string, input: any, enriched?: a
   }
   const id = uid();
   await env.DB.prepare(`INSERT INTO selections (id, owner_id, client_key, media_title, season, episode, timecode_ms, selected_text, translation, focus_word, focus_phrase, focus_translation, synonyms_json, sense_note, variants_json, examples_json, context, created_at, source_lang) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
-    .bind(id, owner, clean(input.client_key), clean(input.media_title) || 'Unknown title', input.season ?? null, input.episode ?? null, input.timecode_ms ?? null, selected, clean(data.translation) || 'Translation unavailable', word || null, phrase || null, clean(data.focus_translation) || null, JSON.stringify(data.synonyms ?? []), clean(data.sense_note) || null, JSON.stringify(data.variants ?? []), JSON.stringify(data.examples ?? []), input.context ?? null, now(), clean(data.source_lang) || null).run();
+    .bind(id, owner, clean(input.client_key), clean(input.media_title) || 'Unknown title', input.season ?? null, input.episode ?? null, input.timecode_ms ?? null, selected, clean(data.translation) || selected, word || null, phrase || null, clean(data.focus_translation) || null, JSON.stringify(data.synonyms ?? []), clean(data.sense_note) || null, JSON.stringify(data.variants ?? []), JSON.stringify(data.examples ?? []), usefulContext || null, now(), clean(data.source_lang) || null).run();
   return env.DB.prepare('SELECT * FROM selections WHERE id = ?').bind(id).first();
 }
 
@@ -1142,7 +1291,7 @@ export default { async fetch(request: Request, env: Env): Promise<Response> {
       const input: any = await request.json();
       const text = clean(input.text);
       if (!text) throw new Error('Nothing to read');
-      const answer = await translate(text, false, user.language || 'ru');
+      const answer = await translate(env, text, false, user.language || 'ru');
       return json({ translation: answer.text, source_lang: answer.source });
     }
 
@@ -1155,7 +1304,7 @@ export default { async fetch(request: Request, env: Env): Promise<Response> {
       // A small dictionary pass gives us the actual source language before we
       // ask the model to read the line.  It also makes the panel useful when
       // Workers AI is temporarily unavailable instead of returning an error.
-      const dictionary = await translate(text, false, user.language || 'ru');
+      const dictionary = await translate(env, text, false, user.language || 'ru');
       const deliberatePhrase = isDeliberatePhrase(text);
       const smart = await smartReading(
         env,
@@ -1166,17 +1315,14 @@ export default { async fetch(request: Request, env: Env): Promise<Response> {
         dictionary.source,
       );
       return json({
-        term_en: deliberatePhrase ? text : (smart?.english || text),
-        translation: deliberatePhrase
-          ? dictionary.text
-          : (smart?.line || dictionary.text),
-        focus_translation: deliberatePhrase
-          ? dictionary.text
-          : (smart?.term || null),
-        synonyms: deliberatePhrase
-          ? dictionary.variants
-          : (smart?.synonyms || dictionary.variants),
-        sense_note: deliberatePhrase ? null : (smart?.note || null),
+        term_en: smart?.english || text,
+        // The subtitle is context only. Return the selected compact phrase in
+        // its contextual sense; return a full sentence only when it was itself
+        // selected.
+        translation: (deliberatePhrase ? smart?.term : smart?.line) || dictionary.text,
+        focus_translation: smart?.term || dictionary.text,
+        synonyms: smart?.synonyms || dictionary.variants,
+        sense_note: smart?.note || null,
         source_language: dictionary.source,
       });
     }
@@ -1212,7 +1358,7 @@ export default { async fetch(request: Request, env: Env): Promise<Response> {
       const row = await env.DB.prepare('SELECT * FROM selections WHERE id = ? AND owner_id = ?').bind(reenrich[1], user.id).first<any>();
       if (!row) throw new Error('Selection not found');
       const data = await enrich(env, clean(row.selected_text), String(row.context ?? ''), user.language || 'ru');
-      if (clean(data.translation) === UNAVAILABLE) throw new Error('Translation service unavailable, nothing changed');
+      if (!clean(data.translation)) throw new Error('No translation answer yet, card was not changed');
       await env.DB.prepare('UPDATE selections SET translation = ?, focus_word = ?, focus_phrase = ?, focus_translation = ?, synonyms_json = ?, sense_note = ?, variants_json = ?, examples_json = ? WHERE id = ?')
         .bind(
           clean(data.translation),

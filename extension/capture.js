@@ -76,8 +76,7 @@
         margin-top: 5px; font-size: 12.5px; font-weight: 500; color: #93a49c; line-height: 1.35;
       }
       .card.small .syn, .card.small .note, .card.small .seen,
-      .card.small .row, .card.small .say, .card.small .sentence,
-      .card.small .head { display: none; }
+      .card.small .row, .card.small .say, .card.small .sentence { display: none; }
       .card.small .head.keep { display: block; font-size: 14px; color: #f2f7f4; }
       .card.small .row.keep { display: flex; margin-top: 9px; }
       .card.small .row.keep button { padding: 7px 10px; font-size: 13px; background: #1e7a4c; color: #ffffff; }

@@ -220,10 +220,11 @@ class _Card extends StatelessWidget {
         ),
         if (card.contextLine != null) ...[
           const SizedBox(height: AppSpace.lg),
-          Text(
-            card.contextLine!,
-            textAlign: TextAlign.center,
-            style: font(size: 15, weight: 600, color: c.ink3, height: 1.4),
+          _ContextLine(
+            line: card.contextLine!,
+            phrases: [card.learningLabel, card.focusWord ?? ''],
+            color: c.ink3,
+            accent: c.green,
           ),
         ],
         const SizedBox(height: AppSpace.xxl),
@@ -267,6 +268,54 @@ class _Card extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+/// The word is visible in the exact line that gave it this meaning.  Seeing
+/// that scene cue prevents a review of "made" from becoming a random choice
+/// among all of its dictionary meanings.
+class _ContextLine extends StatelessWidget {
+  const _ContextLine({
+    required this.line,
+    required this.phrases,
+    required this.color,
+    required this.accent,
+  });
+
+  final String line;
+  final List<String> phrases;
+  final Color color;
+  final Color accent;
+
+  @override
+  Widget build(BuildContext context) {
+    final base = font(size: 15, weight: 600, color: color, height: 1.4);
+    final normalizedLine = line.toLowerCase();
+    final phrase = phrases
+        .map((value) => value.trim())
+        .firstWhere(
+          (value) => value.isNotEmpty && normalizedLine.contains(value.toLowerCase()),
+          orElse: () => '',
+        );
+    final start = phrase.isEmpty ? -1 : normalizedLine.indexOf(phrase.toLowerCase());
+    if (start < 0) {
+      return Text(line, textAlign: TextAlign.center, style: base);
+    }
+    final end = start + phrase.length;
+    return Text.rich(
+      TextSpan(
+        style: base,
+        children: [
+          TextSpan(text: line.substring(0, start)),
+          TextSpan(
+            text: line.substring(start, end),
+            style: base.copyWith(color: accent, fontWeight: FontWeight.w800),
+          ),
+          TextSpan(text: line.substring(end)),
+        ],
+      ),
+      textAlign: TextAlign.center,
     );
   }
 }
