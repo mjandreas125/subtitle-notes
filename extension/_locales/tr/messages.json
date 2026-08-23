@@ -85,6 +85,14 @@
   "popupConnect": {
     "message": "Telefonu bağla"
   },
+  "popupConnectGoogle": {
+    "message": "Google ile devam et",
+    "description": "Popup button that signs in with Google"
+  },
+  "popupConnectCode": {
+    "message": "Kod göster",
+    "description": "Popup button that shows the pairing code"
+  },
   "popupConnected": {
     "message": "Bağlandı - $EMAIL$",
     "placeholders": {

@@ -85,6 +85,14 @@
   "popupConnect": {
     "message": "Yhdistä puhelin"
   },
+  "popupConnectGoogle": {
+    "message": "Jatka Google-tilillä",
+    "description": "Popup button that signs in with Google"
+  },
+  "popupConnectCode": {
+    "message": "Näytä koodi",
+    "description": "Popup button that shows the pairing code"
+  },
   "popupConnected": {
     "message": "Yhdistetty - $EMAIL$",
     "placeholders": {

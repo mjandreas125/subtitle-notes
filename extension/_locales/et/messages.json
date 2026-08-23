@@ -85,6 +85,14 @@
   "popupConnect": {
     "message": "Ühenda telefon"
   },
+  "popupConnectGoogle": {
+    "message": "Jätka Google’iga",
+    "description": "Popup button that signs in with Google"
+  },
+  "popupConnectCode": {
+    "message": "Näita koodi",
+    "description": "Popup button that shows the pairing code"
+  },
   "popupConnected": {
     "message": "Ühendatud - $EMAIL$",
     "placeholders": {

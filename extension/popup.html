@@ -40,8 +40,24 @@
         font-family: inherit; font-size: 14px; font-weight: 760; line-height: 1; letter-spacing: -.01em;
         transition: filter .15s ease, transform .1s ease;
       }
-      #connect:hover { filter: brightness(1.06); }
-      #connect:active { transform: scale(.985); }
+      #connect:hover, #connectGoogle:hover { filter: brightness(1.06); }
+      #connect:active, #connectGoogle:active { transform: scale(.985); }
+      .entry { display: grid; gap: 8px; margin-bottom: 12px; }
+      #connectGoogle {
+        width: 100%; min-height: 52px; border: 0; border-radius: 14px; cursor: pointer;
+        background: linear-gradient(135deg, #20a765, #087442); color: #fff;
+        box-shadow: 0 9px 18px rgba(17, 132, 78, .22);
+        font-family: inherit; font-size: 14px; font-weight: 760; line-height: 1; letter-spacing: -.01em;
+        transition: filter .15s ease, transform .1s ease;
+      }
+      #connectCode {
+        width: 100%; min-height: 44px; border: 1px solid var(--line); border-radius: 13px; cursor: pointer;
+        background: var(--raised); color: var(--ink);
+        font-family: inherit; font-size: 13px; font-weight: 720;
+        transition: background-color .15s ease, border-color .15s ease, transform .1s ease;
+      }
+      #connectCode:hover { background: var(--wash); border-color: #a9d4ba; }
+      #connectCode:active { transform: scale(.985); }
       .foot { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
       .action {
         position: relative; min-height: 56px; display: flex; align-items: center; gap: 9px; min-width: 0; padding: 9px 10px;
@@ -83,7 +99,10 @@
       <h1 id="title">Subtitle Notes</h1>
     </div>
     <p id="state"></p>
-    <button id="connect" hidden></button>
+    <div class="entry" id="entry" hidden>
+      <button id="connectGoogle"></button>
+      <button id="connectCode" class="second"></button>
+    </div>
     <div class="foot">
       <button class="action primary" id="library" hidden>
         <span class="action-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H11v16H6.5A2.5 2.5 0 0 0 4 21z"/><path d="M20 5.5A2.5 2.5 0 0 0 17.5 3H13v16h4.5A2.5 2.5 0 0 1 20 21z"/></svg></span>

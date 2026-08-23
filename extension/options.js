@@ -129,6 +129,12 @@ async function connect({ withGoogle }) {
 view('google').addEventListener('click', () => connect({ withGoogle: true }));
 view('phoneWay').addEventListener('click', () => connect({ withGoogle: false }));
 
+// Opened from the popup with the choice already made.
+const asked = new URLSearchParams(location.search).get('connect');
+if (asked === 'google' || asked === 'code') {
+  connect({ withGoogle: asked === 'google' });
+}
+
 view('cancel').addEventListener('click', () => {
   cancelled = true;
   paintAccount();

@@ -11,12 +11,18 @@ function setActionLabel(button, label) {
   view('title').textContent = t('appName');
   if (!token) {
     view('state').textContent = t('popupNotPaired');
-    view('connect').hidden = false;
-    view('connect').textContent = t('popupConnect');
-    view('connect').addEventListener('click', () => {
-      chrome.runtime.openOptionsPage();
+    view('entry').hidden = false;
+    view('connectGoogle').textContent = t('popupConnectGoogle');
+    view('connectCode').textContent = t('popupConnectCode');
+    // The settings page is where the waiting happens - it has to stay open
+    // while the server is polled - but it is told which way in was chosen, so
+    // nobody is asked twice.
+    const enter = (how) => {
+      chrome.tabs.create({ url: chrome.runtime.getURL(`options.html?connect=${how}`) });
       window.close();
-    });
+    };
+    view('connectGoogle').addEventListener('click', () => enter('google'));
+    view('connectCode').addEventListener('click', () => enter('code'));
     setActionLabel(view('settings'), t('popupSettings'));
     view('settings').addEventListener('click', () => chrome.runtime.openOptionsPage());
     show();

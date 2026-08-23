@@ -85,6 +85,14 @@
   "popupConnect": {
     "message": "Подключить телефон"
   },
+  "popupConnectGoogle": {
+    "message": "Войти через Google",
+    "description": "Popup button that signs in with Google"
+  },
+  "popupConnectCode": {
+    "message": "Показать код",
+    "description": "Popup button that shows the pairing code"
+  },
   "popupConnected": {
     "message": "Подключено - $EMAIL$",
     "placeholders": {

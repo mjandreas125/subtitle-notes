@@ -85,6 +85,14 @@
   "popupConnect": {
     "message": "Connect your phone"
   },
+  "popupConnectGoogle": {
+    "message": "Continue with Google",
+    "description": "Popup button that signs in with Google"
+  },
+  "popupConnectCode": {
+    "message": "Show a code instead",
+    "description": "Popup button that shows the pairing code"
+  },
   "popupConnected": {
     "message": "Connected - $EMAIL$",
     "placeholders": {

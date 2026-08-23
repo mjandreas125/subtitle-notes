@@ -85,6 +85,14 @@
   "popupConnect": {
     "message": "Collega il telefono"
   },
+  "popupConnectGoogle": {
+    "message": "Continua con Google",
+    "description": "Popup button that signs in with Google"
+  },
+  "popupConnectCode": {
+    "message": "Mostra un codice",
+    "description": "Popup button that shows the pairing code"
+  },
   "popupConnected": {
     "message": "Collegato - $EMAIL$",
     "placeholders": {
