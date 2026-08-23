@@ -6,7 +6,11 @@ import 'package:http/http.dart' as http;
 /// The version carried by the Windows installer.  The updater reads published
 /// GitHub Release assets, not a mutable "latest.exe" URL, so a partial upload
 /// can never be installed by someone who happens to open the library then.
-const desktopAppVersion = '1.6.3';
+///
+/// Bump it with `AppVersion` in `installer/SubtitleNotes.iss`. Left behind, it
+/// makes the program offer to install the version it is already running, over
+/// and over — this one had been reading 1.6.3 since the installer was 1.7.7.
+const desktopAppVersion = '1.8.0';
 
 class DesktopRelease {
   const DesktopRelease({required this.version, required this.downloadUrl});

@@ -165,7 +165,8 @@ VLC по `--configure-vlc`, а запущенный руками просто о
 Порядок выпуска новой версии:
 
 1. `installer/SubtitleNotes.iss` — `AppVersion` и `OutputBaseFilename`.
-2. `desktop_update.py` — `VERSION` (иначе программа предложит обновиться на себя).
+2. `desktop_update.py` — `VERSION` и `mobile/lib/desktop/desktop_updates.dart` —
+   `desktopAppVersion` (иначе программа предложит обновиться на себя).
 3. Пересобрать exe → скомпилировать установщик.
 4. `DESKTOP_LATEST` в `cloud_api/src/index.ts` → `npx wrangler deploy`.
 5. `gh release create vX.Y.Z release_package/SubtitleNotesSetup-X.Y.Z.exe …`
