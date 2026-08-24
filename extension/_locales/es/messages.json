@@ -230,10 +230,10 @@
     "message": "Una dirección por línea, por ejemplo mail.google.com."
   },
   "optSites": {
-    "message": "Dónde ves películas"
+    "message": "El espacio solo en estos sitios"
   },
   "optSitesHelp": {
-    "message": "Una dirección por línea, por ejemplo rezka.ag. Los subtítulos y el espacio funcionan solo aquí. Vacío significa en todas partes."
+    "message": "Una dirección por línea, por ejemplo rezka.ag. Vacío significa en todas partes. Lo demás funciona en todas partes igualmente."
   },
   "optSavedToast": {
     "message": "Guardado"

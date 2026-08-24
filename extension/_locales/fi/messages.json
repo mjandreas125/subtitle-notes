@@ -230,10 +230,10 @@
     "message": "Yksi osoite riviä kohden, esimerkiksi mail.google.com."
   },
   "optSites": {
-    "message": "Missä katsot elokuvia"
+    "message": "Välilyönti vain näillä sivustoilla"
   },
   "optSitesHelp": {
-    "message": "Yksi osoite riviä kohden, esimerkiksi rezka.ag. Tekstitykset ja välilyönti toimivat vain täällä. Tyhjä tarkoittaa kaikkia sivustoja."
+    "message": "Yksi osoite riviä kohden, esimerkiksi rezka.ag. Tyhjä tarkoittaa kaikkia sivustoja. Muu toimii joka tapauksessa kaikkialla."
   },
   "optSavedToast": {
     "message": "Tallennettu"

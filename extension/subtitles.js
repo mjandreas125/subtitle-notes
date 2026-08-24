@@ -318,10 +318,6 @@
   const asleep = () => {
     const options = settings();
     return options.subtitles === false ||
-      // Named sites, when any are named: everything below takes over the
-      // captions and the keyboard, which is welcome on the two sites someone
-      // watches films on and an intrusion on the rest of the web.
-      (typeof snSiteAllowed === 'function' && !snSiteAllowed(options, location.hostname)) ||
       (typeof snBlocked === 'function' && snBlocked(options, location.hostname));
   };
 
@@ -493,6 +489,11 @@
       const options = window.__subtitleNotes?.settings ?? {};
       if (options.spaceLine !== true) return;
       if (asleep()) return;
+      // Space is the one thing here that a page already uses for something
+      // else, so it is the one thing worth pointing at particular sites.
+      // Selecting words with the mouse takes nothing away from anybody and
+      // goes on working everywhere.
+      if (typeof snSiteAllowed === 'function' && !snSiteAllowed(options, location.hostname)) return;
       const target = event.target;
       const typing =
         target instanceof HTMLElement &&

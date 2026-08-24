@@ -230,10 +230,10 @@
     "message": "Un indirizzo per riga, per esempio mail.google.com."
   },
   "optSites": {
-    "message": "Dove guardi i film"
+    "message": "La barra spaziatrice solo su questi siti"
   },
   "optSitesHelp": {
-    "message": "Un indirizzo per riga, per esempio rezka.ag. I sottotitoli e la barra spaziatrice funzionano solo qui. Vuoto significa ovunque."
+    "message": "Un indirizzo per riga, per esempio rezka.ag. Vuoto significa ovunque. Il resto funziona ovunque comunque."
   },
   "optSavedToast": {
     "message": "Salvato"

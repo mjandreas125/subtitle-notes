@@ -230,10 +230,10 @@
     "message": "Eine Adresse pro Zeile, zum Beispiel mail.google.com."
   },
   "optSites": {
-    "message": "Wo Sie Filme sehen"
+    "message": "Leertaste nur auf diesen Seiten"
   },
   "optSitesHelp": {
-    "message": "Eine Adresse pro Zeile, zum Beispiel rezka.ag. Untertitel und die Leertaste arbeiten nur hier. Leer heißt überall."
+    "message": "Eine Adresse pro Zeile, zum Beispiel rezka.ag. Leer heißt überall. Alles andere arbeitet ohnehin überall."
   },
   "optSavedToast": {
     "message": "Gespeichert"

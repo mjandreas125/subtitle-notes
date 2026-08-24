@@ -230,10 +230,10 @@
     "message": "Jeden adres na linijkę, na przykład mail.google.com."
   },
   "optSites": {
-    "message": "Gdzie oglądasz filmy"
+    "message": "Spacja tylko na tych stronach"
   },
   "optSitesHelp": {
-    "message": "Jeden adres w wierszu, na przykład rezka.ag. Napisy i spacja działają tylko tutaj. Puste znaczy wszędzie."
+    "message": "Jeden adres w wierszu, na przykład rezka.ag. Puste znaczy wszędzie. Reszta i tak działa wszędzie."
   },
   "optSavedToast": {
     "message": "Zapisano"

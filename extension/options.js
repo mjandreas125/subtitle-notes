@@ -264,7 +264,7 @@ function paintSettings() {
   view('spaceLine').checked = settings.spaceLine === true;
   view('spaceSaves').checked = settings.spaceSaves === true;
   // Keeping what space read is a question about a key that is switched off.
-  view('spaceSavesRow').style.display = settings.spaceLine === true ? '' : 'none';
+  showSpaceExtras(settings.spaceLine === true);
   view('subtitleSites').value = (settings.subtitleSites ?? []).join('\n');
   view('hideAfter').value = settings.hideAfter ?? 6;
   view('blocked').value = (settings.blocked ?? []).join('\n');
@@ -327,8 +327,16 @@ view('subtitles').addEventListener('change', (event) => store({ subtitles: event
 view('pauseVideo').addEventListener('change', (event) => store({ pauseVideo: event.target.checked }));
 view('speak').addEventListener('change', (event) => store({ speak: event.target.checked }));
 view('compactCard').addEventListener('change', (event) => store({ compactCard: event.target.checked }));
+/// Both follow-up questions belong to the space key: there is nothing to ask
+/// about a key that is switched off.
+function showSpaceExtras(shown) {
+  for (const id of ['spaceSavesRow', 'spaceSitesBlock']) {
+    view(id).style.display = shown ? '' : 'none';
+  }
+}
+
 view('spaceLine').addEventListener('change', (event) => {
-  view('spaceSavesRow').style.display = event.target.checked ? '' : 'none';
+  showSpaceExtras(event.target.checked);
   store({ spaceLine: event.target.checked });
 });
 view('spaceSaves').addEventListener('change', (event) => store({ spaceSaves: event.target.checked }));

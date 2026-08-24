@@ -230,10 +230,10 @@
     "message": "Üks aadress rea kohta, näiteks mail.google.com."
   },
   "optSites": {
-    "message": "Kus sa filme vaatad"
+    "message": "Tühik ainult neil saitidel"
   },
   "optSitesHelp": {
-    "message": "Üks aadress real, näiteks rezka.ag. Subtiitrid ja tühik töötavad ainult siin. Tühi tähendab kõikjal."
+    "message": "Üks aadress real, näiteks rezka.ag. Tühi tähendab kõikjal. Kõik muu töötab niikuinii igal pool."
   },
   "optSavedToast": {
     "message": "Salvestatud"

@@ -230,10 +230,10 @@
     "message": "En adress per rad, till exempel mail.google.com."
   },
   "optSites": {
-    "message": "Var du ser filmer"
+    "message": "Mellanslag bara på dessa webbplatser"
   },
   "optSitesHelp": {
-    "message": "En adress per rad, till exempel rezka.ag. Undertexter och mellanslag fungerar bara här. Tomt betyder alla webbplatser."
+    "message": "En adress per rad, till exempel rezka.ag. Tomt betyder alla webbplatser. Resten fungerar överallt ändå."
   },
   "optSavedToast": {
     "message": "Sparat"

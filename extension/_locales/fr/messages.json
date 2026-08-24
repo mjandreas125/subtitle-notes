@@ -230,10 +230,10 @@
     "message": "Une adresse par ligne, par exemple mail.google.com."
   },
   "optSites": {
-    "message": "Où vous regardez des films"
+    "message": "La barre d’espace seulement sur ces sites"
   },
   "optSitesHelp": {
-    "message": "Une adresse par ligne, par exemple rezka.ag. Les sous-titres et la barre d’espace ne marchent qu’ici. Vide signifie partout."
+    "message": "Une adresse par ligne, par exemple rezka.ag. Vide signifie partout. Le reste fonctionne partout de toute façon."
   },
   "optSavedToast": {
     "message": "Enregistré"

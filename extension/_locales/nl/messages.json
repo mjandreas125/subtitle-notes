@@ -230,10 +230,10 @@
     "message": "Eén adres per regel, bijvoorbeeld mail.google.com."
   },
   "optSites": {
-    "message": "Waar je films kijkt"
+    "message": "Spatiebalk alleen op deze sites"
   },
   "optSitesHelp": {
-    "message": "Eén adres per regel, bijvoorbeeld rezka.ag. Ondertitels en de spatiebalk werken alleen hier. Leeg betekent overal."
+    "message": "Eén adres per regel, bijvoorbeeld rezka.ag. Leeg betekent overal. De rest werkt sowieso overal."
   },
   "optSavedToast": {
     "message": "Opgeslagen"

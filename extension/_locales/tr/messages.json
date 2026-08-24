@@ -230,10 +230,10 @@
     "message": "Satır başına bir adres, örneğin mail.google.com."
   },
   "optSites": {
-    "message": "Filmleri nerede izliyorsunuz"
+    "message": "Boşluk yalnızca bu sitelerde"
   },
   "optSitesHelp": {
-    "message": "Satır başına bir adres, örneğin rezka.ag. Altyazılar ve boşluk tuşu yalnızca burada çalışır. Boş bırakmak her siteyi kapsar."
+    "message": "Satır başına bir adres, örneğin rezka.ag. Boş bırakmak her siteyi kapsar. Geri kalanı zaten her yerde çalışır."
   },
   "optSavedToast": {
     "message": "Kaydedildi"

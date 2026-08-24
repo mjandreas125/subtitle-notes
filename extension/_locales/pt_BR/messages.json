@@ -230,10 +230,10 @@
     "message": "Um endereço por linha, por exemplo mail.google.com."
   },
   "optSites": {
-    "message": "Onde você assiste a filmes"
+    "message": "O espaço só nestes sites"
   },
   "optSitesHelp": {
-    "message": "Um endereço por linha, por exemplo rezka.ag. As legendas e o espaço funcionam só aqui. Vazio significa em todos os sites."
+    "message": "Um endereço por linha, por exemplo rezka.ag. Vazio significa em todos os sites. O resto funciona em todos eles de qualquer forma."
   },
   "optSavedToast": {
     "message": "Salvo"

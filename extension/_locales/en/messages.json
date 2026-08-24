@@ -230,10 +230,10 @@
     "message": "One address per line, for example mail.google.com."
   },
   "optSites": {
-    "message": "Where films are watched"
+    "message": "Space only on these sites"
   },
   "optSitesHelp": {
-    "message": "One address per line, for example rezka.ag. Subtitles and the space key work only here. Empty means every site."
+    "message": "One address per line, for example rezka.ag. Empty means every site. Everything else works everywhere either way."
   },
   "optSavedToast": {
     "message": "Saved"
