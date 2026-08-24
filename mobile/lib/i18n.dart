@@ -40,6 +40,7 @@ class AppI18n {
 
   static const _values = <String, Map<String, String>>{
     'de': {
+      'Keep what space read': 'Behalten, was die Leertaste liest',
       'Deleted': 'Gelöscht',
       'Offline': 'Offline',
       'No connection — try again later.': 'Keine Verbindung — versuchen Sie es später noch einmal.',
@@ -369,6 +370,7 @@ class AppI18n {
       '“\${card.learningLabel}” marked as learned': '„\${card.learningLabel}“ als gelernt markiert',
     },
     'es': {
+      'Keep what space read': 'Guardar lo que lee el espacio',
       'Deleted': 'Eliminado',
       'No connection — try again later.': 'Sin conexión: inténtalo de nuevo más tarde.',
       'No connection — the language was not changed.': 'Sin conexión: el idioma no se cambió.',
@@ -697,6 +699,7 @@ class AppI18n {
       '“\${card.learningLabel}” marked as learned': '“\${card.learningLabel}” marcado como aprendido',
     },
     'et': {
+      'Keep what space read': 'Salvesta see, mida tühik luges',
       'Deleted': 'Kustutatud',
       'No connection — try again later.': 'Ühendust ei ole — proovi hiljem uuesti.',
       'No connection — the language was not changed.': 'Ühendust ei ole — keelt ei muudetud.',
@@ -1029,6 +1032,7 @@ class AppI18n {
       '“\${card.learningLabel}” marked as learned': '„\${card.learningLabel}” on märgitud õpituks',
     },
     'fi': {
+      'Keep what space read': 'Tallenna se, minkä väli lukee',
       'Deleted': 'Poistettu',
       'No connection — try again later.': 'Ei yhteyttä — yritä myöhemmin uudelleen.',
       'No connection — the language was not changed.': 'Ei yhteyttä — kieltä ei vaihdettu.',
@@ -1356,6 +1360,7 @@ class AppI18n {
       '“\${card.learningLabel}” marked as learned': '"\${card.learningLabel}" merkitty opituksi',
     },
     'fr': {
+      'Keep what space read': 'Garder ce que la barre d’espace lit',
       'Deleted': 'Supprimé',
       'Interface': 'Interface',
       'No connection — try again later.': 'Pas de connexion — réessayez plus tard.',
@@ -1685,6 +1690,7 @@ class AppI18n {
       '“\${card.learningLabel}” marked as learned': '« \${card.learningLabel} » marqué comme appris',
     },
     'it': {
+      'Keep what space read': 'Conserva ciò che legge la barra spaziatrice',
       'Deleted': 'Eliminato',
       'No connection — try again later.': 'Nessuna connessione — riprova più tardi.',
       'No connection — the language was not changed.': 'Nessuna connessione — la lingua non è stata cambiata.',
@@ -2014,6 +2020,7 @@ class AppI18n {
       '“\${card.learningLabel}” marked as learned': '“\${card.learningLabel}” contrassegnato come appreso',
     },
     'nl': {
+      'Keep what space read': 'Bewaren wat de spatiebalk leest',
       'Deleted': 'Verwijderd',
       'Offline': 'Offline',
       'Interface': 'Interface',
@@ -2342,6 +2349,7 @@ class AppI18n {
       '“\${card.learningLabel}” marked as learned': '“\${card.learningLabel}” gemarkeerd als geleerd',
     },
     'pl': {
+      'Keep what space read': 'Zapisuj to, co czyta spacja',
       'Deleted': 'Usunięto',
       'No connection — try again later.': 'Brak połączenia — spróbuj później.',
       'No connection — the language was not changed.': 'Brak połączenia — język nie został zmieniony.',
@@ -2671,6 +2679,7 @@ class AppI18n {
       '“\${card.learningLabel}” marked as learned': '„\${card.learningLabel}” oznaczone jako nauczone',
     },
     'pt': {
+      'Keep what space read': 'Guardar o que o espaço lê',
       'Deleted': 'Eliminado',
       'Interface': 'Interface',
       'No connection — try again later.': 'Sem ligação — tente novamente mais tarde.',
@@ -2999,6 +3008,7 @@ class AppI18n {
       '“\${card.learningLabel}” marked as learned': '“\${card.learningLabel}” marcado como aprendido',
     },
     'ru': {
+      'Keep what space read': 'Сохранять прочитанное пробелом',
       'Deleted': 'Удалено',
       'No connection — try again later.': 'Нет связи — попробуйте позже.',
       'No connection — the language was not changed.': 'Нет связи — язык не изменён.',
@@ -3332,6 +3342,7 @@ class AppI18n {
       '“\${card.learningLabel}” marked as learned': '«\${card.learningLabel}» отмечено как изученное',
     },
     'sv': {
+      'Keep what space read': 'Spara det mellanslag läser',
       'Deleted': 'Borttagen',
       'Offline': 'Offline',
       'No connection — try again later.': 'Ingen anslutning — försök igen senare.',
@@ -3660,6 +3671,7 @@ class AppI18n {
       '“\${card.learningLabel}” marked as learned': '"\${card.learningLabel}" markerad som inlärd',
     },
     'tr': {
+      'Keep what space read': 'Boşluğun okuduğunu kaydet',
       'Deleted': 'Silindi',
       'No connection — try again later.': 'Bağlantı yok — daha sonra tekrar deneyin.',
       'No connection — the language was not changed.': 'Bağlantı yok — dil değiştirilmedi.',
@@ -3988,6 +4000,7 @@ class AppI18n {
       '“\${card.learningLabel}” marked as learned': '“\${card.learningLabel}” öğrenildi olarak işaretlendi',
     },
     'uk': {
+      'Keep what space read': 'Зберігати прочитане пробілом',
       'Deleted': 'Видалено',
       'No connection — try again later.': 'Немає зв’язку — спробуйте пізніше.',
       'No connection — the language was not changed.': 'Немає зв’язку — мову не змінено.',

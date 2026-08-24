@@ -318,6 +318,10 @@
   const asleep = () => {
     const options = settings();
     return options.subtitles === false ||
+      // Named sites, when any are named: everything below takes over the
+      // captions and the keyboard, which is welcome on the two sites someone
+      // watches films on and an intrusion on the rest of the web.
+      (typeof snSiteAllowed === 'function' && !snSiteAllowed(options, location.hostname)) ||
       (typeof snBlocked === 'function' && snBlocked(options, location.hostname));
   };
 
@@ -477,13 +481,18 @@
     return range;
   }
 
-  // Space is already the key for stopping to look at a line, so it also asks
-  // what the whole line means. Read, not kept: saving stays with the mouse.
+  // Space is the pause key, so it can also ask what the line being paused on
+  // means. Off unless asked for: in a browser space scrolls the page, presses
+  // the button under the cursor and goes into every comment box, and a
+  // translation window on all of those is an interruption. In VLC, where space
+  // is the pause key and nothing else, it is on.
   document.addEventListener(
     'keydown',
     (event) => {
       if (event.code !== 'Space' || event.ctrlKey || event.altKey || event.metaKey) return;
-      if (!(window.__subtitleNotes?.settings?.spaceLine ?? true)) return;
+      const options = window.__subtitleNotes?.settings ?? {};
+      if (options.spaceLine !== true) return;
+      if (asleep()) return;
       const target = event.target;
       const typing =
         target instanceof HTMLElement &&
@@ -493,7 +502,15 @@
       if (!caption) return;
       const line = (caption.innerText || '').replace(/\s+/g, ' ').trim();
       if (!line) return;
-      window.__subtitleNotes?.showCard(caption.getBoundingClientRect(), line, line, snMediaInfo());
+      const api = window.__subtitleNotes;
+      if (!api) return;
+      const where = caption.getBoundingClientRect();
+      const video = currentVideo();
+      const at = video ? Math.round(video.currentTime * 1000) : null;
+      // Reading and collecting are different acts, so keeping the line is a
+      // separate answer from translating it.
+      if (options.spaceSaves === true) api.saveNow(where, line, line, snMediaInfo(), at);
+      else api.showCard(where, line, line, snMediaInfo(), at);
     },
     true,
   );

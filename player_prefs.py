@@ -31,6 +31,10 @@ DEFAULTS = {
     # ten seconds, which is a whole exchange of dialogue.
     "seek_seconds": 10,
     "space_translates": True,
+    # Whether the line space read is also written down. Reading a subtitle and
+    # collecting a word are different acts: pausing on a sentence to see what
+    # it means should not quietly fill the library with whole subtitles.
+    "space_saves": False,
 }
 
 # Two-letter code -> the three-letter form ffmpeg and matroska tags use.
@@ -65,6 +69,7 @@ def load_player_prefs() -> dict[str, object]:
     except (TypeError, ValueError):
         values["seek_seconds"] = DEFAULTS["seek_seconds"]
     values["space_translates"] = bool(values["space_translates"])
+    values["space_saves"] = bool(values["space_saves"])
     return values
 
 

@@ -229,6 +229,12 @@
   "optBlockedHelp": {
     "message": "Eén adres per regel, bijvoorbeeld mail.google.com."
   },
+  "optSites": {
+    "message": "Waar je films kijkt"
+  },
+  "optSitesHelp": {
+    "message": "Eén adres per regel, bijvoorbeeld rezka.ag. Ondertitels en de spatiebalk werken alleen hier. Leeg betekent overal."
+  },
   "optSavedToast": {
     "message": "Opgeslagen"
   },
@@ -356,8 +362,13 @@
     "description": "Options toggle for translating the caption with space"
   },
   "optSpaceLineHelp": {
-    "message": "De ondertitel wordt vertaald, maar niet bewaard.",
-    "description": "Help under the space toggle"
+    "message": "De regel op het scherm, vertaald als je pauzeert."
+  },
+  "optSpaceSaves": {
+    "message": "Bewaren wat de spatiebalk leest"
+  },
+  "optSpaceSavesHelp": {
+    "message": "Anders wordt de regel alleen getoond."
   },
   "popupRecent": {
     "message": "Recent"

@@ -229,6 +229,12 @@
   "optBlockedHelp": {
     "message": "Eine Adresse pro Zeile, zum Beispiel mail.google.com."
   },
+  "optSites": {
+    "message": "Wo Sie Filme sehen"
+  },
+  "optSitesHelp": {
+    "message": "Eine Adresse pro Zeile, zum Beispiel rezka.ag. Untertitel und die Leertaste arbeiten nur hier. Leer heißt überall."
+  },
   "optSavedToast": {
     "message": "Gespeichert"
   },
@@ -356,8 +362,13 @@
     "description": "Options toggle for translating the caption with space"
   },
   "optSpaceLineHelp": {
-    "message": "Der Untertitel wird übersetzt, aber nicht gespeichert.",
-    "description": "Help under the space toggle"
+    "message": "Die Zeile auf dem Bildschirm, übersetzt beim Pausieren."
+  },
+  "optSpaceSaves": {
+    "message": "Behalten, was die Leertaste liest"
+  },
+  "optSpaceSavesHelp": {
+    "message": "Sonst wird die Zeile nur angezeigt."
   },
   "popupRecent": {
     "message": "Zuletzt"

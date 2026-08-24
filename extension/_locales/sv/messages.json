@@ -229,6 +229,12 @@
   "optBlockedHelp": {
     "message": "En adress per rad, till exempel mail.google.com."
   },
+  "optSites": {
+    "message": "Var du ser filmer"
+  },
+  "optSitesHelp": {
+    "message": "En adress per rad, till exempel rezka.ag. Undertexter och mellanslag fungerar bara här. Tomt betyder alla webbplatser."
+  },
   "optSavedToast": {
     "message": "Sparat"
   },
@@ -356,8 +362,13 @@
     "description": "Options toggle for translating the caption with space"
   },
   "optSpaceLineHelp": {
-    "message": "Undertexten översätts men sparas inte.",
-    "description": "Help under the space toggle"
+    "message": "Raden på skärmen, översatt när du pausar."
+  },
+  "optSpaceSaves": {
+    "message": "Spara det mellanslag läser"
+  },
+  "optSpaceSavesHelp": {
+    "message": "Annars visas raden bara."
   },
   "popupRecent": {
     "message": "Senaste"

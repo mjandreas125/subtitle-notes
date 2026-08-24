@@ -229,6 +229,12 @@
   "optBlockedHelp": {
     "message": "Um endereço por linha, por exemplo mail.google.com."
   },
+  "optSites": {
+    "message": "Onde você assiste a filmes"
+  },
+  "optSitesHelp": {
+    "message": "Um endereço por linha, por exemplo rezka.ag. As legendas e o espaço funcionam só aqui. Vazio significa em todos os sites."
+  },
   "optSavedToast": {
     "message": "Salvo"
   },
@@ -356,8 +362,13 @@
     "description": "Options toggle for translating the caption with space"
   },
   "optSpaceLineHelp": {
-    "message": "A legenda é traduzida, mas não salva.",
-    "description": "Help under the space toggle"
+    "message": "A linha na tela, traduzida quando você pausa."
+  },
+  "optSpaceSaves": {
+    "message": "Salvar o que o espaço lê"
+  },
+  "optSpaceSavesHelp": {
+    "message": "Caso contrário, a linha é apenas exibida."
   },
   "popupRecent": {
     "message": "Recentes"

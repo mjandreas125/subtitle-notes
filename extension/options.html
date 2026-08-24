@@ -357,9 +357,16 @@
         <div class="row">
           <div class="text">
             <b data-i18n="optSpaceLine">Space reads the line</b>
-            <span data-i18n="optSpaceLineHelp">The caption on screen, translated but not saved.</span>
+            <span data-i18n="optSpaceLineHelp">The caption on screen, translated when you pause.</span>
           </div>
           <label class="switch"><input type="checkbox" id="spaceLine" /><i></i></label>
+        </div>
+        <div class="row" id="spaceSavesRow">
+          <div class="text">
+            <b data-i18n="optSpaceSaves">Keep what space read</b>
+            <span data-i18n="optSpaceSavesHelp">Otherwise the line is only shown.</span>
+          </div>
+          <label class="switch"><input type="checkbox" id="spaceSaves" /><i></i></label>
         </div>
         <div class="row">
           <div class="text">
@@ -374,6 +381,11 @@
             <span data-i18n="optSpeakHelp">Says the English out loud.</span>
           </div>
           <label class="switch"><input type="checkbox" id="speak" /><i></i></label>
+        </div>
+        <div style="margin-top:18px">
+          <b style="font-size:14.5px; font-weight:620" data-i18n="optSites">Where films are watched</b>
+          <p class="hint" style="margin-top:2px" data-i18n="optSitesHelp">One address per line. Empty means every site.</p>
+          <textarea id="subtitleSites" spellcheck="false" placeholder="rezka.ag&#10;netflix.com"></textarea>
         </div>
         <div style="margin-top:18px">
           <b style="font-size:14.5px; font-weight:620" data-i18n="optBlocked">Stay off these sites</b>

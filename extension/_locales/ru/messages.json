@@ -229,6 +229,12 @@
   "optBlockedHelp": {
     "message": "По одному адресу в строке, например mail.google.com."
   },
+  "optSites": {
+    "message": "Где вы смотрите фильмы"
+  },
+  "optSitesHelp": {
+    "message": "По одному адресу в строке, например rezka.ag. Субтитры и пробел работают только здесь. Пусто — значит везде."
+  },
   "optSavedToast": {
     "message": "Сохранено"
   },
@@ -356,8 +362,13 @@
     "description": "Options toggle for translating the caption with space"
   },
   "optSpaceLineHelp": {
-    "message": "Субтитр на экране переводится, но не сохраняется.",
-    "description": "Help under the space toggle"
+    "message": "Строка на экране переводится, когда вы ставите на паузу."
+  },
+  "optSpaceSaves": {
+    "message": "Сохранять прочитанное пробелом"
+  },
+  "optSpaceSavesHelp": {
+    "message": "Иначе строка только показывается."
   },
   "popupRecent": {
     "message": "Недавние"

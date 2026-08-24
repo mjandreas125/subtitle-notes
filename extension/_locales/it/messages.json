@@ -229,6 +229,12 @@
   "optBlockedHelp": {
     "message": "Un indirizzo per riga, per esempio mail.google.com."
   },
+  "optSites": {
+    "message": "Dove guardi i film"
+  },
+  "optSitesHelp": {
+    "message": "Un indirizzo per riga, per esempio rezka.ag. I sottotitoli e la barra spaziatrice funzionano solo qui. Vuoto significa ovunque."
+  },
   "optSavedToast": {
     "message": "Salvato"
   },
@@ -356,8 +362,13 @@
     "description": "Options toggle for translating the caption with space"
   },
   "optSpaceLineHelp": {
-    "message": "Il sottotitolo viene tradotto, ma non salvato.",
-    "description": "Help under the space toggle"
+    "message": "La riga sullo schermo, tradotta quando metti in pausa."
+  },
+  "optSpaceSaves": {
+    "message": "Conserva ciò che legge la barra spaziatrice"
+  },
+  "optSpaceSavesHelp": {
+    "message": "Altrimenti la riga viene solo mostrata."
   },
   "popupRecent": {
     "message": "Recenti"

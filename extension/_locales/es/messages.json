@@ -229,6 +229,12 @@
   "optBlockedHelp": {
     "message": "Una dirección por línea, por ejemplo mail.google.com."
   },
+  "optSites": {
+    "message": "Dónde ves películas"
+  },
+  "optSitesHelp": {
+    "message": "Una dirección por línea, por ejemplo rezka.ag. Los subtítulos y el espacio funcionan solo aquí. Vacío significa en todas partes."
+  },
   "optSavedToast": {
     "message": "Guardado"
   },
@@ -356,8 +362,13 @@
     "description": "Options toggle for translating the caption with space"
   },
   "optSpaceLineHelp": {
-    "message": "El subtítulo se traduce, pero no se guarda.",
-    "description": "Help under the space toggle"
+    "message": "La línea en pantalla, traducida al pausar."
+  },
+  "optSpaceSaves": {
+    "message": "Guardar lo que lee el espacio"
+  },
+  "optSpaceSavesHelp": {
+    "message": "Si no, la línea solo se muestra."
   },
   "popupRecent": {
     "message": "Recientes"

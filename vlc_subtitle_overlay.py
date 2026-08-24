@@ -1413,17 +1413,23 @@ class VlcSubtitleOverlay:
             # Only when the player has the keyboard: a space typed in a chat
             # window behind the film is not a request to translate anything.
             watching = self.vlc_hwnd and user32.GetForegroundWindow() == self.vlc_hwnd
-            asked = bool(player_prefs.load_player_prefs()["space_translates"])
+            prefs = player_prefs.load_player_prefs()
+            asked = bool(prefs["space_translates"])
             if asked and watching and self.root.state() != "withdrawn" and self.current_text.strip():
-                self._translate_whole_line()
+                self._translate_whole_line(keep=bool(prefs["space_saves"]))
         self.space_was_down = space_down
         self.root.after(35, self._watch_global_mouse)
 
-    def _translate_whole_line(self) -> None:
+    def _translate_whole_line(self, keep: bool = False) -> None:
         """The line on screen, read as one - what space asks for.
 
         Nothing is highlighted: the whole line is the subject, and painting it
         all in mint only hides the film behind it.
+
+        `keep` is the setting for whether the line is also written down.
+        Reading a subtitle and collecting a word are different acts, so it is
+        off unless somebody says otherwise: pausing on every other sentence
+        would fill the library with whole subtitles nobody chose.
         """
         line = self.current_text.strip()
         if not line:
@@ -1434,9 +1440,10 @@ class VlcSubtitleOverlay:
             self._show_popup(self._popup_text(self.cache[key], line), anchor)
             return
         self.last_translation_job += 1
-        # Reading is not keeping: what goes into the library is what the viewer
-        # deliberately marked with the mouse.
-        self.unsaved_jobs.add(self.last_translation_job)
+        # Reading is not keeping, unless the viewer asked for it to be: what
+        # normally goes into the library is what was marked with the mouse.
+        if not keep:
+            self.unsaved_jobs.add(self.last_translation_job)
         self._show_popup("...", anchor)
         threading.Thread(
             target=self._translate_in_background,

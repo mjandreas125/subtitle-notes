@@ -149,10 +149,34 @@ async function badge(state) {
   }
 }
 
+/// Space used to translate on every page, in every browser, whether or not
+/// there was a film on it. In VLC space is the pause key and nothing else; in a
+/// browser it scrolls, plays, presses whatever is under the cursor and goes
+/// into every comment box, and a translation window on all of those is an
+/// interruption. The new default is off — but a browser that has already saved
+/// its settings carries the old value, so it is turned off once here.
+///
+/// The mark is what makes it once. Anybody who turns it back on keeps it: the
+/// next update finds the mark and leaves the setting alone.
+async function quietenSpaceOnce() {
+  try {
+    const done = await chrome.storage.local.get('spaceDefaultMoved');
+    if (done.spaceDefaultMoved) return;
+    const stored = (await chrome.storage.sync.get('settings')).settings;
+    if (stored && stored.spaceLine === true) {
+      await chrome.storage.sync.set({ settings: { ...stored, spaceLine: false } });
+    }
+    await chrome.storage.local.set({ spaceDefaultMoved: 1 });
+  } catch (_) {
+    // Settings that cannot be read are settings that cannot be wrong yet.
+  }
+}
+
 chrome.runtime.onInstalled.addListener((details) => {
   // The popup no longer has a local "recent" list. Clear the old cache once
   // so an update also removes this data from existing browsers.
   if (details.reason === 'update') chrome.storage.local.remove('recent');
+  if (details.reason === 'update' || details.reason === 'install') quietenSpaceOnce();
   // Shown once, when the extension is first added. An update must not reopen
   // it: nobody wants a tutorial for something they already use.
   if (details.reason === 'install') {

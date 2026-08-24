@@ -229,6 +229,12 @@
   "optBlockedHelp": {
     "message": "Une adresse par ligne, par exemple mail.google.com."
   },
+  "optSites": {
+    "message": "Où vous regardez des films"
+  },
+  "optSitesHelp": {
+    "message": "Une adresse par ligne, par exemple rezka.ag. Les sous-titres et la barre d’espace ne marchent qu’ici. Vide signifie partout."
+  },
   "optSavedToast": {
     "message": "Enregistré"
   },
@@ -356,8 +362,13 @@
     "description": "Options toggle for translating the caption with space"
   },
   "optSpaceLineHelp": {
-    "message": "Le sous-titre est traduit, mais pas enregistré.",
-    "description": "Help under the space toggle"
+    "message": "La ligne à l’écran, traduite quand vous mettez en pause."
+  },
+  "optSpaceSaves": {
+    "message": "Garder ce que la barre d’espace lit"
+  },
+  "optSpaceSavesHelp": {
+    "message": "Sinon la ligne est seulement affichée."
   },
   "popupRecent": {
     "message": "Récents"

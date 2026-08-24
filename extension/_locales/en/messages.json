@@ -229,6 +229,12 @@
   "optBlockedHelp": {
     "message": "One address per line, for example mail.google.com."
   },
+  "optSites": {
+    "message": "Where films are watched"
+  },
+  "optSitesHelp": {
+    "message": "One address per line, for example rezka.ag. Subtitles and the space key work only here. Empty means every site."
+  },
   "optSavedToast": {
     "message": "Saved"
   },
@@ -356,8 +362,13 @@
     "description": "Options toggle for translating the caption with space"
   },
   "optSpaceLineHelp": {
-    "message": "The caption on screen, translated but not saved.",
-    "description": "Help under the space toggle"
+    "message": "The caption on screen, translated when you pause."
+  },
+  "optSpaceSaves": {
+    "message": "Keep what space read"
+  },
+  "optSpaceSavesHelp": {
+    "message": "Otherwise the line is only shown."
   },
   "popupRecent": {
     "message": "Recently saved"

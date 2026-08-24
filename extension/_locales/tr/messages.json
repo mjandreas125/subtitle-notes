@@ -229,6 +229,12 @@
   "optBlockedHelp": {
     "message": "Satır başına bir adres, örneğin mail.google.com."
   },
+  "optSites": {
+    "message": "Filmleri nerede izliyorsunuz"
+  },
+  "optSitesHelp": {
+    "message": "Satır başına bir adres, örneğin rezka.ag. Altyazılar ve boşluk tuşu yalnızca burada çalışır. Boş bırakmak her siteyi kapsar."
+  },
   "optSavedToast": {
     "message": "Kaydedildi"
   },
@@ -356,8 +362,13 @@
     "description": "Options toggle for translating the caption with space"
   },
   "optSpaceLineHelp": {
-    "message": "Altyazı çevrilir ama kaydedilmez.",
-    "description": "Help under the space toggle"
+    "message": "Ekrandaki satır, duraklattığınızda çevrilir."
+  },
+  "optSpaceSaves": {
+    "message": "Boşluğun okuduğunu kaydet"
+  },
+  "optSpaceSavesHelp": {
+    "message": "Aksi hâlde satır yalnızca gösterilir."
   },
   "popupRecent": {
     "message": "Son eklenenler"

@@ -229,6 +229,12 @@
   "optBlockedHelp": {
     "message": "Jeden adres na linijkę, na przykład mail.google.com."
   },
+  "optSites": {
+    "message": "Gdzie oglądasz filmy"
+  },
+  "optSitesHelp": {
+    "message": "Jeden adres w wierszu, na przykład rezka.ag. Napisy i spacja działają tylko tutaj. Puste znaczy wszędzie."
+  },
   "optSavedToast": {
     "message": "Zapisano"
   },
@@ -356,8 +362,13 @@
     "description": "Options toggle for translating the caption with space"
   },
   "optSpaceLineHelp": {
-    "message": "Napis zostaje przetłumaczony, ale nie zapisany.",
-    "description": "Help under the space toggle"
+    "message": "Wiersz na ekranie, tłumaczony przy pauzie."
+  },
+  "optSpaceSaves": {
+    "message": "Zapisuj to, co czyta spacja"
+  },
+  "optSpaceSavesHelp": {
+    "message": "W przeciwnym razie wiersz jest tylko pokazywany."
   },
   "popupRecent": {
     "message": "Ostatnie"

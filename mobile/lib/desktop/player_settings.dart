@@ -20,6 +20,7 @@ class PlayerSettings {
     required this.answerSeconds,
     required this.seekSeconds,
     required this.spaceReadsLine,
+    required this.spaceKeepsLine,
   });
 
   final String audioLanguage;
@@ -28,12 +29,20 @@ class PlayerSettings {
   final int seekSeconds;
   final bool spaceReadsLine;
 
+  /// Whether the line space read is also written down.
+  ///
+  /// Reading a subtitle and collecting a word are different acts: pausing on
+  /// every other sentence to see what it means would fill the library with
+  /// whole subtitles nobody chose. Off unless somebody says otherwise.
+  final bool spaceKeepsLine;
+
   static const defaults = PlayerSettings(
     audioLanguage: 'en',
     subtitleLanguage: 'en',
     answerSeconds: 6.5,
     seekSeconds: 10,
     spaceReadsLine: true,
+    spaceKeepsLine: false,
   );
 
   static PlayerSettings load() {
@@ -54,6 +63,7 @@ class PlayerSettings {
       answerSeconds: asNumber(config['popup_seconds'], 6.5),
       seekSeconds: asNumber(config['seek_seconds'], 10).round(),
       spaceReadsLine: config['space_translates'] as bool? ?? true,
+      spaceKeepsLine: config['space_saves'] as bool? ?? false,
     );
   }
 
@@ -73,6 +83,7 @@ class PlayerSettings {
     config['popup_seconds'] = answerSeconds;
     config['seek_seconds'] = seekSeconds;
     config['space_translates'] = spaceReadsLine;
+    config['space_saves'] = spaceKeepsLine;
     try {
       DesktopConfig.folder.createSync(recursive: true);
       DesktopConfig.file.writeAsStringSync(
@@ -89,12 +100,14 @@ class PlayerSettings {
     double? answerSeconds,
     int? seekSeconds,
     bool? spaceReadsLine,
+    bool? spaceKeepsLine,
   }) => PlayerSettings(
     audioLanguage: audioLanguage ?? this.audioLanguage,
     subtitleLanguage: subtitleLanguage ?? this.subtitleLanguage,
     answerSeconds: answerSeconds ?? this.answerSeconds,
     seekSeconds: seekSeconds ?? this.seekSeconds,
     spaceReadsLine: spaceReadsLine ?? this.spaceReadsLine,
+    spaceKeepsLine: spaceKeepsLine ?? this.spaceKeepsLine,
   );
 }
 
@@ -240,6 +253,18 @@ class _PlayerSettingsDialogState extends State<_PlayerSettingsDialog> {
                 onChanged: (value) =>
                     _update(_settings.copyWith(spaceReadsLine: value)),
               ),
+              // Only worth asking about while the key does anything.
+              if (_settings.spaceReadsLine)
+                _Choice<bool>(
+                  label: context.t('Keep what space read'),
+                  value: _settings.spaceKeepsLine,
+                  options: [
+                    MapEntry(true, context.t('on')),
+                    MapEntry(false, context.t('off')),
+                  ],
+                  onChanged: (value) =>
+                      _update(_settings.copyWith(spaceKeepsLine: value)),
+                ),
               const SizedBox(height: AppSpace.md),
               Text(
                 context.t('A film without the chosen language plays with its own first track.'),

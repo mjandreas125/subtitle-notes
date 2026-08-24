@@ -41,13 +41,32 @@ const SN_DEFAULTS = {
   subtitleKey: { ctrl: true, alt: false, shift: false },
   /// Sites the extension keeps out of, one host per line.
   blocked: [],
+  /// Where the player features are wanted: clickable subtitles and the space
+  /// key. Empty means everywhere a player is recognised.
+  ///
+  /// A browser is not a video player. Everything in here takes over keys and
+  /// captions on whatever page it is on, and on the other thousand pages a
+  /// person visits that is an intrusion, not a feature - so it can be pointed
+  /// at the two or three sites they actually watch films on.
+  subtitleSites: [],
   /// Say the English word out loud when a card opens.
   speak: false,
   /// The short card: the meaning and nothing else.
   compactCard: true,
-  /// Space reads the caption that is on screen. Nothing is saved by it: what
-  /// goes into the library is what was deliberately selected.
-  spaceLine: true,
+  /// Space reads the caption that is on screen.
+  ///
+  /// Off by default here, and on in VLC. In VLC space is the pause key and
+  /// nothing else; in a browser it scrolls the page, plays the video, presses
+  /// the button under the cursor and is typed into every comment box - and a
+  /// translation window appearing on every one of those is the extension
+  /// interrupting rather than helping.
+  spaceLine: false,
+  /// Whether what space translated is also kept.
+  ///
+  /// Reading a line and collecting a word are different acts: pausing on a
+  /// sentence to see what it means should not quietly fill the library with
+  /// whole subtitles. Someone who does want that can say so.
+  spaceSaves: false,
 };
 
 function snMatchesHotkey(event, hotkey) {
@@ -108,6 +127,37 @@ function snHotkeyLabel(hotkey) {
 async function snLoadSettings() {
   const stored = await chrome.storage.sync.get('settings');
   return { ...SN_DEFAULTS, ...(stored.settings ?? {}) };
+}
+
+/// A site as a name, out of whatever was pasted in.
+///
+/// People paste the address of the page they are watching, because that is
+/// what is in front of them. "https://rezka.ag/series/drama/1234-severance/"
+/// and "www.rezka.ag" and "rezka.ag" all mean the same site.
+function snSiteKey(value) {
+  let text = String(value || '').trim().toLowerCase();
+  if (!text) return '';
+  text = text.replace(/^[a-z][a-z0-9+.-]*:\/\//, '');
+  text = text.split(/[/?#]/)[0];
+  text = text.split('@').pop() || '';
+  text = text.replace(/:\d+$/, '').replace(/^www\./, '');
+  return /^[a-z0-9.-]+\.[a-z]{2,}$/.test(text) ? text : '';
+}
+
+/// Whether a host is this site or a part of it. Naming rezka.ag covers
+/// hdrezka.rezka.ag without anyone having to think about subdomains.
+function snSiteMatches(rule, host) {
+  const site = snSiteKey(host);
+  return Boolean(rule && site && (site === rule || site.endsWith('.' + rule)));
+}
+
+/// Whether the player features belong on this page.
+///
+/// An empty list means every site: someone who has not named any is not asking
+/// to be restricted, they simply have not been to the settings.
+function snSiteAllowed(settings, host) {
+  const wanted = (settings.subtitleSites ?? []).map(snSiteKey).filter(Boolean);
+  return wanted.length === 0 || wanted.some((rule) => snSiteMatches(rule, host));
 }
 
 /// True when the extension should keep out of this page entirely.

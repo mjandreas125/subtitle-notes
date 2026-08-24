@@ -229,6 +229,12 @@
   "optBlockedHelp": {
     "message": "По одній адресі в рядку, наприклад mail.google.com."
   },
+  "optSites": {
+    "message": "Де ви дивитеся фільми"
+  },
+  "optSitesHelp": {
+    "message": "По одній адресі в рядку, наприклад rezka.ag. Субтитри й пробіл працюють лише тут. Порожньо — означає всюди."
+  },
   "optSavedToast": {
     "message": "Збережено"
   },
@@ -356,8 +362,13 @@
     "description": "Options toggle for translating the caption with space"
   },
   "optSpaceLineHelp": {
-    "message": "Субтитр перекладається, але не зберігається.",
-    "description": "Help under the space toggle"
+    "message": "Рядок на екрані перекладається, коли ви ставите на паузу."
+  },
+  "optSpaceSaves": {
+    "message": "Зберігати прочитане пробілом"
+  },
+  "optSpaceSavesHelp": {
+    "message": "Інакше рядок лише показується."
   },
   "popupRecent": {
     "message": "Нещодавні"

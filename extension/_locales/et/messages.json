@@ -229,6 +229,12 @@
   "optBlockedHelp": {
     "message": "Üks aadress rea kohta, näiteks mail.google.com."
   },
+  "optSites": {
+    "message": "Kus sa filme vaatad"
+  },
+  "optSitesHelp": {
+    "message": "Üks aadress real, näiteks rezka.ag. Subtiitrid ja tühik töötavad ainult siin. Tühi tähendab kõikjal."
+  },
   "optSavedToast": {
     "message": "Salvestatud"
   },
@@ -356,8 +362,13 @@
     "description": "Options toggle for translating the caption with space"
   },
   "optSpaceLineHelp": {
-    "message": "Ekraanil olev subtiiter tõlgitakse, kuid ei salvestata.",
-    "description": "Help under the space toggle"
+    "message": "Ekraanil olev rida tõlgitakse, kui paned pausile."
+  },
+  "optSpaceSaves": {
+    "message": "Salvesta see, mida tühik luges"
+  },
+  "optSpaceSavesHelp": {
+    "message": "Muidu rida ainult näidatakse."
   },
   "popupRecent": {
     "message": "Hiljutised"

@@ -1,5 +1,5 @@
 ﻿#define AppName "Subtitle Notes"
-#define AppVersion "1.8.1"
+#define AppVersion "1.8.2"
 #define AppPublisher "Subtitle Notes"
 #define AppExe "Library\translated_vlc_mobile.exe"
 
@@ -11,7 +11,7 @@ AppPublisher={#AppPublisher}
 DefaultDirName={autopf}\Subtitle Notes
 DefaultGroupName={#AppName}
 OutputDir=..\release_package
-OutputBaseFilename=SubtitleNotesSetup-1.8.1
+OutputBaseFilename=SubtitleNotesSetup-1.8.2
 Compression=lzma2
 SolidCompression=yes
 WizardStyle=modern

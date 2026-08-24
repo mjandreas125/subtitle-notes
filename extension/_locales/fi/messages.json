@@ -229,6 +229,12 @@
   "optBlockedHelp": {
     "message": "Yksi osoite riviä kohden, esimerkiksi mail.google.com."
   },
+  "optSites": {
+    "message": "Missä katsot elokuvia"
+  },
+  "optSitesHelp": {
+    "message": "Yksi osoite riviä kohden, esimerkiksi rezka.ag. Tekstitykset ja välilyönti toimivat vain täällä. Tyhjä tarkoittaa kaikkia sivustoja."
+  },
   "optSavedToast": {
     "message": "Tallennettu"
   },
@@ -356,8 +362,13 @@
     "description": "Options toggle for translating the caption with space"
   },
   "optSpaceLineHelp": {
-    "message": "Tekstitys käännetään mutta ei tallenneta.",
-    "description": "Help under the space toggle"
+    "message": "Näytöllä oleva rivi käännetään, kun pysäytät."
+  },
+  "optSpaceSaves": {
+    "message": "Tallenna se, minkä väli lukee"
+  },
+  "optSpaceSavesHelp": {
+    "message": "Muuten rivi vain näytetään."
   },
   "popupRecent": {
     "message": "Viimeisimmät"

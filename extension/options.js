@@ -261,7 +261,11 @@ function paintSettings() {
   view('pauseVideo').checked = settings.pauseVideo !== false;
   view('speak').checked = Boolean(settings.speak);
   view('compactCard').checked = settings.compactCard !== false;
-  view('spaceLine').checked = settings.spaceLine !== false;
+  view('spaceLine').checked = settings.spaceLine === true;
+  view('spaceSaves').checked = settings.spaceSaves === true;
+  // Keeping what space read is a question about a key that is switched off.
+  view('spaceSavesRow').style.display = settings.spaceLine === true ? '' : 'none';
+  view('subtitleSites').value = (settings.subtitleSites ?? []).join('\n');
   view('hideAfter').value = settings.hideAfter ?? 6;
   view('blocked').value = (settings.blocked ?? []).join('\n');
   for (const button of view('positions').querySelectorAll('button')) {
@@ -323,7 +327,18 @@ view('subtitles').addEventListener('change', (event) => store({ subtitles: event
 view('pauseVideo').addEventListener('change', (event) => store({ pauseVideo: event.target.checked }));
 view('speak').addEventListener('change', (event) => store({ speak: event.target.checked }));
 view('compactCard').addEventListener('change', (event) => store({ compactCard: event.target.checked }));
-view('spaceLine').addEventListener('change', (event) => store({ spaceLine: event.target.checked }));
+view('spaceLine').addEventListener('change', (event) => {
+  view('spaceSavesRow').style.display = event.target.checked ? '' : 'none';
+  store({ spaceLine: event.target.checked });
+});
+view('spaceSaves').addEventListener('change', (event) => store({ spaceSaves: event.target.checked }));
+// People paste the address of the page they are watching, so the site is taken
+// out of whatever they paste and written back tidied up.
+view('subtitleSites').addEventListener('change', (event) => {
+  const sites = [...new Set(event.target.value.split('\n').map(snSiteKey).filter(Boolean))];
+  event.target.value = sites.join('\n');
+  store({ subtitleSites: sites });
+});
 view('hideAfter').addEventListener('change', (event) =>
   store({ hideAfter: Math.min(60, Math.max(2, Number(event.target.value) || 6)) }),
 );
