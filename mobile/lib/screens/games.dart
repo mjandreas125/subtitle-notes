@@ -63,9 +63,9 @@ class GamesTab extends StatelessWidget {
               ? EmptyState(
                   icon: Icons.sports_esports_rounded,
                   title: context.t('Save a few more words'),
-                  message:
-                      'The games are built from your own library. With '
-                      '$_minimumPairs words there is enough to play.',
+                  message: context
+                      .t('The games are built from your own library. With %d words there is enough to play.')
+                      .replaceAll('%d', '$_minimumPairs'),
                   tone: c.amber,
                 )
               : ListView(
@@ -93,10 +93,12 @@ class GamesTab extends StatelessWidget {
                     const SizedBox(height: AppSpace.md),
                     _GameCard(
                       title: context.t('Fill the line'),
-                      description: withContext.length < _minimumPairs
-                          ? 'Needs a few more words saved from a subtitle line.'
-                          : 'A line from something you watched, with one word '
-                                'missing. Pick the one that belongs.',
+                      description: context.t(
+                        withContext.length < _minimumPairs
+                            ? 'Needs a few more words saved from a subtitle line.'
+                            : 'A line from something you watched, with one word '
+                                  'missing. Pick the one that belongs.',
+                      ),
                       icon: Icons.subtitles_rounded,
                       accent: c.blue,
                       wash: c.blueWash,
@@ -305,8 +307,8 @@ class _MatchGamePageState extends State<MatchGamePage> {
                   ? _Finished(
                       title: context.t('Round complete'),
                       message: _moves == pairs
-                          ? 'Not a single wrong turn.'
-                          : 'Found in $_moves turns.',
+                          ? context.t('Not a single wrong turn.')
+                          : '$_moves ${context.t('turns')}',
                       accent: c.green,
                       onAgain: () => setState(_deal),
                     )
@@ -359,7 +361,7 @@ class _MatchTile extends StatelessWidget {
     return Squish(
       onTap: tile.matched ? null : onTap,
       scale: .95,
-      semanticLabel: open ? tile.text : 'Hidden card',
+      semanticLabel: open ? tile.text : context.t('Hidden card'),
       child: AnimatedOpacity(
         opacity: tile.matched ? .45 : 1,
         duration: AppMotion.quick,
@@ -626,11 +628,13 @@ class _ClozeGamePageState extends State<ClozeGamePage> {
               child: finished
                   ? _Finished(
                       title: _correct == _queue.length
-                          ? 'All of them'
-                          : '$_correct of ${_queue.length}',
-                      message: _correct == _queue.length
-                          ? 'Every line filled correctly.'
-                          : 'The ones you missed are still in your library.',
+                          ? context.t('All of them')
+                          : '$_correct / ${_queue.length}',
+                      message: context.t(
+                        _correct == _queue.length
+                            ? 'Every line filled correctly.'
+                            : 'The ones you missed are still in your library.',
+                      ),
                       accent: c.blue,
                       onAgain: _restart,
                     )

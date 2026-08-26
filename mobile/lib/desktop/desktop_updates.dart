@@ -10,7 +10,7 @@ import 'package:http/http.dart' as http;
 /// Bump it with `AppVersion` in `installer/SubtitleNotes.iss`. Left behind, it
 /// makes the program offer to install the version it is already running, over
 /// and over — this one had been reading 1.6.3 since the installer was 1.7.7.
-const desktopAppVersion = '1.8.2';
+const desktopAppVersion = '1.9.0';
 
 class DesktopRelease {
   const DesktopRelease({required this.version, required this.downloadUrl});

@@ -1236,7 +1236,9 @@ class Achievement {
   final List<int> tiers;
   final int value;
 
-  /// Reads the current target and returns the sentence shown under the title.
+  /// The sentence shown under the title, as an English key with `%d` where
+  /// the target goes. It is translated where it is drawn: this class has no
+  /// widget tree to ask, and a sentence built here would be English forever.
   final String Function(int target) goal;
 
   /// Tiers already passed.
@@ -1250,10 +1252,6 @@ class Achievement {
   double get progress => complete
       ? 1
       : ((value - _floor) / (target - _floor)).clamp(0.0, 1.0);
-
-  String get caption => complete
-      ? 'All $level levels done'
-      : 'Level ${level + 1} · $value of $target';
 
   String get description => goal(target);
 }
@@ -1327,7 +1325,7 @@ class StudyStats {
           tone: AchievementTone.green,
           tiers: const [1, 10, 25, 50, 100, 250],
           value: all.length,
-          goal: (target) => 'Save $target words in total',
+          goal: (target) => 'Save %d words in total',
         ),
         Achievement(
           id: 'series',
@@ -1338,7 +1336,7 @@ class StudyStats {
           value: series.length,
           goal: (target) => target == 1
               ? 'Save a word from a series'
-              : 'Take words from $target different series',
+              : 'Take words from %d different series',
         ),
         Achievement(
           id: 'sources',
@@ -1347,7 +1345,7 @@ class StudyStats {
           tone: AchievementTone.blue,
           tiers: const [2, 5, 10, 25],
           value: sources.length,
-          goal: (target) => 'Catch words in $target different videos',
+          goal: (target) => 'Catch words in %d different videos',
         ),
         Achievement(
           id: 'binge',
@@ -1356,7 +1354,7 @@ class StudyStats {
           tone: AchievementTone.amber,
           tiers: const [3, 10, 25],
           value: longestRun,
-          goal: (target) => 'Pick up words in $target episodes of one series',
+          goal: (target) => 'Pick up words in %d episodes of one series',
         ),
         Achievement(
           id: 'phrases',
@@ -1365,7 +1363,7 @@ class StudyStats {
           tone: AchievementTone.red,
           tiers: const [5, 15, 40],
           value: phrases,
-          goal: (target) => 'Save $target expressions, not single words',
+          goal: (target) => 'Save %d expressions, not single words',
         ),
         Achievement(
           id: 'learned',
@@ -1374,7 +1372,7 @@ class StudyStats {
           tone: AchievementTone.green,
           tiers: const [1, 10, 30, 75],
           value: archived.length,
-          goal: (target) => 'Move $target words to Learned',
+          goal: (target) => 'Move %d words to Learned',
         ),
       ],
     );

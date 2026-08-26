@@ -10,8 +10,10 @@ import time
 import winreg
 import json
 import hashlib
-from tkinter import messagebox
+from tkinter import filedialog, messagebox
 import tkinter as tk
+
+from desktop_i18n import tr
 
 import player_prefs
 from vlc_subtitle_overlay import VLC_PASSWORD, find_subtitle_path
@@ -243,8 +245,32 @@ def sibling_executable(name: str) -> str | None:
 def show_error(text: str) -> None:
     root = tk.Tk()
     root.withdraw()
-    messagebox.showerror("Translated VLC", text)
+    messagebox.showerror("Subtitle Notes", text)
     root.destroy()
+
+
+def ask_for_a_film() -> str:
+    """The file picker, for when nobody dropped a film on this.
+
+    Opened from the Start menu or from the program, there is no file to work
+    with and nothing to be done about it except ask. It used to answer "drop a
+    video file onto this launcher" and stop, which is a dead end dressed as an
+    instruction: the launcher is not on anybody's desktop to drop things onto.
+    """
+    root = tk.Tk()
+    root.withdraw()
+    try:
+        chosen = filedialog.askopenfilename(
+            title=tr("pick_film"),
+            filetypes=[
+                (tr("films"), " ".join(f"*{suffix}" for suffix in sorted(VIDEO_EXTENSIONS))),
+                (tr("subtitles_srt"), "*.srt"),
+                (tr("all_files"), "*.*"),
+            ],
+        )
+    finally:
+        root.destroy()
+    return chosen or ""
 
 
 def launch_vlc(vlc: str, media_path: str) -> None:
@@ -282,23 +308,24 @@ def launch_overlay(subtitle_path: str, media_path: str) -> None:
 
 
 def main() -> int:
-    if len(sys.argv) < 2:
-        show_error("Drop a video file onto this launcher or use Open with.")
-        return 1
+    chosen = sys.argv[1] if len(sys.argv) > 1 else ask_for_a_film()
+    if not chosen:
+        # The picker was closed. Nothing went wrong; nothing was asked for.
+        return 0
 
-    media_path = os.path.abspath(sys.argv[1])
+    media_path = os.path.abspath(chosen)
     if not os.path.exists(media_path):
-        show_error(f"File not found:\n{media_path}")
+        show_error(tr("file_missing", path=media_path))
         return 1
 
     extension = os.path.splitext(media_path)[1].lower()
     if extension not in VIDEO_EXTENSIONS and extension != ".srt":
-        show_error("This launcher expects a video file or an .srt subtitle file.")
+        show_error(tr("not_a_film"))
         return 1
 
     vlc = find_vlc()
     if not vlc:
-        show_error("VLC was not found. Install VLC or add vlc.exe to PATH.")
+        show_error(tr("no_vlc"))
         return 1
 
     if extension != ".srt":
@@ -308,7 +335,7 @@ def main() -> int:
     if not subtitle_path:
         subtitle_path, extraction_error = extract_embedded_subtitle(media_path)
         if not subtitle_path:
-            show_error(extraction_error or "No matching .srt file found next to the video or inside the file.")
+            show_error(extraction_error or tr("no_subtitles"))
             return 1
 
     if extension == ".srt":

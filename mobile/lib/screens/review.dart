@@ -119,14 +119,17 @@ class _ReviewPageState extends State<ReviewPage> {
                   : card == null
                   ? EmptyState(
                       icon: Icons.check_circle_rounded,
-                      title: _total == 0
-                          ? 'Nothing due right now'
-                          : 'That is all of them',
+                      title: context.t(
+                        _total == 0
+                            ? 'Nothing due right now'
+                            : 'That is all of them',
+                      ),
                       message: _total == 0
-                          ? 'Words come back a day after you save them, then '
-                                'less and less often as you get them right.'
-                          : '$_total words revisited. The ones you knew will '
-                                'come back later than the ones you did not.',
+                          ? context.t(
+                              'Words come back a day after you save them, then '
+                              'less and less often as you get them right.',
+                            )
+                          : '$_total ${context.t('words revisited. The ones you knew will come back later than the ones you did not.')}',
                       action: PushButton(
                         label: context.t('Done'),
                         expand: false,

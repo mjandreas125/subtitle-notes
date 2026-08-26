@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
@@ -126,6 +128,7 @@ class _DesktopLibraryState extends State<DesktopLibrary> {
             onSearch: (value) => setState(() => _search = value),
             update: widget.update,
             onInstallUpdate: widget.onInstallUpdate,
+            onOpenFilm: _canOpenFilms ? _openFilm : null,
           ),
           Expanded(
             child: Row(
@@ -153,6 +156,38 @@ class _DesktopLibraryState extends State<DesktopLibrary> {
           ),
         ],
       ),
+    );
+  }
+
+  /// Opens a film through the launcher that sets VLC up on the way.
+  ///
+  /// Without this the program was a library with no way to fill it: somebody
+  /// installed it, signed in, and was told that words appear here when a
+  /// subtitle is selected in VLC — with nothing to say how VLC comes into it.
+  /// The answer was a right-click in Explorer that nobody had been told about.
+  Future<void> _openFilm() async {
+    final beside = File(Platform.resolvedExecutable).parent;
+    for (final folder in [beside.parent, beside]) {
+      final launcher = File('${folder.path}${Platform.pathSeparator}OpenWithTranslatedVLC.exe');
+      if (!launcher.existsSync()) continue;
+      try {
+        // Detached: the film outlives this window, and the launcher puts up
+        // its own file picker when it is started without one.
+        await Process.start(launcher.path, const [], mode: ProcessStartMode.detached);
+      } catch (_) {
+        // Nothing to say that the person cannot see for themselves.
+      }
+      return;
+    }
+  }
+
+  /// True when the launcher is installed beside this window. Running from a
+  /// checkout there is nothing to start, and a button that does nothing is
+  /// worse than no button.
+  bool get _canOpenFilms {
+    final beside = File(Platform.resolvedExecutable).parent;
+    return [beside.parent, beside].any(
+      (folder) => File('${folder.path}${Platform.pathSeparator}OpenWithTranslatedVLC.exe').existsSync(),
     );
   }
 
@@ -186,8 +221,16 @@ class _DesktopLibraryState extends State<DesktopLibrary> {
             : Icons.search_off_rounded,
         title: context.t(_search.isEmpty ? 'Nothing saved here yet' : 'No matches'),
         message: _search.isEmpty
-            ? context.t('Select a subtitle line in VLC and it appears here.')
+            ? context.t('Open a film and drag across a word in the subtitle. Ctrl+Alt+S saves selected text from any other program.')
             : context.t('Try a different word.'),
+        action: _search.isEmpty && _canOpenFilms
+            ? PushButton(
+                label: context.t('Open a film'),
+                icon: Icons.movie_rounded,
+                expand: false,
+                onPressed: _openFilm,
+              )
+            : null,
       );
     }
 
@@ -231,12 +274,17 @@ class _TopBar extends StatelessWidget {
     required this.onSearch,
     required this.update,
     required this.onInstallUpdate,
+    this.onOpenFilm,
   });
 
   final String email;
   final int total;
   final ThemeMode themeMode;
   final VoidCallback onToggleTheme, onReload, onDisconnect;
+
+  /// Absent when the launcher is not installed beside this window - running
+  /// from a checkout there is nothing to start.
+  final VoidCallback? onOpenFilm;
   final ValueChanged<String> onSearch;
   final DesktopRelease? update;
   final Future<void> Function()? onInstallUpdate;
@@ -323,6 +371,12 @@ class _TopBar extends StatelessWidget {
             tooltip: context.t('Switch theme'),
             onTap: onToggleTheme,
           ),
+          if (onOpenFilm != null)
+            _BarAction(
+              icon: Icons.movie_rounded,
+              tooltip: context.t('Open a film'),
+              onTap: onOpenFilm!,
+            ),
           _BarAction(
             icon: Icons.refresh_rounded,
             tooltip: context.t('Refresh'),

@@ -962,7 +962,7 @@ class AchievementRow extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Text(
-                      achievement.title,
+                      context.t(achievement.title),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: font(
@@ -992,8 +992,10 @@ class AchievementRow extends StatelessWidget {
               const SizedBox(height: 3),
               Text(
                 achievement.complete
-                    ? 'Every level unlocked'
-                    : achievement.description,
+                    ? context.t('Every level unlocked')
+                    : context
+                          .t(achievement.description)
+                          .replaceAll('%d', '${achievement.target}'),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style: font(size: 13, weight: 600, color: c.ink3, height: 1.35),

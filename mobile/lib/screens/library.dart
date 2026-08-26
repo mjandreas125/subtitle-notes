@@ -539,7 +539,7 @@ class _StatRow extends StatelessWidget {
         Expanded(
           child: _StatTile(
             value: '${stats.total}',
-            label: 'saved',
+            label: context.t('saved'),
             icon: Icons.style_rounded,
             color: c.green,
             wash: c.greenWash,
@@ -549,7 +549,7 @@ class _StatRow extends StatelessWidget {
         Expanded(
           child: _StatTile(
             value: '${stats.sources}',
-            label: 'sources',
+            label: context.t('sources'),
             icon: Icons.movie_rounded,
             color: c.purple,
             wash: c.purpleWash,
@@ -559,7 +559,7 @@ class _StatRow extends StatelessWidget {
         Expanded(
           child: _StatTile(
             value: '${stats.learned}',
-            label: 'learned',
+            label: context.t('learned'),
             icon: Icons.workspace_premium_rounded,
             color: c.blue,
             wash: c.blueWash,
@@ -747,6 +747,8 @@ class _FirstRun extends StatelessWidget {
         'The extension makes web subtitles clickable and saves anything you '
             'highlight.',
       ),
+      // The three ways in, translated where they are drawn: the list itself is
+      // const and has no context to ask.
     ];
     return Padding(
       padding: const EdgeInsets.fromLTRB(
@@ -788,12 +790,12 @@ class _FirstRun extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            title,
+                            context.t(title),
                             style: font(size: 16, weight: 800, color: c.ink),
                           ),
                           const SizedBox(height: AppSpace.xxs),
                           Text(
-                            body,
+                            context.t(body),
                             style: font(
                               size: 14,
                               weight: 600,

@@ -28,17 +28,24 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> _signInWithGoogle() async {
     setState(() => _busy = true);
+    // Read while this screen is certainly still here. Google's dialog can take
+    // a while, and the answer arrives after it, by which time asking the widget
+    // tree for anything is a question about a screen that may be gone.
+    final unsupported = context.t('Google sign-in is not supported on this device.');
+    final noToken = context.t('Google did not return an identity token.');
+    final cancelled = context.t('Sign-in cancelled.');
+    final refused = context.t('Google refused this build');
     try {
       await GoogleSignIn.instance.initialize(
         serverClientId: googleServerClientId,
       );
       if (!GoogleSignIn.instance.supportsAuthenticate()) {
-        throw ApiException('Google sign-in is not supported on this device.');
+        throw ApiException(unsupported);
       }
       final account = await GoogleSignIn.instance.authenticate();
       final idToken = account.authentication.idToken;
       if (idToken == null || idToken.isEmpty) {
-        throw ApiException('Google did not return an identity token.');
+        throw ApiException(noToken);
       }
       final session = await SyncApi.authenticateGoogle(
         baseUrl: _server.text,
@@ -54,9 +61,8 @@ class _LoginPageState extends State<LoginPage> {
       // it has never been told about, and the person is left guessing.
       _report(
         error.code == GoogleSignInExceptionCode.canceled
-            ? 'Sign-in cancelled.'
-            : 'Google refused this build (${error.code.name}). '
-                  'Use "Use a code" below instead.',
+            ? cancelled
+            : '$refused (${error.code.name}).',
       );
     } catch (error) {
       _report('Sign-in failed: $error');
@@ -82,7 +88,7 @@ class _LoginPageState extends State<LoginPage> {
       if (!mounted) return;
       setState(() {
         _pairing = request;
-        _pairingNote = 'Waiting for confirmation…';
+        _pairingNote = context.t('Waiting for confirmation…');
       });
       final deadline = DateTime.now().add(const Duration(minutes: 10));
       while (mounted && _pairing != null && DateTime.now().isBefore(deadline)) {
@@ -95,7 +101,7 @@ class _LoginPageState extends State<LoginPage> {
         return;
       }
       if (mounted && _pairing != null) {
-        setState(() => _pairingNote = 'The code expired. Ask for a new one.');
+        setState(() => _pairingNote = context.t('The code expired. Ask for a new one.'));
       }
     } on ApiException catch (error) {
       if (mounted) setState(() => _pairingNote = error.message);

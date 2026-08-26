@@ -1,5 +1,5 @@
 ﻿#define AppName "Subtitle Notes"
-#define AppVersion "1.8.2"
+#define AppVersion "1.9.0"
 #define AppPublisher "Subtitle Notes"
 #define AppExe "Library\translated_vlc_mobile.exe"
 
@@ -11,7 +11,7 @@ AppPublisher={#AppPublisher}
 DefaultDirName={autopf}\Subtitle Notes
 DefaultGroupName={#AppName}
 OutputDir=..\release_package
-OutputBaseFilename=SubtitleNotesSetup-1.8.2
+OutputBaseFilename=SubtitleNotesSetup-1.9.0
 Compression=lzma2
 SolidCompression=yes
 WizardStyle=modern
@@ -38,7 +38,13 @@ Source: "..\dist\SubtitleNotesQuickCapture.exe"; DestDir: "{app}"; Flags: ignore
 Source: "..\mobile\build\windows\x64\runner\Release\*"; DestDir: "{app}\Library"; Flags: recursesubdirs createallsubdirs ignoreversion
 Source: "..\extension\*"; DestDir: "{userdocs}\Subtitle Notes\Browser Extension"; Flags: recursesubdirs createallsubdirs ignoreversion
 Source: "..\mobile\build\app\outputs\flutter-apk\app-release.apk"; DestDir: "{userdocs}\Subtitle Notes\Android"; DestName: "SubtitleNotes.apk"; Flags: ignoreversion
-Source: "..\README.md"; DestDir: "{userdocs}\Subtitle Notes"; DestName: "README.txt"; Flags: ignoreversion
+; The repository README is a developer document — folder layout, build
+; commands, links to PROJECT.md. Somebody who just installed a program and
+; opened the file it left in Documents was reading about the build system.
+Source: "README-user.txt"; DestDir: "{userdocs}\Subtitle Notes"; DestName: "README.txt"; Flags: ignoreversion
+; The illustrated guide was written and then never shipped: it sat in the
+; release folder while the README pointed at a path nobody had.
+Source: "..\release_package\guide\Subtitle-Notes.pdf"; DestDir: "{userdocs}\Subtitle Notes"; Flags: ignoreversion skipifsourcedoesntexist
 
 [Icons]
 ; One program. Signing in, the words themselves and what the player should do
@@ -47,6 +53,7 @@ Source: "..\README.md"; DestDir: "{userdocs}\Subtitle Notes"; DestName: "README.
 ; for a phone and no way to sign in with Google at all.
 Name: "{group}\Subtitle Notes"; Filename: "{app}\Library\translated_vlc_mobile.exe"
 Name: "{autodesktop}\Subtitle Notes"; Filename: "{app}\Library\translated_vlc_mobile.exe"; Tasks: desktopicon
+Name: "{group}\Guide"; Filename: "{userdocs}\Subtitle Notes\Subtitle-Notes.pdf"
 Name: "{group}\Browser Extension folder"; Filename: "{userdocs}\Subtitle Notes\Browser Extension"
 Name: "{group}\Android APK"; Filename: "{userdocs}\Subtitle Notes\Android\SubtitleNotes.apk"
 

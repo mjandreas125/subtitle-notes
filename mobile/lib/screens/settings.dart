@@ -304,7 +304,7 @@ class _SettingsTabState extends State<SettingsTab> {
                   Expanded(
                     child: _Metric(
                       value: '${stats.learned}',
-                      label: 'learned',
+                      label: context.t('learned'),
                       color: c.amber,
                     ),
                   ),
@@ -312,7 +312,7 @@ class _SettingsTabState extends State<SettingsTab> {
                   Expanded(
                     child: _Metric(
                       value: '${stats.sources}',
-                      label: 'sources',
+                      label: context.t('sources'),
                       color: c.purple,
                     ),
                   ),
@@ -390,8 +390,9 @@ class _SettingsTabState extends State<SettingsTab> {
                 title: context.t('Interface language'),
                 icon: Icons.language_rounded,
                 color: c.green,
-                description:
-                    'Follow your phone, or choose the language Subtitle Notes uses.',
+                description: context.t(
+                  'Follow your phone, or choose the language Subtitle Notes uses.',
+                ),
                 children: [
                   _InterfaceLanguagePicker(
                     value: settings.interfaceLanguage,
