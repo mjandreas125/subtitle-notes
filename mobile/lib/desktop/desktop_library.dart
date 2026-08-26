@@ -8,6 +8,8 @@ import '../data.dart';
 import '../design/components.dart';
 import '../design/tokens.dart';
 import '../i18n.dart';
+import '../screens/library.dart' show showAchievements;
+import '../screens/review.dart';
 import 'desktop_updates.dart';
 import 'player_settings.dart';
 
@@ -94,6 +96,43 @@ class _DesktopLibraryState extends State<DesktopLibrary> {
     }
   }
 
+  /// Moves a card into Learned, or back out of it. The archive is the same
+  /// list the phone calls Learned; the program could see it and not touch it.
+  Future<void> _setLearned(StudyCard card, {required bool learned}) async {
+    setState(() {
+      _selected = null;
+      _detail = null;
+    });
+    try {
+      await _api.setArchived(card.id, archived: learned);
+    } catch (_) {
+      // The reload below shows whatever actually happened.
+    }
+    await _load();
+  }
+
+  Future<void> _forget(StudyCard card) async {
+    final sure = await confirmDestructive(
+      context,
+      icon: Icons.delete_outline_rounded,
+      title: '${context.t('Delete')} “${card.learningLabel}”?',
+      message: context.t('The card is removed from every device. This cannot be undone.'),
+      confirmLabel: context.t('Delete'),
+      cancelLabel: context.t('Keep'),
+    );
+    if (!sure) return;
+    setState(() {
+      _selected = null;
+      _detail = null;
+    });
+    try {
+      await _api.delete(card.id);
+    } catch (_) {
+      // Same as above: the list is reloaded either way.
+    }
+    await _load();
+  }
+
   List<StudyCard> get _visible {
     final query = _search.trim().toLowerCase();
     return _cards.where((card) {
@@ -129,6 +168,10 @@ class _DesktopLibraryState extends State<DesktopLibrary> {
             update: widget.update,
             onInstallUpdate: widget.onInstallUpdate,
             onOpenFilm: _canOpenFilms ? _openFilm : null,
+            onPractise: _cards.isEmpty ? null : _practise,
+            onAchievements: _cards.isEmpty && _learned.isEmpty
+                ? null
+                : () => showAchievements(context, _stats),
           ),
           Expanded(
             child: Row(
@@ -146,6 +189,10 @@ class _DesktopLibraryState extends State<DesktopLibrary> {
                     card: _selected!,
                     detail: _detail,
                     loading: _detailLoading,
+                    learned: _learned.any((one) => one.id == _selected!.id),
+                    onLearned: (value) =>
+                        _setLearned(_selected!, learned: value),
+                    onForget: () => _forget(_selected!),
                     onClose: () => setState(() {
                       _selected = null;
                       _detail = null;
@@ -165,6 +212,15 @@ class _DesktopLibraryState extends State<DesktopLibrary> {
   /// installed it, signed in, and was told that words appear here when a
   /// subtitle is selected in VLC — with nothing to say how VLC comes into it.
   /// The answer was a right-click in Explorer that nobody had been told about.
+  /// The practice run, the same one the phone shows. It reads what is due
+  /// from the server, so a word answered here is answered everywhere.
+  Future<void> _practise() async {
+    final done = await Navigator.of(context).push<int>(
+      MaterialPageRoute(builder: (_) => ReviewPage(api: _api)),
+    );
+    if (done != null && done > 0) await _load();
+  }
+
   Future<void> _openFilm() async {
     final beside = File(Platform.resolvedExecutable).parent;
     for (final folder in [beside.parent, beside]) {
@@ -275,6 +331,8 @@ class _TopBar extends StatelessWidget {
     required this.update,
     required this.onInstallUpdate,
     this.onOpenFilm,
+    this.onPractise,
+    this.onAchievements,
   });
 
   final String email;
@@ -285,6 +343,10 @@ class _TopBar extends StatelessWidget {
   /// Absent when the launcher is not installed beside this window - running
   /// from a checkout there is nothing to start.
   final VoidCallback? onOpenFilm;
+
+  /// Absent while the library is empty: there is nothing to practise and
+  /// nothing to have earned.
+  final VoidCallback? onPractise, onAchievements;
   final ValueChanged<String> onSearch;
   final DesktopRelease? update;
   final Future<void> Function()? onInstallUpdate;
@@ -376,6 +438,18 @@ class _TopBar extends StatelessWidget {
               icon: Icons.movie_rounded,
               tooltip: context.t('Open a film'),
               onTap: onOpenFilm!,
+            ),
+          if (onPractise != null)
+            _BarAction(
+              icon: Icons.school_rounded,
+              tooltip: context.t('Practice'),
+              onTap: onPractise!,
+            ),
+          if (onAchievements != null)
+            _BarAction(
+              icon: Icons.workspace_premium_rounded,
+              tooltip: context.t('Achievements'),
+              onTap: onAchievements!,
             ),
           _BarAction(
             icon: Icons.refresh_rounded,
@@ -755,12 +829,18 @@ class _DetailPanel extends StatelessWidget {
     required this.detail,
     required this.loading,
     required this.onClose,
+    required this.onLearned,
+    required this.onForget,
+    required this.learned,
   });
 
   final StudyCard card;
   final StudyDetail? detail;
   final bool loading;
   final VoidCallback onClose;
+  final ValueChanged<bool> onLearned;
+  final VoidCallback onForget;
+  final bool learned;
 
   @override
   Widget build(BuildContext context) {
@@ -789,6 +869,37 @@ class _DetailPanel extends StatelessWidget {
                     weight: 800,
                     color: c.ink3,
                     height: 1.2,
+                  ),
+                ),
+              ),
+              // Beside the title rather than under the examples: a card with
+              // several senses runs past the bottom of the window, and an
+              // action nobody scrolls to is an action nobody has.
+              Squish(
+                onTap: () => onLearned(!learned),
+                semanticLabel: context.t(learned ? 'Back to the library' : 'Learned'),
+                child: SizedBox(
+                  height: 34,
+                  width: 34,
+                  child: Icon(
+                    learned
+                        ? Icons.undo_rounded
+                        : Icons.workspace_premium_rounded,
+                    size: 18,
+                    color: learned ? c.ink3 : c.green,
+                  ),
+                ),
+              ),
+              Squish(
+                onTap: onForget,
+                semanticLabel: context.t('Delete'),
+                child: SizedBox(
+                  height: 34,
+                  width: 34,
+                  child: Icon(
+                    Icons.delete_outline_rounded,
+                    size: 18,
+                    color: c.red,
                   ),
                 ),
               ),
@@ -933,6 +1044,7 @@ class _DetailPanel extends StatelessWidget {
               ]),
             if (item.examples.isNotEmpty) _list(c, context.t('Examples'), item.examples),
           ],
+
         ],
       ),
     );

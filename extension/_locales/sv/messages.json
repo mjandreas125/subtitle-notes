@@ -11,12 +11,6 @@
   "chipAsk": {
     "message": "Vad betyder det här?"
   },
-  "reading": {
-    "message": "Läser raden…"
-  },
-  "translating": {
-    "message": "översätter…"
-  },
   "pendingLater": {
     "message": "Inget svar just nu — översättningen dyker upp i appen.",
     "description": "Shown when no provider answered; the server retries later."
@@ -86,9 +80,6 @@
   "popupNotPaired": {
     "message": "Den här webbläsaren är inte kopplad till din samling."
   },
-  "popupConnect": {
-    "message": "Anslut telefonen"
-  },
   "popupConnectGoogle": {
     "message": "Fortsätt med Google",
     "description": "Popup button that signs in with Google"
@@ -96,20 +87,6 @@
   "popupConnectCode": {
     "message": "Visa en kod",
     "description": "Popup button that shows the pairing code"
-  },
-  "popupConnected": {
-    "message": "Ansluten - $EMAIL$",
-    "placeholders": {
-      "email": {
-        "content": "$1"
-      }
-    }
-  },
-  "popupConnectedPlain": {
-    "message": "Ditt bibliotek"
-  },
-  "popupEmpty": {
-    "message": "Inget sparat ännu. Markera ett ord på en sida, i en PDF eller i undertexter."
   },
   "popupExport": {
     "message": "Exportera till Anki"
@@ -129,21 +106,6 @@
   },
   "optForget": {
     "message": "Koppla från den här webbläsaren"
-  },
-  "optPairIntro": {
-    "message": "Bekräfta en kod i appen i telefonen för att koppla webbläsaren till din samling."
-  },
-  "optPairGet": {
-    "message": "Hämta en kod"
-  },
-  "optStep1": {
-    "message": "Öppna Subtitle Notes i telefonen."
-  },
-  "optStep2": {
-    "message": "Inställningar → Anslutna enheter."
-  },
-  "optStep3": {
-    "message": "Skriv in koden."
   },
   "optWaiting": {
     "message": "Väntar på bekräftelse…"
@@ -168,12 +130,6 @@
   },
   "optReset": {
     "message": "Återställ"
-  },
-  "optInstantTitle": {
-    "message": "Spara alltid"
-  },
-  "optInstantHelp": {
-    "message": "Varje markering sparas direkt, utan tangenter. Kortet erbjuder ändå att ångra."
   },
   "optWhereTitle": {
     "message": "Var fönstret visas"
@@ -370,10 +326,24 @@
   "optSpaceSavesHelp": {
     "message": "Annars visas raden bara."
   },
-  "popupRecent": {
-    "message": "Senaste"
+  "pageSubtitles": {
+    "message": "Undertexter finns här. Håll $KEYS$ och dra över ett ord.",
+    "placeholders": {
+      "keys": {
+        "content": "$1"
+      }
+    }
   },
-  "popupEmptyTitle": {
-    "message": "Tomt än så länge"
+  "pageNoKey": {
+    "message": "utan tangent"
+  },
+  "pageSubtitlesOff": {
+    "message": "Undertexter finns här, men klickbara undertexter är avstängda."
+  },
+  "pageText": {
+    "message": "Inga spelarundertexter här. Markera text och håll Ctrl+Alt."
+  },
+  "pageOff": {
+    "message": "Subtitle Notes håller sig borta från den här webbplatsen, som du bad om."
   }
 }

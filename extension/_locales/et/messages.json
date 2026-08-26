@@ -11,12 +11,6 @@
   "chipAsk": {
     "message": "Mida see tähendab?"
   },
-  "reading": {
-    "message": "Loen rida…"
-  },
-  "translating": {
-    "message": "tõlgin…"
-  },
   "pendingLater": {
     "message": "Praegu vastust ei tulnud — tõlge ilmub rakendusse.",
     "description": "Shown when no provider answered; the server retries later."
@@ -86,9 +80,6 @@
   "popupNotPaired": {
     "message": "See brauser pole sinu kogusse ühendatud."
   },
-  "popupConnect": {
-    "message": "Ühenda telefon"
-  },
   "popupConnectGoogle": {
     "message": "Jätka Google’iga",
     "description": "Popup button that signs in with Google"
@@ -96,20 +87,6 @@
   "popupConnectCode": {
     "message": "Näita koodi",
     "description": "Popup button that shows the pairing code"
-  },
-  "popupConnected": {
-    "message": "Ühendatud - $EMAIL$",
-    "placeholders": {
-      "email": {
-        "content": "$1"
-      }
-    }
-  },
-  "popupConnectedPlain": {
-    "message": "Sinu kogu"
-  },
-  "popupEmpty": {
-    "message": "Midagi pole veel salvestatud. Märgi sõna lehel, PDF-is või subtiitrites."
   },
   "popupExport": {
     "message": "Ekspordi Ankisse"
@@ -129,21 +106,6 @@
   },
   "optForget": {
     "message": "Ühenda see brauser lahti"
-  },
-  "optPairIntro": {
-    "message": "Brauseri sidumiseks kinnita kood telefonirakenduses."
-  },
-  "optPairGet": {
-    "message": "Küsi kood"
-  },
-  "optStep1": {
-    "message": "Ava telefonis Subtitle Notes."
-  },
-  "optStep2": {
-    "message": "Seaded → Ühendatud seadmed."
-  },
-  "optStep3": {
-    "message": "Sisesta see kood."
   },
   "optWaiting": {
     "message": "Ootan kinnitust…"
@@ -168,12 +130,6 @@
   },
   "optReset": {
     "message": "Lähtesta"
-  },
-  "optInstantTitle": {
-    "message": "Salvesta alati"
-  },
-  "optInstantHelp": {
-    "message": "Iga märgistus salvestub kohe, ilma klahvideta. Kaart pakub ikka tagasivõtmist."
   },
   "optWhereTitle": {
     "message": "Kus aken ilmub"
@@ -370,10 +326,24 @@
   "optSpaceSavesHelp": {
     "message": "Muidu rida ainult näidatakse."
   },
-  "popupRecent": {
-    "message": "Hiljutised"
+  "pageSubtitles": {
+    "message": "Siin on subtiitrid. Hoia $KEYS$ ja tõmba üle sõna.",
+    "placeholders": {
+      "keys": {
+        "content": "$1"
+      }
+    }
   },
-  "popupEmptyTitle": {
-    "message": "Veel tühi"
+  "pageNoKey": {
+    "message": "ilma klahvita"
+  },
+  "pageSubtitlesOff": {
+    "message": "Siin on subtiitrid, aga klõpsatavad subtiitrid on välja lülitatud."
+  },
+  "pageText": {
+    "message": "Pleieri subtiitreid siin ei ole. Vali suvaline tekst ja hoia Ctrl+Alt."
+  },
+  "pageOff": {
+    "message": "Sellel saidil Subtitle Notes ei tööta — nii sa palusid."
   }
 }

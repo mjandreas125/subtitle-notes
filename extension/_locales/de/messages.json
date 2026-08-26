@@ -11,12 +11,6 @@
   "chipAsk": {
     "message": "Was heißt das?"
   },
-  "reading": {
-    "message": "Lese die Zeile…"
-  },
-  "translating": {
-    "message": "übersetze…"
-  },
   "pendingLater": {
     "message": "Gerade keine Antwort — die Übersetzung erscheint in der App.",
     "description": "Shown when no provider answered; the server retries later."
@@ -86,9 +80,6 @@
   "popupNotPaired": {
     "message": "Dieser Browser ist nicht mit deiner Sammlung verbunden."
   },
-  "popupConnect": {
-    "message": "Telefon verbinden"
-  },
   "popupConnectGoogle": {
     "message": "Mit Google fortfahren",
     "description": "Popup button that signs in with Google"
@@ -96,20 +87,6 @@
   "popupConnectCode": {
     "message": "Code anzeigen",
     "description": "Popup button that shows the pairing code"
-  },
-  "popupConnected": {
-    "message": "Verbunden - $EMAIL$",
-    "placeholders": {
-      "email": {
-        "content": "$1"
-      }
-    }
-  },
-  "popupConnectedPlain": {
-    "message": "Deine Sammlung"
-  },
-  "popupEmpty": {
-    "message": "Noch nichts gespeichert. Markiere ein Wort auf einer Seite, in einem PDF oder in Untertiteln."
   },
   "popupExport": {
     "message": "Für Anki exportieren"
@@ -129,21 +106,6 @@
   },
   "optForget": {
     "message": "Diesen Browser trennen"
-  },
-  "optPairIntro": {
-    "message": "Bestätige einen Code in der App auf deinem Telefon, um diesen Browser zu verbinden."
-  },
-  "optPairGet": {
-    "message": "Code anfordern"
-  },
-  "optStep1": {
-    "message": "Öffne Subtitle Notes auf deinem Telefon."
-  },
-  "optStep2": {
-    "message": "Einstellungen → Verbundene Geräte."
-  },
-  "optStep3": {
-    "message": "Gib diesen Code ein."
   },
   "optWaiting": {
     "message": "Warte auf Bestätigung…"
@@ -168,12 +130,6 @@
   },
   "optReset": {
     "message": "Zurücksetzen"
-  },
-  "optInstantTitle": {
-    "message": "Immer speichern"
-  },
-  "optInstantHelp": {
-    "message": "Jede Markierung wird sofort gespeichert, ganz ohne Tasten. Die Karte bietet trotzdem an, es rückgängig zu machen."
   },
   "optWhereTitle": {
     "message": "Wo das Fenster erscheint"
@@ -370,10 +326,24 @@
   "optSpaceSavesHelp": {
     "message": "Sonst wird die Zeile nur angezeigt."
   },
-  "popupRecent": {
-    "message": "Zuletzt"
+  "pageSubtitles": {
+    "message": "Hier gibt es Untertitel. Halten Sie $KEYS$ und ziehen Sie über ein Wort.",
+    "placeholders": {
+      "keys": {
+        "content": "$1"
+      }
+    }
   },
-  "popupEmptyTitle": {
-    "message": "Noch nichts"
+  "pageNoKey": {
+    "message": "ohne Taste"
+  },
+  "pageSubtitlesOff": {
+    "message": "Hier gibt es Untertitel, anklickbare Untertitel sind aber aus."
+  },
+  "pageText": {
+    "message": "Hier gibt es keine Player-Untertitel. Markieren Sie Text und halten Sie Ctrl+Alt."
+  },
+  "pageOff": {
+    "message": "Auf dieser Seite hält sich Subtitle Notes heraus, wie gewünscht."
   }
 }

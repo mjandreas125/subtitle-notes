@@ -960,14 +960,6 @@ class StudyCard {
     if (timecodeMs != null) timecode(timecodeMs!),
   ];
 
-  String get sourceLabel {
-    final parts = <String>[];
-    if (season != null) parts.add('Season $season');
-    if (episode != null) parts.add('Episode $episode');
-    if (timecodeMs != null) parts.add(timecode(timecodeMs!));
-    return parts.isEmpty ? 'Subtitle selection' : parts.join('  ·  ');
-  }
-
   String get learningLabel => focusPhrase?.isNotEmpty == true
       ? focusPhrase!
       : focusWord?.isNotEmpty == true
@@ -1325,7 +1317,9 @@ class StudyStats {
           tone: AchievementTone.green,
           tiers: const [1, 10, 25, 50, 100, 250],
           value: all.length,
-          goal: (target) => 'Save %d words in total',
+          goal: (target) => target == 1
+              ? 'Save your first word'
+              : 'Save %d words in total',
         ),
         Achievement(
           id: 'series',
@@ -1372,7 +1366,9 @@ class StudyStats {
           tone: AchievementTone.green,
           tiers: const [1, 10, 30, 75],
           value: archived.length,
-          goal: (target) => 'Move %d words to Learned',
+          goal: (target) => target == 1
+              ? 'Move a word to Learned'
+              : 'Move %d words to Learned',
         ),
       ],
     );

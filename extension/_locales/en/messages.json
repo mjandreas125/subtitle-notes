@@ -11,12 +11,6 @@
   "chipAsk": {
     "message": "What does this mean?"
   },
-  "reading": {
-    "message": "Reading the line…"
-  },
-  "translating": {
-    "message": "translating…"
-  },
   "pendingLater": {
     "message": "No answer just now — it will be translated in the app.",
     "description": "Shown when no provider answered; the server retries later."
@@ -86,9 +80,6 @@
   "popupNotPaired": {
     "message": "This browser is not linked to your library."
   },
-  "popupConnect": {
-    "message": "Connect your phone"
-  },
   "popupConnectGoogle": {
     "message": "Continue with Google",
     "description": "Popup button that signs in with Google"
@@ -96,20 +87,6 @@
   "popupConnectCode": {
     "message": "Show a code instead",
     "description": "Popup button that shows the pairing code"
-  },
-  "popupConnected": {
-    "message": "Connected - $EMAIL$",
-    "placeholders": {
-      "email": {
-        "content": "$1"
-      }
-    }
-  },
-  "popupConnectedPlain": {
-    "message": "Your library"
-  },
-  "popupEmpty": {
-    "message": "Nothing saved yet. Highlight a word on a page, in a PDF or in subtitles."
   },
   "popupExport": {
     "message": "Export for Anki"
@@ -129,21 +106,6 @@
   },
   "optForget": {
     "message": "Disconnect this browser"
-  },
-  "optPairIntro": {
-    "message": "To link this browser to your library, confirm a code in the app on your phone."
-  },
-  "optPairGet": {
-    "message": "Get a code"
-  },
-  "optStep1": {
-    "message": "Open Subtitle Notes on your phone."
-  },
-  "optStep2": {
-    "message": "Settings → Connected devices."
-  },
-  "optStep3": {
-    "message": "Type this code."
   },
   "optWaiting": {
     "message": "Waiting for confirmation…"
@@ -168,12 +130,6 @@
   },
   "optReset": {
     "message": "Reset"
-  },
-  "optInstantTitle": {
-    "message": "Always save"
-  },
-  "optInstantHelp": {
-    "message": "Every highlight is saved at once, no keys at all. The card still offers to undo it."
   },
   "optWhereTitle": {
     "message": "Where the window appears"
@@ -370,10 +326,24 @@
   "optSpaceSavesHelp": {
     "message": "Otherwise the line is only shown."
   },
-  "popupRecent": {
-    "message": "Recently saved"
+  "pageSubtitles": {
+    "message": "Subtitles found here. Hold $KEYS$ and drag across a word.",
+    "placeholders": {
+      "keys": {
+        "content": "$1"
+      }
+    }
   },
-  "popupEmptyTitle": {
-    "message": "Nothing here yet"
+  "pageNoKey": {
+    "message": "no key"
+  },
+  "pageSubtitlesOff": {
+    "message": "Subtitles found here, but clickable subtitles are switched off."
+  },
+  "pageText": {
+    "message": "No player subtitles here. Highlight any text and hold Ctrl+Alt."
+  },
+  "pageOff": {
+    "message": "Subtitle Notes stays off this site, as you asked."
   }
 }

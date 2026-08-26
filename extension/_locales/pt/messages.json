@@ -11,12 +11,6 @@
   "chipAsk": {
     "message": "O que isso significa?"
   },
-  "reading": {
-    "message": "Lendo a linha…"
-  },
-  "translating": {
-    "message": "traduzindo…"
-  },
   "pendingLater": {
     "message": "Sem resposta agora — a tradução aparecerá na aplicação.",
     "description": "Shown when no provider answered; the server retries later."
@@ -86,9 +80,6 @@
   "popupNotPaired": {
     "message": "Este navegador não está ligado à sua biblioteca."
   },
-  "popupConnect": {
-    "message": "Conectar o telefone"
-  },
   "popupConnectGoogle": {
     "message": "Continuar com Google",
     "description": "Popup button that signs in with Google"
@@ -96,20 +87,6 @@
   "popupConnectCode": {
     "message": "Mostrar um código",
     "description": "Popup button that shows the pairing code"
-  },
-  "popupConnected": {
-    "message": "Conectado - $EMAIL$",
-    "placeholders": {
-      "email": {
-        "content": "$1"
-      }
-    }
-  },
-  "popupConnectedPlain": {
-    "message": "A sua biblioteca"
-  },
-  "popupEmpty": {
-    "message": "Nada salvo ainda. Destaque uma palavra numa página, num PDF ou nas legendas."
   },
   "popupExport": {
     "message": "Exportar para o Anki"
@@ -129,21 +106,6 @@
   },
   "optForget": {
     "message": "Desconectar este navegador"
-  },
-  "optPairIntro": {
-    "message": "Para ligar este navegador à sua biblioteca, confirme um código no aplicativo do telefone."
-  },
-  "optPairGet": {
-    "message": "Obter um código"
-  },
-  "optStep1": {
-    "message": "Abra o Subtitle Notes no telefone."
-  },
-  "optStep2": {
-    "message": "Configurações → Dispositivos conectados."
-  },
-  "optStep3": {
-    "message": "Digite este código."
   },
   "optWaiting": {
     "message": "Aguardando confirmação…"
@@ -168,12 +130,6 @@
   },
   "optReset": {
     "message": "Redefinir"
-  },
-  "optInstantTitle": {
-    "message": "Sempre salvar"
-  },
-  "optInstantHelp": {
-    "message": "Cada seleção é salva na hora, sem teclas. O cartão ainda oferece desfazer."
   },
   "optWhereTitle": {
     "message": "Onde a janela aparece"
@@ -370,10 +326,24 @@
   "optSpaceSavesHelp": {
     "message": "Caso contrário, a linha é apenas mostrada."
   },
-  "popupRecent": {
-    "message": "Recentes"
+  "pageSubtitles": {
+    "message": "Há legendas aqui. Mantenha $KEYS$ e arraste sobre uma palavra.",
+    "placeholders": {
+      "keys": {
+        "content": "$1"
+      }
+    }
   },
-  "popupEmptyTitle": {
-    "message": "Ainda vazio"
+  "pageNoKey": {
+    "message": "sem tecla"
+  },
+  "pageSubtitlesOff": {
+    "message": "Há legendas aqui, mas as legendas clicáveis estão desligadas."
+  },
+  "pageText": {
+    "message": "Não há legendas de leitor aqui. Realce qualquer texto e mantenha Ctrl+Alt."
+  },
+  "pageOff": {
+    "message": "O Subtitle Notes fica fora deste site, como pediu."
   }
 }

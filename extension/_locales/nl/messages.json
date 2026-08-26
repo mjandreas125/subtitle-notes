@@ -11,12 +11,6 @@
   "chipAsk": {
     "message": "Wat betekent dit?"
   },
-  "reading": {
-    "message": "Regel lezen…"
-  },
-  "translating": {
-    "message": "vertalen…"
-  },
   "pendingLater": {
     "message": "Nu geen antwoord — de vertaling verschijnt in de app.",
     "description": "Shown when no provider answered; the server retries later."
@@ -86,9 +80,6 @@
   "popupNotPaired": {
     "message": "Deze browser is niet gekoppeld aan je verzameling."
   },
-  "popupConnect": {
-    "message": "Telefoon verbinden"
-  },
   "popupConnectGoogle": {
     "message": "Doorgaan met Google",
     "description": "Popup button that signs in with Google"
@@ -96,20 +87,6 @@
   "popupConnectCode": {
     "message": "Toon een code",
     "description": "Popup button that shows the pairing code"
-  },
-  "popupConnected": {
-    "message": "Verbonden - $EMAIL$",
-    "placeholders": {
-      "email": {
-        "content": "$1"
-      }
-    }
-  },
-  "popupConnectedPlain": {
-    "message": "Jouw bibliotheek"
-  },
-  "popupEmpty": {
-    "message": "Nog niets opgeslagen. Markeer een woord op een pagina, in een pdf of in ondertiteling."
   },
   "popupExport": {
     "message": "Exporteren naar Anki"
@@ -129,21 +106,6 @@
   },
   "optForget": {
     "message": "Deze browser loskoppelen"
-  },
-  "optPairIntro": {
-    "message": "Bevestig een code in de app op je telefoon om deze browser te koppelen."
-  },
-  "optPairGet": {
-    "message": "Code opvragen"
-  },
-  "optStep1": {
-    "message": "Open Subtitle Notes op je telefoon."
-  },
-  "optStep2": {
-    "message": "Instellingen → Verbonden apparaten."
-  },
-  "optStep3": {
-    "message": "Typ deze code."
   },
   "optWaiting": {
     "message": "Wacht op bevestiging…"
@@ -168,12 +130,6 @@
   },
   "optReset": {
     "message": "Herstellen"
-  },
-  "optInstantTitle": {
-    "message": "Altijd opslaan"
-  },
-  "optInstantHelp": {
-    "message": "Elke selectie wordt meteen opgeslagen, zonder toetsen. De kaart biedt nog steeds aan het ongedaan te maken."
   },
   "optWhereTitle": {
     "message": "Waar het venster verschijnt"
@@ -370,10 +326,24 @@
   "optSpaceSavesHelp": {
     "message": "Anders wordt de regel alleen getoond."
   },
-  "popupRecent": {
-    "message": "Recent"
+  "pageSubtitles": {
+    "message": "Hier staan ondertitels. Houd $KEYS$ vast en sleep over een woord.",
+    "placeholders": {
+      "keys": {
+        "content": "$1"
+      }
+    }
   },
-  "popupEmptyTitle": {
-    "message": "Nog niets"
+  "pageNoKey": {
+    "message": "zonder toets"
+  },
+  "pageSubtitlesOff": {
+    "message": "Hier staan ondertitels, maar klikbare ondertitels staan uit."
+  },
+  "pageText": {
+    "message": "Hier zijn geen spelerondertitels. Markeer tekst en houd Ctrl+Alt vast."
+  },
+  "pageOff": {
+    "message": "Subtitle Notes blijft van deze site af, zoals gevraagd."
   }
 }

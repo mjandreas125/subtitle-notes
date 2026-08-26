@@ -11,12 +11,6 @@
   "chipAsk": {
     "message": "Mitä tämä tarkoittaa?"
   },
-  "reading": {
-    "message": "Luetaan riviä…"
-  },
-  "translating": {
-    "message": "käännetään…"
-  },
   "pendingLater": {
     "message": "Ei vastausta juuri nyt — käännös ilmestyy sovellukseen.",
     "description": "Shown when no provider answered; the server retries later."
@@ -86,9 +80,6 @@
   "popupNotPaired": {
     "message": "Tätä selainta ei ole liitetty kokoelmaasi."
   },
-  "popupConnect": {
-    "message": "Yhdistä puhelin"
-  },
   "popupConnectGoogle": {
     "message": "Jatka Google-tilillä",
     "description": "Popup button that signs in with Google"
@@ -96,20 +87,6 @@
   "popupConnectCode": {
     "message": "Näytä koodi",
     "description": "Popup button that shows the pairing code"
-  },
-  "popupConnected": {
-    "message": "Yhdistetty - $EMAIL$",
-    "placeholders": {
-      "email": {
-        "content": "$1"
-      }
-    }
-  },
-  "popupConnectedPlain": {
-    "message": "Kirjastosi"
-  },
-  "popupEmpty": {
-    "message": "Mitään ei ole vielä tallennettu. Maalaa sana sivulta, PDF:stä tai tekstityksestä."
   },
   "popupExport": {
     "message": "Vie Ankiin"
@@ -129,21 +106,6 @@
   },
   "optForget": {
     "message": "Katkaise tämän selaimen yhteys"
-  },
-  "optPairIntro": {
-    "message": "Liitä selain kokoelmaasi vahvistamalla koodi puhelimen sovelluksessa."
-  },
-  "optPairGet": {
-    "message": "Hae koodi"
-  },
-  "optStep1": {
-    "message": "Avaa Subtitle Notes puhelimessa."
-  },
-  "optStep2": {
-    "message": "Asetukset → Yhdistetyt laitteet."
-  },
-  "optStep3": {
-    "message": "Kirjoita tämä koodi."
   },
   "optWaiting": {
     "message": "Odotetaan vahvistusta…"
@@ -168,12 +130,6 @@
   },
   "optReset": {
     "message": "Palauta"
-  },
-  "optInstantTitle": {
-    "message": "Tallenna aina"
-  },
-  "optInstantHelp": {
-    "message": "Jokainen maalaus tallentuu heti, ilman näppäimiä. Kortti tarjoaa silti kumoamista."
   },
   "optWhereTitle": {
     "message": "Missä ikkuna näkyy"
@@ -370,10 +326,24 @@
   "optSpaceSavesHelp": {
     "message": "Muuten rivi vain näytetään."
   },
-  "popupRecent": {
-    "message": "Viimeisimmät"
+  "pageSubtitles": {
+    "message": "Täällä on tekstitys. Pidä $KEYS$ pohjassa ja vedä sanan yli.",
+    "placeholders": {
+      "keys": {
+        "content": "$1"
+      }
+    }
   },
-  "popupEmptyTitle": {
-    "message": "Vielä tyhjä"
+  "pageNoKey": {
+    "message": "ilman näppäintä"
+  },
+  "pageSubtitlesOff": {
+    "message": "Täällä on tekstitys, mutta napsautettavat tekstitykset ovat pois päältä."
+  },
+  "pageText": {
+    "message": "Täällä ei ole soittimen tekstitystä. Maalaa mitä tahansa tekstiä ja pidä Ctrl+Alt."
+  },
+  "pageOff": {
+    "message": "Subtitle Notes pysyy poissa tältä sivustolta, kuten pyysit."
   }
 }

@@ -11,12 +11,6 @@
   "chipAsk": {
     "message": "Qu'est-ce que ça veut dire ?"
   },
-  "reading": {
-    "message": "Lecture de la ligne…"
-  },
-  "translating": {
-    "message": "traduction…"
-  },
   "pendingLater": {
     "message": "Pas de réponse à l’instant — la traduction arrivera dans l’application.",
     "description": "Shown when no provider answered; the server retries later."
@@ -86,9 +80,6 @@
   "popupNotPaired": {
     "message": "Ce navigateur n'est pas relié à votre bibliothèque."
   },
-  "popupConnect": {
-    "message": "Connecter le téléphone"
-  },
   "popupConnectGoogle": {
     "message": "Continuer avec Google",
     "description": "Popup button that signs in with Google"
@@ -96,20 +87,6 @@
   "popupConnectCode": {
     "message": "Afficher un code",
     "description": "Popup button that shows the pairing code"
-  },
-  "popupConnected": {
-    "message": "Connecté - $EMAIL$",
-    "placeholders": {
-      "email": {
-        "content": "$1"
-      }
-    }
-  },
-  "popupConnectedPlain": {
-    "message": "Votre bibliothèque"
-  },
-  "popupEmpty": {
-    "message": "Rien d'enregistré pour l'instant. Surlignez un mot sur une page, dans un PDF ou dans des sous-titres."
   },
   "popupExport": {
     "message": "Exporter vers Anki"
@@ -129,21 +106,6 @@
   },
   "optForget": {
     "message": "Déconnecter ce navigateur"
-  },
-  "optPairIntro": {
-    "message": "Pour relier ce navigateur à votre bibliothèque, confirmez un code dans l'application sur votre téléphone."
-  },
-  "optPairGet": {
-    "message": "Obtenir un code"
-  },
-  "optStep1": {
-    "message": "Ouvrez Subtitle Notes sur votre téléphone."
-  },
-  "optStep2": {
-    "message": "Réglages → Appareils connectés."
-  },
-  "optStep3": {
-    "message": "Saisissez ce code."
   },
   "optWaiting": {
     "message": "En attente de confirmation…"
@@ -168,12 +130,6 @@
   },
   "optReset": {
     "message": "Réinitialiser"
-  },
-  "optInstantTitle": {
-    "message": "Toujours enregistrer"
-  },
-  "optInstantHelp": {
-    "message": "Chaque sélection est enregistrée aussitôt, sans aucune touche. La carte propose quand même d'annuler."
   },
   "optWhereTitle": {
     "message": "Où la fenêtre apparaît"
@@ -370,10 +326,24 @@
   "optSpaceSavesHelp": {
     "message": "Sinon la ligne est seulement affichée."
   },
-  "popupRecent": {
-    "message": "Récents"
+  "pageSubtitles": {
+    "message": "Des sous-titres ici. Maintenez $KEYS$ et glissez sur un mot.",
+    "placeholders": {
+      "keys": {
+        "content": "$1"
+      }
+    }
   },
-  "popupEmptyTitle": {
-    "message": "Encore vide"
+  "pageNoKey": {
+    "message": "sans touche"
+  },
+  "pageSubtitlesOff": {
+    "message": "Des sous-titres ici, mais les sous-titres cliquables sont désactivés."
+  },
+  "pageText": {
+    "message": "Pas de sous-titres de lecteur ici. Surlignez du texte en maintenant Ctrl+Alt."
+  },
+  "pageOff": {
+    "message": "Subtitle Notes reste à l’écart de ce site, comme demandé."
   }
 }

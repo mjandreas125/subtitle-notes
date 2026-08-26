@@ -11,12 +11,6 @@
   "chipAsk": {
     "message": "Co to znaczy?"
   },
-  "reading": {
-    "message": "Czytam linijkę…"
-  },
-  "translating": {
-    "message": "tłumaczę…"
-  },
   "pendingLater": {
     "message": "Teraz brak odpowiedzi — tłumaczenie pojawi się w aplikacji.",
     "description": "Shown when no provider answered; the server retries later."
@@ -86,9 +80,6 @@
   "popupNotPaired": {
     "message": "Ta przeglądarka nie jest połączona z twoim zbiorem."
   },
-  "popupConnect": {
-    "message": "Połącz telefon"
-  },
   "popupConnectGoogle": {
     "message": "Kontynuuj z Google",
     "description": "Popup button that signs in with Google"
@@ -96,20 +87,6 @@
   "popupConnectCode": {
     "message": "Pokaż kod",
     "description": "Popup button that shows the pairing code"
-  },
-  "popupConnected": {
-    "message": "Połączono - $EMAIL$",
-    "placeholders": {
-      "email": {
-        "content": "$1"
-      }
-    }
-  },
-  "popupConnectedPlain": {
-    "message": "Twoja biblioteka"
-  },
-  "popupEmpty": {
-    "message": "Nic jeszcze nie zapisano. Zaznacz słowo na stronie, w PDF-ie albo w napisach."
   },
   "popupExport": {
     "message": "Eksportuj do Anki"
@@ -129,21 +106,6 @@
   },
   "optForget": {
     "message": "Odłącz tę przeglądarkę"
-  },
-  "optPairIntro": {
-    "message": "Aby połączyć przeglądarkę ze zbiorem, potwierdź kod w aplikacji na telefonie."
-  },
-  "optPairGet": {
-    "message": "Poproś o kod"
-  },
-  "optStep1": {
-    "message": "Otwórz Subtitle Notes na telefonie."
-  },
-  "optStep2": {
-    "message": "Ustawienia → Połączone urządzenia."
-  },
-  "optStep3": {
-    "message": "Wpisz ten kod."
   },
   "optWaiting": {
     "message": "Czekam na potwierdzenie…"
@@ -168,12 +130,6 @@
   },
   "optReset": {
     "message": "Przywróć"
-  },
-  "optInstantTitle": {
-    "message": "Zawsze zapisuj"
-  },
-  "optInstantHelp": {
-    "message": "Każde zaznaczenie zapisuje się od razu, bez klawiszy. Karta i tak zaproponuje cofnięcie."
   },
   "optWhereTitle": {
     "message": "Gdzie pojawia się okno"
@@ -370,10 +326,24 @@
   "optSpaceSavesHelp": {
     "message": "W przeciwnym razie wiersz jest tylko pokazywany."
   },
-  "popupRecent": {
-    "message": "Ostatnie"
+  "pageSubtitles": {
+    "message": "Są tu napisy. Przytrzymaj $KEYS$ i przeciągnij po słowie.",
+    "placeholders": {
+      "keys": {
+        "content": "$1"
+      }
+    }
   },
-  "popupEmptyTitle": {
-    "message": "Jeszcze pusto"
+  "pageNoKey": {
+    "message": "bez klawisza"
+  },
+  "pageSubtitlesOff": {
+    "message": "Są tu napisy, ale klikalne napisy są wyłączone."
+  },
+  "pageText": {
+    "message": "Nie ma tu napisów odtwarzacza. Zaznacz dowolny tekst, trzymając Ctrl+Alt."
+  },
+  "pageOff": {
+    "message": "Na tej stronie Subtitle Notes się nie włącza — tak ustawiłeś."
   }
 }

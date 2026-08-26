@@ -11,12 +11,6 @@
   "chipAsk": {
     "message": "¿Qué significa esto?"
   },
-  "reading": {
-    "message": "Leyendo la línea…"
-  },
-  "translating": {
-    "message": "traduciendo…"
-  },
   "pendingLater": {
     "message": "Ahora no hay respuesta: la traducción aparecerá en la aplicación.",
     "description": "Shown when no provider answered; the server retries later."
@@ -86,9 +80,6 @@
   "popupNotPaired": {
     "message": "Este navegador no está enlazado con tu biblioteca."
   },
-  "popupConnect": {
-    "message": "Conectar el teléfono"
-  },
   "popupConnectGoogle": {
     "message": "Continuar con Google",
     "description": "Popup button that signs in with Google"
@@ -96,20 +87,6 @@
   "popupConnectCode": {
     "message": "Mostrar un código",
     "description": "Popup button that shows the pairing code"
-  },
-  "popupConnected": {
-    "message": "Conectado - $EMAIL$",
-    "placeholders": {
-      "email": {
-        "content": "$1"
-      }
-    }
-  },
-  "popupConnectedPlain": {
-    "message": "Tu biblioteca"
-  },
-  "popupEmpty": {
-    "message": "Aún no hay nada guardado. Resalta una palabra en una página, en un PDF o en los subtítulos."
   },
   "popupExport": {
     "message": "Exportar a Anki"
@@ -129,21 +106,6 @@
   },
   "optForget": {
     "message": "Desconectar este navegador"
-  },
-  "optPairIntro": {
-    "message": "Para enlazar este navegador con tu biblioteca, confirma un código en la aplicación del teléfono."
-  },
-  "optPairGet": {
-    "message": "Pedir un código"
-  },
-  "optStep1": {
-    "message": "Abre Subtitle Notes en tu teléfono."
-  },
-  "optStep2": {
-    "message": "Ajustes → Dispositivos conectados."
-  },
-  "optStep3": {
-    "message": "Escribe este código."
   },
   "optWaiting": {
     "message": "Esperando confirmación…"
@@ -168,12 +130,6 @@
   },
   "optReset": {
     "message": "Restablecer"
-  },
-  "optInstantTitle": {
-    "message": "Guardar siempre"
-  },
-  "optInstantHelp": {
-    "message": "Cada selección se guarda al instante, sin teclas. La tarjeta sigue ofreciendo deshacerlo."
   },
   "optWhereTitle": {
     "message": "Dónde aparece la ventana"
@@ -370,10 +326,24 @@
   "optSpaceSavesHelp": {
     "message": "Si no, la línea solo se muestra."
   },
-  "popupRecent": {
-    "message": "Recientes"
+  "pageSubtitles": {
+    "message": "Hay subtítulos aquí. Mantén $KEYS$ y arrastra sobre una palabra.",
+    "placeholders": {
+      "keys": {
+        "content": "$1"
+      }
+    }
   },
-  "popupEmptyTitle": {
-    "message": "Aún vacío"
+  "pageNoKey": {
+    "message": "sin tecla"
+  },
+  "pageSubtitlesOff": {
+    "message": "Hay subtítulos aquí, pero los subtítulos clicables están desactivados."
+  },
+  "pageText": {
+    "message": "Aquí no hay subtítulos de reproductor. Resalta cualquier texto y mantén Ctrl+Alt."
+  },
+  "pageOff": {
+    "message": "Subtitle Notes no actúa en este sitio, como pediste."
   }
 }

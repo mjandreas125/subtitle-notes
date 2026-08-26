@@ -11,12 +11,6 @@
   "chipAsk": {
     "message": "Che cosa significa?"
   },
-  "reading": {
-    "message": "Leggo la riga…"
-  },
-  "translating": {
-    "message": "traduco…"
-  },
   "pendingLater": {
     "message": "Nessuna risposta ora: la traduzione arriverà nell’app.",
     "description": "Shown when no provider answered; the server retries later."
@@ -86,9 +80,6 @@
   "popupNotPaired": {
     "message": "Questo browser non è collegato alla tua raccolta."
   },
-  "popupConnect": {
-    "message": "Collega il telefono"
-  },
   "popupConnectGoogle": {
     "message": "Continua con Google",
     "description": "Popup button that signs in with Google"
@@ -96,20 +87,6 @@
   "popupConnectCode": {
     "message": "Mostra un codice",
     "description": "Popup button that shows the pairing code"
-  },
-  "popupConnected": {
-    "message": "Collegato - $EMAIL$",
-    "placeholders": {
-      "email": {
-        "content": "$1"
-      }
-    }
-  },
-  "popupConnectedPlain": {
-    "message": "La tua raccolta"
-  },
-  "popupEmpty": {
-    "message": "Ancora niente salvato. Evidenzia una parola su una pagina, in un PDF o nei sottotitoli."
   },
   "popupExport": {
     "message": "Esporta per Anki"
@@ -129,21 +106,6 @@
   },
   "optForget": {
     "message": "Scollega questo browser"
-  },
-  "optPairIntro": {
-    "message": "Per collegare il browser alla tua raccolta, conferma un codice nell'app sul telefono."
-  },
-  "optPairGet": {
-    "message": "Ottieni un codice"
-  },
-  "optStep1": {
-    "message": "Apri Subtitle Notes sul telefono."
-  },
-  "optStep2": {
-    "message": "Impostazioni → Dispositivi collegati."
-  },
-  "optStep3": {
-    "message": "Inserisci questo codice."
   },
   "optWaiting": {
     "message": "Attendo conferma…"
@@ -168,12 +130,6 @@
   },
   "optReset": {
     "message": "Reimposta"
-  },
-  "optInstantTitle": {
-    "message": "Salva sempre"
-  },
-  "optInstantHelp": {
-    "message": "Ogni selezione viene salvata subito, senza tasti. La scheda propone comunque di annullare."
   },
   "optWhereTitle": {
     "message": "Dove appare la finestra"
@@ -370,10 +326,24 @@
   "optSpaceSavesHelp": {
     "message": "Altrimenti la riga viene solo mostrata."
   },
-  "popupRecent": {
-    "message": "Recenti"
+  "pageSubtitles": {
+    "message": "Qui ci sono sottotitoli. Tieni premuto $KEYS$ e trascina su una parola.",
+    "placeholders": {
+      "keys": {
+        "content": "$1"
+      }
+    }
   },
-  "popupEmptyTitle": {
-    "message": "Ancora vuoto"
+  "pageNoKey": {
+    "message": "senza tasto"
+  },
+  "pageSubtitlesOff": {
+    "message": "Qui ci sono sottotitoli, ma i sottotitoli cliccabili sono disattivati."
+  },
+  "pageText": {
+    "message": "Qui non ci sono sottotitoli del player. Evidenzia del testo tenendo Ctrl+Alt."
+  },
+  "pageOff": {
+    "message": "Su questo sito Subtitle Notes resta fuori, come hai chiesto."
   }
 }

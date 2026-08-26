@@ -254,6 +254,22 @@
     return found;
   }
 
+  // What the popup asks when somebody opens it over this page. Answered from
+  // here because this is the only script that knows what a caption looks like.
+  chrome.runtime.onMessage.addListener((message, sender, respond) => {
+    if (message?.type !== 'pageState') return false;
+    const options = settings();
+    respond({
+      captions: captionNodes().length,
+      subtitles: options.subtitles !== false,
+      space: options.spaceLine === true &&
+        (typeof snSiteAllowed !== 'function' || snSiteAllowed(options, location.hostname)),
+      blocked: typeof snBlocked === 'function' && snBlocked(options, location.hostname),
+      keys: typeof snSubtitleKeyLabel === 'function' ? snSubtitleKeyLabel(options) : '',
+    });
+    return true;
+  });
+
   let marked = [];
   let armed = false;
   let holding = false;

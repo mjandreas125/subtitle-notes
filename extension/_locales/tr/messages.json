@@ -11,12 +11,6 @@
   "chipAsk": {
     "message": "Bu ne demek?"
   },
-  "reading": {
-    "message": "Satır okunuyor…"
-  },
-  "translating": {
-    "message": "çevriliyor…"
-  },
   "pendingLater": {
     "message": "Şu an yanıt yok — çeviri uygulamada görünecek.",
     "description": "Shown when no provider answered; the server retries later."
@@ -86,9 +80,6 @@
   "popupNotPaired": {
     "message": "Bu tarayıcı kitaplığına bağlı değil."
   },
-  "popupConnect": {
-    "message": "Telefonu bağla"
-  },
   "popupConnectGoogle": {
     "message": "Google ile devam et",
     "description": "Popup button that signs in with Google"
@@ -96,20 +87,6 @@
   "popupConnectCode": {
     "message": "Kod göster",
     "description": "Popup button that shows the pairing code"
-  },
-  "popupConnected": {
-    "message": "Bağlandı - $EMAIL$",
-    "placeholders": {
-      "email": {
-        "content": "$1"
-      }
-    }
-  },
-  "popupConnectedPlain": {
-    "message": "Kütüphaneniz"
-  },
-  "popupEmpty": {
-    "message": "Henüz hiçbir şey kaydedilmedi. Bir sayfada, PDF'te ya da altyazıda bir kelime seç."
   },
   "popupExport": {
     "message": "Anki için dışa aktar"
@@ -129,21 +106,6 @@
   },
   "optForget": {
     "message": "Bu tarayıcının bağlantısını kes"
-  },
-  "optPairIntro": {
-    "message": "Bu tarayıcıyı kitaplığına bağlamak için telefonundaki uygulamada bir kodu onayla."
-  },
-  "optPairGet": {
-    "message": "Kod al"
-  },
-  "optStep1": {
-    "message": "Telefonunda Subtitle Notes'u aç."
-  },
-  "optStep2": {
-    "message": "Ayarlar → Bağlı cihazlar."
-  },
-  "optStep3": {
-    "message": "Bu kodu gir."
   },
   "optWaiting": {
     "message": "Onay bekleniyor…"
@@ -168,12 +130,6 @@
   },
   "optReset": {
     "message": "Sıfırla"
-  },
-  "optInstantTitle": {
-    "message": "Her zaman kaydet"
-  },
-  "optInstantHelp": {
-    "message": "Her seçim tuşsuz olarak hemen kaydedilir. Kart yine de geri almayı önerir."
   },
   "optWhereTitle": {
     "message": "Pencere nerede görünsün"
@@ -370,10 +326,24 @@
   "optSpaceSavesHelp": {
     "message": "Aksi hâlde satır yalnızca gösterilir."
   },
-  "popupRecent": {
-    "message": "Son eklenenler"
+  "pageSubtitles": {
+    "message": "Burada altyazı var. $KEYS$ tuşunu basılı tutup bir kelimenin üzerinde sürükleyin.",
+    "placeholders": {
+      "keys": {
+        "content": "$1"
+      }
+    }
   },
-  "popupEmptyTitle": {
-    "message": "Henüz boş"
+  "pageNoKey": {
+    "message": "tuşsuz"
+  },
+  "pageSubtitlesOff": {
+    "message": "Burada altyazı var ama tıklanabilir altyazılar kapalı."
+  },
+  "pageText": {
+    "message": "Burada oynatıcı altyazısı yok. Herhangi bir metni Ctrl+Alt basılıyken seçin."
+  },
+  "pageOff": {
+    "message": "Bu sitede Subtitle Notes devreye girmiyor — istediğiniz gibi."
   }
 }

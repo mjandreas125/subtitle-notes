@@ -1,5 +1,32 @@
 const view = (id) => document.getElementById(id);
 
+/// What the extension is doing on the page behind this popup.
+///
+/// A person on a site where nothing happens has no way to tell "this player is
+/// not recognised" from "working, you just have not selected anything". One
+/// line answers both, and says which key to hold.
+async function describeThisPage() {
+  const line = view('state');
+  try {
+    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+    if (!tab?.id) return;
+    const state = await chrome.tabs.sendMessage(tab.id, { type: 'pageState' });
+    if (!state) return;
+    if (state.blocked) line.textContent = t('pageOff');
+    else if (state.captions > 0) {
+      line.textContent = state.subtitles
+        ? t('pageSubtitles', state.keys || t('pageNoKey'))
+        : t('pageSubtitlesOff');
+    } else {
+      line.textContent = t('pageText');
+    }
+    line.hidden = false;
+  } catch (_) {
+    // No content script on this page - a store page, a PDF viewer, a tab
+    // opened before the extension was installed. Nothing to report.
+  }
+}
+
 function setActionLabel(button, label) {
   button.querySelector('.action-label').textContent = label;
 }
@@ -31,7 +58,8 @@ function setActionLabel(button, label) {
 
   // Connected: the library remains tied to the signed-in account, but its
   // e-mail is deliberately never rendered in the popup.
-  view('state').hidden = true;
+  view('state').textContent = '';
+  describeThisPage();
   const settingsButton = view('settings');
   setActionLabel(settingsButton, t('popupSettings'));
   settingsButton.addEventListener('click', () => chrome.runtime.openOptionsPage());

@@ -11,12 +11,6 @@
   "chipAsk": {
     "message": "Что это значит?"
   },
-  "reading": {
-    "message": "Читаю строку…"
-  },
-  "translating": {
-    "message": "перевожу…"
-  },
   "pendingLater": {
     "message": "Сейчас ответа нет — перевод появится в приложении.",
     "description": "Shown when no provider answered; the server retries later."
@@ -86,9 +80,6 @@
   "popupNotPaired": {
     "message": "Браузер ещё не связан с вашей библиотекой."
   },
-  "popupConnect": {
-    "message": "Подключить телефон"
-  },
   "popupConnectGoogle": {
     "message": "Войти через Google",
     "description": "Popup button that signs in with Google"
@@ -96,20 +87,6 @@
   "popupConnectCode": {
     "message": "Показать код",
     "description": "Popup button that shows the pairing code"
-  },
-  "popupConnected": {
-    "message": "Подключено - $EMAIL$",
-    "placeholders": {
-      "email": {
-        "content": "$1"
-      }
-    }
-  },
-  "popupConnectedPlain": {
-    "message": "Ваша библиотека"
-  },
-  "popupEmpty": {
-    "message": "Пока ничего не сохранено. Выделите слово на странице, в PDF или в субтитрах."
   },
   "popupExport": {
     "message": "Выгрузить для Anki"
@@ -129,21 +106,6 @@
   },
   "optForget": {
     "message": "Отключить этот браузер"
-  },
-  "optPairIntro": {
-    "message": "Чтобы связать браузер с библиотекой, подтвердите код в приложении на телефоне."
-  },
-  "optPairGet": {
-    "message": "Получить код"
-  },
-  "optStep1": {
-    "message": "Откройте Subtitle Notes на телефоне."
-  },
-  "optStep2": {
-    "message": "Настройки → Подключённые устройства."
-  },
-  "optStep3": {
-    "message": "Введите этот код."
   },
   "optWaiting": {
     "message": "Жду подтверждения…"
@@ -168,12 +130,6 @@
   },
   "optReset": {
     "message": "Сброс"
-  },
-  "optInstantTitle": {
-    "message": "Сохранять всегда"
-  },
-  "optInstantHelp": {
-    "message": "Любое выделение уходит сразу, никаких клавиш. Карточка всё равно предложит отменить."
   },
   "optWhereTitle": {
     "message": "Где показывать окно"
@@ -370,10 +326,24 @@
   "optSpaceSavesHelp": {
     "message": "Иначе строка только показывается."
   },
-  "popupRecent": {
-    "message": "Недавние"
+  "pageSubtitles": {
+    "message": "Здесь есть субтитры. Держите $KEYS$ и протяните по слову.",
+    "placeholders": {
+      "keys": {
+        "content": "$1"
+      }
+    }
   },
-  "popupEmptyTitle": {
-    "message": "Пока пусто"
+  "pageNoKey": {
+    "message": "без клавиши"
+  },
+  "pageSubtitlesOff": {
+    "message": "Здесь есть субтитры, но кликабельные субтитры выключены."
+  },
+  "pageText": {
+    "message": "Субтитров плеера здесь нет. Выделите любой текст и держите Ctrl+Alt."
+  },
+  "pageOff": {
+    "message": "На этом сайте Subtitle Notes не работает — так вы просили."
   }
 }

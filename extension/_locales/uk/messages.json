@@ -11,12 +11,6 @@
   "chipAsk": {
     "message": "Що це означає?"
   },
-  "reading": {
-    "message": "Читаю рядок…"
-  },
-  "translating": {
-    "message": "перекладаю…"
-  },
   "pendingLater": {
     "message": "Зараз відповіді немає - переклад з’явиться в застосунку.",
     "description": "Shown when no provider answered; the server retries later."
@@ -86,9 +80,6 @@
   "popupNotPaired": {
     "message": "Цей браузер не пов'язаний з вашою бібліотекою."
   },
-  "popupConnect": {
-    "message": "Під'єднати телефон"
-  },
   "popupConnectGoogle": {
     "message": "Увійти через Google",
     "description": "Popup button that signs in with Google"
@@ -96,20 +87,6 @@
   "popupConnectCode": {
     "message": "Показати код",
     "description": "Popup button that shows the pairing code"
-  },
-  "popupConnected": {
-    "message": "Під'єднано - $EMAIL$",
-    "placeholders": {
-      "email": {
-        "content": "$1"
-      }
-    }
-  },
-  "popupConnectedPlain": {
-    "message": "Ваша бібліотека"
-  },
-  "popupEmpty": {
-    "message": "Поки нічого не збережено. Виділіть слово на сторінці, у PDF або в субтитрах."
   },
   "popupExport": {
     "message": "Вивантажити для Anki"
@@ -129,21 +106,6 @@
   },
   "optForget": {
     "message": "Від'єднати цей браузер"
-  },
-  "optPairIntro": {
-    "message": "Щоб пов'язати браузер із бібліотекою, підтвердьте код у застосунку на телефоні."
-  },
-  "optPairGet": {
-    "message": "Отримати код"
-  },
-  "optStep1": {
-    "message": "Відкрийте Subtitle Notes на телефоні."
-  },
-  "optStep2": {
-    "message": "Налаштування → Під'єднані пристрої."
-  },
-  "optStep3": {
-    "message": "Введіть цей код."
   },
   "optWaiting": {
     "message": "Чекаю на підтвердження…"
@@ -168,12 +130,6 @@
   },
   "optReset": {
     "message": "Скинути"
-  },
-  "optInstantTitle": {
-    "message": "Зберігати завжди"
-  },
-  "optInstantHelp": {
-    "message": "Будь-яке виділення зберігається одразу, без клавіш. Картка все одно запропонує скасувати."
   },
   "optWhereTitle": {
     "message": "Де показувати вікно"
@@ -370,10 +326,24 @@
   "optSpaceSavesHelp": {
     "message": "Інакше рядок лише показується."
   },
-  "popupRecent": {
-    "message": "Нещодавні"
+  "pageSubtitles": {
+    "message": "Тут є субтитри. Тримайте $KEYS$ і протягніть по слову.",
+    "placeholders": {
+      "keys": {
+        "content": "$1"
+      }
+    }
   },
-  "popupEmptyTitle": {
-    "message": "Поки порожньо"
+  "pageNoKey": {
+    "message": "без клавіші"
+  },
+  "pageSubtitlesOff": {
+    "message": "Тут є субтитри, але клікабельні субтитри вимкнені."
+  },
+  "pageText": {
+    "message": "Субтитрів плеєра тут немає. Виділіть будь-який текст і тримайте Ctrl+Alt."
+  },
+  "pageOff": {
+    "message": "На цьому сайті Subtitle Notes не працює — так ви просили."
   }
 }
