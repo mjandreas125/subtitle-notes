@@ -66,7 +66,7 @@ Translates the word you select, taking the whole line into account. Works in sub
 ```
 A dictionary translates the word. Subtitle Notes translates what the word meant in the line you found it in.
 
-"No one wants a record" is not about a best-ever score. The line is read by a language model that sees the whole utterance, and it answers the way a dubbing translator would: a criminal record. Every word comes with synonyms, and a figure of speech also comes with the literal image it grew out of.
+Word for word, "Il n'est pas dans son assiette" is "he is not in his plate" - which is what a dictionary gives you and not what anybody said. The line is read by a language model that sees the whole utterance, and it answers the way a dubbing translator would: he is not feeling well. Every word comes with synonyms, and a figure of speech also comes with the literal image it grew out of.
 
 WHILE YOU WATCH
 Hold Ctrl and a subtitle in a web player becomes ordinary text you can drag across: YouTube, Netflix, Playerjs and the rest. The film pauses by itself while you read the answer. Let go of the key and the player is yours again - the line drags, a click pauses.

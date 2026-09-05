@@ -266,10 +266,18 @@
     "message": "How it works"
   },
   "tourMeaning": {
-    "message": "a record - a criminal record"
+    "message": "assiette - the way you feel"
+  },
+  "tourSubtitle": {
+    "message": "Il n'est pas dans son assiette.",
+    "description": "The subtitle shown on the welcome card."
+  },
+  "tourPick": {
+    "message": "assiette",
+    "description": "The part of that subtitle that is picked out."
   },
   "tourLine": {
-    "message": "Nobody wants a criminal record.",
+    "message": "He is not feeling well.",
     "description": "The translated subtitle line on the welcome card."
   },
   "tourSaved": {

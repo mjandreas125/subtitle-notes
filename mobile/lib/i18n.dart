@@ -57,6 +57,16 @@ class AppI18n {
   }
 
   static const _values = <String, Map<String, String>>{
+    // English readers cannot be shown an English line answered in
+    // English - nothing is being translated in front of them. Theirs
+    // is a French line whose word-for-word reading is exactly the kind
+    // of answer this exists to replace.
+    'en': {
+      'No one wants a record.': 'Il n\'est pas dans son assiette.',
+      'record': 'assiette',
+      'No one wants a best-ever score.': 'He is not in his plate.',
+      'No one wants a criminal record.': 'He is not feeling well.',
+    },
     'de': {
       'Not the word - what it means here': 'Nicht das Wort, sondern die Bedeutung',
       'A dictionary translates the word by itself. Here the whole sentence is read, so the word gets the meaning it has in it.': 'Ein Wörterbuch übersetzt das Wort für sich. Hier wird der ganze Satz gelesen, also bekommt das Wort die Bedeutung, die es darin hat.',

@@ -6,22 +6,25 @@
 /// whole argument for the thing existing is that one example, so it is the one
 /// piece that has to be in the reader's own language.
 ///
-/// The subtitle stays English on purpose: it is the language being learned.
-/// What changes per language is the answer under it - the dictionary's, which
-/// is wrong, and ours, which is not. The wording of both matches the tour in
-/// the extension and in the Windows program, so the same example does not tell
-/// three slightly different stories.
+/// The example is always a foreign line read in the reader's own language,
+/// because that is the only shape in which it demonstrates anything. For most
+/// readers the foreign line is English, which is what they are learning. For
+/// an English reader it is French: an English line answered in English shows
+/// no translation happening at all. Both the line and the word picked out of
+/// it are per-language strings, so a fifth example is an entry, not a change
+/// to the page.
 
 type Strings = Record<string, string>;
 
 const HOME_TEXT: Record<string, Strings> = {
   en: {
+    line: 'Il n\'est pas dans son assiette.', mark: 'assiette',
     title: 'Subtitle Notes - the word you did not know, where you met it',
     h1: 'The word you did not know, where you met it.',
     lede: 'Highlight it in a subtitle, on a page or in a PDF, and see what it means in that line - then find it again later, on any of your devices.',
     dict: 'A dictionary', ours: 'Subtitle Notes',
-    wrong: 'No one wants a best-ever score.',
-    right: 'No one wants a criminal record.',
+    wrong: 'He is not in his plate.',
+    right: 'He is not feeling well.',
     note: 'The line is read by a language model that can see the rest of the sentence, so a word gets the sense the speaker meant rather than its first entry in a dictionary.',
     whereTitle: 'Where it works',
     browserT: 'In the browser', browserB: 'Subtitles in web players, any text on a page, and PDFs. Hold the key, drag across the words, let go - the meaning appears where you are looking.',
@@ -38,6 +41,7 @@ const HOME_TEXT: Record<string, Strings> = {
     fTag: 'Subtitle Notes - a place to keep the words you looked up.', langLabel: 'Language',
   },
   ru: {
+    line: 'No one wants a record.', mark: 'record',
     title: 'Subtitle Notes - незнакомое слово там, где вы его встретили',
     h1: 'Незнакомое слово там, где вы его встретили.',
     lede: 'Выделите его в субтитре, на странице или в PDF и сразу увидите, что оно значит в этой строке - а потом найдёте снова, на любом своём устройстве.',
@@ -60,6 +64,7 @@ const HOME_TEXT: Record<string, Strings> = {
     fTag: 'Subtitle Notes - место, где остаются слова, которые вы посмотрели.', langLabel: 'Язык',
   },
   et: {
+    line: 'No one wants a record.', mark: 'record',
     title: 'Subtitle Notes - tundmatu sõna seal, kus sa selle kohtasid',
     h1: 'Tundmatu sõna seal, kus sa selle kohtasid.',
     lede: 'Tee see subtiitris, lehel või PDF-is aktiivseks ja näed kohe, mida see selles lauses tähendab - ja leiad hiljem uuesti, ükskõik millisest seadmest.',
@@ -82,6 +87,7 @@ const HOME_TEXT: Record<string, Strings> = {
     fTag: 'Subtitle Notes - koht, kuhu jäävad sõnad, mille sa üles otsisid.', langLabel: 'Keel',
   },
   de: {
+    line: 'No one wants a record.', mark: 'record',
     title: 'Subtitle Notes - das unbekannte Wort dort, wo Sie es getroffen haben',
     h1: 'Das unbekannte Wort dort, wo Sie es getroffen haben.',
     lede: 'Markieren Sie es im Untertitel, auf einer Seite oder in einem PDF und sehen Sie, was es in dieser Zeile bedeutet - und finden Sie es später wieder, auf jedem Ihrer Geräte.',
@@ -104,6 +110,7 @@ const HOME_TEXT: Record<string, Strings> = {
     fTag: 'Subtitle Notes - ein Ort für die Wörter, die Sie nachgeschlagen haben.', langLabel: 'Sprache',
   },
   fr: {
+    line: 'No one wants a record.', mark: 'record',
     title: 'Subtitle Notes - le mot inconnu, là où vous l\'avez rencontré',
     h1: 'Le mot inconnu, là où vous l\'avez rencontré.',
     lede: 'Sélectionnez-le dans un sous-titre, sur une page ou dans un PDF et voyez ce qu\'il veut dire dans cette réplique - puis retrouvez-le plus tard, sur n\'importe lequel de vos appareils.',
@@ -126,6 +133,7 @@ const HOME_TEXT: Record<string, Strings> = {
     fTag: 'Subtitle Notes - un endroit pour les mots que vous avez cherchés.', langLabel: 'Langue',
   },
   es: {
+    line: 'No one wants a record.', mark: 'record',
     title: 'Subtitle Notes - la palabra que no conocías, donde la encontraste',
     h1: 'La palabra que no conocías, donde la encontraste.',
     lede: 'Selecciónala en un subtítulo, en una página o en un PDF y verás qué significa en esa frase - y la encontrarás de nuevo más tarde, en cualquiera de tus dispositivos.',
@@ -148,6 +156,7 @@ const HOME_TEXT: Record<string, Strings> = {
     fTag: 'Subtitle Notes - un sitio donde se quedan las palabras que buscaste.', langLabel: 'Idioma',
   },
   it: {
+    line: 'No one wants a record.', mark: 'record',
     title: 'Subtitle Notes - la parola che non conoscevi, dove l\'hai incontrata',
     h1: 'La parola che non conoscevi, dove l\'hai incontrata.',
     lede: 'Selezionala in un sottotitolo, su una pagina o in un PDF e vedi che cosa significa in quella battuta - poi la ritrovi più tardi, su qualsiasi tuo dispositivo.',
@@ -170,6 +179,7 @@ const HOME_TEXT: Record<string, Strings> = {
     fTag: 'Subtitle Notes - un posto per le parole che hai cercato.', langLabel: 'Lingua',
   },
   pt: {
+    line: 'No one wants a record.', mark: 'record',
     title: 'Subtitle Notes - a palavra que não conhecia, onde a encontrou',
     h1: 'A palavra que não conhecia, onde a encontrou.',
     lede: 'Selecione-a numa legenda, numa página ou num PDF e veja o que significa naquela fala - e volte a encontrá-la mais tarde, em qualquer dos seus aparelhos.',
@@ -192,6 +202,7 @@ const HOME_TEXT: Record<string, Strings> = {
     fTag: 'Subtitle Notes - um sítio para as palavras que foi procurar.', langLabel: 'Idioma',
   },
   pl: {
+    line: 'No one wants a record.', mark: 'record',
     title: 'Subtitle Notes - nieznane słowo tam, gdzie je spotkałeś',
     h1: 'Nieznane słowo tam, gdzie je spotkałeś.',
     lede: 'Zaznacz je w napisach, na stronie albo w PDF-ie i zobacz, co znaczy w tej kwestii - a potem znajdź je znowu, na dowolnym swoim urządzeniu.',
@@ -214,6 +225,7 @@ const HOME_TEXT: Record<string, Strings> = {
     fTag: 'Subtitle Notes - miejsce na słowa, które sprawdziłeś.', langLabel: 'Język',
   },
   uk: {
+    line: 'No one wants a record.', mark: 'record',
     title: 'Subtitle Notes - незнайоме слово там, де ви його зустріли',
     h1: 'Незнайоме слово там, де ви його зустріли.',
     lede: 'Виділіть його в субтитрі, на сторінці або в PDF і побачите, що воно означає саме в цьому рядку - а потім знайдете знову, на будь-якому своєму пристрої.',
@@ -236,6 +248,7 @@ const HOME_TEXT: Record<string, Strings> = {
     fTag: 'Subtitle Notes - місце, де лишаються слова, які ви подивилися.', langLabel: 'Мова',
   },
   nl: {
+    line: 'No one wants a record.', mark: 'record',
     title: 'Subtitle Notes - het woord dat je niet kende, waar je het tegenkwam',
     h1: 'Het woord dat je niet kende, waar je het tegenkwam.',
     lede: 'Selecteer het in een ondertitel, op een pagina of in een PDF en zie wat het in die zin betekent - en vind het later terug, op al je apparaten.',
@@ -258,6 +271,7 @@ const HOME_TEXT: Record<string, Strings> = {
     fTag: 'Subtitle Notes - een plek voor de woorden die je opzocht.', langLabel: 'Taal',
   },
   tr: {
+    line: 'No one wants a record.', mark: 'record',
     title: 'Subtitle Notes - bilmediğin kelime, onunla karşılaştığın yerde',
     h1: 'Bilmediğin kelime, onunla karşılaştığın yerde.',
     lede: 'Altyazıda, bir sayfada ya da PDF\'te seç ve o cümlede ne anlama geldiğini gör - sonra istediğin cihazda yeniden bul.',
@@ -280,6 +294,7 @@ const HOME_TEXT: Record<string, Strings> = {
     fTag: 'Subtitle Notes - baktığın kelimelerin kaldığı yer.', langLabel: 'Dil',
   },
   sv: {
+    line: 'No one wants a record.', mark: 'record',
     title: 'Subtitle Notes - ordet du inte kunde, där du mötte det',
     h1: 'Ordet du inte kunde, där du mötte det.',
     lede: 'Markera det i en undertext, på en sida eller i en PDF och se vad det betyder i just den repliken - och hitta det igen senare, på vilken av dina enheter som helst.',
@@ -302,6 +317,7 @@ const HOME_TEXT: Record<string, Strings> = {
     fTag: 'Subtitle Notes - en plats för orden du slog upp.', langLabel: 'Språk',
   },
   fi: {
+    line: 'No one wants a record.', mark: 'record',
     title: 'Subtitle Notes - tuntematon sana siellä, missä sen kohtasit',
     h1: 'Tuntematon sana siellä, missä sen kohtasit.',
     lede: 'Maalaa se tekstityksestä, sivulta tai PDF:stä ja näet, mitä se juuri siinä repliikissä tarkoittaa - ja löydät sen myöhemmin uudelleen, millä tahansa laitteellasi.',
@@ -339,6 +355,12 @@ const escape = (value: string) =>
 export function homePage(lang: string): string {
   const t = HOME_TEXT[lang] ?? HOME_TEXT.en;
   const code = HOME_TEXT[lang] ? lang : 'en';
+  // The subtitle with the picked word marked inside it, whatever the word is.
+  const at = t.line.indexOf(t.mark);
+  const marked = at < 0
+    ? escape(t.line)
+    : escape(t.line.slice(0, at)) + '<mark>' + escape(t.mark) + '</mark>' +
+      escape(t.line.slice(at + t.mark.length));
   const options = HOME_LANGUAGES.map(
     (name) => '<option value="' + name + '"' + (name === code ? ' selected' : '') + '>' +
       escape(LANGUAGE_NAMES[name] ?? name) + '</option>',
@@ -420,12 +442,12 @@ export function homePage(lang: string): string {
 <div class="demo">
   <div class="wrong">
     <div class="label">${escape(t.dict)}</div>
-    <div class="line">No one wants a <mark>record</mark>.</div>
+    <div class="line">${marked}</div>
     <div class="out">${escape(t.wrong)}</div>
   </div>
   <div class="right">
     <div class="label">${escape(t.ours)}</div>
-    <div class="line">No one wants a <mark>record</mark>.</div>
+    <div class="line">${marked}</div>
     <div class="out">${escape(t.right)}</div>
   </div>
 </div>

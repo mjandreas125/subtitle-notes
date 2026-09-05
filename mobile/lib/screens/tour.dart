@@ -279,23 +279,15 @@ class _PickSceneState extends _SceneState<_PickScene> {
                         bottom: 22,
                         left: 16,
                         right: 16,
-                        child: _Subtitle(progress: sweep),
+                        child: _Subtitle(
+                          progress: sweep,
+                          showFinger: dragging,
+                        ),
                       ),
                     ],
                   ),
                 ),
               ),
-              // The finger doing it, on the line rather than above it.
-              if (dragging)
-                Positioned(
-                  top: _film - 42,
-                  left: 74 + sweep * 116,
-                  child: Icon(
-                    Icons.touch_app_rounded,
-                    size: 26,
-                    color: Colors.white.withValues(alpha: .8),
-                  ),
-                ),
               // The answer, arriving under the words it belongs to - under
               // them, not over them.
               Positioned(
@@ -327,7 +319,7 @@ class _PickSceneState extends _SceneState<_PickScene> {
                         ),
                         const SizedBox(height: 3),
                         Text(
-                          'No one wants a record.',
+                          context.t('No one wants a record.'),
                           style: AppText.caption(c.ink3),
                         ),
                       ],
@@ -343,43 +335,80 @@ class _PickSceneState extends _SceneState<_PickScene> {
   }
 }
 
-/// The subtitle with a highlight growing across the first three words, drawn
-/// under the letters rather than over them - the same mark the extension puts
-/// on a line in a browser.
+/// The whole selected subtitle is highlighted from edge to edge, drawn under
+/// the letters rather than over them - the same mark the extension puts on a
+/// line in a browser.
 class _Subtitle extends StatelessWidget {
-  const _Subtitle({required this.progress});
+  const _Subtitle({required this.progress, required this.showFinger});
 
   final double progress;
+  final bool showFinger;
+
+  static const _fingerSize = 26.0;
+  // In the touch icon the point of contact is ten pixels from its left edge.
+  // This lets the visual fingertip sit precisely on the growing selection.
+  static const _fingerTipX = 10.0;
 
   @override
   Widget build(BuildContext context) {
     final c = context.c;
-    return Center(
-      child: Stack(
-        alignment: Alignment.centerLeft,
-        children: [
-          Positioned(
-            left: -4,
-            child: Container(
-              height: 22,
-              width: progress * 116,
-              decoration: BoxDecoration(
-                color: c.green.withValues(alpha: .4),
-                borderRadius: BorderRadius.circular(6),
+    final line = context.t('No one wants a record.');
+    final style = font(
+      size: 15.5,
+      weight: 700,
+      color: Colors.white,
+      height: 1.35,
+    );
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final painter = TextPainter(
+          text: TextSpan(text: line, style: style),
+          textDirection: Directionality.of(context),
+        )..layout(maxWidth: constraints.maxWidth);
+        final lineLeft = (constraints.maxWidth - painter.width) / 2;
+        final selectionEnd = lineLeft + painter.width * progress;
+
+        return SizedBox(
+          height: painter.height,
+          child: Stack(
+            clipBehavior: Clip.none,
+            children: [
+              Positioned(
+                left: lineLeft,
+                top: 0,
+                width: painter.width,
+                height: painter.height,
+                child: FractionallySizedBox(
+                  widthFactor: progress,
+                  alignment: Alignment.centerLeft,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: c.green.withValues(alpha: .4),
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                  ),
+                ),
               ),
-            ),
+              Positioned(
+                left: lineLeft,
+                top: 0,
+                width: painter.width,
+                child: Text(line, style: style),
+              ),
+              if (showFinger)
+                Positioned(
+                  left: selectionEnd - _fingerTipX,
+                  top: 0,
+                  child: Icon(
+                    Icons.touch_app_rounded,
+                    size: _fingerSize,
+                    color: Colors.white.withValues(alpha: .8),
+                  ),
+                ),
+            ],
           ),
-          Text(
-            'No one wants a record.',
-            style: font(
-              size: 15.5,
-              weight: 700,
-              color: Colors.white,
-              height: 1.35,
-            ),
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
@@ -395,6 +424,9 @@ class _SenseScene extends StatefulWidget {
 
 class _SenseSceneState extends _SceneState<_SenseScene> {
   @override
+  Duration get cycle => const Duration(milliseconds: 4000);
+
+  @override
   Widget build(BuildContext context) {
     final c = context.c;
     return AnimatedBuilder(
@@ -409,7 +441,7 @@ class _SenseSceneState extends _SceneState<_SenseScene> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Text(
-                'No one wants a record.',
+                context.t('No one wants a record.'),
                 textAlign: TextAlign.center,
                 style: AppText.word(c.ink),
               ),
@@ -650,10 +682,17 @@ class _ReturnSceneState extends _SceneState<_ReturnScene> {
   static const _width = 300.0;
   static const _card = 86.0;
   static const _dot = 12.0;
+  // Leave space for the word card at each end. Otherwise the clamp pins the
+  // card to a side instead of centring it above the first and last markers.
+  static const _trackInset = _card / 2 + 12;
 
-  /// The centre of each marker on the track, evenly spread across the width.
+  @override
+  Duration get cycle => const Duration(milliseconds: 4000);
+
+  /// The centre of each marker on the inset track, with space for the card.
   double _centre(int index) =>
-      _dot / 2 + index * (_width - _dot) / (_steps.length - 1);
+      _trackInset +
+      index * (_width - _trackInset * 2) / (_steps.length - 1);
 
   @override
   Widget build(BuildContext context) {
@@ -677,8 +716,8 @@ class _ReturnSceneState extends _SceneState<_ReturnScene> {
             children: [
               Positioned(
                 top: 130,
-                left: _dot / 2,
-                right: _dot / 2,
+                left: _trackInset,
+                right: _trackInset,
                 child: Container(height: 2, color: c.line),
               ),
               for (final (position, days) in _steps.indexed) ...[
@@ -707,7 +746,7 @@ class _ReturnSceneState extends _SceneState<_ReturnScene> {
               ],
               Positioned(
                 top: 74 - hop * 26,
-                left: (at - _card / 2).clamp(0.0, _width - _card),
+                left: at - _card / 2,
                 width: _card,
                 child: Container(
                   padding: const EdgeInsets.symmetric(vertical: 8),
@@ -723,7 +762,7 @@ class _ReturnSceneState extends _SceneState<_ReturnScene> {
                     ],
                   ),
                   child: Text(
-                    'record',
+                    context.t('record'),
                     textAlign: TextAlign.center,
                     style: AppText.label(c.onGreen),
                   ),

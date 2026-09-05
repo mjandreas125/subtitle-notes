@@ -268,6 +268,14 @@
   "tourMeaning": {
     "message": "a record - sabıka kaydı"
   },
+  "tourSubtitle": {
+    "message": "No one wants a record.",
+    "description": "The subtitle shown on the welcome card."
+  },
+  "tourPick": {
+    "message": "a record",
+    "description": "The part of that subtitle that is picked out."
+  },
   "tourLine": {
     "message": "Kimse sabıka istemez.",
     "description": "The translated subtitle line on the welcome card."
