@@ -53,7 +53,12 @@
         content: ""; position: absolute; inset: 0;
         background: radial-gradient(120% 90% at 30% 15%, rgba(255,255,255,.07), transparent 60%);
       }
-      .caption {
+      /* Scoped to the stage on purpose. The caption also carries `pick` now,
+         and `.pick` is declared after it with `position: relative` - one class
+         each, so the later one won and the subtitle stopped being positioned
+         inside the picture at all. It rendered above the film, which is why
+         the stage looked like a still with no subtitle on it. */
+      .stage .caption {
         position: absolute; left: 50%; bottom: 15%; transform: translateX(-50%);
         padding: 7px 12px; border-radius: 5px; background: rgba(0, 0, 0, .72);
         color: #ffffff; font-size: clamp(13px, 2.6vw, 18px); font-weight: 600; white-space: nowrap;
@@ -114,10 +119,15 @@
         44%, 92% { opacity: 1; transform: none; }
         100% { opacity: 0; transform: translateY(8px) scale(.97); }
       }
+      /* With animations turned off in the operating system - and plenty of
+         people have them off - this picture is all anybody sees, so it has to
+         be the finished state and not a half-drawn one: line marked, card up,
+         key held. Scoped past `.stage .caption`, which would otherwise keep
+         its own black. */
       @media (prefers-reduced-motion: reduce) {
         .stage.play * { animation: none !important; }
         .card, .key { opacity: 1; transform: none; }
-        .pick { background: rgba(70, 214, 143, .34); }
+        .pick, .stage .caption.pick { background: rgba(70, 214, 143, .34); }
       }
 
       ol { counter-reset: step; list-style: none; margin: 26px 0 0; padding: 0; }

@@ -25,7 +25,7 @@ const SAY: Record<string, Record<string, string>> = {
     exportAnki: 'Export for Anki', exportNote: 'A file with the word, its meaning and the line it came from.',
     deleteAccount: 'Delete account', working: 'One moment…',
     enter: 'Continue with Google',
-    sync: 'Sync with the app',
+    sync: 'Your saved words live here. Sign in with Google to see them.',
   },
   ru: {
     title: 'Ваша библиотека', words: 'Слова', review: 'Повторение', goals: 'Достижения',
@@ -47,7 +47,7 @@ const SAY: Record<string, Record<string, string>> = {
     exportAnki: 'Выгрузить для Anki', exportNote: 'Файл со словом, значением и репликой, из которой оно взято.',
     deleteAccount: 'Удалить аккаунт', working: 'Секунду…',
     enter: 'Войти через Google',
-    sync: 'Синхронизация с приложением',
+    sync: 'Здесь лежат сохранённые слова. Войдите через Google, чтобы их увидеть.',
   },
   et: {
     title: 'Sinu kogu', words: 'Sõnad', review: 'Kordamine', goals: 'Saavutused',
@@ -69,7 +69,7 @@ const SAY: Record<string, Record<string, string>> = {
     exportAnki: 'Ekspordi Ankisse', exportNote: 'Fail sõna, tähenduse ja lausega, kust see pärineb.',
     deleteAccount: 'Kustuta konto', working: 'Hetk…',
     enter: 'Jätka Google’iga',
-    sync: 'Sünkroonimine rakendusega',
+    sync: 'Siin on sinu salvestatud sõnad. Logi Google\'iga sisse, et neid näha.',
   },
   de: {
     title: 'Deine Sammlung', words: 'Wörter', review: 'Üben', goals: 'Erfolge',
@@ -91,7 +91,7 @@ const SAY: Record<string, Record<string, string>> = {
     exportAnki: 'Für Anki exportieren', exportNote: 'Eine Datei mit Wort, Bedeutung und der Zeile, aus der es stammt.',
     deleteAccount: 'Konto löschen', working: 'Einen Moment…',
     enter: 'Mit Google fortfahren',
-    sync: 'Mit der App synchronisieren',
+    sync: 'Hier liegen Ihre gespeicherten Wörter. Melden Sie sich mit Google an, um sie zu sehen.',
   },
   fr: {
     title: 'Votre bibliothèque', words: 'Mots', review: 'Réviser', goals: 'Réussites',
@@ -113,7 +113,7 @@ const SAY: Record<string, Record<string, string>> = {
     exportAnki: 'Exporter vers Anki', exportNote: 'Un fichier avec le mot, le sens et la réplique d’où il vient.',
     deleteAccount: 'Supprimer le compte', working: 'Un instant…',
     enter: 'Continuer avec Google',
-    sync: 'Synchroniser avec l’application',
+    sync: 'Vos mots gardés sont ici. Connectez-vous avec Google pour les voir.',
   },
   es: {
     title: 'Tu biblioteca', words: 'Palabras', review: 'Repasar', goals: 'Logros',
@@ -135,7 +135,7 @@ const SAY: Record<string, Record<string, string>> = {
     exportAnki: 'Exportar a Anki', exportNote: 'Un archivo con la palabra, su significado y la línea de origen.',
     deleteAccount: 'Eliminar cuenta', working: 'Un momento…',
     enter: 'Continuar con Google',
-    sync: 'Sincronizar con la aplicación',
+    sync: 'Aquí están tus palabras guardadas. Inicia sesión con Google para verlas.',
   },
   it: {
     title: 'La tua raccolta', words: 'Parole', review: 'Ripasso', goals: 'Traguardi',
@@ -157,7 +157,7 @@ const SAY: Record<string, Record<string, string>> = {
     exportAnki: 'Esporta per Anki', exportNote: 'Un file con la parola, il significato e la battuta di origine.',
     deleteAccount: 'Elimina account', working: 'Un attimo…',
     enter: 'Continua con Google',
-    sync: 'Sincronizza con l’app',
+    sync: 'Qui ci sono le parole che hai salvato. Accedi con Google per vederle.',
   },
   pt: {
     title: 'A sua biblioteca', words: 'Palavras', review: 'Rever', goals: 'Conquistas',
@@ -179,7 +179,7 @@ const SAY: Record<string, Record<string, string>> = {
     exportAnki: 'Exportar para Anki', exportNote: 'Um ficheiro com a palavra, o significado e a fala de origem.',
     deleteAccount: 'Apagar conta', working: 'Um momento…',
     enter: 'Continuar com Google',
-    sync: 'Sincronizar com a aplicação',
+    sync: 'As palavras que guardou estão aqui. Entre com o Google para as ver.',
   },
   pl: {
     title: 'Twoja biblioteka', words: 'Słowa', review: 'Powtórka', goals: 'Osiągnięcia',
@@ -201,7 +201,7 @@ const SAY: Record<string, Record<string, string>> = {
     exportAnki: 'Eksport do Anki', exportNote: 'Plik ze słowem, znaczeniem i kwestią, z której pochodzi.',
     deleteAccount: 'Usuń konto', working: 'Chwileczkę…',
     enter: 'Kontynuuj z Google',
-    sync: 'Synchronizacja z aplikacją',
+    sync: 'Tu są twoje zapisane słowa. Zaloguj się przez Google, żeby je zobaczyć.',
   },
   uk: {
     title: 'Ваша бібліотека', words: 'Слова', review: 'Повторення', goals: 'Досягнення',
@@ -223,7 +223,7 @@ const SAY: Record<string, Record<string, string>> = {
     exportAnki: 'Вивантажити для Anki', exportNote: 'Файл зі словом, значенням і реплікою, з якої воно взяте.',
     deleteAccount: 'Видалити акаунт', working: 'Секунду…',
     enter: 'Увійти через Google',
-    sync: 'Синхронізація із застосунком',
+    sync: 'Тут лежать збережені слова. Увійдіть через Google, щоб їх побачити.',
   },
   nl: {
     title: 'Jouw bibliotheek', words: 'Woorden', review: 'Oefenen', goals: 'Prestaties',
@@ -245,7 +245,7 @@ const SAY: Record<string, Record<string, string>> = {
     exportAnki: 'Exporteren naar Anki', exportNote: 'Een bestand met het woord, de betekenis en de zin waar het uit komt.',
     deleteAccount: 'Account verwijderen', working: 'Momentje…',
     enter: 'Doorgaan met Google',
-    sync: 'Synchroniseren met de app',
+    sync: 'Hier staan je bewaarde woorden. Log in met Google om ze te zien.',
   },
   sv: {
     title: 'Ditt bibliotek', words: 'Ord', review: 'Öva', goals: 'Utmärkelser',
@@ -267,7 +267,7 @@ const SAY: Record<string, Record<string, string>> = {
     exportAnki: 'Exportera till Anki', exportNote: 'En fil med ordet, betydelsen och repliken det kom ur.',
     deleteAccount: 'Radera konto', working: 'Ett ögonblick…',
     enter: 'Fortsätt med Google',
-    sync: 'Synkronisera med appen',
+    sync: 'Här ligger dina sparade ord. Logga in med Google för att se dem.',
   },
   fi: {
     title: 'Oma kirjasto', words: 'Sanat', review: 'Kertaus', goals: 'Saavutukset',
@@ -289,7 +289,7 @@ const SAY: Record<string, Record<string, string>> = {
     exportAnki: 'Vie Ankiin', exportNote: 'Tiedosto, jossa on sana, merkitys ja repliikki.',
     deleteAccount: 'Poista tili', working: 'Hetki…',
     enter: 'Jatka Google-tilillä',
-    sync: 'Synkronoi sovelluksen kanssa',
+    sync: 'Tallentamasi sanat ovat täällä. Kirjaudu Googlella, niin näet ne.',
   },
   tr: {
     title: 'Kitaplığınız', words: 'Kelimeler', review: 'Tekrar', goals: 'Başarımlar',
@@ -311,7 +311,7 @@ const SAY: Record<string, Record<string, string>> = {
     exportAnki: 'Anki için dışa aktar', exportNote: 'Kelimeyi, anlamını ve geldiği repliği içeren bir dosya.',
     deleteAccount: 'Hesabı sil', working: 'Bir saniye…',
     enter: 'Google ile devam et',
-    sync: 'Uygulamayla eşitle',
+    sync: 'Kaydettiğin kelimeler burada. Görmek için Google ile giriş yap.',
   },
 };
 
