@@ -72,8 +72,33 @@ async function clientKey(parts) {
   return [...new Uint8Array(digest)].map((b) => b.toString(16).padStart(2, '0')).join('');
 }
 
+/// Answers already given, kept for as long as the browser keeps this worker
+/// alive. Reading a subtitle twice is normal - you rewind, or the same word
+/// turns up two lines later - and the second time should cost nothing.
+///
+/// Keyed by the words and the line they were in, because that pair is what the
+/// answer depends on. Small on purpose: this is a speed-up, not storage.
+const answers = new Map();
+const ANSWER_LIMIT = 120;
+
+function remember(key, value) {
+  answers.delete(key);
+  answers.set(key, value);
+  while (answers.size > ANSWER_LIMIT) answers.delete(answers.keys().next().value);
+  return value;
+}
+
+async function cached(key, produce) {
+  if (answers.has(key)) return answers.get(key);
+  const value = await produce();
+  return remember(key, value);
+}
+
+const flatKey = (value) => String(value ?? '').replace(/\s+/g, ' ').trim().toLowerCase();
+
 async function reading({ text, context }) {
-  return call('/reading', { text, context: context || '' });
+  return cached(`r|${flatKey(text)}|${flatKey(context)}`, () =>
+    call('/reading', { text, context: context || '' }));
 }
 
 /// Saving does not send a translation with it. The server reads the line again
@@ -123,6 +148,13 @@ async function capture({ text, context, title, season, episode, timecodeMs }) {
     context: context || null,
   });
   await badge('ok');
+  remember(`r|${flatKey(text)}|${flatKey(context)}`, {
+    translation: saved.translation,
+    focus_translation: saved.focus_translation,
+    focus_word: saved.focus_word,
+    focus_phrase: saved.focus_phrase,
+    source_lang: saved.source_lang,
+  });
   return saved;
 }
 
@@ -230,7 +262,7 @@ chrome.runtime.onMessage.addListener((message, sender, respond) => {
     reading: () => reading(message),
     // The dictionary alone: back in a moment, and good enough to read while
     // the better answer is still being worked out.
-    quick: () => call('/quick', { text: message.text }),
+    quick: () => cached(`q|${flatKey(message.text)}`, () => call('/quick', { text: message.text })),
     capture: () => capture({ ...message, title: message.title || titleFor(sender.tab) }),
     status: async () => ({ paired: Boolean(await session()) }),
     undo: () => undo(message.id),

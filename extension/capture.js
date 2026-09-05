@@ -323,6 +323,10 @@
   // A fast dictionary request may be rate-limited while the contextual
   // reading is still on its way. Never turn that temporary failure into a
   // visible card.
+  /// One word is a lookup; more than one is a reading. They deserve different
+  /// answers and, as it turns out, different numbers of requests.
+  const oneWord = (value) => String(value ?? '').trim().split(/\s+/).length === 1;
+
   function hasTranslation(value) {
     const text = String(value ?? '').trim();
     return Boolean(text) && text.toLowerCase() !== 'translation unavailable';
@@ -461,14 +465,19 @@
     makeDraggable(panel);
 
     // The dictionary answers in a moment and the reading of the whole line
-    // takes a beat longer. Show the first one rather than a row of dots, and
-    // let the considered answer replace it when it lands.
+    // takes a beat longer. For one word the first answer is usually the same
+    // as the second, so it goes up rather than a row of dots. For a phrase it
+    // usually is not - the dictionary reads it word by word - and a card that
+    // changes its mind in front of the reader is worse than a card that takes
+    // another half second. So it is not even asked.
     const mine = panel;
-    ask({ type: 'quick', text }).then((quick) => {
-      if (panel !== mine || mine.dataset.read || !quick.ok) return;
-      if (!hasTranslation(quick.data?.translation)) return;
-      paint(mine, quickHtml(quick.data.translation));
-    });
+    if (oneWord(text)) {
+      ask({ type: 'quick', text }).then((quick) => {
+        if (panel !== mine || mine.dataset.read || !quick.ok) return;
+        if (!hasTranslation(quick.data?.translation)) return;
+        paint(mine, quickHtml(quick.data.translation));
+      });
+    }
 
     const reply = await ask({ type: 'reading', text, context });
     if (!panel || panel !== mine) return;
@@ -530,20 +539,21 @@
     place(panel, rect);
     makeDraggable(panel);
 
-    // Two requests, not three. The dictionary answers in a fraction of a
-    // second and goes on screen the moment it does; saving now answers with
-    // the reading as well, so there is nothing left for a separate one to do.
-    // The card used to wait for the slow model before it settled, which is
-    // why an instant capture did not feel instant.
+    // Two requests at most, and for a phrase only one. Saving answers with the
+    // reading as well, so there is nothing left for a separate request to do
+    // except fill the wait - which is worth doing for a word, where the
+    // dictionary agrees with the reading, and not for a phrase, where it does
+    // not and the reader watches the card change its mind.
     const mine = panel;
-    const quick = ask({ type: 'quick', text });
     const saving = ask({ type: 'capture', text, context, ...where(media), timecodeMs });
-    quick.then((answer) => {
-      // Only until something better arrives, and never over the top of it.
-      if (panel !== mine || mine.dataset.settled || !answer.ok) return;
-      if (!hasTranslation(answer.data?.translation)) return;
-      paint(mine, quickHtml(answer.data.translation));
-    });
+    if (oneWord(text)) {
+      ask({ type: 'quick', text }).then((answer) => {
+        // Only until something better arrives, and never over the top of it.
+        if (panel !== mine || mine.dataset.settled || !answer.ok) return;
+        if (!hasTranslation(answer.data?.translation)) return;
+        paint(mine, quickHtml(answer.data.translation));
+      });
+    }
 
     const saved = await saving;
     if (panel !== mine) return;

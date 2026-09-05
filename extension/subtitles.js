@@ -105,7 +105,34 @@
       clearGlow();
       return;
     }
-    paintPanes([...live.getClientRects()]);
+    paintPanes([...tighten(live).getClientRects()]);
+  }
+
+  /// The same selection without the whitespace on its ends.
+  ///
+  /// A drag that finishes a few pixels past the last letter takes the space
+  /// after it with it, and the space has a box like any other character - so
+  /// the mark ran on past the full stop it was supposed to end at. The words
+  /// selected do not change, only where the paint stops.
+  function tighten(range) {
+    const tight = range.cloneRange();
+    const end = tight.endContainer;
+    if (end.nodeType === Node.TEXT_NODE) {
+      let offset = tight.endOffset;
+      while (offset > 0 && /\s/.test(end.data[offset - 1])) offset -= 1;
+      if (offset > 0 && offset !== tight.endOffset) {
+        try { tight.setEnd(end, offset); } catch (_) { return range; }
+      }
+    }
+    const start = tight.startContainer;
+    if (start.nodeType === Node.TEXT_NODE) {
+      let offset = tight.startOffset;
+      while (offset < start.data.length && /\s/.test(start.data[offset])) offset += 1;
+      if (offset !== tight.startOffset) {
+        try { tight.setStart(start, offset); } catch (_) { return range; }
+      }
+    }
+    return tight.collapsed ? range : tight;
   }
 
   function paintPanes(rects) {
@@ -116,14 +143,18 @@
       // and a highlight that fills it looks like a bar rather than a mark.
       // Less trimming than before, though - it was sitting on the letters.
       const inset = Math.min(4, Math.max(1, rect.height * 0.09));
+      // Sideways it grows with the text rather than by a fixed seven pixels,
+      // which on a subtitle was most of a character: the mark ended visibly
+      // further right than the question mark it was marking.
+      const bleed = Math.min(5, Math.max(2, rect.height * 0.13));
       const pane = panes[index] ?? document.createElement('div');
       if (!panes[index]) {
         pane.className = 'pane enter';
         glowRoot.appendChild(pane);
       }
-      pane.style.left = `${Math.round(rect.left - 7)}px`;
+      pane.style.left = `${Math.round(rect.left - bleed)}px`;
       pane.style.top = `${Math.round(rect.top + inset)}px`;
-      pane.style.width = `${Math.round(rect.width + 14)}px`;
+      pane.style.width = `${Math.round(rect.width + bleed * 2)}px`;
       pane.style.height = `${Math.round(rect.height - inset * 2)}px`;
     }
     for (let index = visible.length; index < panes.length; index += 1) panes[index].remove();
@@ -521,7 +552,7 @@
 
       if (text && selection.rangeCount) {
         const range = selection.getRangeAt(0);
-        rect = range.getBoundingClientRect();
+        rect = tighten(range).getBoundingClientRect();
         // Read the source line before clearing the native selection. Clearing
         // it first also clears anchorNode, which reduced every Rezka capture
         // to one word and left the translator without its context.
