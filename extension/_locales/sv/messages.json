@@ -316,8 +316,24 @@
   "optDesktopGet": {
     "message": "Hämta för Windows"
   },
+  "optPhoneTitle": {
+    "message": "I telefonen",
+    "description": "The offer of the Android app in settings."
+  },
+  "optPhoneHelp": {
+    "message": "Samma ord, med repetition och sökning. Android tills vidare; filen installeras utanför butiken, så telefonen frågar en gång.",
+    "description": "The offer of the Android app in settings."
+  },
+  "optPhoneGet": {
+    "message": "Ladda ner för Android",
+    "description": "The offer of the Android app in settings."
+  },
   "tourDesktop": {
     "message": "Även till datorn"
+  },
+  "tourPhone": {
+    "message": "Och i telefonen",
+    "description": "The offer of the Android app on the welcome page."
   },
   "optCompact": {
     "message": "Kort kort"

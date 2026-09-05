@@ -17,6 +17,23 @@ const DESKTOP_LATEST = {
   url: 'https://github.com/mjandreas125/subtitle-notes/releases/latest/download/SubtitleNotesSetup-1.9.1.exe',
   notes: '',
 };
+/// The other two ways in, kept here for the same reason as the installer: a
+/// link that lives on the server can be moved without rebuilding anything that
+/// points at it. When the app reaches Google Play, this one line changes and
+/// every button in the extension and on the site follows.
+const ANDROID_LATEST = {
+  version: '1.8.0',
+  url: 'https://github.com/mjandreas125/subtitle-notes/releases/latest/download/SubtitleNotes.apk',
+  // What it is, so a page can warn about installing outside a store.
+  source: 'github',
+};
+
+const BROWSER_LATEST = {
+  version: '2.8.1',
+  url: 'https://chromewebstore.google.com/detail/subtitle-notes/lkajlfbpeinegffgmmmiemknkhbklmca',
+  source: 'chrome-web-store',
+};
+
 const json = (value: unknown, status = 200) => new Response(JSON.stringify(value), { status, headers: { ...cors, 'content-type': 'application/json; charset=utf-8' } });
 const cors = { 'access-control-allow-origin': '*', 'access-control-allow-headers': 'authorization, content-type', 'access-control-allow-methods': 'GET, POST, PATCH, DELETE, OPTIONS' };
 const now = () => new Date().toISOString();
@@ -1266,12 +1283,21 @@ export default { async fetch(request: Request, env: Env, ctx: ExecutionContext):
   try {
     if (path === '/health') return json({ status: 'ok' });
     if (path === '/desktop/latest') return json(DESKTOP_LATEST);
+    if (path === '/android/latest') return json(ANDROID_LATEST);
+    if (path === '/browser/latest') return json(BROWSER_LATEST);
     // Google Play asks for a page that explains how to delete the account and
     // is reachable without installing anything, so it is served here rather
     // than depending on a separate site staying up.
     if (path === '/delete-account') return new Response(DELETE_ACCOUNT_PAGE, { headers: { ...cors, 'Content-Type': 'text/html; charset=utf-8' } });
     if (path === '/' || path === '/index.html') {
-      return new Response(homePage(linkLanguage(url, request)), { headers: { ...cors, 'Content-Type': 'text/html; charset=utf-8' } });
+      return new Response(
+        homePage(linkLanguage(url, request), {
+          browser: BROWSER_LATEST.url,
+          android: ANDROID_LATEST.url,
+          desktop: DESKTOP_LATEST.url,
+        }),
+        { headers: { ...cors, 'Content-Type': 'text/html; charset=utf-8' } },
+      );
     }
     if (path === '/privacy') return new Response(PRIVACY_PAGE, { headers: { ...cors, 'Content-Type': 'text/html; charset=utf-8' } });
     // Opened by the browser extension and by the Windows program, and by a

@@ -211,21 +211,29 @@ view('language').addEventListener('click', async (event) => {
   flash();
 });
 
-// The program for the computer has no store to be found in, so the browser
-// that already has the extension is the one place a person will look.
-view('getProgram').addEventListener('click', async () => {
-  const button = view('getProgram');
-  button.disabled = true;
+// The other two parts of Subtitle Notes are offered here because this is where
+// people are: the browser is the piece somebody installs first.
+//
+// Neither address is written down in the extension. The server is asked, so
+// the day the app is in Google Play the link goes there and every copy of the
+// extension already installed follows without an update.
+async function openLatest(button, what) {
+  const node = view(button);
+  node.disabled = true;
   try {
-    const reply = await fetch(`${LINK_PAGE.replace('/link', '')}/desktop/latest`);
+    const reply = await fetch(`${LINK_PAGE.replace('/link', '')}/${what}/latest`);
     const latest = await reply.json();
+    if (!latest?.url) throw new Error('no address');
     chrome.tabs.create({ url: latest.url });
   } catch (_) {
     flash(t('failed'));
   } finally {
-    button.disabled = false;
+    node.disabled = false;
   }
-});
+}
+
+view('getProgram').addEventListener('click', () => openLatest('getProgram', 'desktop'));
+view('getPhone').addEventListener('click', () => openLatest('getPhone', 'android'));
 
 // ---- settings ---------------------------------------------------------------
 

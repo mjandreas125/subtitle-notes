@@ -18,11 +18,20 @@ document.getElementById('connect').addEventListener('click', () => {
   chrome.runtime.openOptionsPage();
   window.close();
 });
-document.getElementById('desktop').addEventListener('click', async () => {
-  const reply = await fetch('https://app.subtitlenotes.workers.dev/desktop/latest');
-  const latest = await reply.json();
-  window.open(latest.url, '_blank');
-});
+// Both addresses come from the server, so they can move - to Google Play, to a
+// signed installer - without anybody reinstalling this.
+async function openLatest(what) {
+  try {
+    const reply = await fetch(`https://app.subtitlenotes.workers.dev/${what}/latest`);
+    const latest = await reply.json();
+    if (latest?.url) window.open(latest.url, '_blank');
+  } catch (_) {
+    window.open('https://github.com/mjandreas125/subtitle-notes/releases/latest', '_blank');
+  }
+}
+
+document.getElementById('desktop').addEventListener('click', () => openLatest('desktop'));
+document.getElementById('phone').addEventListener('click', () => openLatest('android'));
 document.getElementById('later').addEventListener('click', () => window.close());
 
 const deck = document.getElementById('tour');

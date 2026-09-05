@@ -316,8 +316,24 @@
   "optDesktopGet": {
     "message": "Завантажити для Windows"
   },
+  "optPhoneTitle": {
+    "message": "У телефоні",
+    "description": "The offer of the Android app in settings."
+  },
+  "optPhoneHelp": {
+    "message": "Ті самі слова, з повторенням і пошуком. Поки Android; файл ставиться повз магазин, тож телефон один раз перепитає.",
+    "description": "The offer of the Android app in settings."
+  },
+  "optPhoneGet": {
+    "message": "Завантажити для Android",
+    "description": "The offer of the Android app in settings."
+  },
   "tourDesktop": {
     "message": "Ще й на комп’ютер"
+  },
+  "tourPhone": {
+    "message": "І на телефон",
+    "description": "The offer of the Android app on the welcome page."
   },
   "optCompact": {
     "message": "Коротка картка"

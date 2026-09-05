@@ -316,8 +316,24 @@
   "optDesktopGet": {
     "message": "Downloaden voor Windows"
   },
+  "optPhoneTitle": {
+    "message": "Op je telefoon",
+    "description": "The offer of the Android app in settings."
+  },
+  "optPhoneHelp": {
+    "message": "Dezelfde woorden, met herhaling en zoeken. Voorlopig Android; het bestand installeert buiten de store, dus de telefoon vraagt het één keer.",
+    "description": "The offer of the Android app in settings."
+  },
+  "optPhoneGet": {
+    "message": "Downloaden voor Android",
+    "description": "The offer of the Android app in settings."
+  },
   "tourDesktop": {
     "message": "Ook voor de computer"
+  },
+  "tourPhone": {
+    "message": "En op de telefoon",
+    "description": "The offer of the Android app on the welcome page."
   },
   "optCompact": {
     "message": "Korte kaart"

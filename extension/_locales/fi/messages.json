@@ -316,8 +316,24 @@
   "optDesktopGet": {
     "message": "Lataa Windowsille"
   },
+  "optPhoneTitle": {
+    "message": "Puhelimessa",
+    "description": "The offer of the Android app in settings."
+  },
+  "optPhoneHelp": {
+    "message": "Samat sanat, kertauksella ja haulla. Toistaiseksi Android; tiedosto asennetaan kaupan ohi, joten puhelin kysyy kerran.",
+    "description": "The offer of the Android app in settings."
+  },
+  "optPhoneGet": {
+    "message": "Lataa Androidille",
+    "description": "The offer of the Android app in settings."
+  },
   "tourDesktop": {
     "message": "Myös tietokoneelle"
+  },
+  "tourPhone": {
+    "message": "Ja puhelimeen",
+    "description": "The offer of the Android app on the welcome page."
   },
   "optCompact": {
     "message": "Lyhyt kortti"

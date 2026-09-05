@@ -193,10 +193,11 @@ VLC по `--configure-vlc`, а запущенный руками просто о
 
 1. **Название на экране входа Google** - сейчас показывает домен. Поле *App name*
    на <https://console.cloud.google.com/auth/branding?project=151185018789>.
-2. **Chrome Web Store**: версия 2.6.1 на проверке с 18 августа. Когда пройдёт -
-   залить 2.9.0 (`release_package/subtitle-notes-extension-2.9.0.zip`) и удалить
-   лишний черновик со старой 2.6.0. Пока идёт проверка, новую версию не
-   отправлять: она заменит ту, что стоит в очереди.
+2. **Chrome Web Store**: опубликовано, в магазине 2.8.1 от 26 августа.
+   Адрес позиции: https://chromewebstore.google.com/detail/subtitle-notes/lkajlfbpeinegffgmmmiemknkhbklmca
+   Собранное здесь ушло дальше - остаётся загружать новые сборки тем же
+   порядком. Адрес магазина сервер отдаёт по `GET /browser/latest`, поэтому
+   ссылки на сайте и в расширении меняются в одном месте.
 3. **Google Play** - $25, порядок в `PLAY-RELEASE.md`, перед сборкой вернуть
    `applicationId` и подпись (§5).
 4. **Скопировать ключ подписи** `C:\Users\andre\keystores\subtitle-notes-upload.jks`

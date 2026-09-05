@@ -316,8 +316,24 @@
   "optDesktopGet": {
     "message": "Windows için indir"
   },
+  "optPhoneTitle": {
+    "message": "Telefonda",
+    "description": "The offer of the Android app in settings."
+  },
+  "optPhoneHelp": {
+    "message": "Aynı kelimeler, tekrar ve aramayla. Şimdilik Android; dosya mağaza dışından kurulur, telefon bir kez sorar.",
+    "description": "The offer of the Android app in settings."
+  },
+  "optPhoneGet": {
+    "message": "Android için indir",
+    "description": "The offer of the Android app in settings."
+  },
   "tourDesktop": {
     "message": "Bilgisayar için de"
+  },
+  "tourPhone": {
+    "message": "Bir de telefona",
+    "description": "The offer of the Android app on the welcome page."
   },
   "optCompact": {
     "message": "Kısa kart"

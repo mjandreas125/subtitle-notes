@@ -316,8 +316,24 @@
   "optDesktopGet": {
     "message": "Baixar para Windows"
   },
+  "optPhoneTitle": {
+    "message": "No celular",
+    "description": "The offer of the Android app in settings."
+  },
+  "optPhoneHelp": {
+    "message": "As mesmas palavras, com revisão e busca. Por enquanto Android; o arquivo instala fora da loja, então o celular pergunta uma vez.",
+    "description": "The offer of the Android app in settings."
+  },
+  "optPhoneGet": {
+    "message": "Baixar para Android",
+    "description": "The offer of the Android app in settings."
+  },
   "tourDesktop": {
     "message": "Também para o computador"
+  },
+  "tourPhone": {
+    "message": "E no celular",
+    "description": "The offer of the Android app on the welcome page."
   },
   "optCompact": {
     "message": "Cartão curto"

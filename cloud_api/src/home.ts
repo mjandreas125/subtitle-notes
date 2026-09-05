@@ -19,9 +19,9 @@ type Strings = Record<string, string>;
 const HOME_TEXT: Record<string, Strings> = {
   en: {
     line: 'Il n\'est pas dans son assiette.', mark: 'assiette',
-    title: 'Subtitle Notes - what a word means where you met it',
-    h1: 'What this word means here',
-    lede: 'Highlight a word in subtitles, on a page or in a PDF and see what it means in that sentence. It stays in your library, on every device.',
+    title: 'Subtitle Notes - translated by the line, not by the word',
+    h1: 'Translated by the line, not by the word',
+    lede: 'Highlight an unfamiliar word in subtitles, on a page or in a PDF. It is translated the way it sounds in that sentence, and it stays in your library.',
     dict: 'A dictionary', ours: 'Subtitle Notes',
     wrong: 'He is not in his plate.',
     right: 'He is not feeling well.',
@@ -35,16 +35,19 @@ const HOME_TEXT: Record<string, Strings> = {
     oneT: 'One library', oneB: 'Sign in with Google once. A word saved in the browser is already on your phone.',
     backT: 'Brings it back', backB: 'First after a day, then after three, then after a week. What you forget comes back more often.',
     sayT: 'Lets you disagree', sayB: 'Disagree with the answer? Write your own on the card. If enough people write the same one, it becomes the answer everybody gets.',
+    linkBrowser: 'Add to Chrome',
+    linkPhone: 'Download for Android',
+    linkPc: 'Download for Windows',
     ctaLib: 'Open your library', ctaWin: 'Download for Windows',
-    alpha: 'Subtitle Notes is in closed alpha. The browser extension and the Android app are on their way to the stores; the Windows installer is not signed yet, so it shows a SmartScreen warning the first time it runs.',
+    alpha: 'The extension is in the Chrome Web Store. The Android app installs from a file for now, and the Windows installer is not signed yet, so both ask once whether you meant it.',
     fPrivacy: 'Privacy', fDelete: 'Delete your account', fLibrary: 'Library', fSource: 'Source and releases',
     fTag: 'Subtitle Notes - a place to keep the words you looked up.', langLabel: 'Language',
   },
   ru: {
     line: 'No one wants a record.', mark: 'record',
-    title: 'Subtitle Notes - что слово значит там, где вы его встретили',
-    h1: 'Что это слово значит здесь',
-    lede: 'Выделите незнакомое слово в субтитрах, на странице или в PDF - и увидите, что оно значит в этой фразе. Слово останется в вашей библиотеке, на всех устройствах.',
+    title: 'Subtitle Notes - перевод по смыслу, а не по словарю',
+    h1: 'Перевод по смыслу, а не по словарю',
+    lede: 'Выделите незнакомое слово в субтитрах, на странице или в PDF. Оно переведётся так, как звучит в этой фразе, и останется в вашей библиотеке.',
     dict: 'Словарь', ours: 'Subtitle Notes',
     wrong: 'никто не хочет рекорд',
     right: 'никому не нужна судимость',
@@ -58,16 +61,19 @@ const HOME_TEXT: Record<string, Strings> = {
     oneT: 'Одна библиотека', oneB: 'Один вход через Google. Слово, сохранённое в браузере, уже на телефоне.',
     backT: 'Возвращает слово', backB: 'Сначала через день, потом через три, потом через неделю. Что забывается - показывается чаще.',
     sayT: 'Позволяет спорить', sayB: 'Не согласны с ответом? Напишите свой прямо на карточке. Если так же напишут другие, он станет общим.',
+    linkBrowser: 'Установить в браузер',
+    linkPhone: 'Скачать для Android',
+    linkPc: 'Скачать для Windows',
     ctaLib: 'Открыть библиотеку', ctaWin: 'Скачать для Windows',
-    alpha: 'Subtitle Notes в закрытой альфе. Расширение и приложение для Android готовятся к публикации; установщик для Windows пока не подписан, поэтому при первом запуске SmartScreen показывает предупреждение.',
+    alpha: 'Расширение уже в Chrome Web Store. Приложение для Android пока ставится файлом, а установщик Windows не подписан - оба один раз переспросят, точно ли вы этого хотели.',
     fPrivacy: 'Конфиденциальность', fDelete: 'Удалить аккаунт', fLibrary: 'Библиотека', fSource: 'Исходники и выпуски',
     fTag: 'Subtitle Notes - место, где остаются слова, которые вы посмотрели.', langLabel: 'Язык',
   },
   et: {
     line: 'No one wants a record.', mark: 'record',
-    title: 'Subtitle Notes - mida sõna tähendab seal, kus sa selle kohtasid',
-    h1: 'Mida see sõna siin tähendab',
-    lede: 'Vali tundmatu sõna subtiitrist, lehelt või PDF-ist ja näed, mida see selles lauses tähendab. Sõna jääb sinu kogusse, kõigis seadmetes.',
+    title: 'Subtitle Notes - tõlge lause järgi, mitte sõna järgi',
+    h1: 'Tõlge lause järgi, mitte sõna järgi',
+    lede: 'Vali tundmatu sõna subtiitrist, lehelt või PDF-ist. See tõlgitakse nii, nagu see selles lauses kõlab, ja jääb sinu kogusse.',
     dict: 'Sõnaraamat', ours: 'Subtitle Notes',
     wrong: 'keegi ei taha rekordit',
     right: 'kellelgi pole vaja karistusregistri kannet',
@@ -81,16 +87,19 @@ const HOME_TEXT: Record<string, Strings> = {
     oneT: 'Üks kogu', oneB: 'Üks Google\'i sisselogimine. Brauseris salvestatud sõna on juba telefonis.',
     backT: 'Toob sõna tagasi', backB: 'Kõigepealt päeva pärast, siis kolme, siis nädala pärast. Mis ununeb, seda näidatakse sagedamini.',
     sayT: 'Lubab vaielda', sayB: 'Ei nõustu vastusega? Kirjuta kaardile oma. Kui piisavalt inimesi kirjutab sama, saab sellest kõigi vastus.',
+    linkBrowser: 'Lisa brauserisse',
+    linkPhone: 'Laadi alla Androidile',
+    linkPc: 'Laadi alla Windowsile',
     ctaLib: 'Ava oma kogu', ctaWin: 'Laadi alla Windowsile',
-    alpha: 'Subtitle Notes on suletud alfaversioonis. Brauserilaiendus ja Androidi rakendus on teel poodidesse; Windowsi installer pole veel allkirjastatud, nii et SmartScreen näitab esimesel korral hoiatust.',
+    alpha: 'Laiendus on Chrome Web Store\'is. Androidi rakendus paigaldub praegu failist ja Windowsi installer pole allkirjastatud - mõlemad küsivad korra üle, kas sa ikka tahad.',
     fPrivacy: 'Privaatsus', fDelete: 'Kustuta konto', fLibrary: 'Kogu', fSource: 'Lähtekood ja väljalasked',
     fTag: 'Subtitle Notes - koht, kuhu jäävad sõnad, mille sa üles otsisid.', langLabel: 'Keel',
   },
   de: {
     line: 'No one wants a record.', mark: 'record',
-    title: 'Subtitle Notes - was ein Wort dort bedeutet, wo Sie es getroffen haben',
-    h1: 'Was dieses Wort hier bedeutet',
-    lede: 'Markieren Sie ein unbekanntes Wort im Untertitel, auf einer Seite oder in einem PDF und sehen Sie, was es in diesem Satz bedeutet. Es bleibt in Ihrer Sammlung, auf allen Geräten.',
+    title: 'Subtitle Notes - übersetzt nach dem Satz, nicht nach dem Wort',
+    h1: 'Übersetzt nach dem Satz, nicht nach dem Wort',
+    lede: 'Markieren Sie ein unbekanntes Wort im Untertitel, auf einer Seite oder in einem PDF. Es wird so übersetzt, wie es in diesem Satz gemeint ist, und bleibt in Ihrer Sammlung.',
     dict: 'Ein Wörterbuch', ours: 'Subtitle Notes',
     wrong: 'niemand will einen Rekord',
     right: 'niemand will eine Vorstrafe',
@@ -104,16 +113,19 @@ const HOME_TEXT: Record<string, Strings> = {
     oneT: 'Eine Sammlung', oneB: 'Einmal mit Google anmelden. Ein im Browser gespeichertes Wort ist schon auf dem Telefon.',
     backT: 'Bringt es zurück', backB: 'Zuerst nach einem Tag, dann nach drei, dann nach einer Woche. Was Sie vergessen, kommt häufiger.',
     sayT: 'Lässt Sie widersprechen', sayB: 'Mit der Antwort nicht einverstanden? Schreiben Sie Ihre eigene auf die Karte. Schreiben genug Leute dieselbe, wird sie die Antwort für alle.',
+    linkBrowser: 'Zu Chrome hinzufügen',
+    linkPhone: 'Für Android herunterladen',
+    linkPc: 'Für Windows herunterladen',
     ctaLib: 'Sammlung öffnen', ctaWin: 'Für Windows herunterladen',
-    alpha: 'Subtitle Notes ist in einer geschlossenen Alpha. Erweiterung und Android-App sind auf dem Weg in die Stores; das Windows-Installationsprogramm ist noch nicht signiert, deshalb warnt SmartScreen beim ersten Start.',
+    alpha: 'Die Erweiterung ist im Chrome Web Store. Die Android-App wird vorerst aus einer Datei installiert und das Windows-Installationsprogramm ist noch nicht signiert - beide fragen einmal nach.',
     fPrivacy: 'Datenschutz', fDelete: 'Konto löschen', fLibrary: 'Sammlung', fSource: 'Quellcode und Releases',
     fTag: 'Subtitle Notes - ein Ort für die Wörter, die Sie nachgeschlagen haben.', langLabel: 'Sprache',
   },
   fr: {
     line: 'No one wants a record.', mark: 'record',
-    title: 'Subtitle Notes - ce qu\'un mot veut dire là où vous l\'avez rencontré',
-    h1: 'Ce que ce mot veut dire ici',
-    lede: 'Sélectionnez un mot inconnu dans un sous-titre, sur une page ou dans un PDF et voyez ce qu\'il veut dire dans cette phrase. Il reste dans votre bibliothèque, sur tous vos appareils.',
+    title: 'Subtitle Notes - traduit d\'après la phrase, pas d\'après le mot',
+    h1: 'Traduit d\'après la phrase, pas d\'après le mot',
+    lede: 'Sélectionnez un mot inconnu dans un sous-titre, sur une page ou dans un PDF. Il est traduit tel qu\'il sonne dans cette phrase, et il reste dans votre bibliothèque.',
     dict: 'Un dictionnaire', ours: 'Subtitle Notes',
     wrong: 'personne ne veut un record',
     right: 'personne ne veut de casier judiciaire',
@@ -127,16 +139,19 @@ const HOME_TEXT: Record<string, Strings> = {
     oneT: 'Une seule bibliothèque', oneB: 'Une connexion Google. Un mot gardé dans le navigateur est déjà sur le téléphone.',
     backT: 'Le fait revenir', backB: 'D\'abord après un jour, puis trois, puis une semaine. Ce que vous oubliez revient plus souvent.',
     sayT: 'Vous laisse contredire', sayB: 'Pas d\'accord avec la réponse ? Écrivez la vôtre sur la fiche. Si assez de gens écrivent la même, elle devient la réponse de tout le monde.',
+    linkBrowser: 'Ajouter à Chrome',
+    linkPhone: 'Télécharger pour Android',
+    linkPc: 'Télécharger pour Windows',
     ctaLib: 'Ouvrir la bibliothèque', ctaWin: 'Télécharger pour Windows',
-    alpha: 'Subtitle Notes est en alpha fermée. L\'extension et l\'application Android sont en route vers les magasins ; l\'installateur Windows n\'est pas encore signé, SmartScreen affiche donc un avertissement au premier lancement.',
+    alpha: 'L\'extension est dans le Chrome Web Store. L\'application Android s\'installe pour l\'instant depuis un fichier et l\'installateur Windows n\'est pas signé : les deux demandent une confirmation.',
     fPrivacy: 'Confidentialité', fDelete: 'Supprimer le compte', fLibrary: 'Bibliothèque', fSource: 'Sources et versions',
     fTag: 'Subtitle Notes - un endroit pour les mots que vous avez cherchés.', langLabel: 'Langue',
   },
   es: {
     line: 'No one wants a record.', mark: 'record',
-    title: 'Subtitle Notes - qué significa una palabra donde la encontraste',
-    h1: 'Qué significa esta palabra aquí',
-    lede: 'Selecciona una palabra desconocida en un subtítulo, en una página o en un PDF y verás qué significa en esa frase. Se queda en tu biblioteca, en todos tus dispositivos.',
+    title: 'Subtitle Notes - traducido por la frase, no por la palabra',
+    h1: 'Traducido por la frase, no por la palabra',
+    lede: 'Selecciona una palabra desconocida en un subtítulo, en una página o en un PDF. Se traduce como suena en esa frase y se queda en tu biblioteca.',
     dict: 'Un diccionario', ours: 'Subtitle Notes',
     wrong: 'nadie quiere un récord',
     right: 'nadie quiere antecedentes penales',
@@ -150,16 +165,19 @@ const HOME_TEXT: Record<string, Strings> = {
     oneT: 'Una sola biblioteca', oneB: 'Un inicio de sesión con Google. Una palabra guardada en el navegador ya está en el teléfono.',
     backT: 'La trae de vuelta', backB: 'Primero al día siguiente, luego a los tres, luego a la semana. Lo que se olvida aparece más a menudo.',
     sayT: 'Te deja discrepar', sayB: '¿No estás de acuerdo con la respuesta? Escribe la tuya en la ficha. Si bastante gente escribe la misma, se convierte en la de todos.',
+    linkBrowser: 'Añadir a Chrome',
+    linkPhone: 'Descargar para Android',
+    linkPc: 'Descargar para Windows',
     ctaLib: 'Abrir la biblioteca', ctaWin: 'Descargar para Windows',
-    alpha: 'Subtitle Notes está en alfa cerrada. La extensión y la aplicación de Android van camino de las tiendas; el instalador de Windows aún no está firmado, así que SmartScreen avisa la primera vez.',
+    alpha: 'La extensión está en la Chrome Web Store. La aplicación de Android se instala de momento desde un archivo y el instalador de Windows aún no está firmado: los dos preguntan una vez.',
     fPrivacy: 'Privacidad', fDelete: 'Eliminar la cuenta', fLibrary: 'Biblioteca', fSource: 'Código y versiones',
     fTag: 'Subtitle Notes - un sitio donde se quedan las palabras que buscaste.', langLabel: 'Idioma',
   },
   it: {
     line: 'No one wants a record.', mark: 'record',
-    title: 'Subtitle Notes - che cosa significa una parola dove l\'hai incontrata',
-    h1: 'Che cosa significa questa parola qui',
-    lede: 'Seleziona una parola sconosciuta in un sottotitolo, su una pagina o in un PDF e vedi che cosa significa in quella frase. Resta nella tua raccolta, su tutti i dispositivi.',
+    title: 'Subtitle Notes - tradotto dalla frase, non dalla parola',
+    h1: 'Tradotto dalla frase, non dalla parola',
+    lede: 'Seleziona una parola sconosciuta in un sottotitolo, su una pagina o in un PDF. Viene tradotta come suona in quella frase e resta nella tua raccolta.',
     dict: 'Un dizionario', ours: 'Subtitle Notes',
     wrong: 'nessuno vuole un record',
     right: 'nessuno vuole precedenti penali',
@@ -173,16 +191,19 @@ const HOME_TEXT: Record<string, Strings> = {
     oneT: 'Una sola raccolta', oneB: 'Un accesso con Google. Una parola salvata nel browser è già sul telefono.',
     backT: 'La riporta indietro', backB: 'Prima dopo un giorno, poi dopo tre, poi dopo una settimana. Quello che dimentichi torna più spesso.',
     sayT: 'Ti lascia dissentire', sayB: 'Non sei d\'accordo con la risposta? Scrivi la tua sulla scheda. Se abbastanza persone scrivono la stessa, diventa quella di tutti.',
+    linkBrowser: 'Aggiungi a Chrome',
+    linkPhone: 'Scarica per Android',
+    linkPc: 'Scarica per Windows',
     ctaLib: 'Apri la raccolta', ctaWin: 'Scarica per Windows',
-    alpha: 'Subtitle Notes è in alfa chiusa. L\'estensione e l\'app Android sono in viaggio verso gli store; l\'installer per Windows non è ancora firmato, quindi SmartScreen avvisa al primo avvio.',
+    alpha: 'L\'estensione è nel Chrome Web Store. L\'app Android per ora si installa da un file e l\'installer per Windows non è firmato: entrambi chiedono conferma una volta.',
     fPrivacy: 'Privacy', fDelete: 'Elimina l\'account', fLibrary: 'Raccolta', fSource: 'Sorgenti e versioni',
     fTag: 'Subtitle Notes - un posto per le parole che hai cercato.', langLabel: 'Lingua',
   },
   pt: {
     line: 'No one wants a record.', mark: 'record',
-    title: 'Subtitle Notes - o que uma palavra significa onde a encontrou',
-    h1: 'O que esta palavra significa aqui',
-    lede: 'Selecione uma palavra desconhecida numa legenda, numa página ou num PDF e veja o que significa naquela frase. Fica na sua biblioteca, em todos os aparelhos.',
+    title: 'Subtitle Notes - traduzido pela frase, não pela palavra',
+    h1: 'Traduzido pela frase, não pela palavra',
+    lede: 'Selecione uma palavra desconhecida numa legenda, numa página ou num PDF. É traduzida como soa naquela frase e fica na sua biblioteca.',
     dict: 'Um dicionário', ours: 'Subtitle Notes',
     wrong: 'ninguém quer um recorde',
     right: 'ninguém quer registo criminal',
@@ -196,16 +217,19 @@ const HOME_TEXT: Record<string, Strings> = {
     oneT: 'Uma só biblioteca', oneB: 'Uma entrada com o Google. Uma palavra guardada no navegador já está no telemóvel.',
     backT: 'Traz de volta', backB: 'Primeiro ao fim de um dia, depois de três, depois de uma semana. O que se esquece aparece mais vezes.',
     sayT: 'Deixa discordar', sayB: 'Não concorda com a resposta? Escreva a sua no cartão. Se gente suficiente escrever a mesma, passa a ser a de todos.',
+    linkBrowser: 'Adicionar ao Chrome',
+    linkPhone: 'Transferir para Android',
+    linkPc: 'Transferir para Windows',
     ctaLib: 'Abrir a biblioteca', ctaWin: 'Transferir para Windows',
-    alpha: 'O Subtitle Notes está em alfa fechada. A extensão e a aplicação Android estão a caminho das lojas; o instalador de Windows ainda não está assinado, por isso o SmartScreen avisa da primeira vez.',
+    alpha: 'A extensão está na Chrome Web Store. A aplicação Android instala-se por agora a partir de um ficheiro e o instalador do Windows não está assinado: ambos perguntam uma vez.',
     fPrivacy: 'Privacidade', fDelete: 'Apagar a conta', fLibrary: 'Biblioteca', fSource: 'Código e versões',
     fTag: 'Subtitle Notes - um sítio para as palavras que foi procurar.', langLabel: 'Idioma',
   },
   pl: {
     line: 'No one wants a record.', mark: 'record',
-    title: 'Subtitle Notes - co słowo znaczy tam, gdzie je spotkałeś',
-    h1: 'Co to słowo znaczy tutaj',
-    lede: 'Zaznacz nieznane słowo w napisach, na stronie albo w PDF-ie i zobacz, co znaczy w tym zdaniu. Zostaje w twojej bibliotece, na wszystkich urządzeniach.',
+    title: 'Subtitle Notes - tłumaczenie według zdania, nie według słowa',
+    h1: 'Tłumaczenie według zdania, nie według słowa',
+    lede: 'Zaznacz nieznane słowo w napisach, na stronie albo w PDF-ie. Zostanie przetłumaczone tak, jak brzmi w tym zdaniu, i zostanie w twojej bibliotece.',
     dict: 'Słownik', ours: 'Subtitle Notes',
     wrong: 'nikt nie chce rekordu',
     right: 'nikt nie chce kartoteki karnej',
@@ -219,16 +243,19 @@ const HOME_TEXT: Record<string, Strings> = {
     oneT: 'Jedna biblioteka', oneB: 'Jedno logowanie Google. Słowo zapisane w przeglądarce jest już w telefonie.',
     backT: 'Przypomina je', backB: 'Najpierw po dniu, potem po trzech, potem po tygodniu. To, co się zapomina, wraca częściej.',
     sayT: 'Pozwala się nie zgodzić', sayB: 'Nie zgadzasz się z odpowiedzią? Napisz własną na karcie. Jeśli dość osób napisze tę samą, stanie się odpowiedzią dla wszystkich.',
+    linkBrowser: 'Dodaj do Chrome',
+    linkPhone: 'Pobierz na Androida',
+    linkPc: 'Pobierz na Windows',
     ctaLib: 'Otwórz bibliotekę', ctaWin: 'Pobierz na Windows',
-    alpha: 'Subtitle Notes jest w zamkniętej alfie. Rozszerzenie i aplikacja na Androida są w drodze do sklepów; instalator Windows nie jest jeszcze podpisany, więc SmartScreen ostrzega przy pierwszym uruchomieniu.',
+    alpha: 'Rozszerzenie jest w Chrome Web Store. Aplikacja na Androida instaluje się na razie z pliku, a instalator Windows nie jest podpisany - oba raz zapytają, czy na pewno.',
     fPrivacy: 'Prywatność', fDelete: 'Usuń konto', fLibrary: 'Biblioteka', fSource: 'Kod i wydania',
     fTag: 'Subtitle Notes - miejsce na słowa, które sprawdziłeś.', langLabel: 'Język',
   },
   uk: {
     line: 'No one wants a record.', mark: 'record',
-    title: 'Subtitle Notes - що слово означає там, де ви його зустріли',
-    h1: 'Що це слово означає тут',
-    lede: 'Виділіть незнайоме слово в субтитрі, на сторінці або в PDF - і побачите, що воно означає в цій фразі. Слово лишиться у вашій бібліотеці, на всіх пристроях.',
+    title: 'Subtitle Notes - переклад за змістом, а не за словником',
+    h1: 'Переклад за змістом, а не за словником',
+    lede: 'Виділіть незнайоме слово в субтитрі, на сторінці або в PDF. Воно перекладеться так, як звучить у цій фразі, і лишиться у вашій бібліотеці.',
     dict: 'Словник', ours: 'Subtitle Notes',
     wrong: 'ніхто не хоче рекорд',
     right: 'нікому не потрібна судимість',
@@ -242,16 +269,19 @@ const HOME_TEXT: Record<string, Strings> = {
     oneT: 'Одна бібліотека', oneB: 'Один вхід через Google. Слово, збережене в браузері, уже в телефоні.',
     backT: 'Повертає слово', backB: 'Спершу через день, потім через три, потім через тиждень. Те, що забувається, показується частіше.',
     sayT: 'Дозволяє сперечатися', sayB: 'Не згодні з відповіддю? Напишіть свою на картці. Якщо так само напишуть інші, вона стане спільною.',
+    linkBrowser: 'Додати в браузер',
+    linkPhone: 'Завантажити для Android',
+    linkPc: 'Завантажити для Windows',
     ctaLib: 'Відкрити бібліотеку', ctaWin: 'Завантажити для Windows',
-    alpha: 'Subtitle Notes у закритій альфі. Розширення та застосунок для Android готуються до публікації; інсталятор для Windows поки не підписаний, тому SmartScreen попереджає під час першого запуску.',
+    alpha: 'Розширення вже в Chrome Web Store. Застосунок для Android поки ставиться файлом, а інсталятор Windows не підписаний - обидва один раз перепитають.',
     fPrivacy: 'Конфіденційність', fDelete: 'Видалити акаунт', fLibrary: 'Бібліотека', fSource: 'Код і випуски',
     fTag: 'Subtitle Notes - місце, де лишаються слова, які ви подивилися.', langLabel: 'Мова',
   },
   nl: {
     line: 'No one wants a record.', mark: 'record',
-    title: 'Subtitle Notes - wat een woord betekent waar je het tegenkwam',
-    h1: 'Wat dit woord hier betekent',
-    lede: 'Selecteer een onbekend woord in een ondertitel, op een pagina of in een PDF en zie wat het in die zin betekent. Het blijft in je bibliotheek, op al je apparaten.',
+    title: 'Subtitle Notes - vertaald naar de zin, niet naar het woord',
+    h1: 'Vertaald naar de zin, niet naar het woord',
+    lede: 'Selecteer een onbekend woord in een ondertitel, op een pagina of in een PDF. Het wordt vertaald zoals het in die zin klinkt en blijft in je bibliotheek.',
     dict: 'Een woordenboek', ours: 'Subtitle Notes',
     wrong: 'niemand wil een record',
     right: 'niemand wil een strafblad',
@@ -265,16 +295,19 @@ const HOME_TEXT: Record<string, Strings> = {
     oneT: 'Eén bibliotheek', oneB: 'Eén keer inloggen met Google. Een woord dat je in de browser bewaart, staat al op je telefoon.',
     backT: 'Brengt het terug', backB: 'Eerst na een dag, dan na drie, dan na een week. Wat je vergeet, komt vaker terug.',
     sayT: 'Laat je het oneens zijn', sayB: 'Niet eens met het antwoord? Schrijf je eigen antwoord op de kaart. Schrijven genoeg mensen hetzelfde, dan wordt dat het antwoord voor iedereen.',
+    linkBrowser: 'Aan Chrome toevoegen',
+    linkPhone: 'Downloaden voor Android',
+    linkPc: 'Downloaden voor Windows',
     ctaLib: 'Open je bibliotheek', ctaWin: 'Downloaden voor Windows',
-    alpha: 'Subtitle Notes is in gesloten alfa. De extensie en de Android-app zijn onderweg naar de stores; het Windows-installatieprogramma is nog niet ondertekend, dus SmartScreen waarschuwt de eerste keer.',
+    alpha: 'De extensie staat in de Chrome Web Store. De Android-app wordt voorlopig uit een bestand geïnstalleerd en het Windows-installatieprogramma is niet ondertekend - beide vragen het één keer.',
     fPrivacy: 'Privacy', fDelete: 'Account verwijderen', fLibrary: 'Bibliotheek', fSource: 'Broncode en releases',
     fTag: 'Subtitle Notes - een plek voor de woorden die je opzocht.', langLabel: 'Taal',
   },
   tr: {
     line: 'No one wants a record.', mark: 'record',
-    title: 'Subtitle Notes - bir kelimenin, onunla karşılaştığın yerdeki anlamı',
-    h1: 'Bu kelime burada ne demek',
-    lede: 'Altyazıda, bir sayfada ya da PDF\'te bilmediğin bir kelimeyi seç ve o cümlede ne demek olduğunu gör. Kelime kitaplığında kalır, tüm cihazlarında.',
+    title: 'Subtitle Notes - kelimeye göre değil, cümleye göre çeviri',
+    h1: 'Kelimeye göre değil, cümleye göre çeviri',
+    lede: 'Altyazıda, bir sayfada ya da PDF\'te bilmediğin bir kelimeyi seç. O cümlede nasıl geçiyorsa öyle çevrilir ve kitaplığında kalır.',
     dict: 'Sözlük', ours: 'Subtitle Notes',
     wrong: 'kimse rekor istemez',
     right: 'kimse sabıka kaydı istemez',
@@ -288,16 +321,19 @@ const HOME_TEXT: Record<string, Strings> = {
     oneT: 'Tek kitaplık', oneB: 'Google ile bir kez giriş. Tarayıcıda kaydettiğin kelime telefonunda zaten var.',
     backT: 'Geri getirir', backB: 'Önce bir gün sonra, sonra üç gün, sonra bir hafta. Unuttukların daha sık gösterilir.',
     sayT: 'İtiraz etmene izin verir', sayB: 'Cevaba katılmıyor musun? Kendi karşılığını karta yaz. Yeterince kişi aynısını yazarsa herkesin gördüğü cevap o olur.',
+    linkBrowser: 'Chrome\'a ekle',
+    linkPhone: 'Android için indir',
+    linkPc: 'Windows için indir',
     ctaLib: 'Kitaplığı aç', ctaWin: 'Windows için indir',
-    alpha: 'Subtitle Notes kapalı alfa aşamasında. Tarayıcı eklentisi ve Android uygulaması mağazalara doğru yolda; Windows kurulumu henüz imzalı değil, bu yüzden SmartScreen ilk açılışta uyarı gösterir.',
+    alpha: 'Eklenti Chrome Web Store\'da. Android uygulaması şimdilik dosyadan kuruluyor ve Windows kurulumu imzalı değil - ikisi de bir kez soruyor.',
     fPrivacy: 'Gizlilik', fDelete: 'Hesabı sil', fLibrary: 'Kitaplık', fSource: 'Kaynak ve sürümler',
     fTag: 'Subtitle Notes - baktığın kelimelerin kaldığı yer.', langLabel: 'Dil',
   },
   sv: {
     line: 'No one wants a record.', mark: 'record',
-    title: 'Subtitle Notes - vad ett ord betyder där du mötte det',
-    h1: 'Vad det här ordet betyder här',
-    lede: 'Markera ett okänt ord i en undertext, på en sida eller i en PDF och se vad det betyder i just den meningen. Det stannar i ditt bibliotek, på alla dina enheter.',
+    title: 'Subtitle Notes - översatt efter meningen, inte efter ordet',
+    h1: 'Översatt efter meningen, inte efter ordet',
+    lede: 'Markera ett okänt ord i en undertext, på en sida eller i en PDF. Det översätts som det låter i just den meningen och stannar i ditt bibliotek.',
     dict: 'En ordbok', ours: 'Subtitle Notes',
     wrong: 'ingen vill ha ett rekord',
     right: 'ingen vill ha ett brottsregister',
@@ -311,16 +347,19 @@ const HOME_TEXT: Record<string, Strings> = {
     oneT: 'Ett bibliotek', oneB: 'En inloggning med Google. Ett ord du sparar i webbläsaren finns redan i telefonen.',
     backT: 'Tar tillbaka det', backB: 'Först efter en dag, sedan efter tre, sedan efter en vecka. Det du glömmer visas oftare.',
     sayT: 'Låter dig invända', sayB: 'Håller du inte med om svaret? Skriv ditt eget på kortet. Skriver tillräckligt många samma sak blir det allas svar.',
+    linkBrowser: 'Lägg till i Chrome',
+    linkPhone: 'Ladda ner för Android',
+    linkPc: 'Ladda ner för Windows',
     ctaLib: 'Öppna biblioteket', ctaWin: 'Ladda ner för Windows',
-    alpha: 'Subtitle Notes är i sluten alfa. Tillägget och Android-appen är på väg till butikerna; Windows-installationen är ännu inte signerad, så SmartScreen varnar första gången.',
+    alpha: 'Tillägget finns i Chrome Web Store. Android-appen installeras tills vidare från en fil och Windows-installationen är inte signerad - båda frågar en gång.',
     fPrivacy: 'Integritet', fDelete: 'Radera kontot', fLibrary: 'Bibliotek', fSource: 'Källkod och utgåvor',
     fTag: 'Subtitle Notes - en plats för orden du slog upp.', langLabel: 'Språk',
   },
   fi: {
     line: 'No one wants a record.', mark: 'record',
-    title: 'Subtitle Notes - mitä sana tarkoittaa siellä, missä sen kohtasit',
-    h1: 'Mitä tämä sana tarkoittaa tässä',
-    lede: 'Maalaa tuntematon sana tekstityksestä, sivulta tai PDF:stä ja näet, mitä se tarkoittaa juuri siinä lauseessa. Sana jää kirjastoosi, kaikille laitteillesi.',
+    title: 'Subtitle Notes - käännös lauseen mukaan, ei sanan',
+    h1: 'Käännös lauseen mukaan, ei sanan',
+    lede: 'Maalaa tuntematon sana tekstityksestä, sivulta tai PDF:stä. Se käännetään niin kuin se siinä lauseessa kuuluu, ja se jää kirjastoosi.',
     dict: 'Sanakirja', ours: 'Subtitle Notes',
     wrong: 'kukaan ei halua ennätystä',
     right: 'kukaan ei halua rikosrekisteriä',
@@ -334,8 +373,11 @@ const HOME_TEXT: Record<string, Strings> = {
     oneT: 'Yksi kirjasto', oneB: 'Yksi Google-kirjautuminen. Selaimessa tallennettu sana on jo puhelimessa.',
     backT: 'Tuo sen takaisin', backB: 'Ensin päivän päästä, sitten kolmen, sitten viikon. Se mikä unohtuu, näytetään useammin.',
     sayT: 'Antaa olla eri mieltä', sayB: 'Etkö ole samaa mieltä vastauksesta? Kirjoita kortille oma. Jos tarpeeksi moni kirjoittaa saman, siitä tulee kaikkien vastaus.',
+    linkBrowser: 'Lisää Chromeen',
+    linkPhone: 'Lataa Androidille',
+    linkPc: 'Lataa Windowsille',
     ctaLib: 'Avaa kirjasto', ctaWin: 'Lataa Windowsille',
-    alpha: 'Subtitle Notes on suljetussa alfavaiheessa. Selainlaajennus ja Android-sovellus ovat matkalla kauppoihin; Windows-asennusohjelmaa ei ole vielä allekirjoitettu, joten SmartScreen varoittaa ensimmäisellä kerralla.',
+    alpha: 'Laajennus on Chrome Web Storessa. Android-sovellus asennetaan toistaiseksi tiedostosta eikä Windows-asennusohjelmaa ole allekirjoitettu - kumpikin kysyy kerran.',
     fPrivacy: 'Tietosuoja', fDelete: 'Poista tili', fLibrary: 'Kirjasto', fSource: 'Lähdekoodi ja julkaisut',
     fTag: 'Subtitle Notes - paikka sanoille, jotka katsoit.', langLabel: 'Kieli',
   },
@@ -352,7 +394,7 @@ const LANGUAGE_NAMES: Record<string, string> = {
 const escape = (value: string) =>
   value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
-export function homePage(lang: string): string {
+export function homePage(lang: string, links: Record<string, string> = {}): string {
   const t = HOME_TEXT[lang] ?? HOME_TEXT.en;
   const code = HOME_TEXT[lang] ? lang : 'en';
   // The subtitle with the picked word marked inside it, whatever the word is.
@@ -451,6 +493,14 @@ export function homePage(lang: string): string {
   @media (min-width: 50rem) { .where { grid-template-columns: repeat(3, 1fr); } }
   .where section { background: var(--card); border: 1px solid var(--hair); border-left: 3px solid var(--accent); border-radius: 12px; padding: 1.3rem 1.4rem 1.4rem; }
   .where p { color: var(--soft); margin: 0; font-size: .96rem; }
+  .where section { display: flex; flex-direction: column; align-items: flex-start; }
+  .where section p { flex: 1; }
+  .get {
+    margin-top: 1rem; align-self: stretch; text-align: center; text-decoration: none;
+    padding: .55rem .9rem; border-radius: 9px; border: 1px solid var(--hair);
+    background: var(--wash); color: var(--accent); font-weight: 650; font-size: .95rem;
+  }
+  .get:hover { border-color: var(--accent); }
   .keys { display: inline-block; margin-top: .9rem; padding: .2rem .5rem; border-radius: 6px; border: 1px solid var(--hair); background: var(--wash); color: var(--accent); font-size: .82rem; font-weight: 650; }
 
   .rows { border-top: 1px solid var(--hair); }
@@ -470,6 +520,44 @@ export function homePage(lang: string): string {
   .picker { display: flex; align-items: center; gap: .5rem; margin-top: 1.1rem; }
   .picker select { font: inherit; color: inherit; background: var(--card); border: 1px solid var(--hair); border-radius: 8px; padding: .3rem .5rem; }
   a { color: var(--accent); }
+
+  /* Sections arrive as you reach them. Six pixels and a fifth of a second:
+     enough to feel deliberate, not enough to make anybody wait for it. */
+  [data-reveal] { opacity: 0; transform: translateY(14px); }
+  [data-reveal].seen {
+    opacity: 1; transform: none;
+    transition: opacity .5s cubic-bezier(.2,.7,.3,1), transform .5s cubic-bezier(.2,.7,.3,1);
+  }
+  [data-reveal].seen .where section:nth-child(2) { transition-delay: .06s; }
+  [data-reveal].seen .where section:nth-child(3) { transition-delay: .12s; }
+
+  /* The demo does what the product does: the dictionary's answer is struck
+     through and ours rises into the place it was standing in. */
+  .demo .wrong .out { position: relative; text-decoration: none; }
+  .demo .wrong .out::after {
+    content: ""; position: absolute; left: 0; top: 52%; height: 1px; width: 0;
+    background: currentColor;
+  }
+  .demo.seen .wrong .out::after { width: 100%; transition: width .5s ease .35s; }
+  .demo .right .out { opacity: 0; transform: translateY(6px); }
+  .demo.seen .right .out {
+    opacity: 1; transform: none;
+    transition: opacity .45s ease .95s, transform .45s cubic-bezier(.2,.7,.3,1) .95s;
+  }
+  .demo mark { transition: background .4s ease; }
+
+  .where section { transition: transform .18s cubic-bezier(.2,.7,.3,1), border-color .18s ease; }
+  .where section:hover { transform: translateY(-2px); border-color: color-mix(in srgb, var(--accent) 45%, var(--hair)); }
+  .get, .button { transition: transform .14s cubic-bezier(.2,.7,.3,1), filter .14s ease, border-color .14s ease; }
+  .get:hover, .button:hover { transform: translateY(-1px); }
+  .get:active, .button:active { transform: translateY(0); }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-reveal], [data-reveal].seen { opacity: 1; transform: none; transition: none; }
+    .demo .wrong .out::after { width: 100%; transition: none; }
+    .demo .right .out { opacity: 1; transform: none; transition: none; }
+    .where section:hover, .get:hover, .button:hover { transform: none; }
+  }
 </style></head><body>
 <div class="page">
 
@@ -481,7 +569,7 @@ export function homePage(lang: string): string {
 <section class="site-tour" id="siteTour" aria-roledescription="carousel">
   <div class="site-tour-window"><div class="site-tour-track" id="siteTourTrack">
     <article class="site-tour-slide is-active">
-      <div class="demo"><div class="wrong"><div class="label">${escape(t.dict)}</div><div class="line">${marked}</div><div class="out">${escape(t.wrong)}</div></div><div class="right"><div class="label">${escape(t.ours)}</div><div class="line">${marked}</div><div class="out">${escape(t.right)}</div></div></div>
+      <div class="demo" data-reveal><div class="wrong"><div class="label">${escape(t.dict)}</div><div class="line">${marked}</div><div class="out">${escape(t.wrong)}</div></div><div class="right"><div class="label">${escape(t.ours)}</div><div class="line">${marked}</div><div class="out">${escape(t.right)}</div></div></div>
       <div class="site-tour-copy"><b>${escape(t.ours)}</b><span>${escape(t.note)}</span></div>
     </article>
     <article class="site-tour-slide">
@@ -500,24 +588,36 @@ export function homePage(lang: string): string {
   <div class="site-tour-controls"><button class="site-tour-arrow" type="button" data-tour-prev aria-label="Previous slide">‹</button><div class="site-tour-dots"><button class="site-tour-dot" type="button" aria-label="Slide 1" aria-current="true"></button><button class="site-tour-dot" type="button" aria-label="Slide 2"></button><button class="site-tour-dot" type="button" aria-label="Slide 3"></button><button class="site-tour-dot" type="button" aria-label="Slide 4"></button></div><button class="site-tour-arrow" type="button" data-tour-next aria-label="Next slide">›</button></div>
 </section>
 
-<h2>${escape(t.whereTitle)}</h2>
-<div class="where">
-  <section><h3>${escape(t.browserT)}</h3><p>${escape(t.browserB)}</p><span class="keys">Ctrl + drag</span></section>
-  <section><h3>${escape(t.phoneT)}</h3><p>${escape(t.phoneB)}</p><span class="keys">Android</span></section>
-  <section><h3>${escape(t.pcT)}</h3><p>${escape(t.pcB)}</p><span class="keys">Ctrl + Alt + S</span></section>
+<h2 data-reveal>${escape(t.whereTitle)}</h2>
+<div class="where" data-reveal>
+  <section>
+    <h3>${escape(t.browserT)}</h3><p>${escape(t.browserB)}</p>
+    <span class="keys">Ctrl + drag</span>
+    ${links.browser ? `<a class="get" href="${escape(links.browser)}">${escape(t.linkBrowser)}</a>` : ''}
+  </section>
+  <section>
+    <h3>${escape(t.phoneT)}</h3><p>${escape(t.phoneB)}</p>
+    <span class="keys">Android</span>
+    ${links.android ? `<a class="get" href="${escape(links.android)}">${escape(t.linkPhone)}</a>` : ''}
+  </section>
+  <section>
+    <h3>${escape(t.pcT)}</h3><p>${escape(t.pcB)}</p>
+    <span class="keys">Ctrl + Alt + S</span>
+    ${links.desktop ? `<a class="get" href="${escape(links.desktop)}">${escape(t.linkPc)}</a>` : ''}
+  </section>
 </div>
 
-<h2>${escape(t.doesTitle)}</h2>
-<div class="rows">
+<h2 data-reveal>${escape(t.doesTitle)}</h2>
+<div class="rows" data-reveal>
   <div><b>${escape(t.keepT)}</b><span>${escape(t.keepB)}</span></div>
   <div><b>${escape(t.oneT)}</b><span>${escape(t.oneB)}</span></div>
   <div><b>${escape(t.backT)}</b><span>${escape(t.backB)}</span></div>
   <div><b>${escape(t.sayT)}</b><span>${escape(t.sayB)}</span></div>
 </div>
 
-<div class="cta">
-  <a class="button" href="/library?lang=${code}">${escape(t.ctaLib)}</a>
-  <a class="button quiet" href="https://github.com/mjandreas125/subtitle-notes/releases/latest">${escape(t.ctaWin)}</a>
+<div class="cta" data-reveal>
+  ${links.browser ? `<a class="button" href="${escape(links.browser)}">${escape(t.linkBrowser)}</a>` : ''}
+  <a class="button quiet" href="/library?lang=${code}">${escape(t.ctaLib)}</a>
 </div>
 <p class="note">${escape(t.alpha)}</p>
 
@@ -540,6 +640,25 @@ export function homePage(lang: string): string {
   document.getElementById('lang').onchange = function () {
     location.search = '?lang=' + this.value;
   };
+
+  // Anything marked shows itself once, when it comes into view. One observer,
+  // no scroll handler, and nothing at all to do if the reader asked for less
+  // motion - the CSS has already put everything in its finished state.
+  (function () {
+    var marked = document.querySelectorAll('[data-reveal]');
+    if (!('IntersectionObserver' in window)) {
+      marked.forEach(function (node) { node.classList.add('seen'); });
+      return;
+    }
+    var watch = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('seen');
+        watch.unobserve(entry.target);
+      });
+    }, { rootMargin: '0px 0px -12% 0px', threshold: 0.15 });
+    marked.forEach(function (node) { watch.observe(node); });
+  })();
   (function () {
     const deck = document.getElementById('siteTour');
     const track = document.getElementById('siteTourTrack');
