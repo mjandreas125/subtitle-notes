@@ -19,22 +19,22 @@ type Strings = Record<string, string>;
 const HOME_TEXT: Record<string, Strings> = {
   en: {
     line: 'Il n\'est pas dans son assiette.', mark: 'assiette',
-    title: 'Subtitle Notes - the word you did not know, where you met it',
-    h1: 'The word you did not know, where you met it.',
-    lede: 'Highlight it in a subtitle, on a page or in a PDF, and see what it means in that line - then find it again later, on any of your devices.',
+    title: 'Subtitle Notes - what a word means where you met it',
+    h1: 'What this word means here',
+    lede: 'Highlight a word in subtitles, on a page or in a PDF and see what it means in that sentence. It stays in your library, on every device.',
     dict: 'A dictionary', ours: 'Subtitle Notes',
     wrong: 'He is not in his plate.',
     right: 'He is not feeling well.',
-    note: 'The line is read by a language model that can see the rest of the sentence, so a word gets the sense the speaker meant rather than its first entry in a dictionary.',
+    note: 'The whole line is read, so the word gets the sense it has in it - not the first entry in a dictionary.',
     whereTitle: 'Where it works',
-    browserT: 'In the browser', browserB: 'Subtitles in web players, any text on a page, and PDFs. Hold the key, drag across the words, let go - the meaning appears where you are looking.',
-    phoneT: 'On the phone', phoneB: 'The library: search, revision on a schedule, and a card for every word you kept, with the line it came from.',
-    pcT: 'On the computer', pcB: 'Subtitles in VLC while a film plays, and selected text in any program at all - a reader, a mail client, a PDF.',
+    browserT: 'In the browser', browserB: 'Subtitles in web players, any text on a page, and PDFs. Hold the key, drag across the words, let go - the answer appears beside them.',
+    phoneT: 'On the phone', phoneB: 'Your words: search, revision on a schedule, and the sentence each one came from.',
+    pcT: 'On the computer', pcB: 'Subtitles in VLC while the film runs, and selected text in any program - a reader, mail, a PDF.',
     doesTitle: 'What it does with a word',
-    keepT: 'Keeps the line', keepB: 'The sentence, the film and the episode are stored with the word, because that is what made it mean what it meant.',
-    oneT: 'One library', oneB: 'Sign in with Google once. What you pick in the browser is on the phone before you reach for it.',
-    backT: 'Brings it back', backB: 'Revision on a widening schedule: a word you struggled with returns sooner than one you knew.',
-    sayT: 'Lets you disagree', sayB: 'Write your own wording on any card. Enough people writing the same one makes it the reading everybody gets.',
+    keepT: 'Keeps the line', keepB: 'The sentence, the film and the episode are saved with the word, so a week later you still know what it was about.',
+    oneT: 'One library', oneB: 'Sign in with Google once. A word saved in the browser is already on your phone.',
+    backT: 'Brings it back', backB: 'First after a day, then after three, then after a week. What you forget comes back more often.',
+    sayT: 'Lets you disagree', sayB: 'Disagree with the answer? Write your own on the card. If enough people write the same one, it becomes the answer everybody gets.',
     ctaLib: 'Open your library', ctaWin: 'Download for Windows',
     alpha: 'Subtitle Notes is in closed alpha. The browser extension and the Android app are on their way to the stores; the Windows installer is not signed yet, so it shows a SmartScreen warning the first time it runs.',
     fPrivacy: 'Privacy', fDelete: 'Delete your account', fLibrary: 'Library', fSource: 'Source and releases',
@@ -42,22 +42,22 @@ const HOME_TEXT: Record<string, Strings> = {
   },
   ru: {
     line: 'No one wants a record.', mark: 'record',
-    title: 'Subtitle Notes - незнакомое слово там, где вы его встретили',
-    h1: 'Незнакомое слово там, где вы его встретили.',
-    lede: 'Выделите его в субтитре, на странице или в PDF и сразу увидите, что оно значит в этой строке - а потом найдёте снова, на любом своём устройстве.',
+    title: 'Subtitle Notes - что слово значит там, где вы его встретили',
+    h1: 'Что это слово значит здесь',
+    lede: 'Выделите незнакомое слово в субтитрах, на странице или в PDF - и увидите, что оно значит в этой фразе. Слово останется в вашей библиотеке, на всех устройствах.',
     dict: 'Словарь', ours: 'Subtitle Notes',
     wrong: 'никто не хочет рекорд',
     right: 'никому не нужна судимость',
-    note: 'Строку читает языковая модель, которая видит всю реплику, поэтому слово получает тот смысл, который вкладывал говорящий, а не первую статью из словаря.',
+    note: 'Читается вся строка, поэтому слово получает тот смысл, который у него в ней, а не первую статью из словаря.',
     whereTitle: 'Где это работает',
-    browserT: 'В браузере', browserB: 'Субтитры в веб-плеерах, любой текст на странице и PDF. Держите клавишу, протяните по словам, отпустите - значение появится там, куда вы смотрите.',
-    phoneT: 'На телефоне', phoneB: 'Библиотека: поиск, повторение по расписанию и карточка на каждое сохранённое слово вместе со строкой, из которой оно взято.',
+    browserT: 'В браузере', browserB: 'Субтитры в веб-плеерах, любой текст на странице и PDF. Зажмите клавишу, проведите по словам, отпустите - ответ появится рядом.',
+    phoneT: 'На телефоне', phoneB: 'Ваши слова: поиск, повторение по расписанию и фраза, из которой взято каждое.',
     pcT: 'На компьютере', pcB: 'Субтитры в VLC прямо во время фильма и выделенный текст в любой программе - читалке, почте, PDF.',
     doesTitle: 'Что происходит со словом',
-    keepT: 'Сохраняет строку', keepB: 'Вместе со словом хранится реплика, фильм и серия: именно они сделали его тем, чем оно оказалось.',
-    oneT: 'Одна библиотека', oneB: 'Один вход через Google. Выделенное в браузере уже на телефоне, когда вы до него дотянетесь.',
-    backT: 'Возвращает слово', backB: 'Повторение с растущими интервалами: то, что далось тяжело, вернётся раньше того, что вы знали.',
-    sayT: 'Позволяет спорить', sayB: 'Напишите на карточке свой вариант. Если так же напишут другие, он станет общим переводом.',
+    keepT: 'Сохраняет строку', keepB: 'Вместе со словом сохраняется фраза, фильм и серия - через неделю понятно, о чём шла речь.',
+    oneT: 'Одна библиотека', oneB: 'Один вход через Google. Слово, сохранённое в браузере, уже на телефоне.',
+    backT: 'Возвращает слово', backB: 'Сначала через день, потом через три, потом через неделю. Что забывается - показывается чаще.',
+    sayT: 'Позволяет спорить', sayB: 'Не согласны с ответом? Напишите свой прямо на карточке. Если так же напишут другие, он станет общим.',
     ctaLib: 'Открыть библиотеку', ctaWin: 'Скачать для Windows',
     alpha: 'Subtitle Notes в закрытой альфе. Расширение и приложение для Android готовятся к публикации; установщик для Windows пока не подписан, поэтому при первом запуске SmartScreen показывает предупреждение.',
     fPrivacy: 'Конфиденциальность', fDelete: 'Удалить аккаунт', fLibrary: 'Библиотека', fSource: 'Исходники и выпуски',
@@ -65,22 +65,22 @@ const HOME_TEXT: Record<string, Strings> = {
   },
   et: {
     line: 'No one wants a record.', mark: 'record',
-    title: 'Subtitle Notes - tundmatu sõna seal, kus sa selle kohtasid',
-    h1: 'Tundmatu sõna seal, kus sa selle kohtasid.',
-    lede: 'Tee see subtiitris, lehel või PDF-is aktiivseks ja näed kohe, mida see selles lauses tähendab - ja leiad hiljem uuesti, ükskõik millisest seadmest.',
+    title: 'Subtitle Notes - mida sõna tähendab seal, kus sa selle kohtasid',
+    h1: 'Mida see sõna siin tähendab',
+    lede: 'Vali tundmatu sõna subtiitrist, lehelt või PDF-ist ja näed, mida see selles lauses tähendab. Sõna jääb sinu kogusse, kõigis seadmetes.',
     dict: 'Sõnaraamat', ours: 'Subtitle Notes',
     wrong: 'keegi ei taha rekordit',
     right: 'kellelgi pole vaja karistusregistri kannet',
-    note: 'Lauset loeb keelemudel, mis näeb kogu repliiki, nii et sõna saab selle tähenduse, mida rääkija mõtles, mitte sõnaraamatu esimese kirje.',
+    note: 'Loetakse kogu lauset, nii et sõna saab selle tähenduse, mis tal seal on, mitte sõnaraamatu esimest kirjet.',
     whereTitle: 'Kus see töötab',
-    browserT: 'Brauseris', browserB: 'Subtiitrid veebipleierites, iga tekst lehel ja PDF-id. Hoia klahvi all, tõmba üle sõnade, lase lahti - tähendus ilmub sinna, kuhu sa vaatad.',
-    phoneT: 'Telefonis', phoneB: 'Kogu: otsing, kordamine ajakava järgi ja kaart iga salvestatud sõna kohta koos lausega, kust see pärineb.',
+    browserT: 'Brauseris', browserB: 'Subtiitrid veebipleierites, iga tekst lehel ja PDF-id. Hoia klahvi, tõmba üle sõnade, lase lahti - vastus ilmub kõrvale.',
+    phoneT: 'Telefonis', phoneB: 'Sinu sõnad: otsing, kordamine ajakava järgi ja lause, kust iga sõna pärineb.',
     pcT: 'Arvutis', pcB: 'Subtiitrid VLC-s filmi ajal ja valitud tekst ükskõik millises programmis - lugeris, e-kirjas, PDF-is.',
     doesTitle: 'Mida sõnaga tehakse',
-    keepT: 'Hoiab lauset alles', keepB: 'Sõna juurde jäävad repliik, film ja osa - just need andsid talle selle tähenduse.',
-    oneT: 'Üks kogu', oneB: 'Üks Google\'i sisselogimine. Brauseris valitud sõna on telefonis enne, kui sa selle järele sirutad.',
-    backT: 'Toob sõna tagasi', backB: 'Kordamine kasvavate vahedega: raskesti meelde jäänu tuleb tagasi varem kui see, mida juba teadsid.',
-    sayT: 'Lubab vaielda', sayB: 'Kirjuta kaardile oma sõnastus. Kui piisavalt inimesi kirjutab sama, saab sellest kõigi tõlge.',
+    keepT: 'Hoiab lauset alles', keepB: 'Sõna juurde salvestatakse lause, film ja osa - nädala pärast tead ikka, millest jutt käis.',
+    oneT: 'Üks kogu', oneB: 'Üks Google\'i sisselogimine. Brauseris salvestatud sõna on juba telefonis.',
+    backT: 'Toob sõna tagasi', backB: 'Kõigepealt päeva pärast, siis kolme, siis nädala pärast. Mis ununeb, seda näidatakse sagedamini.',
+    sayT: 'Lubab vaielda', sayB: 'Ei nõustu vastusega? Kirjuta kaardile oma. Kui piisavalt inimesi kirjutab sama, saab sellest kõigi vastus.',
     ctaLib: 'Ava oma kogu', ctaWin: 'Laadi alla Windowsile',
     alpha: 'Subtitle Notes on suletud alfaversioonis. Brauserilaiendus ja Androidi rakendus on teel poodidesse; Windowsi installer pole veel allkirjastatud, nii et SmartScreen näitab esimesel korral hoiatust.',
     fPrivacy: 'Privaatsus', fDelete: 'Kustuta konto', fLibrary: 'Kogu', fSource: 'Lähtekood ja väljalasked',
@@ -88,22 +88,22 @@ const HOME_TEXT: Record<string, Strings> = {
   },
   de: {
     line: 'No one wants a record.', mark: 'record',
-    title: 'Subtitle Notes - das unbekannte Wort dort, wo Sie es getroffen haben',
-    h1: 'Das unbekannte Wort dort, wo Sie es getroffen haben.',
-    lede: 'Markieren Sie es im Untertitel, auf einer Seite oder in einem PDF und sehen Sie, was es in dieser Zeile bedeutet - und finden Sie es später wieder, auf jedem Ihrer Geräte.',
+    title: 'Subtitle Notes - was ein Wort dort bedeutet, wo Sie es getroffen haben',
+    h1: 'Was dieses Wort hier bedeutet',
+    lede: 'Markieren Sie ein unbekanntes Wort im Untertitel, auf einer Seite oder in einem PDF und sehen Sie, was es in diesem Satz bedeutet. Es bleibt in Ihrer Sammlung, auf allen Geräten.',
     dict: 'Ein Wörterbuch', ours: 'Subtitle Notes',
     wrong: 'niemand will einen Rekord',
     right: 'niemand will eine Vorstrafe',
-    note: 'Die Zeile liest ein Sprachmodell, das den ganzen Satz sieht. So bekommt ein Wort die Bedeutung, die gemeint war, und nicht den ersten Eintrag im Wörterbuch.',
+    note: 'Die ganze Zeile wird gelesen, also bekommt das Wort die Bedeutung, die es darin hat - nicht den ersten Eintrag im Wörterbuch.',
     whereTitle: 'Wo es funktioniert',
-    browserT: 'Im Browser', browserB: 'Untertitel in Webplayern, jeder Text auf einer Seite und PDFs. Taste halten, über die Wörter ziehen, loslassen - die Bedeutung erscheint dort, wo Sie hinsehen.',
-    phoneT: 'Auf dem Telefon', phoneB: 'Die Sammlung: Suche, Wiederholung nach Plan und eine Karte zu jedem behaltenen Wort, mit der Zeile, aus der es stammt.',
-    pcT: 'Auf dem Computer', pcB: 'Untertitel in VLC während der Film läuft, und markierter Text in jedem beliebigen Programm - Lese-App, Mailprogramm, PDF.',
+    browserT: 'Im Browser', browserB: 'Untertitel in Webplayern, jeder Text auf einer Seite und PDFs. Taste halten, über die Wörter ziehen, loslassen - die Antwort erscheint daneben.',
+    phoneT: 'Auf dem Telefon', phoneB: 'Ihre Wörter: Suche, Wiederholung nach Plan und der Satz, aus dem jedes stammt.',
+    pcT: 'Auf dem Computer', pcB: 'Untertitel in VLC während der Film läuft, und markierter Text in jedem Programm - Lese-App, Mail, PDF.',
     doesTitle: 'Was mit einem Wort geschieht',
-    keepT: 'Behält die Zeile', keepB: 'Satz, Film und Folge werden mit dem Wort gespeichert - sie haben ihm seine Bedeutung gegeben.',
-    oneT: 'Eine Sammlung', oneB: 'Einmal mit Google anmelden. Was Sie im Browser auswählen, ist auf dem Telefon, bevor Sie danach greifen.',
-    backT: 'Bringt es zurück', backB: 'Wiederholung in wachsenden Abständen: ein schwieriges Wort kommt früher zurück als eines, das saß.',
-    sayT: 'Lässt Sie widersprechen', sayB: 'Schreiben Sie Ihre eigene Formulierung auf jede Karte. Schreiben genug Leute dieselbe, wird sie die Lesart für alle.',
+    keepT: 'Behält die Zeile', keepB: 'Satz, Film und Folge werden mit dem Wort gespeichert - eine Woche später wissen Sie noch, worum es ging.',
+    oneT: 'Eine Sammlung', oneB: 'Einmal mit Google anmelden. Ein im Browser gespeichertes Wort ist schon auf dem Telefon.',
+    backT: 'Bringt es zurück', backB: 'Zuerst nach einem Tag, dann nach drei, dann nach einer Woche. Was Sie vergessen, kommt häufiger.',
+    sayT: 'Lässt Sie widersprechen', sayB: 'Mit der Antwort nicht einverstanden? Schreiben Sie Ihre eigene auf die Karte. Schreiben genug Leute dieselbe, wird sie die Antwort für alle.',
     ctaLib: 'Sammlung öffnen', ctaWin: 'Für Windows herunterladen',
     alpha: 'Subtitle Notes ist in einer geschlossenen Alpha. Erweiterung und Android-App sind auf dem Weg in die Stores; das Windows-Installationsprogramm ist noch nicht signiert, deshalb warnt SmartScreen beim ersten Start.',
     fPrivacy: 'Datenschutz', fDelete: 'Konto löschen', fLibrary: 'Sammlung', fSource: 'Quellcode und Releases',
@@ -111,22 +111,22 @@ const HOME_TEXT: Record<string, Strings> = {
   },
   fr: {
     line: 'No one wants a record.', mark: 'record',
-    title: 'Subtitle Notes - le mot inconnu, là où vous l\'avez rencontré',
-    h1: 'Le mot inconnu, là où vous l\'avez rencontré.',
-    lede: 'Sélectionnez-le dans un sous-titre, sur une page ou dans un PDF et voyez ce qu\'il veut dire dans cette réplique - puis retrouvez-le plus tard, sur n\'importe lequel de vos appareils.',
+    title: 'Subtitle Notes - ce qu\'un mot veut dire là où vous l\'avez rencontré',
+    h1: 'Ce que ce mot veut dire ici',
+    lede: 'Sélectionnez un mot inconnu dans un sous-titre, sur une page ou dans un PDF et voyez ce qu\'il veut dire dans cette phrase. Il reste dans votre bibliothèque, sur tous vos appareils.',
     dict: 'Un dictionnaire', ours: 'Subtitle Notes',
     wrong: 'personne ne veut un record',
     right: 'personne ne veut de casier judiciaire',
-    note: 'La réplique est lue par un modèle de langue qui voit la phrase entière : le mot reçoit le sens voulu par celui qui parle, et non la première entrée du dictionnaire.',
+    note: 'La phrase entière est lue, donc le mot reçoit le sens qu\'il a dedans - pas la première entrée du dictionnaire.',
     whereTitle: 'Où cela fonctionne',
-    browserT: 'Dans le navigateur', browserB: 'Sous-titres des lecteurs web, n\'importe quel texte d\'une page, et les PDF. Maintenez la touche, glissez sur les mots, relâchez - le sens apparaît là où vous regardez.',
-    phoneT: 'Sur le téléphone', phoneB: 'La bibliothèque : recherche, révision programmée et une fiche pour chaque mot gardé, avec la réplique d\'où il vient.',
+    browserT: 'Dans le navigateur', browserB: 'Sous-titres des lecteurs web, n\'importe quel texte d\'une page, et les PDF. Maintenez la touche, glissez sur les mots, relâchez : la réponse apparaît à côté.',
+    phoneT: 'Sur le téléphone', phoneB: 'Vos mots : recherche, révision programmée et la phrase dont chacun vient.',
     pcT: 'Sur l\'ordinateur', pcB: 'Les sous-titres dans VLC pendant le film, et le texte sélectionné dans n\'importe quel programme - liseuse, messagerie, PDF.',
     doesTitle: 'Ce qui arrive à un mot',
-    keepT: 'Garde la réplique', keepB: 'La phrase, le film et l\'épisode sont gardés avec le mot : ce sont eux qui lui ont donné son sens.',
-    oneT: 'Une seule bibliothèque', oneB: 'Une connexion Google, une fois. Ce que vous prenez dans le navigateur est sur le téléphone avant que vous ne l\'attrapiez.',
-    backT: 'Le fait revenir', backB: 'Révision à intervalles croissants : un mot difficile revient plus tôt qu\'un mot su.',
-    sayT: 'Vous laisse contredire', sayB: 'Écrivez votre propre formulation sur une fiche. Si assez de gens écrivent la même, elle devient la lecture de tout le monde.',
+    keepT: 'Garde la réplique', keepB: 'La phrase, le film et l\'épisode sont gardés avec le mot : une semaine plus tard vous savez encore de quoi il s\'agissait.',
+    oneT: 'Une seule bibliothèque', oneB: 'Une connexion Google. Un mot gardé dans le navigateur est déjà sur le téléphone.',
+    backT: 'Le fait revenir', backB: 'D\'abord après un jour, puis trois, puis une semaine. Ce que vous oubliez revient plus souvent.',
+    sayT: 'Vous laisse contredire', sayB: 'Pas d\'accord avec la réponse ? Écrivez la vôtre sur la fiche. Si assez de gens écrivent la même, elle devient la réponse de tout le monde.',
     ctaLib: 'Ouvrir la bibliothèque', ctaWin: 'Télécharger pour Windows',
     alpha: 'Subtitle Notes est en alpha fermée. L\'extension et l\'application Android sont en route vers les magasins ; l\'installateur Windows n\'est pas encore signé, SmartScreen affiche donc un avertissement au premier lancement.',
     fPrivacy: 'Confidentialité', fDelete: 'Supprimer le compte', fLibrary: 'Bibliothèque', fSource: 'Sources et versions',
@@ -134,22 +134,22 @@ const HOME_TEXT: Record<string, Strings> = {
   },
   es: {
     line: 'No one wants a record.', mark: 'record',
-    title: 'Subtitle Notes - la palabra que no conocías, donde la encontraste',
-    h1: 'La palabra que no conocías, donde la encontraste.',
-    lede: 'Selecciónala en un subtítulo, en una página o en un PDF y verás qué significa en esa frase - y la encontrarás de nuevo más tarde, en cualquiera de tus dispositivos.',
+    title: 'Subtitle Notes - qué significa una palabra donde la encontraste',
+    h1: 'Qué significa esta palabra aquí',
+    lede: 'Selecciona una palabra desconocida en un subtítulo, en una página o en un PDF y verás qué significa en esa frase. Se queda en tu biblioteca, en todos tus dispositivos.',
     dict: 'Un diccionario', ours: 'Subtitle Notes',
     wrong: 'nadie quiere un récord',
     right: 'nadie quiere antecedentes penales',
-    note: 'La frase la lee un modelo de lenguaje que ve la oración entera, así que la palabra recibe el sentido que quiso darle quien habla, y no la primera entrada del diccionario.',
+    note: 'Se lee la frase entera, así que la palabra recibe el sentido que tiene en ella, no la primera entrada del diccionario.',
     whereTitle: 'Dónde funciona',
-    browserT: 'En el navegador', browserB: 'Subtítulos en reproductores web, cualquier texto de una página y PDF. Mantén la tecla, arrastra sobre las palabras, suelta - el significado aparece donde estás mirando.',
-    phoneT: 'En el teléfono', phoneB: 'La biblioteca: búsqueda, repaso programado y una ficha por cada palabra guardada, con la frase de la que salió.',
-    pcT: 'En el ordenador', pcB: 'Subtítulos en VLC mientras corre la película, y texto seleccionado en cualquier programa - un lector, el correo, un PDF.',
+    browserT: 'En el navegador', browserB: 'Subtítulos en reproductores web, cualquier texto de una página y PDF. Mantén la tecla, arrastra sobre las palabras, suelta: la respuesta aparece al lado.',
+    phoneT: 'En el teléfono', phoneB: 'Tus palabras: búsqueda, repaso programado y la frase de la que salió cada una.',
+    pcT: 'En el ordenador', pcB: 'Subtítulos en VLC mientras corre la película, y texto seleccionado en cualquier programa: un lector, el correo, un PDF.',
     doesTitle: 'Qué le pasa a una palabra',
-    keepT: 'Guarda la frase', keepB: 'La oración, la película y el episodio se guardan con la palabra: fueron ellos los que le dieron ese sentido.',
-    oneT: 'Una sola biblioteca', oneB: 'Inicia sesión con Google una vez. Lo que eliges en el navegador ya está en el teléfono antes de que lo cojas.',
-    backT: 'La trae de vuelta', backB: 'Repaso con intervalos crecientes: la palabra que costó vuelve antes que la que ya sabías.',
-    sayT: 'Te deja discrepar', sayB: 'Escribe tu propia versión en cualquier ficha. Si bastante gente escribe la misma, se convierte en la lectura de todos.',
+    keepT: 'Guarda la frase', keepB: 'La frase, la película y el episodio se guardan con la palabra: una semana después todavía sabes de qué iba.',
+    oneT: 'Una sola biblioteca', oneB: 'Un inicio de sesión con Google. Una palabra guardada en el navegador ya está en el teléfono.',
+    backT: 'La trae de vuelta', backB: 'Primero al día siguiente, luego a los tres, luego a la semana. Lo que se olvida aparece más a menudo.',
+    sayT: 'Te deja discrepar', sayB: '¿No estás de acuerdo con la respuesta? Escribe la tuya en la ficha. Si bastante gente escribe la misma, se convierte en la de todos.',
     ctaLib: 'Abrir la biblioteca', ctaWin: 'Descargar para Windows',
     alpha: 'Subtitle Notes está en alfa cerrada. La extensión y la aplicación de Android van camino de las tiendas; el instalador de Windows aún no está firmado, así que SmartScreen avisa la primera vez.',
     fPrivacy: 'Privacidad', fDelete: 'Eliminar la cuenta', fLibrary: 'Biblioteca', fSource: 'Código y versiones',
@@ -157,22 +157,22 @@ const HOME_TEXT: Record<string, Strings> = {
   },
   it: {
     line: 'No one wants a record.', mark: 'record',
-    title: 'Subtitle Notes - la parola che non conoscevi, dove l\'hai incontrata',
-    h1: 'La parola che non conoscevi, dove l\'hai incontrata.',
-    lede: 'Selezionala in un sottotitolo, su una pagina o in un PDF e vedi che cosa significa in quella battuta - poi la ritrovi più tardi, su qualsiasi tuo dispositivo.',
+    title: 'Subtitle Notes - che cosa significa una parola dove l\'hai incontrata',
+    h1: 'Che cosa significa questa parola qui',
+    lede: 'Seleziona una parola sconosciuta in un sottotitolo, su una pagina o in un PDF e vedi che cosa significa in quella frase. Resta nella tua raccolta, su tutti i dispositivi.',
     dict: 'Un dizionario', ours: 'Subtitle Notes',
     wrong: 'nessuno vuole un record',
     right: 'nessuno vuole precedenti penali',
-    note: 'La battuta viene letta da un modello linguistico che vede tutta la frase, così la parola riceve il senso che intendeva chi parla e non la prima voce del dizionario.',
+    note: 'Viene letta tutta la frase, così la parola prende il senso che ha lì dentro, non la prima voce del dizionario.',
     whereTitle: 'Dove funziona',
-    browserT: 'Nel browser', browserB: 'Sottotitoli nei player web, qualsiasi testo su una pagina e i PDF. Tieni premuto il tasto, trascina sulle parole, lascia - il significato compare dove stai guardando.',
-    phoneT: 'Sul telefono', phoneB: 'La raccolta: ricerca, ripasso programmato e una scheda per ogni parola tenuta, con la battuta da cui viene.',
-    pcT: 'Sul computer', pcB: 'Sottotitoli in VLC mentre il film va, e il testo selezionato in qualunque programma - un lettore, la posta, un PDF.',
+    browserT: 'Nel browser', browserB: 'Sottotitoli nei player web, qualsiasi testo su una pagina e i PDF. Tieni premuto il tasto, trascina sulle parole, lascia: la risposta compare accanto.',
+    phoneT: 'Sul telefono', phoneB: 'Le tue parole: ricerca, ripasso programmato e la frase da cui viene ciascuna.',
+    pcT: 'Sul computer', pcB: 'Sottotitoli in VLC mentre il film va, e testo selezionato in qualunque programma: un lettore, la posta, un PDF.',
     doesTitle: 'Che cosa succede a una parola',
-    keepT: 'Tiene la battuta', keepB: 'La frase, il film e l\'episodio restano con la parola: sono loro ad averle dato quel senso.',
-    oneT: 'Una sola raccolta', oneB: 'Un accesso Google, una volta. Quello che prendi nel browser è sul telefono prima che tu lo prenda in mano.',
-    backT: 'La riporta indietro', backB: 'Ripasso a intervalli crescenti: la parola che è costata fatica torna prima di quella che sapevi.',
-    sayT: 'Ti lascia dissentire', sayB: 'Scrivi la tua versione su una scheda. Se abbastanza persone scrivono la stessa, diventa la lettura di tutti.',
+    keepT: 'Tiene la battuta', keepB: 'La frase, il film e l\'episodio restano con la parola: una settimana dopo sai ancora di che si trattava.',
+    oneT: 'Una sola raccolta', oneB: 'Un accesso con Google. Una parola salvata nel browser è già sul telefono.',
+    backT: 'La riporta indietro', backB: 'Prima dopo un giorno, poi dopo tre, poi dopo una settimana. Quello che dimentichi torna più spesso.',
+    sayT: 'Ti lascia dissentire', sayB: 'Non sei d\'accordo con la risposta? Scrivi la tua sulla scheda. Se abbastanza persone scrivono la stessa, diventa quella di tutti.',
     ctaLib: 'Apri la raccolta', ctaWin: 'Scarica per Windows',
     alpha: 'Subtitle Notes è in alfa chiusa. L\'estensione e l\'app Android sono in viaggio verso gli store; l\'installer per Windows non è ancora firmato, quindi SmartScreen avvisa al primo avvio.',
     fPrivacy: 'Privacy', fDelete: 'Elimina l\'account', fLibrary: 'Raccolta', fSource: 'Sorgenti e versioni',
@@ -180,22 +180,22 @@ const HOME_TEXT: Record<string, Strings> = {
   },
   pt: {
     line: 'No one wants a record.', mark: 'record',
-    title: 'Subtitle Notes - a palavra que não conhecia, onde a encontrou',
-    h1: 'A palavra que não conhecia, onde a encontrou.',
-    lede: 'Selecione-a numa legenda, numa página ou num PDF e veja o que significa naquela fala - e volte a encontrá-la mais tarde, em qualquer dos seus aparelhos.',
+    title: 'Subtitle Notes - o que uma palavra significa onde a encontrou',
+    h1: 'O que esta palavra significa aqui',
+    lede: 'Selecione uma palavra desconhecida numa legenda, numa página ou num PDF e veja o que significa naquela frase. Fica na sua biblioteca, em todos os aparelhos.',
     dict: 'Um dicionário', ours: 'Subtitle Notes',
     wrong: 'ninguém quer um recorde',
     right: 'ninguém quer registo criminal',
-    note: 'A fala é lida por um modelo de linguagem que vê a frase inteira, por isso a palavra recebe o sentido que quem fala lhe deu, e não a primeira entrada do dicionário.',
+    note: 'Lê-se a frase inteira, por isso a palavra recebe o sentido que tem nela, não a primeira entrada do dicionário.',
     whereTitle: 'Onde funciona',
-    browserT: 'No navegador', browserB: 'Legendas em leitores web, qualquer texto numa página e PDF. Segure a tecla, arraste sobre as palavras, largue - o significado aparece onde está a olhar.',
-    phoneT: 'No telemóvel', phoneB: 'A biblioteca: pesquisa, revisão com horário e um cartão para cada palavra guardada, com a fala de onde veio.',
-    pcT: 'No computador', pcB: 'Legendas no VLC durante o filme, e texto selecionado em qualquer programa - um leitor, o correio, um PDF.',
+    browserT: 'No navegador', browserB: 'Legendas em leitores web, qualquer texto numa página e PDF. Segure a tecla, arraste sobre as palavras, largue: a resposta aparece ao lado.',
+    phoneT: 'No telemóvel', phoneB: 'As suas palavras: pesquisa, revisão com horário e a frase de onde veio cada uma.',
+    pcT: 'No computador', pcB: 'Legendas no VLC durante o filme, e texto selecionado em qualquer programa: um leitor, o correio, um PDF.',
     doesTitle: 'O que acontece a uma palavra',
-    keepT: 'Guarda a fala', keepB: 'A frase, o filme e o episódio ficam com a palavra: foram eles que lhe deram aquele sentido.',
-    oneT: 'Uma só biblioteca', oneB: 'Entre com o Google uma vez. O que escolhe no navegador está no telemóvel antes de lhe pegar.',
-    backT: 'Traz de volta', backB: 'Revisão com intervalos crescentes: a palavra que custou volta mais cedo do que a que já sabia.',
-    sayT: 'Deixa discordar', sayB: 'Escreva a sua própria versão num cartão. Se gente suficiente escrever a mesma, passa a ser a leitura de todos.',
+    keepT: 'Guarda a fala', keepB: 'A frase, o filme e o episódio ficam com a palavra: uma semana depois ainda sabe do que se tratava.',
+    oneT: 'Uma só biblioteca', oneB: 'Uma entrada com o Google. Uma palavra guardada no navegador já está no telemóvel.',
+    backT: 'Traz de volta', backB: 'Primeiro ao fim de um dia, depois de três, depois de uma semana. O que se esquece aparece mais vezes.',
+    sayT: 'Deixa discordar', sayB: 'Não concorda com a resposta? Escreva a sua no cartão. Se gente suficiente escrever a mesma, passa a ser a de todos.',
     ctaLib: 'Abrir a biblioteca', ctaWin: 'Transferir para Windows',
     alpha: 'O Subtitle Notes está em alfa fechada. A extensão e a aplicação Android estão a caminho das lojas; o instalador de Windows ainda não está assinado, por isso o SmartScreen avisa da primeira vez.',
     fPrivacy: 'Privacidade', fDelete: 'Apagar a conta', fLibrary: 'Biblioteca', fSource: 'Código e versões',
@@ -203,22 +203,22 @@ const HOME_TEXT: Record<string, Strings> = {
   },
   pl: {
     line: 'No one wants a record.', mark: 'record',
-    title: 'Subtitle Notes - nieznane słowo tam, gdzie je spotkałeś',
-    h1: 'Nieznane słowo tam, gdzie je spotkałeś.',
-    lede: 'Zaznacz je w napisach, na stronie albo w PDF-ie i zobacz, co znaczy w tej kwestii - a potem znajdź je znowu, na dowolnym swoim urządzeniu.',
+    title: 'Subtitle Notes - co słowo znaczy tam, gdzie je spotkałeś',
+    h1: 'Co to słowo znaczy tutaj',
+    lede: 'Zaznacz nieznane słowo w napisach, na stronie albo w PDF-ie i zobacz, co znaczy w tym zdaniu. Zostaje w twojej bibliotece, na wszystkich urządzeniach.',
     dict: 'Słownik', ours: 'Subtitle Notes',
     wrong: 'nikt nie chce rekordu',
     right: 'nikt nie chce kartoteki karnej',
-    note: 'Kwestię czyta model językowy, który widzi całe zdanie, więc słowo dostaje sens, o który chodziło mówiącemu, a nie pierwsze hasło ze słownika.',
+    note: 'Czytane jest całe zdanie, więc słowo dostaje sens, który w nim ma, a nie pierwsze hasło ze słownika.',
     whereTitle: 'Gdzie to działa',
-    browserT: 'W przeglądarce', browserB: 'Napisy w odtwarzaczach webowych, dowolny tekst na stronie i PDF-y. Przytrzymaj klawisz, przeciągnij po słowach, puść - znaczenie pojawi się tam, gdzie patrzysz.',
-    phoneT: 'W telefonie', phoneB: 'Biblioteka: wyszukiwanie, powtórki według planu i karta do każdego zachowanego słowa, razem z kwestią, z której pochodzi.',
+    browserT: 'W przeglądarce', browserB: 'Napisy w odtwarzaczach webowych, dowolny tekst na stronie i PDF-y. Przytrzymaj klawisz, przeciągnij po słowach, puść - odpowiedź pojawi się obok.',
+    phoneT: 'W telefonie', phoneB: 'Twoje słowa: wyszukiwanie, powtórki według planu i zdanie, z którego pochodzi każde.',
     pcT: 'Na komputerze', pcB: 'Napisy w VLC w trakcie filmu i zaznaczony tekst w dowolnym programie - czytniku, poczcie, PDF-ie.',
     doesTitle: 'Co dzieje się ze słowem',
-    keepT: 'Zachowuje kwestię', keepB: 'Zdanie, film i odcinek zostają razem ze słowem: to one nadały mu ten sens.',
-    oneT: 'Jedna biblioteka', oneB: 'Jedno logowanie Google. To, co wybierzesz w przeglądarce, jest w telefonie, zanim po niego sięgniesz.',
-    backT: 'Przypomina je', backB: 'Powtórki w rosnących odstępach: słowo, z którym był kłopot, wraca wcześniej niż to, które znałeś.',
-    sayT: 'Pozwala się nie zgodzić', sayB: 'Napisz na karcie własną wersję. Jeśli dość osób napisze tę samą, stanie się tłumaczeniem dla wszystkich.',
+    keepT: 'Zachowuje kwestię', keepB: 'Zdanie, film i odcinek zapisują się razem ze słowem - po tygodniu nadal wiesz, o co chodziło.',
+    oneT: 'Jedna biblioteka', oneB: 'Jedno logowanie Google. Słowo zapisane w przeglądarce jest już w telefonie.',
+    backT: 'Przypomina je', backB: 'Najpierw po dniu, potem po trzech, potem po tygodniu. To, co się zapomina, wraca częściej.',
+    sayT: 'Pozwala się nie zgodzić', sayB: 'Nie zgadzasz się z odpowiedzią? Napisz własną na karcie. Jeśli dość osób napisze tę samą, stanie się odpowiedzią dla wszystkich.',
     ctaLib: 'Otwórz bibliotekę', ctaWin: 'Pobierz na Windows',
     alpha: 'Subtitle Notes jest w zamkniętej alfie. Rozszerzenie i aplikacja na Androida są w drodze do sklepów; instalator Windows nie jest jeszcze podpisany, więc SmartScreen ostrzega przy pierwszym uruchomieniu.',
     fPrivacy: 'Prywatność', fDelete: 'Usuń konto', fLibrary: 'Biblioteka', fSource: 'Kod i wydania',
@@ -226,22 +226,22 @@ const HOME_TEXT: Record<string, Strings> = {
   },
   uk: {
     line: 'No one wants a record.', mark: 'record',
-    title: 'Subtitle Notes - незнайоме слово там, де ви його зустріли',
-    h1: 'Незнайоме слово там, де ви його зустріли.',
-    lede: 'Виділіть його в субтитрі, на сторінці або в PDF і побачите, що воно означає саме в цьому рядку - а потім знайдете знову, на будь-якому своєму пристрої.',
+    title: 'Subtitle Notes - що слово означає там, де ви його зустріли',
+    h1: 'Що це слово означає тут',
+    lede: 'Виділіть незнайоме слово в субтитрі, на сторінці або в PDF - і побачите, що воно означає в цій фразі. Слово лишиться у вашій бібліотеці, на всіх пристроях.',
     dict: 'Словник', ours: 'Subtitle Notes',
     wrong: 'ніхто не хоче рекорд',
     right: 'нікому не потрібна судимість',
-    note: 'Рядок читає мовна модель, яка бачить усю репліку, тож слово отримує той сенс, який мав на увазі мовець, а не першу статтю зі словника.',
+    note: 'Читається весь рядок, тож слово отримує той сенс, який має в ньому, а не першу статтю зі словника.',
     whereTitle: 'Де це працює',
-    browserT: 'У браузері', browserB: 'Субтитри у веб-плеєрах, будь-який текст на сторінці та PDF. Тримайте клавішу, протягніть по словах, відпустіть - значення з\'явиться там, куди ви дивитеся.',
-    phoneT: 'У телефоні', phoneB: 'Бібліотека: пошук, повторення за розкладом і картка на кожне збережене слово разом із рядком, звідки воно взялося.',
+    browserT: 'У браузері', browserB: 'Субтитри у веб-плеєрах, будь-який текст на сторінці та PDF. Затисніть клавішу, проведіть по словах, відпустіть - відповідь з\'явиться поруч.',
+    phoneT: 'У телефоні', phoneB: 'Ваші слова: пошук, повторення за розкладом і фраза, з якої взяте кожне.',
     pcT: 'На комп\'ютері', pcB: 'Субтитри у VLC просто під час фільму й виділений текст у будь-якій програмі - читалці, пошті, PDF.',
     doesTitle: 'Що стається зі словом',
-    keepT: 'Зберігає рядок', keepB: 'Разом зі словом лишаються репліка, фільм і серія: саме вони дали йому цей сенс.',
-    oneT: 'Одна бібліотека', oneB: 'Один вхід через Google. Виділене в браузері вже в телефоні, поки ви до нього тягнетеся.',
-    backT: 'Повертає слово', backB: 'Повторення зі зростаючими інтервалами: те, що далося важко, повернеться раніше за те, що ви знали.',
-    sayT: 'Дозволяє сперечатися', sayB: 'Напишіть на картці свій варіант. Якщо так само напишуть інші, він стане спільним перекладом.',
+    keepT: 'Зберігає рядок', keepB: 'Разом зі словом зберігається фраза, фільм і серія - через тиждень ви ще пам\'ятаєте, про що йшлося.',
+    oneT: 'Одна бібліотека', oneB: 'Один вхід через Google. Слово, збережене в браузері, уже в телефоні.',
+    backT: 'Повертає слово', backB: 'Спершу через день, потім через три, потім через тиждень. Те, що забувається, показується частіше.',
+    sayT: 'Дозволяє сперечатися', sayB: 'Не згодні з відповіддю? Напишіть свою на картці. Якщо так само напишуть інші, вона стане спільною.',
     ctaLib: 'Відкрити бібліотеку', ctaWin: 'Завантажити для Windows',
     alpha: 'Subtitle Notes у закритій альфі. Розширення та застосунок для Android готуються до публікації; інсталятор для Windows поки не підписаний, тому SmartScreen попереджає під час першого запуску.',
     fPrivacy: 'Конфіденційність', fDelete: 'Видалити акаунт', fLibrary: 'Бібліотека', fSource: 'Код і випуски',
@@ -249,22 +249,22 @@ const HOME_TEXT: Record<string, Strings> = {
   },
   nl: {
     line: 'No one wants a record.', mark: 'record',
-    title: 'Subtitle Notes - het woord dat je niet kende, waar je het tegenkwam',
-    h1: 'Het woord dat je niet kende, waar je het tegenkwam.',
-    lede: 'Selecteer het in een ondertitel, op een pagina of in een PDF en zie wat het in die zin betekent - en vind het later terug, op al je apparaten.',
+    title: 'Subtitle Notes - wat een woord betekent waar je het tegenkwam',
+    h1: 'Wat dit woord hier betekent',
+    lede: 'Selecteer een onbekend woord in een ondertitel, op een pagina of in een PDF en zie wat het in die zin betekent. Het blijft in je bibliotheek, op al je apparaten.',
     dict: 'Een woordenboek', ours: 'Subtitle Notes',
     wrong: 'niemand wil een record',
     right: 'niemand wil een strafblad',
-    note: 'De regel wordt gelezen door een taalmodel dat de hele zin ziet, dus krijgt een woord de betekenis die de spreker bedoelde en niet het eerste lemma uit het woordenboek.',
+    note: 'De hele zin wordt gelezen, dus krijgt het woord de betekenis die het daarin heeft - niet het eerste lemma uit het woordenboek.',
     whereTitle: 'Waar het werkt',
-    browserT: 'In de browser', browserB: 'Ondertitels in webspelers, elke tekst op een pagina en PDF\'s. Houd de toets vast, sleep over de woorden, laat los - de betekenis verschijnt waar je kijkt.',
-    phoneT: 'Op de telefoon', phoneB: 'De bibliotheek: zoeken, herhalen volgens schema en een kaart voor elk bewaard woord, met de zin waar het uit komt.',
-    pcT: 'Op de computer', pcB: 'Ondertitels in VLC terwijl de film loopt, en geselecteerde tekst in welk programma dan ook - een lezer, de mail, een PDF.',
+    browserT: 'In de browser', browserB: 'Ondertitels in webspelers, elke tekst op een pagina en PDF\'s. Houd de toets vast, sleep over de woorden, laat los - het antwoord verschijnt ernaast.',
+    phoneT: 'Op de telefoon', phoneB: 'Jouw woorden: zoeken, herhalen volgens schema en de zin waar elk woord uit komt.',
+    pcT: 'Op de computer', pcB: 'Ondertitels in VLC terwijl de film loopt, en geselecteerde tekst in elk programma - een lezer, de mail, een PDF.',
     doesTitle: 'Wat er met een woord gebeurt',
-    keepT: 'Bewaart de zin', keepB: 'De zin, de film en de aflevering worden bij het woord bewaard: die gaven het die betekenis.',
-    oneT: 'Eén bibliotheek', oneB: 'Eén keer inloggen met Google. Wat je in de browser kiest, staat op je telefoon voordat je ernaar grijpt.',
-    backT: 'Brengt het terug', backB: 'Herhalen met groeiende tussenpozen: een moeilijk woord komt eerder terug dan een woord dat zat.',
-    sayT: 'Laat je het oneens zijn', sayB: 'Schrijf je eigen formulering op een kaart. Schrijven genoeg mensen dezelfde, dan wordt dat de lezing voor iedereen.',
+    keepT: 'Bewaart de zin', keepB: 'De zin, de film en de aflevering worden bij het woord bewaard - een week later weet je nog waar het over ging.',
+    oneT: 'Eén bibliotheek', oneB: 'Eén keer inloggen met Google. Een woord dat je in de browser bewaart, staat al op je telefoon.',
+    backT: 'Brengt het terug', backB: 'Eerst na een dag, dan na drie, dan na een week. Wat je vergeet, komt vaker terug.',
+    sayT: 'Laat je het oneens zijn', sayB: 'Niet eens met het antwoord? Schrijf je eigen antwoord op de kaart. Schrijven genoeg mensen hetzelfde, dan wordt dat het antwoord voor iedereen.',
     ctaLib: 'Open je bibliotheek', ctaWin: 'Downloaden voor Windows',
     alpha: 'Subtitle Notes is in gesloten alfa. De extensie en de Android-app zijn onderweg naar de stores; het Windows-installatieprogramma is nog niet ondertekend, dus SmartScreen waarschuwt de eerste keer.',
     fPrivacy: 'Privacy', fDelete: 'Account verwijderen', fLibrary: 'Bibliotheek', fSource: 'Broncode en releases',
@@ -272,22 +272,22 @@ const HOME_TEXT: Record<string, Strings> = {
   },
   tr: {
     line: 'No one wants a record.', mark: 'record',
-    title: 'Subtitle Notes - bilmediğin kelime, onunla karşılaştığın yerde',
-    h1: 'Bilmediğin kelime, onunla karşılaştığın yerde.',
-    lede: 'Altyazıda, bir sayfada ya da PDF\'te seç ve o cümlede ne anlama geldiğini gör - sonra istediğin cihazda yeniden bul.',
+    title: 'Subtitle Notes - bir kelimenin, onunla karşılaştığın yerdeki anlamı',
+    h1: 'Bu kelime burada ne demek',
+    lede: 'Altyazıda, bir sayfada ya da PDF\'te bilmediğin bir kelimeyi seç ve o cümlede ne demek olduğunu gör. Kelime kitaplığında kalır, tüm cihazlarında.',
     dict: 'Sözlük', ours: 'Subtitle Notes',
     wrong: 'kimse rekor istemez',
     right: 'kimse sabıka kaydı istemez',
-    note: 'Satırı, cümlenin tamamını gören bir dil modeli okur; böylece kelime sözlükteki ilk karşılığı değil, konuşanın kastettiği anlamı alır.',
+    note: 'Cümlenin tamamı okunur, yani kelime sözlükteki ilk karşılığı değil, o cümledeki anlamını alır.',
     whereTitle: 'Nerede çalışır',
-    browserT: 'Tarayıcıda', browserB: 'Web oynatıcılardaki altyazılar, sayfadaki herhangi bir metin ve PDF\'ler. Tuşu basılı tut, kelimelerin üzerinden sürükle, bırak - anlam baktığın yerde belirir.',
-    phoneT: 'Telefonda', phoneB: 'Kitaplık: arama, programa göre tekrar ve sakladığın her kelime için geldiği cümleyle birlikte bir kart.',
+    browserT: 'Tarayıcıda', browserB: 'Web oynatıcılardaki altyazılar, sayfadaki her metin ve PDF\'ler. Tuşu basılı tut, kelimelerin üzerinden sürükle, bırak - cevap yanında belirir.',
+    phoneT: 'Telefonda', phoneB: 'Kelimelerin: arama, programa göre tekrar ve her birinin geldiği cümle.',
     pcT: 'Bilgisayarda', pcB: 'Film oynarken VLC\'deki altyazılar ve herhangi bir programdaki seçili metin - okuyucu, e-posta, PDF.',
     doesTitle: 'Bir kelimeye ne olur',
-    keepT: 'Cümleyi saklar', keepB: 'Cümle, film ve bölüm kelimeyle birlikte saklanır: anlamı ona onlar verdi.',
-    oneT: 'Tek kitaplık', oneB: 'Google ile bir kez giriş. Tarayıcıda seçtiğin, sen telefona uzanmadan telefonda olur.',
-    backT: 'Geri getirir', backB: 'Aralıkları büyüyen tekrar: zorlandığın kelime, bildiğinden daha erken geri gelir.',
-    sayT: 'İtiraz etmene izin verir', sayB: 'Herhangi bir karta kendi karşılığını yaz. Yeterince kişi aynısını yazarsa herkesin gördüğü karşılık o olur.',
+    keepT: 'Cümleyi saklar', keepB: 'Cümle, film ve bölüm kelimeyle birlikte saklanır - bir hafta sonra da neyin konuşulduğunu bilirsin.',
+    oneT: 'Tek kitaplık', oneB: 'Google ile bir kez giriş. Tarayıcıda kaydettiğin kelime telefonunda zaten var.',
+    backT: 'Geri getirir', backB: 'Önce bir gün sonra, sonra üç gün, sonra bir hafta. Unuttukların daha sık gösterilir.',
+    sayT: 'İtiraz etmene izin verir', sayB: 'Cevaba katılmıyor musun? Kendi karşılığını karta yaz. Yeterince kişi aynısını yazarsa herkesin gördüğü cevap o olur.',
     ctaLib: 'Kitaplığı aç', ctaWin: 'Windows için indir',
     alpha: 'Subtitle Notes kapalı alfa aşamasında. Tarayıcı eklentisi ve Android uygulaması mağazalara doğru yolda; Windows kurulumu henüz imzalı değil, bu yüzden SmartScreen ilk açılışta uyarı gösterir.',
     fPrivacy: 'Gizlilik', fDelete: 'Hesabı sil', fLibrary: 'Kitaplık', fSource: 'Kaynak ve sürümler',
@@ -295,22 +295,22 @@ const HOME_TEXT: Record<string, Strings> = {
   },
   sv: {
     line: 'No one wants a record.', mark: 'record',
-    title: 'Subtitle Notes - ordet du inte kunde, där du mötte det',
-    h1: 'Ordet du inte kunde, där du mötte det.',
-    lede: 'Markera det i en undertext, på en sida eller i en PDF och se vad det betyder i just den repliken - och hitta det igen senare, på vilken av dina enheter som helst.',
+    title: 'Subtitle Notes - vad ett ord betyder där du mötte det',
+    h1: 'Vad det här ordet betyder här',
+    lede: 'Markera ett okänt ord i en undertext, på en sida eller i en PDF och se vad det betyder i just den meningen. Det stannar i ditt bibliotek, på alla dina enheter.',
     dict: 'En ordbok', ours: 'Subtitle Notes',
     wrong: 'ingen vill ha ett rekord',
     right: 'ingen vill ha ett brottsregister',
-    note: 'Repliken läses av en språkmodell som ser hela meningen, så ordet får den betydelse talaren menade och inte ordbokens första uppslag.',
+    note: 'Hela meningen läses, så ordet får den betydelse det har där - inte ordbokens första uppslag.',
     whereTitle: 'Var det fungerar',
-    browserT: 'I webbläsaren', browserB: 'Undertexter i webbspelare, vilken text som helst på en sida och PDF-er. Håll ned tangenten, dra över orden, släpp - betydelsen dyker upp där du tittar.',
-    phoneT: 'I telefonen', phoneB: 'Biblioteket: sökning, repetition enligt schema och ett kort för varje sparat ord, med repliken det kom ur.',
+    browserT: 'I webbläsaren', browserB: 'Undertexter i webbspelare, vilken text som helst på en sida och PDF-er. Håll ned tangenten, dra över orden, släpp - svaret dyker upp bredvid.',
+    phoneT: 'I telefonen', phoneB: 'Dina ord: sökning, repetition enligt schema och meningen varje ord kom ur.',
     pcT: 'På datorn', pcB: 'Undertexter i VLC medan filmen går, och markerad text i vilket program som helst - en läsare, e-posten, en PDF.',
     doesTitle: 'Vad som händer med ett ord',
-    keepT: 'Behåller repliken', keepB: 'Meningen, filmen och avsnittet sparas med ordet: det var de som gav det betydelsen.',
-    oneT: 'Ett bibliotek', oneB: 'Logga in med Google en gång. Det du tar i webbläsaren finns i telefonen innan du hinner ta upp den.',
-    backT: 'Tar tillbaka det', backB: 'Repetition med växande mellanrum: ett ord som var svårt kommer tillbaka tidigare än ett du kunde.',
-    sayT: 'Låter dig invända', sayB: 'Skriv din egen formulering på ett kort. Skriver tillräckligt många samma sak blir det allas läsning.',
+    keepT: 'Behåller repliken', keepB: 'Meningen, filmen och avsnittet sparas med ordet - en vecka senare vet du fortfarande vad det handlade om.',
+    oneT: 'Ett bibliotek', oneB: 'En inloggning med Google. Ett ord du sparar i webbläsaren finns redan i telefonen.',
+    backT: 'Tar tillbaka det', backB: 'Först efter en dag, sedan efter tre, sedan efter en vecka. Det du glömmer visas oftare.',
+    sayT: 'Låter dig invända', sayB: 'Håller du inte med om svaret? Skriv ditt eget på kortet. Skriver tillräckligt många samma sak blir det allas svar.',
     ctaLib: 'Öppna biblioteket', ctaWin: 'Ladda ner för Windows',
     alpha: 'Subtitle Notes är i sluten alfa. Tillägget och Android-appen är på väg till butikerna; Windows-installationen är ännu inte signerad, så SmartScreen varnar första gången.',
     fPrivacy: 'Integritet', fDelete: 'Radera kontot', fLibrary: 'Bibliotek', fSource: 'Källkod och utgåvor',
@@ -318,22 +318,22 @@ const HOME_TEXT: Record<string, Strings> = {
   },
   fi: {
     line: 'No one wants a record.', mark: 'record',
-    title: 'Subtitle Notes - tuntematon sana siellä, missä sen kohtasit',
-    h1: 'Tuntematon sana siellä, missä sen kohtasit.',
-    lede: 'Maalaa se tekstityksestä, sivulta tai PDF:stä ja näet, mitä se juuri siinä repliikissä tarkoittaa - ja löydät sen myöhemmin uudelleen, millä tahansa laitteellasi.',
+    title: 'Subtitle Notes - mitä sana tarkoittaa siellä, missä sen kohtasit',
+    h1: 'Mitä tämä sana tarkoittaa tässä',
+    lede: 'Maalaa tuntematon sana tekstityksestä, sivulta tai PDF:stä ja näet, mitä se tarkoittaa juuri siinä lauseessa. Sana jää kirjastoosi, kaikille laitteillesi.',
     dict: 'Sanakirja', ours: 'Subtitle Notes',
     wrong: 'kukaan ei halua ennätystä',
     right: 'kukaan ei halua rikosrekisteriä',
-    note: 'Repliikin lukee kielimalli, joka näkee koko lauseen, joten sana saa sen merkityksen, jota puhuja tarkoitti, eikä sanakirjan ensimmäistä hakusanaa.',
+    note: 'Koko lause luetaan, joten sana saa sen merkityksen, joka sillä siinä on - ei sanakirjan ensimmäistä hakusanaa.',
     whereTitle: 'Missä tämä toimii',
-    browserT: 'Selaimessa', browserB: 'Tekstitykset verkkosoittimissa, mikä tahansa teksti sivulla ja PDF-tiedostot. Pidä näppäintä pohjassa, vedä sanojen yli, päästä irti - merkitys ilmestyy siihen, mihin katsot.',
-    phoneT: 'Puhelimessa', phoneB: 'Kirjasto: haku, kertaus aikataulun mukaan ja kortti jokaisesta talteen otetusta sanasta, mukana repliikki, josta se on peräisin.',
+    browserT: 'Selaimessa', browserB: 'Tekstitykset verkkosoittimissa, mikä tahansa teksti sivulla ja PDF-tiedostot. Pidä näppäintä pohjassa, vedä sanojen yli, päästä irti - vastaus ilmestyy viereen.',
+    phoneT: 'Puhelimessa', phoneB: 'Sinun sanasi: haku, kertaus aikataulun mukaan ja lause, josta kukin on peräisin.',
     pcT: 'Tietokoneella', pcB: 'Tekstitykset VLC:ssä elokuvan pyöriessä ja valittu teksti missä tahansa ohjelmassa - lukuohjelmassa, sähköpostissa, PDF:ssä.',
     doesTitle: 'Mitä sanalle tapahtuu',
-    keepT: 'Säilyttää repliikin', keepB: 'Lause, elokuva ja jakso tallennetaan sanan mukana: juuri ne antoivat sille sen merkityksen.',
-    oneT: 'Yksi kirjasto', oneB: 'Yksi Google-kirjautuminen. Selaimessa poimittu sana on puhelimessa ennen kuin ehdit tarttua siihen.',
-    backT: 'Tuo sen takaisin', backB: 'Kertaus kasvavin välein: vaikea sana palaa aikaisemmin kuin sellainen, jonka osasit.',
-    sayT: 'Antaa olla eri mieltä', sayB: 'Kirjoita korttiin oma muotoilusi. Jos tarpeeksi moni kirjoittaa saman, siitä tulee kaikkien käännös.',
+    keepT: 'Säilyttää repliikin', keepB: 'Lause, elokuva ja jakso tallentuvat sanan mukana - viikon päästäkin tiedät, mistä oli kyse.',
+    oneT: 'Yksi kirjasto', oneB: 'Yksi Google-kirjautuminen. Selaimessa tallennettu sana on jo puhelimessa.',
+    backT: 'Tuo sen takaisin', backB: 'Ensin päivän päästä, sitten kolmen, sitten viikon. Se mikä unohtuu, näytetään useammin.',
+    sayT: 'Antaa olla eri mieltä', sayB: 'Etkö ole samaa mieltä vastauksesta? Kirjoita kortille oma. Jos tarpeeksi moni kirjoittaa saman, siitä tulee kaikkien vastaus.',
     ctaLib: 'Avaa kirjasto', ctaWin: 'Lataa Windowsille',
     alpha: 'Subtitle Notes on suljetussa alfavaiheessa. Selainlaajennus ja Android-sovellus ovat matkalla kauppoihin; Windows-asennusohjelmaa ei ole vielä allekirjoitettu, joten SmartScreen varoittaa ensimmäisellä kerralla.',
     fPrivacy: 'Tietosuoja', fDelete: 'Poista tili', fLibrary: 'Kirjasto', fSource: 'Lähdekoodi ja julkaisut',
@@ -361,6 +361,7 @@ export function homePage(lang: string): string {
     ? escape(t.line)
     : escape(t.line.slice(0, at)) + '<mark>' + escape(t.mark) + '</mark>' +
       escape(t.line.slice(at + t.mark.length));
+  const fullLine = escape(t.line);
   const options = HOME_LANGUAGES.map(
     (name) => '<option value="' + name + '"' + (name === code ? ' selected' : '') + '>' +
       escape(LANGUAGE_NAMES[name] ?? name) + '</option>',
@@ -408,6 +409,44 @@ export function homePage(lang: string): string {
   .demo .wrong .out { color: var(--soft); text-decoration: line-through; text-decoration-thickness: 1px; }
   .demo .right .out { color: var(--accent); }
 
+  /* The landing demonstration uses the same four moments as the apps. It is
+     a carousel, not an autoplay video: touch, arrows and dots always let the
+     reader set the pace. */
+  .site-tour { border: 1px solid var(--hair); border-radius: 16px; overflow: hidden; background: var(--card); box-shadow: 0 18px 44px -34px rgba(20,32,28,.6); }
+  .site-tour-window { overflow: hidden; }
+  .site-tour-track { display: flex; transition: transform 460ms cubic-bezier(.22,.8,.28,1); touch-action: pan-y; }
+  .site-tour-slide { flex: 0 0 100%; min-width: 0; min-height: 290px; padding: clamp(1rem, 3vw, 1.7rem); display: grid; align-content: center; gap: 1.05rem; }
+  .site-tour-copy { max-width: 43rem; margin: 0 auto; text-align: center; }
+  .site-tour-copy b { display: block; font-size: 1.1rem; letter-spacing: -.02em; }
+  .site-tour-copy span { display: block; margin-top: .35rem; font-size: .92rem; color: var(--soft); }
+  .site-tour .demo { width: min(100%, 43rem); margin: 0 auto; }
+  .site-film { position: relative; width: min(100%, 43rem); min-height: 138px; margin: 0 auto; border-radius: 14px; overflow: hidden; background: linear-gradient(150deg,#27333e,#10171b 62%); }
+  .site-film::before { content: '▶'; position: absolute; top: 24px; left: 50%; transform: translateX(-50%); color: rgba(255,255,255,.18); font-size: 2rem; }
+  .site-subtitle { position: absolute; left: 50%; bottom: 20px; transform: translateX(-50%); max-width: calc(100% - 32px); padding: .28rem .45rem; border-radius: 5px; color: #fff; background: rgba(0,0,0,.72); font-weight: 650; white-space: nowrap; }
+  .site-tour-slide.is-active .site-subtitle { animation: site-pick 4s ease-in-out infinite; }
+  .site-pointer { position: absolute; left: 68%; bottom: 4px; color: #fff; font-size: 1.45rem; filter: drop-shadow(0 2px 2px rgba(0,0,0,.6)); }
+  .site-tour-slide.is-active .site-pointer { animation: site-pointer 4s ease-in-out infinite; }
+  @keyframes site-pick { 0%,14% { background: rgba(0,0,0,.72); } 38%,82% { background: rgba(66,190,127,.66); } 100% { background: rgba(0,0,0,.72); } }
+  @keyframes site-pointer { 0%,14% { transform: translateX(-7rem); opacity: 0; } 22% { opacity: 1; } 42%,80% { transform: translateX(0); opacity: 1; } 100% { transform: translateX(0); opacity: 0; } }
+  .site-devices { width: min(100%, 43rem); margin: 0 auto; display: grid; grid-template-columns: repeat(3, 1fr); gap: .7rem; }
+  .site-device { padding: 1rem .4rem; border: 1px solid var(--hair); border-radius: 12px; text-align: center; color: var(--soft); font-size: .82rem; font-weight: 700; }
+  .site-device i { display: block; margin-bottom: .4rem; color: var(--accent); font-style: normal; font-size: 1.35rem; }
+  .site-library { grid-column: 1 / -1; border-radius: 10px; padding: .7rem; background: var(--wash); color: var(--accent); text-align: center; font-size: .88rem; font-weight: 750; }
+  .site-repeat { width: min(100%, 43rem); margin: 0 auto; padding: 1.4rem 1rem .8rem; }
+  .site-repeat-word { width: 88px; margin: 0 auto 1.5rem; padding: .42rem .5rem; border-radius: 8px; background: var(--accent); color: var(--paper); text-align: center; font-size: .82rem; font-weight: 800; }
+  .site-tour-slide.is-active .site-repeat-word { animation: site-hop 4s ease-in-out infinite; }
+  .site-days { display: flex; align-items: center; justify-content: space-between; border-top: 2px solid var(--hair); color: var(--soft); font-size: .8rem; font-weight: 700; }
+  .site-days i { width: 10px; height: 10px; margin-top: -6px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 4px var(--card); }
+  @keyframes site-hop { 0%,12% { transform: translateX(-112px); } 28% { transform: translateX(-37px) translateY(-16px); } 44% { transform: translateX(-37px); } 60% { transform: translateX(37px) translateY(-16px); } 76% { transform: translateX(37px); } 90%,100% { transform: translateX(112px); } }
+  .site-tour-controls { display: grid; grid-template-columns: 44px 1fr 44px; align-items: center; min-height: 52px; border-top: 1px solid var(--hair); }
+  .site-tour-arrow { width: 44px; height: 44px; padding: 0; border: 0; background: transparent; color: var(--ink); cursor: pointer; font-size: 1.55rem; }
+  .site-tour-arrow:hover { background: var(--wash); }
+  .site-tour-dots { display: flex; justify-content: center; gap: .45rem; }
+  .site-tour-dot { width: 7px; height: 7px; padding: 0; border: 0; border-radius: 999px; background: var(--hair); cursor: pointer; transition: width .2s ease, background .2s ease; }
+  .site-tour-dot[aria-current="true"] { width: 22px; background: var(--accent); }
+  @media (max-width: 28rem) { .site-tour-slide { min-height: 268px; padding: 1rem; } .site-subtitle { font-size: .8rem; } }
+  @media (prefers-reduced-motion: reduce) { .site-tour-track { transition: none; } .site-tour-slide * { animation: none !important; } }
+
   .where { display: grid; gap: 1.1rem; grid-template-columns: 1fr; }
   @media (min-width: 50rem) { .where { grid-template-columns: repeat(3, 1fr); } }
   .where section { background: var(--card); border: 1px solid var(--hair); border-left: 3px solid var(--accent); border-radius: 12px; padding: 1.3rem 1.4rem 1.4rem; }
@@ -439,19 +478,27 @@ export function homePage(lang: string): string {
 <h1>${escape(t.h1)}</h1>
 <p class="lede">${escape(t.lede)}</p>
 
-<div class="demo">
-  <div class="wrong">
-    <div class="label">${escape(t.dict)}</div>
-    <div class="line">${marked}</div>
-    <div class="out">${escape(t.wrong)}</div>
-  </div>
-  <div class="right">
-    <div class="label">${escape(t.ours)}</div>
-    <div class="line">${marked}</div>
-    <div class="out">${escape(t.right)}</div>
-  </div>
-</div>
-<p class="note">${escape(t.note)}</p>
+<section class="site-tour" id="siteTour" aria-roledescription="carousel">
+  <div class="site-tour-window"><div class="site-tour-track" id="siteTourTrack">
+    <article class="site-tour-slide is-active">
+      <div class="demo"><div class="wrong"><div class="label">${escape(t.dict)}</div><div class="line">${marked}</div><div class="out">${escape(t.wrong)}</div></div><div class="right"><div class="label">${escape(t.ours)}</div><div class="line">${marked}</div><div class="out">${escape(t.right)}</div></div></div>
+      <div class="site-tour-copy"><b>${escape(t.ours)}</b><span>${escape(t.note)}</span></div>
+    </article>
+    <article class="site-tour-slide">
+      <div class="site-film"><div class="site-subtitle">${fullLine}</div><div class="site-pointer">☝</div></div>
+      <div class="site-tour-copy"><b>${escape(t.browserT)}</b><span>${escape(t.browserB)}</span></div>
+    </article>
+    <article class="site-tour-slide">
+      <div class="site-devices"><div class="site-device"><i>◉</i>${escape(t.browserT)}</div><div class="site-device"><i>▣</i>${escape(t.phoneT)}</div><div class="site-device"><i>▤</i>${escape(t.pcT)}</div><div class="site-library">${escape(t.oneT)}</div></div>
+      <div class="site-tour-copy"><b>${escape(t.oneT)}</b><span>${escape(t.oneB)}</span></div>
+    </article>
+    <article class="site-tour-slide">
+      <div class="site-repeat"><div class="site-repeat-word">${escape(t.mark)}</div><div class="site-days"><i></i><span>1</span><i></i><span>3</span><i></i><span>7</span><i></i><span>16</span></div></div>
+      <div class="site-tour-copy"><b>${escape(t.backT)}</b><span>${escape(t.backB)}</span></div>
+    </article>
+  </div></div>
+  <div class="site-tour-controls"><button class="site-tour-arrow" type="button" data-tour-prev aria-label="Previous slide">‹</button><div class="site-tour-dots"><button class="site-tour-dot" type="button" aria-label="Slide 1" aria-current="true"></button><button class="site-tour-dot" type="button" aria-label="Slide 2"></button><button class="site-tour-dot" type="button" aria-label="Slide 3"></button><button class="site-tour-dot" type="button" aria-label="Slide 4"></button></div><button class="site-tour-arrow" type="button" data-tour-next aria-label="Next slide">›</button></div>
+</section>
 
 <h2>${escape(t.whereTitle)}</h2>
 <div class="where">
@@ -493,6 +540,31 @@ export function homePage(lang: string): string {
   document.getElementById('lang').onchange = function () {
     location.search = '?lang=' + this.value;
   };
+  (function () {
+    const deck = document.getElementById('siteTour');
+    const track = document.getElementById('siteTourTrack');
+    const slides = Array.from(deck.querySelectorAll('.site-tour-slide'));
+    const dots = Array.from(deck.querySelectorAll('.site-tour-dot'));
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let at = 0, timer, start = 0;
+    const stop = () => { clearInterval(timer); timer = undefined; };
+    const restart = () => { stop(); if (!reduced) timer = setInterval(() => show(at + 1), 6000); };
+    function show(index, byPerson) {
+      at = (index + slides.length) % slides.length;
+      track.style.transform = 'translateX(-' + (at * 100) + '%)';
+      slides.forEach((slide, position) => slide.classList.toggle('is-active', position === at));
+      dots.forEach((dot, position) => dot.setAttribute('aria-current', String(position === at)));
+      if (byPerson) restart();
+    }
+    deck.querySelector('[data-tour-prev]').onclick = () => show(at - 1, true);
+    deck.querySelector('[data-tour-next]').onclick = () => show(at + 1, true);
+    dots.forEach((dot, index) => dot.onclick = () => show(index, true));
+    deck.onmouseenter = stop; deck.onmouseleave = restart;
+    deck.onfocusin = stop; deck.onfocusout = restart;
+    deck.addEventListener('touchstart', event => { start = event.changedTouches[0].clientX; }, { passive: true });
+    deck.addEventListener('touchend', event => { const delta = event.changedTouches[0].clientX - start; if (Math.abs(delta) > 34) show(at + (delta < 0 ? 1 : -1), true); }, { passive: true });
+    restart();
+  })();
 </script>
 </body></html>`;
 }

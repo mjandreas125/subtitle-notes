@@ -11,6 +11,7 @@ import '../design/components.dart';
 import '../design/tokens.dart';
 import '../i18n.dart';
 import 'desktop_config.dart';
+import '../screens/tour.dart';
 
 /// First run on Windows: sign in, then write the session where the VLC helper
 /// will find it.
@@ -257,6 +258,12 @@ class _PairingScreenState extends State<PairingScreen> {
         context.t('One account for phone, computer and browser.'),
         style: AppText.bodySoft(c.ink3),
       ),
+      const SizedBox(height: AppSpace.xxl),
+      // At the original height the four teaching scenes had to be scaled down,
+      // which cramped the top device icons and the selection gesture. Give the
+      // animation its natural vertical room; this screen already scrolls on a
+      // shorter window.
+      const TourCarousel(height: 420),
       if (pending > 0) ...[
         const SizedBox(height: AppSpace.xxl),
         AppCard(

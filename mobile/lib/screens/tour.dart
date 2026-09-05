@@ -10,6 +10,7 @@
 // the reader's theme, their text size and their language without a second set
 // of files to keep in step.
 
+import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
@@ -129,6 +130,174 @@ class _TourPageState extends State<TourPage> {
           ],
         ),
       ),
+    );
+  }
+}
+
+/// A compact, self-advancing version of the first-run tour for wider surfaces
+/// such as the Windows sign-in screen. It keeps the actual teaching scenes,
+/// rather than substituting screenshots, and has dots, arrows and swipe
+/// navigation for people who want to take control.
+class TourCarousel extends StatefulWidget {
+  const TourCarousel({this.height = 354, super.key});
+
+  final double height;
+
+  @override
+  State<TourCarousel> createState() => _TourCarouselState();
+}
+
+class _TourCarouselState extends State<TourCarousel> {
+  static const _count = 4;
+  final _pages = PageController();
+  Timer? _advance;
+  int _at = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _scheduleAdvance();
+  }
+
+  @override
+  void dispose() {
+    _advance?.cancel();
+    _pages.dispose();
+    super.dispose();
+  }
+
+  void _scheduleAdvance() {
+    _advance?.cancel();
+    _advance = Timer.periodic(const Duration(seconds: 6), (_) {
+      if (!mounted || !_pages.hasClients) return;
+      _go((_at + 1) % _count);
+    });
+  }
+
+  void _go(int index) {
+    if (!_pages.hasClients) return;
+    _pages.animateToPage(
+      index,
+      duration: const Duration(milliseconds: 460),
+      curve: Curves.easeOutCubic,
+    );
+    _scheduleAdvance();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.c;
+    const slides = [
+      (
+        _SenseScene(),
+        'Not the word - what it means here',
+        'The full sentence gives a word its intended meaning.',
+      ),
+      (
+        _PickScene(),
+        'Saving a word is one movement',
+        'Drag across a subtitle and keep its meaning with the line.',
+      ),
+      (
+        _DevicesScene(),
+        'One library on every device',
+        'Everything you save travels with your account.',
+      ),
+      (
+        _ReturnScene(),
+        'Words come back until they stay',
+        'Review appears at wider intervals as you learn.',
+      ),
+    ];
+
+    return SizedBox(
+      height: widget.height,
+      child: AppCard(
+        padding: const EdgeInsets.fromLTRB(
+          AppSpace.lg,
+          AppSpace.lg,
+          AppSpace.lg,
+          AppSpace.md,
+        ),
+        child: Column(
+          children: [
+            Expanded(
+              child: PageView.builder(
+                controller: _pages,
+                itemCount: _count,
+                onPageChanged: (index) {
+                  setState(() => _at = index);
+                  _scheduleAdvance();
+                },
+                itemBuilder: (context, index) {
+                  final slide = slides[index];
+                  return _CarouselSlide(
+                    show: slide.$1,
+                    title: slide.$2,
+                    body: slide.$3,
+                  );
+                },
+              ),
+            ),
+            const SizedBox(height: AppSpace.sm),
+            Row(
+              children: [
+                IconButton(
+                  tooltip: 'Previous slide',
+                  onPressed: () => _go((_at + _count - 1) % _count),
+                  icon: Icon(Icons.arrow_back_rounded, color: c.ink2),
+                ),
+                Expanded(child: _Dots(count: _count, at: _at)),
+                IconButton(
+                  tooltip: 'Next slide',
+                  onPressed: () => _go((_at + 1) % _count),
+                  icon: Icon(Icons.arrow_forward_rounded, color: c.ink2),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _CarouselSlide extends StatelessWidget {
+  const _CarouselSlide({
+    required this.show,
+    required this.title,
+    required this.body,
+  });
+
+  final Widget show;
+  final String title;
+  final String body;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.c;
+    return Column(
+      children: [
+        Expanded(
+          child: Center(
+            child: FittedBox(fit: BoxFit.scaleDown, child: show),
+          ),
+        ),
+        const SizedBox(height: AppSpace.sm),
+        Text(
+          context.t(title),
+          textAlign: TextAlign.center,
+          style: AppText.label(c.ink),
+        ),
+        const SizedBox(height: 3),
+        Text(
+          context.t(body),
+          textAlign: TextAlign.center,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+          style: font(size: 12.5, weight: 600, color: c.ink3, height: 1.28),
+        ),
+      ],
     );
   }
 }

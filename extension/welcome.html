@@ -142,6 +142,39 @@
       button:hover { background: var(--accent-deep); }
       button.quiet { background: transparent; color: var(--soft); border-color: var(--hair); }
       button.quiet:hover { background: var(--wash); color: var(--ink); }
+
+      /* The explanation is a small, responsive filmstrip rather than a wall
+         of instructions. It advances on its own, but arrows, dots and a swipe
+         all give the reader control. */
+      .tour-deck { margin-top: 6px; border: 1px solid var(--hair); border-radius: 18px; overflow: hidden; background: var(--paper); box-shadow: 0 18px 42px -30px rgb(var(--shade) / .62); }
+      .tour-window { overflow: hidden; }
+      .tour-track { display: flex; transition: transform 460ms cubic-bezier(.22,.8,.28,1); touch-action: pan-y; }
+      .tour-slide { flex: 0 0 100%; min-width: 0; padding: 20px; display: grid; gap: 16px; align-content: center; min-height: 300px; }
+      .tour-copy { text-align: center; max-width: 29rem; margin: 0 auto; }
+      .tour-copy b { display: block; font-size: 17px; line-height: 1.2; letter-spacing: -.018em; }
+      .tour-copy span { display: block; margin-top: 6px; color: var(--soft); font-size: 13px; }
+      .tour-slide:not(.is-active) .stage.play * { animation-play-state: paused; }
+      .tour-slide .stage { max-width: 29rem; width: 100%; margin: 0 auto; }
+      .tour-answers { width: min(100%, 29rem); margin: 0 auto; display: grid; gap: 8px; }
+      .tour-answer { padding: 12px 14px; border-radius: 12px; background: var(--wash); color: var(--accent); border-left: 3px solid var(--accent); font-weight: 700; }
+      .tour-answer.muted { background: color-mix(in srgb, var(--paper) 75%, var(--hair)); color: var(--soft); border-left-color: var(--hair); text-decoration: line-through; }
+      .tour-devices { width: min(100%, 29rem); margin: 0 auto; display: grid; grid-template-columns: repeat(3, 1fr); gap: 9px; }
+      .tour-device { padding: 14px 8px; border: 1px solid var(--hair); border-radius: 12px; text-align: center; color: var(--soft); font-size: 12px; font-weight: 700; }
+      .tour-device i { display: block; margin-bottom: 7px; color: var(--accent); font-size: 23px; font-style: normal; }
+      .tour-library { grid-column: 1 / -1; padding: 11px; border-radius: 11px; background: var(--wash); color: var(--accent); text-align: center; font-size: 13px; font-weight: 800; }
+      .tour-repeat { width: min(100%, 29rem); margin: 0 auto; padding: 20px 8px 12px; }
+      .tour-word { width: 86px; margin: 0 auto 22px; padding: 8px 10px; border-radius: 8px; background: var(--accent); color: #fff; text-align: center; font-size: 13px; font-weight: 800; animation: hop 4s ease-in-out infinite; }
+      .tour-days { display: flex; align-items: center; justify-content: space-between; border-top: 2px solid var(--hair); padding-top: 10px; color: var(--soft); font-size: 12px; font-weight: 700; }
+      .tour-days i { width: 10px; height: 10px; margin-top: -16px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 4px var(--paper); }
+      @keyframes hop { 0%, 12% { transform: translateX(-96px); } 27% { transform: translateX(-32px) translateY(-16px); } 43% { transform: translateX(-32px); } 58% { transform: translateX(32px) translateY(-16px); } 74% { transform: translateX(32px); } 89%, 100% { transform: translateX(96px); } }
+      .tour-controls { display: grid; grid-template-columns: 42px 1fr 42px; align-items: center; border-top: 1px solid var(--hair); min-height: 50px; }
+      .tour-arrow { width: 42px; height: 42px; padding: 0; border: 0; border-radius: 0; color: var(--ink); background: transparent; font-size: 23px; }
+      .tour-arrow:hover { background: var(--wash); }
+      .tour-dots { display: flex; justify-content: center; gap: 7px; }
+      .tour-dot { width: 7px; height: 7px; min-width: 0; padding: 0; border: 0; border-radius: 999px; background: var(--hair); transition: width .2s ease, background .2s ease; }
+      .tour-dot[aria-current="true"] { width: 22px; background: var(--accent); }
+      @media (max-width: 360px) { .tour-slide { padding: 14px; min-height: 278px; } .tour-copy b { font-size: 16px; } .stage .card { width: 54%; padding: 9px; } }
+      @media (prefers-reduced-motion: reduce) { .tour-track { transition: none; } .tour-word { animation: none; } }
     </style>
   </head>
   <body>
@@ -150,33 +183,34 @@
       <h1 data-i18n="tourTitle">Any word, the way it is meant here</h1>
       <p class="lede" data-i18n="tourLede">Three seconds of it, then you can go.</p>
 
-      <div class="stage play" id="stage">
-        <div class="caption" id="caption"></div>
-        <div class="key">Ctrl</div>
-        <svg class="cursor" viewBox="0 0 12 18" aria-hidden="true">
-          <path d="M1 1l9.5 9.5H6.2l2.4 5.2-2 .9-2.4-5.3L1 14.6z" fill="#fff" stroke="#111" stroke-width="1"/>
-        </svg>
-        <div class="card">
-          <b data-i18n="tourLine">Nobody wants a criminal record.</b>
-          <u data-i18n="tourMeaning">a record - a criminal record</u>
-          <em data-i18n="tourSaved">Saved to your library</em>
+      <section class="tour-deck" id="tour" aria-roledescription="carousel">
+        <div class="tour-window">
+          <div class="tour-track" id="tourTrack">
+            <article class="tour-slide is-active">
+              <div class="stage play" id="stage">
+                <div class="caption" id="caption"></div>
+                <div class="key">Ctrl</div>
+                <svg class="cursor" viewBox="0 0 12 18" aria-hidden="true"><path d="M1 1l9.5 9.5H6.2l2.4 5.2-2 .9-2.4-5.3L1 14.6z" fill="#fff" stroke="#111" stroke-width="1"/></svg>
+                <div class="card"><b data-i18n="tourLine">Nobody wants a criminal record.</b><u data-i18n="tourMeaning">a record - a criminal record</u><em data-i18n="tourSaved">Saved to your library</em></div>
+              </div>
+              <div class="tour-copy"><b data-i18n="tourStep1">Hold Ctrl and drag across the subtitle</b><span data-i18n="tourStep1Body">Without the key the player is untouched: the line still drags, a click still pauses.</span></div>
+            </article>
+            <article class="tour-slide">
+              <div class="tour-answers"><div class="tour-answer muted" data-i18n="tourSubtitle">No one wants a record.</div><div class="tour-answer" data-i18n="tourLine">Nobody wants a criminal record.</div></div>
+              <div class="tour-copy"><b data-i18n="tourStep2">Anywhere else, just highlight</b><span data-i18n="tourStep2Body">A page, a PDF, a comment. Hold Ctrl+Alt while you do it and it is saved without asking.</span></div>
+            </article>
+            <article class="tour-slide">
+              <div class="tour-devices"><div class="tour-device"><i>⌕</i>Browser</div><div class="tour-device"><i>▣</i>Phone</div><div class="tour-device"><i>▤</i>Computer</div><div class="tour-library" data-i18n="tourSaved">Saved to your library</div></div>
+              <div class="tour-copy"><b data-i18n="tourStep3">Everything lands in one library</b><span data-i18n="tourStep3Body">The same Google account on the phone, in the browser and on the computer.</span></div>
+            </article>
+            <article class="tour-slide">
+              <div class="tour-repeat"><div class="tour-word" data-i18n="tourPick">a record</div><div class="tour-days"><i></i><span>1</span><i></i><span>3</span><i></i><span>7</span><i></i><span>16</span></div></div>
+              <div class="tour-copy"><b data-i18n="tourDesktop">Also for the computer</b><span data-i18n="tourStep3Body">The same Google account on the phone, in the browser and on the computer.</span></div>
+            </article>
+          </div>
         </div>
-      </div>
-
-      <ol>
-        <li>
-          <b data-i18n="tourStep1">Hold Ctrl and drag across the subtitle</b>
-          <span data-i18n="tourStep1Body">Without the key the player is untouched: the line still drags, a click still pauses.</span>
-        </li>
-        <li>
-          <b data-i18n="tourStep2">Anywhere else, just highlight</b>
-          <span data-i18n="tourStep2Body">A page, a PDF, a comment. Hold Ctrl+Alt while you do it and it is saved without asking.</span>
-        </li>
-        <li>
-          <b data-i18n="tourStep3">Everything lands in one library</b>
-          <span data-i18n="tourStep3Body">The same Google account on the phone, in the browser and on the computer.</span>
-        </li>
-      </ol>
+        <div class="tour-controls"><button class="tour-arrow" type="button" data-tour-prev aria-label="Previous slide">‹</button><div class="tour-dots"><button class="tour-dot" type="button" aria-label="Slide 1" aria-current="true"></button><button class="tour-dot" type="button" aria-label="Slide 2"></button><button class="tour-dot" type="button" aria-label="Slide 3"></button><button class="tour-dot" type="button" aria-label="Slide 4"></button></div><button class="tour-arrow" type="button" data-tour-next aria-label="Next slide">›</button></div>
+      </section>
 
       <div class="actions">
         <button id="connect" data-i18n="tourConnect">Connect the account</button>

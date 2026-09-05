@@ -20,6 +20,7 @@ _WINDOWS_PRIMARY = {
 
 _TEXT: dict[str, dict[str, str]] = {
     "en": {
+        "not_signed_in": "Not signed in on this computer. Open Subtitle Notes and sign in with Google - the word will be saved to your library.",
         "pick_film": "Choose a film",
         "films": "Films",
         "subtitles_srt": "Subtitles",
@@ -75,6 +76,7 @@ _TEXT: dict[str, dict[str, str]] = {
         "vlc_configured": "VLC is set up: the overlay works with any film you open.",
     },
     "ru": {
+        "not_signed_in": "На этом компьютере вход не выполнен. Откройте Subtitle Notes и войдите через Google - слово сохранится в вашу библиотеку.",
         "pick_film": "Выберите фильм",
         "films": "Фильмы",
         "subtitles_srt": "Субтитры",
@@ -130,6 +132,7 @@ _TEXT: dict[str, dict[str, str]] = {
         "vlc_configured": "VLC настроен: перевод работает с любым фильмом.",
     },
     "et": {
+        "not_signed_in": "Selles arvutis pole sisse logitud. Ava Subtitle Notes ja logi Google'iga sisse - sõna salvestub sinu kogusse.",
         "pick_film": "Vali film",
         "films": "Filmid",
         "subtitles_srt": "Subtiitrid",
@@ -185,6 +188,7 @@ _TEXT: dict[str, dict[str, str]] = {
         "vlc_configured": "VLC on seadistatud: tõlge töötab iga filmiga.",
     },
     "de": {
+        "not_signed_in": "Auf diesem Computer ist niemand angemeldet. Öffnen Sie Subtitle Notes und melden Sie sich mit Google an - das Wort landet dann in Ihrer Sammlung.",
         "pick_film": "Film auswählen",
         "films": "Filme",
         "subtitles_srt": "Untertitel",
@@ -240,6 +244,7 @@ _TEXT: dict[str, dict[str, str]] = {
         "vlc_configured": "VLC ist eingerichtet: Die Übersetzung funktioniert mit jedem Film.",
     },
     "fr": {
+        "not_signed_in": "Personne n'est connecté sur cet ordinateur. Ouvrez Subtitle Notes et connectez-vous avec Google - le mot ira dans votre bibliothèque.",
         "pick_film": "Choisissez un film",
         "films": "Films",
         "subtitles_srt": "Sous-titres",
@@ -295,6 +300,7 @@ _TEXT: dict[str, dict[str, str]] = {
         "vlc_configured": "VLC est configuré : la traduction fonctionne avec tous les films.",
     },
     "es": {
+        "not_signed_in": "No hay sesión iniciada en este ordenador. Abre Subtitle Notes e inicia sesión con Google: la palabra irá a tu biblioteca.",
         "pick_film": "Elige una película",
         "films": "Películas",
         "subtitles_srt": "Subtítulos",
@@ -350,6 +356,7 @@ _TEXT: dict[str, dict[str, str]] = {
         "vlc_configured": "VLC está configurado: la traducción funciona con cualquier película.",
     },
     "it": {
+        "not_signed_in": "Nessun accesso su questo computer. Apri Subtitle Notes e accedi con Google: la parola andrà nella tua raccolta.",
         "pick_film": "Scegli un film",
         "films": "Film",
         "subtitles_srt": "Sottotitoli",
@@ -405,6 +412,7 @@ _TEXT: dict[str, dict[str, str]] = {
         "vlc_configured": "VLC è configurato: la traduzione funziona con qualsiasi film.",
     },
     "pt_BR": {
+        "not_signed_in": "Ninguém entrou neste computador. Abra o Subtitle Notes e entre com o Google - a palavra vai para a sua biblioteca.",
         "pick_film": "Escolha um filme",
         "films": "Filmes",
         "subtitles_srt": "Legendas",
@@ -460,6 +468,7 @@ _TEXT: dict[str, dict[str, str]] = {
         "vlc_configured": "O VLC está configurado: a tradução funciona com qualquer filme.",
     },
     "pl": {
+        "not_signed_in": "Na tym komputerze nikt nie jest zalogowany. Otwórz Subtitle Notes i zaloguj się przez Google - słowo trafi do twojej biblioteki.",
         "pick_film": "Wybierz film",
         "films": "Filmy",
         "subtitles_srt": "Napisy",
@@ -515,6 +524,7 @@ _TEXT: dict[str, dict[str, str]] = {
         "vlc_configured": "VLC jest skonfigurowany: tłumaczenie działa z każdym filmem.",
     },
     "uk": {
+        "not_signed_in": "На цьому комп'ютері вхід не виконано. Відкрийте Subtitle Notes і увійдіть через Google - слово збережеться у вашу бібліотеку.",
         "pick_film": "Виберіть фільм",
         "films": "Фільми",
         "subtitles_srt": "Субтитри",
@@ -570,6 +580,7 @@ _TEXT: dict[str, dict[str, str]] = {
         "vlc_configured": "VLC налаштовано: переклад працює з будь-яким фільмом.",
     },
     "nl": {
+        "not_signed_in": "Op deze computer is niemand ingelogd. Open Subtitle Notes en log in met Google - het woord komt dan in je bibliotheek.",
         "pick_film": "Kies een film",
         "films": "Films",
         "subtitles_srt": "Ondertitels",
@@ -625,6 +636,7 @@ _TEXT: dict[str, dict[str, str]] = {
         "vlc_configured": "VLC is ingesteld: de vertaling werkt bij elke film.",
     },
     "tr": {
+        "not_signed_in": "Bu bilgisayarda oturum açılmamış. Subtitle Notes'u açıp Google ile giriş yap - kelime kitaplığına kaydedilir.",
         "pick_film": "Bir film seçin",
         "films": "Filmler",
         "subtitles_srt": "Altyazılar",
@@ -680,6 +692,7 @@ _TEXT: dict[str, dict[str, str]] = {
         "vlc_configured": "VLC hazır: çeviri her filmde çalışır.",
     },
     "sv": {
+        "not_signed_in": "Ingen är inloggad på den här datorn. Öppna Subtitle Notes och logga in med Google - ordet hamnar då i ditt bibliotek.",
         "pick_film": "Välj en film",
         "films": "Filmer",
         "subtitles_srt": "Undertexter",
@@ -735,6 +748,7 @@ _TEXT: dict[str, dict[str, str]] = {
         "vlc_configured": "VLC är inställt: översättningen fungerar med vilken film som helst.",
     },
     "fi": {
+        "not_signed_in": "Tällä tietokoneella ei ole kirjauduttu. Avaa Subtitle Notes ja kirjaudu Googlella - sana tallentuu kirjastoosi.",
         "pick_film": "Valitse elokuva",
         "films": "Elokuvat",
         "subtitles_srt": "Tekstitykset",

@@ -554,10 +554,22 @@ export const libraryPage = (lang: string, clientId: string) => {
       return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[ch];
     });
   };
+  // What the reader highlighted is what the card is about. The narrowed
+  // expression is how the server finds something learnable inside a long
+  // selection - useful, but not a replacement for the selection, which is why
+  // a saved phrase used to turn into a single word on its own card.
+  var picked = function (card) { return String(card.selected_text || '').trim(); };
+  var manyWords = function (card) { return picked(card).split(/\s+/).length > 1; };
   var label = function (card) {
-    return card.focus_phrase || card.focus_word || card.selected_text || '';
+    return manyWords(card)
+      ? picked(card)
+      : card.focus_phrase || card.focus_word || picked(card);
   };
-  var meaning = function (card) { return card.focus_translation || card.translation || ''; };
+  var meaning = function (card) {
+    return manyWords(card)
+      ? card.translation || card.focus_translation || ''
+      : card.focus_translation || card.translation || '';
+  };
   // A word alone cannot be practised honestly when it has several meanings.
   // Prefer the subtitle line captured with it; older cards fall back to the
   // selected text so they remain readable.

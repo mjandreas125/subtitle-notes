@@ -18,6 +18,7 @@ from __future__ import annotations
 import ctypes
 import ctypes.wintypes
 import hashlib
+import math
 import queue
 import sys
 import threading
@@ -37,6 +38,15 @@ from sync_client import (
 
 VK_CONTROL, VK_MENU, VK_S = 0x11, 0x12, 0x53
 user32 = ctypes.windll.user32
+gdi32 = ctypes.windll.gdi32
+wintypes = ctypes.wintypes
+gdi32.GetPixel.restype = ctypes.c_uint32
+gdi32.GetPixel.argtypes = [ctypes.c_void_p, ctypes.c_int, ctypes.c_int]
+user32.GetDC.restype = ctypes.c_void_p
+user32.GetDC.argtypes = [ctypes.c_void_p]
+user32.ReleaseDC.argtypes = [ctypes.c_void_p, ctypes.c_void_p]
+user32.GetClientRect.argtypes = [ctypes.c_void_p, ctypes.POINTER(wintypes.RECT)]
+user32.ClientToScreen.argtypes = [ctypes.c_void_p, ctypes.POINTER(wintypes.POINT)]
 user32.GetForegroundWindow.restype = ctypes.c_void_p
 user32.GetWindowTextLengthW.argtypes = [ctypes.c_void_p]
 user32.GetWindowTextW.argtypes = [ctypes.c_void_p, ctypes.c_wchar_p, ctypes.c_int]
@@ -60,9 +70,8 @@ DARK = {
 }
 
 
-def palette() -> dict[str, str]:
-    """Light or dark, as Windows has it. Read every time: somebody who switches
-    the desktop to dark in the evening should not have to restart this."""
+def windows_is_light() -> bool:
+    """The desktop's own setting, used when the window cannot be read."""
     try:
         import winreg
 
@@ -70,9 +79,57 @@ def palette() -> dict[str, str]:
             winreg.HKEY_CURRENT_USER,
             r"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize",
         ) as key:
-            light = int(winreg.QueryValueEx(key, "AppsUseLightTheme")[0])
+            return bool(int(winreg.QueryValueEx(key, "AppsUseLightTheme")[0]))
     except (OSError, ValueError, ImportError):
-        light = 1
+        return True
+
+
+def window_is_light(window: int | None) -> bool | None:
+    """Whether the program the text came from is drawing dark or light.
+
+    Windows will not tell us: a program's theme is its own business and there
+    is no setting to ask for. What there is, is the picture it drew. Nine
+    points across the middle of its window, the median of their brightness -
+    a dark reader on a light desktop reads as dark, which is the whole point.
+    Text and cursors are why it is a median and not an average.
+    """
+    if not window:
+        return None
+    rect = wintypes.RECT()
+    if not user32.GetClientRect(window, ctypes.byref(rect)):
+        return None
+    width, height = rect.right - rect.left, rect.bottom - rect.top
+    if width < 80 or height < 80:
+        return None
+    screen = user32.GetDC(0)
+    if not screen:
+        return None
+    seen = []
+    try:
+        for row in (0.3, 0.5, 0.7):
+            for column in (0.25, 0.5, 0.75):
+                point = wintypes.POINT(int(width * column), int(height * row))
+                if not user32.ClientToScreen(window, ctypes.byref(point)):
+                    continue
+                colour = gdi32.GetPixel(screen, point.x, point.y)
+                if colour == 0xFFFFFFFF:
+                    continue
+                red, green, blue = colour & 255, (colour >> 8) & 255, (colour >> 16) & 255
+                seen.append(0.2126 * red + 0.7152 * green + 0.0722 * blue)
+    finally:
+        user32.ReleaseDC(0, screen)
+    if len(seen) < 5:
+        return None
+    seen.sort()
+    return seen[len(seen) // 2] > 128
+
+
+def palette(window: int | None = None) -> dict[str, str]:
+    """Light or dark: the program being read if it can be read, the desktop
+    otherwise. Decided per card, so switching themes needs no restart."""
+    light = window_is_light(window)
+    if light is None:
+        light = windows_is_light()
     return LIGHT if light else DARK
 
 
@@ -87,14 +144,36 @@ def mix(first: str, second: str, weight: float) -> str:
     return "#" + "".join(f"{round(x + (y - x) * weight):02x}" for x, y in zip(a, b))
 
 
-def foreground_title() -> str:
+def answer_for(data: dict, selected: str) -> str:
+    """Which of the server's two answers belongs on the card.
+
+    `translation` answers what was highlighted; `focus_translation` answers the
+    expression the server narrowed a long selection down to, which for a
+    sentence is one word out of it. A phrase asked about is a phrase answered.
+    """
+    words = len(str(selected or "").split())
+    order = ("translation", "focus_translation") if words > 1 else ("focus_translation", "translation")
+    for field in order:
+        value = str(data.get(field) or "").strip()
+        if value:
+            return value
+    return ""
+
+
+def foreground_window() -> int | None:
+    try:
+        return user32.GetForegroundWindow() or None
+    except Exception:
+        return None
+
+
+def window_title(window: int | None) -> str:
     """Which program the words were taken out of - a reader, a mail client, a
     browser. It is the only thing here that knows where a selection came from,
     and it is worth more in the library than "Windows selection"."""
+    if not window:
+        return ""
     try:
-        window = user32.GetForegroundWindow()
-        if not window:
-            return ""
         length = user32.GetWindowTextLengthW(window)
         if length <= 0:
             return ""
@@ -108,16 +187,21 @@ def foreground_title() -> str:
 class Card:
     """One answer, drawn beside the cursor and dismissed by clicking it."""
 
-    def __init__(self, root: tk.Tk, selection: str) -> None:
-        self.colours = palette()
+    def __init__(self, root: tk.Tk, selection: str, window: int | None = None) -> None:
+        # The colours of the program being answered, not of the desktop.
+        self.colours = palette(window)
         self.alive = True
         self.settled = False
         self.hide_at: float | None = None
-        self.pulse_step = 0
+        self.opened = time.monotonic()
+        self.shade = 0.0
 
         self.window = tk.Toplevel(root)
         self.window.overrideredirect(True)
         self.window.attributes("-topmost", True)
+        # Nothing appears at full strength: the card fades up, which at this
+        # size reads as it arriving rather than as the screen changing.
+        self.window.attributes("-alpha", 0.0)
         # The hairline is the outer frame; Tk has no border colour of its own.
         self.window.configure(bg=self.colours["hair"])
 
@@ -158,6 +242,7 @@ class Card:
 
         self._pulse()
         self._place()
+        self._fade(1.0)
 
     @staticmethod
     def _shorten(text: str) -> str:
@@ -180,15 +265,50 @@ class Card:
         y = max(12, min(y, max(12, limit_y)))
         self.window.geometry(f"{width}x{height}+{x}+{y}")
 
+    def _fade(self, target: float) -> None:
+        """Alpha, walked to where it should be. Tk repaints a borderless
+        window fast enough that sixteen milliseconds a step is smooth."""
+        if not self.alive and target > 0:
+            return
+        try:
+            now = float(self.window.attributes("-alpha"))
+        except (tk.TclError, ValueError):
+            return
+        step = 0.09 if target > now else -0.12
+        value = now + step
+        done = value >= target if target > now else value <= target
+        try:
+            self.window.attributes("-alpha", max(0.0, min(1.0, target if done else value)))
+        except tk.TclError:
+            return
+        if not done:
+            self.window.after(16, lambda: self._fade(target))
+        elif target == 0:
+            try:
+                self.window.destroy()
+            except tk.TclError:
+                pass
+
     def _pulse(self) -> None:
+        """Waiting, on a curve. Two bars blinking between two colours is a
+        warning light; the same two breathing is a program thinking."""
         if not self.alive or not self.bars:
             return
-        faint = mix(self.colours["paper"], self.colours["accent"], 0.20)
-        lit = mix(self.colours["paper"], self.colours["accent"], 0.42)
+        phase = (time.monotonic() - self.opened) * 1.7
         for index, bar in enumerate(self.bars):
-            bar.configure(bg=lit if (self.pulse_step + index) % 2 == 0 else faint)
-        self.pulse_step += 1
-        self.window.after(420, self._pulse)
+            wave = 0.5 + 0.5 * math.sin(phase - index * 0.7)
+            bar.configure(bg=mix(self.colours["paper"], self.colours["accent"], 0.16 + wave * 0.26))
+        self.window.after(40, self._pulse)
+
+    def _bloom(self, step: int = 0) -> None:
+        """The answer arrives in its own colour rather than being swapped in
+        between two frames: it comes up out of the paper it is printed on."""
+        if not self.alive or step > 10:
+            return
+        self.meaning.configure(
+            fg=mix(self.colours["paper"], self.colours["accent"], min(1.0, step / 10)),
+        )
+        self.window.after(18, lambda: self._bloom(step + 1))
 
     def answer(self, meaning: str, settled: bool) -> None:
         """The dictionary's answer, then the considered one over the top of it.
@@ -204,6 +324,7 @@ class Card:
             self.bars = []
             self.meaning.pack(anchor="w", before=self.line)
         self.meaning.configure(text=self._shorten(meaning))
+        self._bloom()
         self._place()
         self._linger()
 
@@ -234,10 +355,7 @@ class Card:
         if not self.alive:
             return
         self.alive = False
-        try:
-            self.window.destroy()
-        except tk.TclError:
-            pass
+        self._fade(0.0)
 
 
 class QuickCapture:
@@ -248,6 +366,9 @@ class QuickCapture:
         self.combo_down = False
         self.clipboard_before = 0
         self.source = ""
+        self.window_handle: int | None = None
+        # What was highlighted, per card, so the answer can be matched to it.
+        self.card_text: dict[int, str] = {}
         self.card: Card | None = None
         self.results: queue.Queue[tuple[str, object]] = queue.Queue()
         self.root.after(35, self._watch_hotkey)
@@ -267,7 +388,8 @@ class QuickCapture:
         # path Windows gives us for selected text in arbitrary third-party apps.
         self.clipboard_before = user32.GetClipboardSequenceNumber()
         # Asked before our own card exists, or the answer would be this program.
-        self.source = foreground_title()
+        self.window_handle = foreground_window()
+        self.source = window_title(self.window_handle)
         log_sync("Ctrl+Alt+S pressed")
         self._copy_when_hands_are_off(0)
 
@@ -320,7 +442,8 @@ class QuickCapture:
     def show(self, text: str, source: str) -> None:
         if self.card:
             self.card.close()
-        self.card = Card(self.root, text)
+        self.card = Card(self.root, text, self.window_handle)
+        self.card_text[id(self.card)] = text
         for worker in (self._ask_dictionary, self._keep):
             threading.Thread(target=worker, args=(self.card, text, source), daemon=True).start()
 
@@ -342,7 +465,10 @@ class QuickCapture:
         base_url = str(config.get("api_url", "")).strip()
         token = str(config.get("token", "")).strip()
         if not base_url or not token:
-            self.results.put(("error", (card, tr("no_server"))))
+            # Not a network failure: nobody has signed in on this computer, and
+            # saying "no connection to the server" sends people to look at
+            # their Wi-Fi.
+            self.results.put(("error", (card, tr("not_signed_in"))))
             return
         key = hashlib.sha256(f"windows|{time.time_ns()}|{text}".encode()).hexdigest()
         payload = {
@@ -373,7 +499,7 @@ class QuickCapture:
                 card.answer(str(payload), settled=False)
             elif kind == "saved":
                 data = payload if isinstance(payload, dict) else {}
-                meaning = str(data.get("focus_translation") or data.get("translation") or "")
+                meaning = answer_for(data, self.card_text.get(id(card), ""))
                 if has_translation(meaning):
                     card.answer(meaning, settled=True)
                 card.note("✓", tone="accent")
@@ -386,7 +512,7 @@ class QuickCapture:
     # ---- something to say when there is no answer ---------------------------
 
     def _say(self, message: str) -> None:
-        colours = palette()
+        colours = palette(self.window_handle)
         note = tk.Toplevel(self.root)
         note.overrideredirect(True)
         note.attributes("-topmost", True)
@@ -412,7 +538,7 @@ def demo(text: str) -> None:
     """Draw the card once, without the hotkey and without the network, so its
     look can be checked on a machine where nothing is signed in."""
     capture = QuickCapture()
-    card = Card(capture.root, text)
+    card = Card(capture.root, text, foreground_window())
     capture.card = card
     capture.root.after(900, lambda: card.answer("никому не нужна судимость", settled=False))
     capture.root.after(2600, lambda: (card.answer("никому не нужна судимость", settled=True), card.note("✓", "accent")))

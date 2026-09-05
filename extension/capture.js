@@ -60,38 +60,53 @@
         width: 336px; max-width: calc(100vw - 24px); padding: 16px 18px 15px;
         border-radius: 16px; border-left: 3px solid var(--accent);
       }
-      /* Only the meaning. Dark on purpose: it sits over a film, and a sheet of
-         white paper in the middle of a dark picture is a lamp in the face.
-         Everything that is not the answer is gone, buttons included - a word
-         picked out of a subtitle saves itself, so there is nothing to press. */
+      /* Only the meaning: everything that is not the answer is gone, buttons
+         included - a word picked out of a subtitle saves itself, so there is
+         nothing to press.
+
+         It used to be fixed dark, on the grounds that it sits over a film. It
+         also lands on ordinary pages, where a black chip on white paper is
+         somebody else's design, so it takes the same colours as the long card
+         and those come from the page. Over a film the page under it is dark
+         anyway, and it still comes out dark. */
       .card.small {
         width: auto; min-width: 148px; max-width: 300px; padding: 9px 12px 10px;
-        border-radius: 11px; border: 1px solid rgba(255, 255, 255, .10); border-left: 2px solid #46d68f;
-        background: rgba(18, 22, 21, .94); color: #f2f7f4;
-        box-shadow: 0 8px 24px -10px rgba(0, 0, 0, .8);
+        border-radius: 11px; border: 1px solid var(--hair); border-left: 2px solid var(--accent);
+        background: var(--paper); color: var(--ink);
+        box-shadow: 0 6px 22px -10px rgb(var(--shade) / .55);
       }
-      .card.small .head { font-size: 14.5px; font-weight: 600; line-height: 1.35; color: #dbe6e0; }
+      .card.small .head { font-size: 14.5px; font-weight: 600; line-height: 1.35; color: var(--ink); }
       .card.small .term {
         margin: 0; padding: 0; border: 0; font-size: 17px; font-weight: 640;
-        letter-spacing: -.015em; color: #7fe3ab; line-height: 1.3;
+        letter-spacing: -.015em; color: var(--accent); line-height: 1.3;
       }
-      .card.small .term b { color: #f2f7f4; font-weight: 600; font-size: 14px; }
+      .card.small .term b { color: var(--ink); font-weight: 600; font-size: 14px; }
       .card.small .sentence {
-        margin-top: 5px; font-size: 12.5px; font-weight: 500; color: #93a49c; line-height: 1.35;
+        margin-top: 5px; font-size: 12.5px; font-weight: 500; color: var(--soft); line-height: 1.35;
       }
       .card.small .syn, .card.small .note, .card.small .seen,
       .card.small .row, .card.small .say, .card.small .sentence { display: none; }
-      .card.small .wait span { background: #46d68f; }
-      .card.small .head.keep { display: block; font-size: 14px; color: #f2f7f4; }
+      .card.small .wait span { background: var(--accent); }
+      .card.small .head.keep { display: block; font-size: 14px; color: var(--ink); }
       .card.small .row.keep { display: flex; margin-top: 9px; }
-      .card.small .row.keep button { padding: 7px 10px; font-size: 13px; background: #1e7a4c; color: #ffffff; }
-      .card.small .flag { margin-bottom: 5px; font-size: 9.5px; letter-spacing: .09em; color: #7fe3ab; }
-      .card.small .flag.grey { color: #8c9a93; }
-      .card.small .muted { font-size: 12.5px; color: #93a49c; }
-      .card.small .say { color: #93a49c; }
-      .card.small .say:hover { background: rgba(255, 255, 255, .08); }
+      .card.small .row.keep button { padding: 7px 10px; font-size: 13px; }
+      .card.small .flag { margin-bottom: 5px; font-size: 9.5px; letter-spacing: .09em; color: var(--accent); }
+      .card.small .flag.grey { color: var(--soft); }
+      .card.small .muted { font-size: 12.5px; color: var(--soft); }
+      .card.small .say { color: var(--soft); }
+      .card.small .say:hover { background: var(--wash); }
       /* Undoing is still possible - the word is one swipe away in the app -
          so the card itself stays a single line. */
+      /* Nothing here appears between two frames. The card rises into place,
+         and when the considered answer replaces the dictionary's it rises in
+         the same way rather than being swapped underneath the reader's eye. */
+      @keyframes sn-arrive { from { opacity: 0; transform: translateY(4px) scale(.99); } }
+      @keyframes sn-settle { from { opacity: 0; transform: translateY(3px); } }
+      .card { animation: sn-arrive .17s cubic-bezier(.2,.7,.3,1) both; }
+      .card.swap > * { animation: sn-settle .19s cubic-bezier(.2,.7,.3,1) both; }
+      @media (prefers-reduced-motion: reduce) {
+        .card, .card.swap > * { animation: none; }
+      }
       .card.pinned { cursor: grab; }
       .card.dragging { cursor: grabbing; user-select: none; }
 
@@ -169,15 +184,16 @@
       }
       .flag.grey { color: var(--soft); }
 
-      @media (prefers-color-scheme: dark) {
-        .layer {
-          --paper: #151b19; --ink: #eaf1ed; --soft: #93a49c; --hair: #2a3733;
-          --accent: #64c795; --wash: #1d2a25; --shade: 0 0 0;
-        }
-        .chip { border-color: #2f4a3d; }
-        .syn span { color: #a9d9c0; }
-        button { color: #062115; }
+      /* Dark is not a browser setting here, it is a fact about the page the
+         card is being drawn on: a dark site with the browser set to light was
+         getting a sheet of white paper dropped on it. */
+      .layer.dark {
+        --paper: #151b19; --ink: #eaf1ed; --soft: #93a49c; --hair: #2a3733;
+        --accent: #64c795; --wash: #1d2a25; --shade: 0 0 0;
       }
+      .layer.dark .chip { border-color: #2f4a3d; }
+      .layer.dark .syn span { color: #a9d9c0; }
+      .layer.dark button { color: #062115; }
     </style>
     <div class="layer"></div>`;
   const layer = root.querySelector('.layer');
@@ -249,6 +265,16 @@
     return node;
   }
 
+  /// New contents for a card that is already on screen, brought in rather than
+  /// switched. Restarting the animation needs the class off, a reflow, and the
+  /// class on again; without the reflow the browser sees no change at all.
+  function paint(node, html) {
+    node.innerHTML = html;
+    node.classList.remove('swap');
+    void node.offsetWidth;
+    node.classList.add('swap');
+  }
+
   /// A speaker, drawn rather than borrowed from the emoji font - which renders
   /// as a different picture on every machine and never matches the card.
   const SPEAKER =
@@ -257,6 +283,39 @@
     '<path d="M13.6 7.2a4 4 0 0 1 0 5.6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>' +
     '<path d="M15.9 5a7 7 0 0 1 0 10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" opacity=".55"/>' +
     '</svg>';
+
+  /// Whether what the card will sit on is dark.
+  ///
+  /// Walked up from the selection until something is actually painted: most
+  /// elements are transparent, and the colour that matters is the first one
+  /// that is not. A page that never paints anything leaves the question to
+  /// the browser's own setting.
+  function darkUnder(node) {
+    const opaque = (value) => {
+      const parts = String(value || '').match(/[\d.]+/g);
+      if (!parts || parts.length < 3) return null;
+      const alpha = parts.length > 3 ? Number(parts[3]) : 1;
+      if (!(alpha > 0.15)) return null;
+      const [red, green, blue] = parts.map(Number);
+      return 0.2126 * red + 0.7152 * green + 0.0722 * blue;
+    };
+    let element = node?.nodeType === Node.TEXT_NODE ? node.parentElement : node;
+    for (let step = 0; element && step < 24; step += 1, element = element.parentElement) {
+      const light = opaque(getComputedStyle(element).backgroundColor);
+      if (light !== null) return light < 128;
+    }
+    for (const fallback of [document.body, document.documentElement]) {
+      const light = fallback && opaque(getComputedStyle(fallback).backgroundColor);
+      if (light !== null && light !== undefined) return light < 128;
+    }
+    return window.matchMedia?.('(prefers-color-scheme: dark)').matches ?? false;
+  }
+
+  /// Matches the card to the page before it is placed, so it never appears in
+  /// the wrong colours and corrects itself afterwards.
+  function dress(node) {
+    layer.classList.toggle('dark', darkUnder(node));
+  }
 
   const escape = (value) =>
     String(value).replace(/[&<>"]/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[character]));
@@ -318,8 +377,23 @@
   /// term repeated back all belong to a card being studied, in the app, with
   /// the film stopped. Over a running film they are three things to read
   /// before the one thing that was asked for.
+  /// The answer to show for a selection.
+  ///
+  /// The server answers twice: `translation` is what the reader highlighted,
+  /// `focus_translation` is the expression it narrowed a long selection down
+  /// to. Highlight a sentence and the second one is a single word out of it -
+  /// which is why the card used to show the phrase and then swap it for one
+  /// word a second later. What was asked for is what gets answered.
+  function answerFor(info, text) {
+    const picked = String(text ?? '').trim();
+    const many = picked ? picked.split(/\s+/).length > 1 : false;
+    return many
+      ? info.translation || info.focus_translation || ''
+      : info.focus_translation || info.translation || '';
+  }
+
   function meaningHtml(info, text) {
-    const meaning = info.focus_translation || info.translation || '';
+    const meaning = answerFor(info, text);
     // The whole line, only when it is a different sentence from the answer -
     // which it is not when the whole line is what was selected.
     const line = info.translation && info.translation !== meaning ? info.translation : '';
@@ -364,6 +438,7 @@
   function showChip(rect, text, context, media) {
     close();
     reparent();
+    dress(window.getSelection()?.anchorNode ?? document.body);
     panel = element('chip', `<span>✦</span><span>${t('chipAsk')}</span>`);
     layer.appendChild(panel);
     place(panel, rect);
@@ -379,6 +454,7 @@
   async function showCard(rect, text, context, media, timecodeMs = null) {
     close();
     reparent();
+    dress(window.getSelection()?.anchorNode ?? document.body);
     panel = element(`card${compact() ? ' small' : ''}`, waitingHtml());
     layer.appendChild(panel);
     place(panel, rect);
@@ -391,7 +467,7 @@
     ask({ type: 'quick', text }).then((quick) => {
       if (panel !== mine || mine.dataset.read || !quick.ok) return;
       if (!hasTranslation(quick.data?.translation)) return;
-      mine.innerHTML = quickHtml(quick.data.translation);
+      paint(mine, quickHtml(quick.data.translation));
     });
 
     const reply = await ask({ type: 'reading', text, context });
@@ -399,18 +475,17 @@
     mine.dataset.read = '1';
 
     if (!reply.ok) {
-      panel.innerHTML =
-        reply.error === 'not-paired'
-          ? notPairedHtml()
-          : `<div class="muted">${escape(reply.error)}</div><div class="row"><button class="ghost" id="close">${t('close')}</button></div>`;
+      paint(panel, reply.error === 'not-paired'
+        ? notPairedHtml()
+        : `<div class="muted">${escape(reply.error)}</div><div class="row"><button class="ghost" id="close">${t('close')}</button></div>`);
       panel.querySelector('#connect')?.addEventListener('click', () => ask({ type: 'options' }).then(close));
       panel.querySelector('#close')?.addEventListener('click', close);
       place(panel, rect);
       return;
     }
 
-    panel.innerHTML = `${meaningHtml(reply.data, text)}
-      <div class="row"><button id="save">${t('save')}</button><button class="ghost" id="close">${t('close')}</button></div>`;
+    paint(panel, `${meaningHtml(reply.data, text)}
+      <div class="row"><button id="save">${t('save')}</button><button class="ghost" id="close">${t('close')}</button></div>`);
     activate(panel, { spokenText: true });
     place(panel, rect);
 
@@ -449,6 +524,7 @@
     // the shape of the answer. It used to open with the selected English and
     // "translating…" under it, which read as a result - and one the reader
     // already had, still highlighted two centimetres away.
+    dress(window.getSelection()?.anchorNode ?? document.body);
     panel = element(`card${compact() ? ' small' : ''}`, waitingHtml());
     layer.appendChild(panel);
     place(panel, rect);
@@ -466,25 +542,23 @@
       // Only until something better arrives, and never over the top of it.
       if (panel !== mine || mine.dataset.settled || !answer.ok) return;
       if (!hasTranslation(answer.data?.translation)) return;
-      mine.innerHTML = quickHtml(answer.data.translation);
+      paint(mine, quickHtml(answer.data.translation));
     });
 
     const saved = await saving;
     if (panel !== mine) return;
     // A refused save carries no data - the session expiring is the usual
     // reason - and reading through it threw before the error could be shown.
-    const stored = saved.ok && saved.data
-      ? saved.data.focus_translation || saved.data.translation
-      : '';
+    const stored = saved.ok && saved.data ? answerFor(saved.data, text) : '';
 
     if (!saved.ok) {
-      panel.innerHTML =
+      paint(panel,
         saved.error === 'not-paired'
           ? notPairedHtml()
           : `<div class="flag grey">${t('notSaved')}</div>
              <div class="head">${escape(text)}</div>
              <div class="muted" style="margin-top:8px">${escape(saved.error)}</div>
-             ${compact() ? '' : `<div class="row"><button id="retry">${t('save')}</button><button class="ghost" id="close">${t('close')}</button></div>`}`;
+             ${compact() ? '' : `<div class="row"><button id="retry">${t('save')}</button><button class="ghost" id="close">${t('close')}</button></div>`}`);
       panel.querySelector('#retry')?.addEventListener('click', () => saveNow(rect, text, context, media, timecodeMs));
       panel.querySelector('#connect')?.addEventListener('click', () => ask({ type: 'options' }).then(close));
       panel.querySelector('#close')?.addEventListener('click', close);
@@ -517,14 +591,14 @@
       : drawn.length
         ? drawn.map((node) => node.outerHTML).join('')
         : `<div class="muted">${t('pendingLater')}</div>`;
-    panel.innerHTML = `
+    paint(panel, `
       ${compact() ? '' : `<div class="flag${reused ? ' grey' : ''}">${reused ? t('inLibrary') : t('saved')}</div>`}
       ${body}
       <div class="row thin">
         ${reused ? '' : `<button class="ghost" id="undo">${t('undo')}</button>`}
         ${compact() ? '' : `<button class="ghost" id="rerun">${t('rerun')}</button>
         <button class="ghost" id="mine">${t('mine')}</button>`}
-      </div>`;
+      </div>`);
     activate(panel, { seen: Number(saved.data.seen_count) || 1 });
 
     // A second opinion on a card that is already saved: the server re-reads the
@@ -541,7 +615,7 @@
         button.textContent = t('failed');
         return;
       }
-      mine.innerHTML = `<div class="flag">${t('saved')}</div>` +
+      paint(mine, `<div class="flag">${t('saved')}</div>` +
         meaningHtml(
           {
             translation: fresh.data.translation,
@@ -549,7 +623,7 @@
             focus_translation: fresh.data.focus_translation,
           },
           text,
-        );
+        ));
       activate(mine, { seen: Number(fresh.data.seen_count) || 1 });
       place(mine, rect);
     });
