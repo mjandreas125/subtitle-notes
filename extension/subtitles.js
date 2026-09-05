@@ -65,6 +65,7 @@
   // soft enough to read through, and it fades in rather than snapping on.
   const glow = document.createElement('div');
   glow.style.cssText = 'all: initial; position: fixed; inset: 0; z-index: 2147483645; pointer-events: none;';
+  glow.setAttribute('data-sn-layer', '');
   const glowRoot = glow.attachShadow({ mode: 'closed' });
   glowRoot.innerHTML = `
     <style>
@@ -282,8 +283,107 @@
     for (const node of marked) node.classList.remove('sn-pick');
     marked = on ? captionNodes() : [];
     for (const node of marked) node.classList.add('sn-pick');
+    undrag(on);
+    lift(on);
     markedAt = performance.now();
   }
+
+  /// Whatever the player has lying on top of its own caption.
+  ///
+  /// A caption can be perfectly selectable and still unreachable: Plyr keeps
+  /// its poster over the picture after a seek, YouTube slides the control bar
+  /// under the line when the mouse comes near. The mouse lands on that instead
+  /// of on the words, and a player with nothing wrong with it looks broken.
+  ///
+  /// So the covers stop taking the mouse for as long as the key is held. Three
+  /// points along the line rather than one: a control bar often covers only
+  /// half of it.
+  let lifted = [];
+
+  function lift(on) {
+    for (const { node, value } of lifted) node.style.pointerEvents = value;
+    lifted = [];
+    if (!on) return;
+    for (const caption of marked) {
+      const rect = caption.getBoundingClientRect();
+      if (rect.width < 4 || rect.height < 4) continue;
+      const middle = rect.top + rect.height / 2;
+      const inset = Math.min(10, rect.width / 4);
+      for (const x of [rect.left + inset, rect.left + rect.width / 2, rect.right - inset]) {
+        const stack = document.elementsFromPoint(x, middle);
+        const reached = stack.findIndex((node) => node === caption || caption.contains(node));
+        if (reached <= 0) continue;
+        for (const node of stack.slice(0, reached)) {
+          // Ancestors are not covers, and our own layers must keep their mouse:
+          // the card has buttons on it.
+          if (!(node instanceof HTMLElement) || node.contains(caption)) continue;
+          if (node.hasAttribute('data-sn-layer')) continue;
+          if (lifted.some((kept) => kept.node === node)) continue;
+          lifted.push({ node, value: node.style.pointerEvents });
+          node.style.pointerEvents = 'none';
+        }
+      }
+    }
+  }
+
+  /// Players that let the viewer move the caption box mark it
+  /// `draggable="true"` - YouTube does. A dragged element is not a selectable
+  /// one: the browser starts carrying the box the moment the mouse moves, so
+  /// the words could never be picked and the line simply followed the cursor.
+  /// That is the whole of the "it just drags the subtitles" report.
+  ///
+  /// The attribute comes off while the key is held and goes back the moment it
+  /// is let go, so moving the captions still works when this is idle.
+  let undragged = [];
+
+  function undrag(on) {
+    for (const node of undragged) node.draggable = true;
+    undragged = [];
+    if (!on) return;
+    for (const caption of marked) {
+      const family = [caption, ...caption.querySelectorAll('[draggable="true"]')];
+      // The box that carries the line is usually the caption's parent, not the
+      // caption: YouTube's segment sits inside a draggable window.
+      let node = caption.parentElement;
+      for (let step = 0; node && step < 5; step += 1, node = node.parentElement) family.push(node);
+      for (const element of family) {
+        if (element instanceof HTMLElement && element.draggable) {
+          element.draggable = false;
+          undragged.push(element);
+        }
+      }
+    }
+  }
+
+  // Belt and braces: a player that starts its own drag from script rather than
+  // from the attribute is stopped here instead.
+  //
+  // These listeners sit on `window`, not on `document`. Capturing runs
+  // window -> document -> element, so a listener here is reached before any of
+  // the player's own capturing ones - and the player registered its first,
+  // because a content script runs after the page it is added to. On
+  // `document` ours came second and the player had already called
+  // preventDefault, which is what stopped a selection from ever starting.
+  window.addEventListener(
+    'dragstart',
+    (event) => {
+      if (armed && insideCaption(event.target)) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+    },
+    true,
+  );
+
+  // Cancelling `selectstart` is the other way a page refuses to be selected,
+  // and it cannot be un-cancelled - so the page never gets to see the event.
+  window.addEventListener(
+    'selectstart',
+    (event) => {
+      if (armed && insideCaption(event.target)) event.stopPropagation();
+    },
+    true,
+  );
 
   /// Players build a fresh element for every line, so the one on screen is
   /// rarely the one that was marked a second ago. The scan is cheap and
@@ -361,7 +461,7 @@
 
   // Some players listen for pointerdown rather than mousedown and cancel it,
   // which would stop a selection from ever starting.
-  document.addEventListener(
+  window.addEventListener(
     'pointerdown',
     (event) => {
       if (armed && insideCaption(event.target)) event.stopPropagation();
@@ -372,7 +472,7 @@
   // The click that ends a selection is a separate event from the mouse going
   // up, and players listen for it to pause. Swallowing it is what keeps the
   // film from starting again the moment a word is picked.
-  document.addEventListener(
+  window.addEventListener(
     'click',
     (event) => {
       if (!armed || !insideCaption(event.target)) return;
@@ -382,7 +482,7 @@
     true,
   );
 
-  document.addEventListener(
+  window.addEventListener(
     'mousedown',
     (event) => {
       if (!armed) return;
@@ -406,7 +506,7 @@
     true,
   );
 
-  document.addEventListener(
+  window.addEventListener(
     'mouseup',
     (event) => {
       if (!holding) return;

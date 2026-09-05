@@ -25,6 +25,10 @@
 
   const host = document.createElement('div');
   host.style.cssText = 'all: initial; position: fixed; z-index: 2147483647; top: 0; left: 0;';
+  // Says "this layer belongs to the extension" to the subtitle script, which
+  // takes the mouse away from anything covering a caption - and must not take
+  // it away from the card it is about to draw.
+  host.setAttribute('data-sn-layer', '');
   const root = host.attachShadow({ mode: 'closed' });
   root.innerHTML = `
     <style>
