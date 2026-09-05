@@ -269,25 +269,46 @@ class QuickCapture:
         # Asked before our own card exists, or the answer would be this program.
         self.source = foreground_title()
         log_sync("Ctrl+Alt+S pressed")
+        self._copy_when_hands_are_off(0)
+
+    def _copy_when_hands_are_off(self, waited: int) -> None:
+        """Wait for the hotkey to be let go before sending the copy.
+
+        Alt is still physically down at the moment the combination is
+        recognised, so a synthetic Ctrl+C arrives at the other program as
+        Ctrl+Alt+C - which nothing copies on. That is the whole reason the
+        clipboard "did not land": the keystroke was sent, and it was the wrong
+        one. Nobody holds the keys for long, and a second is a generous
+        ceiling.
+        """
+        held = any(user32.GetAsyncKeyState(key) & 0x8000 for key in (VK_CONTROL, VK_MENU, VK_S))
+        if held and waited < 1200:
+            self.root.after(15, lambda: self._copy_when_hands_are_off(waited + 15))
+            return
         user32.keybd_event(VK_CONTROL, 0, 0, 0)
         user32.keybd_event(0x43, 0, 0, 0)
         user32.keybd_event(0x43, 0, 2, 0)
         user32.keybd_event(VK_CONTROL, 0, 2, 0)
-        self.root.after(220, self._open_from_clipboard)
+        self.root.after(40, lambda: self._open_from_clipboard(0))
 
-    def _open_from_clipboard(self) -> None:
-        copied = user32.GetClipboardSequenceNumber() != self.clipboard_before
-        try:
-            text = self.root.clipboard_get().strip()
-        except tk.TclError:
-            text = ""
-        if not copied:
+    def _open_from_clipboard(self, tries: int) -> None:
+        """A program fills the clipboard when it gets round to it. A single
+        look 220 ms later found nothing in the slow ones and reported that as
+        "nothing was selected"."""
+        if user32.GetClipboardSequenceNumber() == self.clipboard_before:
+            if tries < 24:
+                self.root.after(30, lambda: self._open_from_clipboard(tries + 1))
+                return
             # Nothing came across. Either nothing was selected, or the window
             # is running as administrator and refuses keystrokes from a program
             # that is not - which is silent from here, so say it out loud.
             log_sync("Ctrl+Alt+S: the copy did not land (nothing selected, or an elevated window)")
             self._say(tr("capture_nothing"))
             return
+        try:
+            text = self.root.clipboard_get().strip()
+        except tk.TclError:
+            text = ""
         if not text:
             log_sync("Ctrl+Alt+S: clipboard held no text")
             return
