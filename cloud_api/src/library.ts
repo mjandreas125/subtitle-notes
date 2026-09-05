@@ -404,7 +404,12 @@ export const libraryPage = (lang: string, clientId: string) => {
   .chip.on { background:var(--wash); color:var(--accent); border-color:color-mix(in srgb,var(--accent) 55%,var(--hair)) }
 
   .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(238px,1fr)); gap:13px }
-  .card { position:relative; min-height:178px; padding:16px; border:1px solid var(--hair); border-radius:14px;
+  /* A column, so that a long line pushes the name of the film down instead of
+     being drawn straight through it. The source used to be pinned to the
+     bottom edge; a card taller than its minimum then had two things in the
+     same place. */
+  .card { position:relative; display:flex; flex-direction:column; min-height:178px; padding:16px;
+          border:1px solid var(--hair); border-radius:14px;
           background:var(--card); cursor:pointer; overflow:hidden;
           transition:transform .16s cubic-bezier(.2,.7,.3,1), box-shadow .16s, border-color .16s }
   .card:hover { transform:translateY(-3px); border-color:color-mix(in srgb,var(--accent) 50%,var(--hair));
@@ -422,10 +427,12 @@ export const libraryPage = (lang: string, clientId: string) => {
              font-style:italic; line-height:1.4; overflow:hidden; -webkit-line-clamp:2; -webkit-box-orient:vertical }
   mark { padding:0 2px; border-radius:3px; background:color-mix(in srgb,var(--accent) 22%,transparent); color:inherit;
          font-weight:780; font-style:normal }
-  .source { position:absolute; left:16px; right:16px; bottom:14px; color:var(--soft); font-size:12px;
+  .source { margin-top:auto; padding-top:12px; color:var(--soft); font-size:12px;
             font-weight:650; white-space:nowrap; overflow:hidden; text-overflow:ellipsis }
   .card .badge { position:absolute; top:14px; right:14px; width:8px; height:8px; border-radius:50%;
                  background:var(--accent); opacity:.55 }
+  /* The dot marks a learned card; the word must not run under it. */
+  .card .badge + div { padding-right:14px }
 
   .empty { margin:70px auto; max-width:430px; text-align:center; color:var(--soft) }
   .empty h2 { color:var(--ink); font-size:20px; margin-bottom:6px }
