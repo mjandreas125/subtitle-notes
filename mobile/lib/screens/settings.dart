@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import '../data.dart';
 import '../design/components.dart';
 import '../design/tokens.dart';
+import 'tour.dart';
 import '../i18n.dart';
 import 'scan_code.dart';
 
@@ -493,6 +494,29 @@ class _SettingsTabState extends State<SettingsTab> {
                     value: settings.compactCards,
                     onChanged: (value) =>
                         _apply(settings.copyWith(compactCards: value)),
+                  ),
+                ],
+              ),
+
+              _Section(
+                title: context.t('How it works'),
+                icon: Icons.auto_stories_rounded,
+                color: c.amber,
+                description: context.t(
+                  'The four screens shown the first time, in case you went past them.',
+                ),
+                children: [
+                  PushButton(
+                    label: context.t('Show again'),
+                    icon: Icons.play_arrow_rounded,
+                    tone: PushTone.neutral,
+                    onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) =>
+                            TourPage(onDone: () => Navigator.pop(context)),
+                      ),
+                    ),
                   ),
                 ],
               ),

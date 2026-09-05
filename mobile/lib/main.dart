@@ -12,6 +12,7 @@ import 'screens/capture.dart';
 import 'screens/connect_sheet.dart';
 import 'screens/home.dart';
 import 'screens/login.dart';
+import 'screens/tour.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -196,6 +197,13 @@ class _BootstrapPageState extends State<BootstrapPage> {
   @override
   Widget build(BuildContext context) {
     if (!_sessionChecked) return const _Splash();
+    // What the app is comes before anybody is asked to sign in to it, once.
+    if (_session == null && !widget.settings.tourSeen) {
+      return TourPage(
+        onDone: () =>
+            widget.onSettingsChanged(widget.settings.copyWith(tourSeen: true)),
+      );
+    }
     if (_session == null) {
       return LoginPage(
         onAuthenticated: (value) => setState(() => _session = value),

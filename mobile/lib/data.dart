@@ -116,6 +116,7 @@ class AppSettings {
     this.tipDismissed = false,
     this.simpleMode = false,
     this.interfaceLanguage = 'auto',
+    this.tourSeen = false,
   });
 
   final CaptureMode captureMode;
@@ -129,6 +130,10 @@ class AppSettings {
 
   /// The library hint stays gone once it has been closed.
   final bool tipDismissed;
+
+  /// Whether the four screens explaining the app have been through once.
+  /// They come before the sign-in screen, and never again after it.
+  final bool tourSeen;
 
   /// Words and nothing else: no friends, no games, no achievements. Someone
   /// who came here to collect vocabulary should not have to walk past four
@@ -144,6 +149,7 @@ class AppSettings {
     String? interfaceLanguage,
     bool? tipDismissed,
     bool? simpleMode,
+    bool? tourSeen,
   }) => AppSettings(
     captureMode: captureMode ?? this.captureMode,
     showOriginal: showOriginal ?? this.showOriginal,
@@ -153,6 +159,7 @@ class AppSettings {
     interfaceLanguage: interfaceLanguage ?? this.interfaceLanguage,
     tipDismissed: tipDismissed ?? this.tipDismissed,
     simpleMode: simpleMode ?? this.simpleMode,
+    tourSeen: tourSeen ?? this.tourSeen,
   );
 
   static Future<AppSettings> load() async {
@@ -173,6 +180,7 @@ class AppSettings {
       },
       tipDismissed: data.getBool('tip_dismissed') ?? false,
       simpleMode: data.getBool('simple_mode') ?? false,
+      tourSeen: data.getBool('tour_seen') ?? false,
       interfaceLanguage: data.getString('interface_language') ?? 'auto',
     );
   }
@@ -196,6 +204,7 @@ class AppSettings {
     });
     await data.setBool('tip_dismissed', tipDismissed);
     await data.setBool('simple_mode', simpleMode);
+    await data.setBool('tour_seen', tourSeen);
     await data.setString('interface_language', interfaceLanguage);
   }
 }

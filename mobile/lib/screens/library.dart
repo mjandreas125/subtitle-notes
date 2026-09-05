@@ -394,7 +394,9 @@ Future<void> showAchievements(BuildContext context, StudyStats stats) {
                         ),
                         const SizedBox(height: 2),
                         Text(
-                          '${stats.unlocked} unlocked',
+                          context.tf(r'${stats.unlocked} unlocked', {
+                            r'${stats.unlocked}': stats.unlocked,
+                          }),
                           style: AppText.caption(c.ink3),
                         ),
                       ],
@@ -475,7 +477,10 @@ class _AchievementCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      'All ${stats.unlocked} levels. Keep saving what you like.',
+                      context.tf(
+                        r'All ${stats.unlocked} levels. Keep saving what you like.',
+                        {r'${stats.unlocked}': stats.unlocked},
+                      ),
                       style: AppText.caption(c.ink2),
                     ),
                   ],
@@ -508,7 +513,9 @@ class _AchievementCard extends StatelessWidget {
                 ),
                 const Spacer(),
                 Text(
-                  '${stats.unlocked} unlocked',
+                  context.tf(r'${stats.unlocked} unlocked', {
+                    r'${stats.unlocked}': stats.unlocked,
+                  }),
                   style: font(
                     size: 11,
                     weight: 800,
@@ -692,7 +699,11 @@ class _PractiseCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  count == 1 ? '1 word to revisit' : '$count words to revisit',
+                  count == 1
+                      ? context.t('1 word to revisit')
+                      : context.tf(r'$count words to revisit', {
+                          r'$count': count,
+                        }),
                   style: font(size: 16, weight: 800, color: c.ink),
                 ),
                 const SizedBox(height: AppSpace.xxs),
