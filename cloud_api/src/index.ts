@@ -796,6 +796,172 @@ const PAGE_STYLE = `
   code { padding: .1rem .3rem; border-radius: .25rem; background: rgba(127,127,127,.18); }
   .updated { color: #888; font-size: .9rem; }`;
 
+/// The front door. There was none: the root answered 401, so every address a
+/// person was ever given pointed at a page for somebody who had already
+/// installed something. A store listing asks for the website, and Google will
+/// not show the app's name on its own sign-in screen until this exists.
+const HOME_PAGE = `<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Subtitle Notes — the word you did not know, where you met it</title>
+<meta name="description" content="Highlight a word in a subtitle, on a page or in a PDF and see what it means in that line. It is kept in one library shared by your phone, your browser and your computer.">
+<style>
+  :root {
+    --paper: #faf8f4; --ink: #14201c; --soft: #5d6d67; --hair: #e4dfd5;
+    --accent: #1e7a4c; --wash: #e7f2ea; --card: #ffffff;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #101614; --ink: #eaf1ed; --soft: #93a49c; --hair: #26332e;
+      --accent: #64c795; --wash: #17241f; --card: #151d1a;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 0; background: var(--paper); color: var(--ink);
+    font: 16px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .page { max-width: 62rem; margin: 0 auto; padding: 3.5rem 1.25rem 4rem; }
+  header { display: flex; align-items: center; gap: .7rem; margin-bottom: 4rem; }
+  .glyph {
+    width: 26px; height: 18px; border-radius: 4px; background: var(--accent);
+    position: relative; flex: 0 0 auto;
+  }
+  .glyph::after {
+    content: ""; position: absolute; left: 4px; right: 4px; bottom: 4px; height: 3px;
+    border-radius: 2px; background: var(--paper); opacity: .85;
+  }
+  .wordmark { font-weight: 700; letter-spacing: -.02em; font-size: 1.05rem; }
+  h1 {
+    margin: 0 0 1.1rem; font-size: clamp(2rem, 5.2vw, 3.1rem); line-height: 1.1;
+    letter-spacing: -.035em; font-weight: 700; text-wrap: balance; max-width: 20ch;
+  }
+  .lede { margin: 0 0 2.6rem; font-size: clamp(1.05rem, 2.2vw, 1.22rem); color: var(--soft); max-width: 46ch; }
+  h2 { font-size: 1.02rem; letter-spacing: .06em; text-transform: uppercase; color: var(--soft); font-weight: 650; margin: 4.5rem 0 1.4rem; }
+  h3 { margin: 0 0 .45rem; font-size: 1.05rem; letter-spacing: -.015em; }
+  p { margin: 0 0 1rem; }
+
+  /* The example, which is the whole argument for the thing existing. */
+  .demo {
+    display: grid; gap: 1px; background: var(--hair); border: 1px solid var(--hair);
+    border-radius: 14px; overflow: hidden; grid-template-columns: 1fr;
+  }
+  @media (min-width: 44rem) { .demo { grid-template-columns: 1fr 1fr; } }
+  .demo > div { background: var(--card); padding: 1.3rem 1.4rem 1.5rem; }
+  .demo .label { font-size: .74rem; letter-spacing: .09em; text-transform: uppercase; color: var(--soft); font-weight: 700; margin-bottom: .8rem; }
+  .demo .line { font-size: 1.02rem; color: var(--soft); margin-bottom: .55rem; }
+  .demo mark { background: var(--wash); color: inherit; padding: .05em .25em; border-radius: 4px; font-weight: 600; }
+  .demo .out { font-size: 1.25rem; font-weight: 650; letter-spacing: -.02em; }
+  .demo .wrong .out { color: var(--soft); text-decoration: line-through; text-decoration-thickness: 1px; }
+  .demo .right .out { color: var(--accent); }
+
+  .where { display: grid; gap: 1.1rem; grid-template-columns: 1fr; }
+  @media (min-width: 50rem) { .where { grid-template-columns: repeat(3, 1fr); } }
+  .where section {
+    background: var(--card); border: 1px solid var(--hair); border-left: 3px solid var(--accent);
+    border-radius: 12px; padding: 1.3rem 1.4rem 1.4rem;
+  }
+  .where p { color: var(--soft); margin: 0; font-size: .96rem; }
+  .keys {
+    display: inline-block; margin-top: .9rem; padding: .2rem .5rem; border-radius: 6px;
+    border: 1px solid var(--hair); background: var(--wash); color: var(--accent);
+    font-size: .82rem; font-weight: 650;
+  }
+
+  .rows { border-top: 1px solid var(--hair); }
+  .rows div { border-bottom: 1px solid var(--hair); padding: 1.05rem 0; display: grid; gap: .15rem .9rem; }
+  @media (min-width: 44rem) { .rows div { grid-template-columns: 13rem 1fr; } }
+  .rows b { font-weight: 650; }
+  .rows span { color: var(--soft); }
+
+  .cta { margin-top: 2.4rem; display: flex; flex-wrap: wrap; gap: .7rem; align-items: center; }
+  .button {
+    display: inline-block; padding: .68rem 1.15rem; border-radius: 10px; text-decoration: none;
+    background: var(--accent); color: var(--paper); font-weight: 650; letter-spacing: -.005em;
+  }
+  .button.quiet { background: transparent; color: var(--ink); border: 1px solid var(--hair); }
+  .note { margin-top: 1.1rem; color: var(--soft); font-size: .92rem; max-width: 52ch; }
+
+  footer { margin-top: 5rem; padding-top: 1.5rem; border-top: 1px solid var(--hair); color: var(--soft); font-size: .9rem; }
+  footer a { color: inherit; }
+  footer nav { display: flex; flex-wrap: wrap; gap: 1.1rem; margin-bottom: .8rem; }
+  a { color: var(--accent); }
+</style></head><body>
+<div class="page">
+
+<header><span class="glyph" aria-hidden="true"></span><span class="wordmark">Subtitle Notes</span></header>
+
+<h1>The word you did not know, where you met it.</h1>
+<p class="lede">Highlight it in a subtitle, on a page or in a PDF, and see what it means
+<em>in that line</em> — then find it again later, on any of your devices.</p>
+
+<div class="demo">
+  <div class="wrong">
+    <div class="label">A dictionary</div>
+    <div class="line">No one wants a <mark>record</mark>.</div>
+    <div class="out">никто не хочет рекорд</div>
+  </div>
+  <div class="right">
+    <div class="label">Subtitle Notes</div>
+    <div class="line">No one wants a <mark>record</mark>.</div>
+    <div class="out">никому не нужна судимость</div>
+  </div>
+</div>
+<p class="note">The line is read by a language model that can see the rest of the sentence,
+so a word gets the sense the speaker meant rather than its first entry in a dictionary.</p>
+
+<h2>Where it works</h2>
+<div class="where">
+  <section>
+    <h3>In the browser</h3>
+    <p>Subtitles in web players, any text on a page, and PDFs. Hold the key, drag across
+    the words, let go — the meaning appears where you are looking.</p>
+    <span class="keys">Ctrl + drag</span>
+  </section>
+  <section>
+    <h3>On the phone</h3>
+    <p>The library: search, revision on a schedule, and the card for every word you kept,
+    with the line it came from.</p>
+    <span class="keys">Android</span>
+  </section>
+  <section>
+    <h3>On the computer</h3>
+    <p>Subtitles in VLC while a film plays, and selected text in any program at all —
+    a reader, a mail client, a PDF.</p>
+    <span class="keys">Ctrl + Alt + S</span>
+  </section>
+</div>
+
+<h2>What it does with a word</h2>
+<div class="rows">
+  <div><b>Keeps the line</b><span>The sentence, the film and the episode are stored with the word, because that is what made it mean what it meant.</span></div>
+  <div><b>One library</b><span>Sign in with Google once. What you pick in the browser is on the phone before you reach for it.</span></div>
+  <div><b>Brings it back</b><span>Revision on a widening schedule: a word you struggled with returns sooner than one you knew.</span></div>
+  <div><b>Says it out loud</b><span>In the language of the subtitle, not through an English voice.</span></div>
+  <div><b>Lets you disagree</b><span>Write your own wording on any card. Enough people writing the same one makes it the reading everybody gets.</span></div>
+</div>
+
+<div class="cta">
+  <a class="button" href="/library">Open your library</a>
+  <a class="button quiet" href="https://github.com/mjandreas125/subtitle-notes/releases/latest">Download for Windows</a>
+</div>
+<p class="note">Subtitle Notes is in closed alpha. The browser extension and the Android app
+are on their way to the stores; the Windows installer is not signed yet, so it shows a
+SmartScreen warning the first time it runs.</p>
+
+<footer>
+  <nav>
+    <a href="/privacy">Privacy</a>
+    <a href="/delete-account">Delete your account</a>
+    <a href="/library">Library</a>
+    <a href="https://github.com/mjandreas125/subtitle-notes">Source and releases</a>
+  </nav>
+  <div>Subtitle Notes — a place to keep the words you looked up.</div>
+</footer>
+
+</div></body></html>`;
+
 /// Google Play will not publish an app that collects an email address without
 /// a policy that says so. It is served from the worker for the same reason as
 /// the deletion page: one less thing that can quietly go offline.
@@ -1269,6 +1435,7 @@ export default { async fetch(request: Request, env: Env, ctx: ExecutionContext):
     // is reachable without installing anything, so it is served here rather
     // than depending on a separate site staying up.
     if (path === '/delete-account') return new Response(DELETE_ACCOUNT_PAGE, { headers: { ...cors, 'Content-Type': 'text/html; charset=utf-8' } });
+    if (path === '/' || path === '/index.html') return new Response(HOME_PAGE, { headers: { ...cors, 'Content-Type': 'text/html; charset=utf-8' } });
     if (path === '/privacy') return new Response(PRIVACY_PAGE, { headers: { ...cors, 'Content-Type': 'text/html; charset=utf-8' } });
     // Opened by the browser extension and by the Windows program, and by a
     // phone camera pointed at the code they show.
