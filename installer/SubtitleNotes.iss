@@ -38,7 +38,7 @@ Source: "..\dist\SubtitleNotesQuickCapture.exe"; DestDir: "{app}"; Flags: ignore
 Source: "..\mobile\build\windows\x64\runner\Release\*"; DestDir: "{app}\Library"; Flags: recursesubdirs createallsubdirs ignoreversion
 Source: "..\extension\*"; DestDir: "{userdocs}\Subtitle Notes\Browser Extension"; Flags: recursesubdirs createallsubdirs ignoreversion
 Source: "..\mobile\build\app\outputs\flutter-apk\app-release.apk"; DestDir: "{userdocs}\Subtitle Notes\Android"; DestName: "SubtitleNotes.apk"; Flags: ignoreversion
-; The repository README is a developer document — folder layout, build
+; The repository README is a developer document - folder layout, build
 ; commands, links to PROJECT.md. Somebody who just installed a program and
 ; opened the file it left in Documents was reading about the build system.
 Source: "README-user.txt"; DestDir: "{userdocs}\Subtitle Notes"; DestName: "README.txt"; Flags: ignoreversion

@@ -249,7 +249,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 }
 
-/// Three stacked cards standing in for a saved word — the app's own mark
+/// Three stacked cards standing in for a saved word - the app's own mark
 /// rather than a stock book glyph in a circle.
 class _Mark extends StatelessWidget {
   const _Mark();

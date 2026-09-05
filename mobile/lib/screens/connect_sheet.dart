@@ -5,7 +5,7 @@ import '../i18n.dart';
 import '../design/components.dart';
 import '../design/tokens.dart';
 
-/// Shown when a pairing code arrives from outside the app — scanned with the
+/// Shown when a pairing code arrives from outside the app - scanned with the
 /// phone's own camera, or tapped as a link. Connecting is always a deliberate
 /// confirmation, never automatic: a QR someone else shows you should not be
 /// able to attach their computer to your library silently.

@@ -1,4 +1,4 @@
-# Subtitle Notes — browser test install
+# Subtitle Notes - browser test install
 
 This is a temporary test build for Chrome, Edge and Opera. It is not yet in the
 Chrome Web Store, so the browser asks you to enable developer mode. That is

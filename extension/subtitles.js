@@ -6,7 +6,7 @@
 // player rebuilt its element underneath.
 //
 // Nothing is drawn here now. The player's own caption element is made
-// selectable in place — the same words, the same size, the same spot, because
+// selectable in place - the same words, the same size, the same spot, because
 // it is literally the same element. All this layer does is decide when it is
 // text you can drag across and when it is the player's again.
 //
@@ -30,7 +30,7 @@
     '.plyr__caption', // Plyr
     '.shaka-text-container', // Shaka
     // Playerjs, which the Russian film sites use. Its elements are <pjsdiv>
-    // tags — a tag, not a class — and the caption is the one whose id ends in
+    // tags - a tag, not a class - and the caption is the one whose id ends in
     // "_subtitle", e.g. "pjs_cdnplayer_subtitle" on rezka.
     'pjsdiv[id*="subtitle" i]',
     '[id*="_subtitle" i]',
@@ -48,7 +48,7 @@
       pointer-events: auto !important; cursor: text !important;
     }
     /* The browser's own highlight is a rectangle as tall as the line box, with
-       square corners, and nothing about it can be changed — not the height,
+       square corners, and nothing about it can be changed - not the height,
        not the radius. So it is made invisible and drawn again below. */
     .sn-pick ::selection { background: transparent !important; }
     .sn-pick::selection { background: transparent !important; }
@@ -69,7 +69,7 @@
   const glowRoot = glow.attachShadow({ mode: 'closed' });
   glowRoot.innerHTML = `
     <style>
-      /* Faint enough that the letters keep their own colour — a mark under the
+      /* Faint enough that the letters keep their own colour - a mark under the
          words, not paint over them. */
       .pane {
         position: fixed; border-radius: 10px; pointer-events: none;
@@ -165,7 +165,7 @@
   }
 
   /// Players rebuild the caption element for every line, and a rebuild in the
-  /// middle of a drag used to throw the selection away — which is what made it
+  /// middle of a drag used to throw the selection away - which is what made it
   /// vanish letter by letter. The words are the same, so the same range is put
   /// back on the new element.
   function restoreGrip() {
@@ -219,8 +219,8 @@
   window.addEventListener('scroll', drawGlow, true);
   window.addEventListener('resize', drawGlow);
 
-  /// The biggest video actually on screen. A page can hold several — a trailer
-  /// in a sidebar, an advert — and the one being watched is the large one.
+  /// The biggest video actually on screen. A page can hold several - a trailer
+  /// in a sidebar, an advert - and the one being watched is the large one.
   function currentVideo() {
     let best = null;
     let bestArea = 0;
@@ -387,7 +387,7 @@
 
   /// Players build a fresh element for every line, so the one on screen is
   /// rarely the one that was marked a second ago. The scan is cheap and
-  /// throttled, and it has to have happened before the mouse goes down —
+  /// throttled, and it has to have happened before the mouse goes down -
   /// afterwards is too late for the browser to start a selection.
   function refresh(force = false) {
     if (!armed) return;
@@ -440,7 +440,7 @@
   const armFrom = (event) => {
     if (asleep()) return setArmed(false);
     // Letting go of the key in the middle of a drag must not throw away the
-    // words already selected — many people release it before the mouse.
+    // words already selected - many people release it before the mouse.
     if (holding) return;
     setArmed(snSubtitleKeyHeld(event, settings()));
     refresh();

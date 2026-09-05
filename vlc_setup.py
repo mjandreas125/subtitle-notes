@@ -2,8 +2,8 @@
 
 The overlay reads what VLC is playing through that interface. Opening a film
 through "Open with Subtitle Notes" passes the switches on the command line, but
-a film opened any other way — double-clicked, dragged onto VLC, already
-playing — starts a VLC that is not listening, and the translation window then
+a film opened any other way - double-clicked, dragged onto VLC, already
+playing - starts a VLC that is not listening, and the translation window then
 has nothing to talk to.
 
 VLC keeps its settings in a plain INI file, so the same switches can be written

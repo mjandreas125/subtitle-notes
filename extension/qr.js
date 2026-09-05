@@ -1,12 +1,12 @@
 // A QR code, drawn without a library.
 //
-// An extension may not load code from anywhere else, and the alternative —
-// asking a server to draw the picture — would send the pairing code out to a
+// An extension may not load code from anywhere else, and the alternative -
+// asking a server to draw the picture - would send the pairing code out to a
 // third party on every attempt. What has to be encoded is one short link, so
 // only what that needs is here: byte mode, error correction level L, and
 // versions 1 to 9 (up to 230 characters).
 
-/// Arithmetic in GF(256), the field Reed–Solomon codes are computed in.
+/// Arithmetic in GF(256), the field Reed-Solomon codes are computed in.
 const SN_QR_EXP = new Uint8Array(512);
 const SN_QR_LOG = new Uint8Array(256);
 (() => {
@@ -246,8 +246,8 @@ function snQrMatrix(text) {
     candidate[7][8] = bit(6);
     for (let i = 0; i <= 5; i += 1) candidate[i][8] = bit(i);
     // The second copy runs the other way about: the top seven bits go up the
-    // bottom-left column — the module below them is the one that is always
-    // dark — and the low eight run left to right along the top right.
+    // bottom-left column - the module below them is the one that is always
+    // dark - and the low eight run left to right along the top right.
     for (let i = 0; i <= 6; i += 1) candidate[size - 1 - i][8] = bit(14 - i);
     for (let i = 0; i <= 7; i += 1) candidate[8][size - 8 + i] = bit(7 - i);
     const score = snQrPenalty(candidate);

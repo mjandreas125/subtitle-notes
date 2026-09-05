@@ -11,7 +11,7 @@ import '../i18n.dart';
 /// What friends have been saving, and how to find them.
 ///
 /// Two views behind one tab: the feed, and a people search. Adding someone is
-/// one-directional — you follow their words, they do not have to approve, and
+/// one-directional - you follow their words, they do not have to approve, and
 /// nothing of yours becomes visible that your own sharing switch has not
 /// already allowed.
 class FriendsTab extends StatefulWidget {

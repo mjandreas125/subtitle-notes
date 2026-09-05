@@ -37,7 +37,7 @@ for (const [text, season, episode] of [
   ['Severance S2:E5 Trojan’s Horse', '2', '5'],
   ['Severance S02E05', '2', '5'],
   ['The Wire 3x07 - Back Burners', '3', '7'],
-  ['Разделение — 2 сезон 5 серия', '2', '5'],
+  ['Разделение - 2 сезон 5 серия', '2', '5'],
   ['Смотреть 12 серия 3 сезон онлайн', '3', '12'],
   ['Season 4, Episode 11', '4', '11'],
   ['Staffel 2 Folge 6', '2', '6'],
@@ -74,7 +74,7 @@ for (const [label, want] of [
 // Only the first of those may become the name, or the same programme arrives in
 // the library under a different heading every week.
 for (const [pageTitle, want] of [
-  ['Смотреть Разделение (2 сезон 5 серия) онлайн бесплатно — HDrezka', 'Разделение'],
+  ['Смотреть Разделение (2 сезон 5 серия) онлайн бесплатно - HDrezka', 'Разделение'],
   ['Severance S2:E5 Trojan Horse - Netflix', 'Severance'],
   ['The Wire - Season 3 Episode 7 - watch online', 'The Wire'],
   ['Разделение 2x05 в хорошем качестве', 'Разделение'],

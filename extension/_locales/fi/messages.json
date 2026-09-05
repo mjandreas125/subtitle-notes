@@ -12,7 +12,7 @@
     "message": "Mitä tämä tarkoittaa?"
   },
   "pendingLater": {
-    "message": "Ei vastausta juuri nyt — käännös ilmestyy sovellukseen.",
+    "message": "Ei vastausta juuri nyt - käännös ilmestyy sovellukseen.",
     "description": "Shown when no provider answered; the server retries later."
   },
   "listen": {
@@ -267,6 +267,10 @@
   },
   "tourMeaning": {
     "message": "a record - rikosrekisteri"
+  },
+  "tourLine": {
+    "message": "Kukaan ei halua rikosrekisteriä.",
+    "description": "The translated subtitle line on the welcome card."
   },
   "tourSaved": {
     "message": "Tallennettu kirjastoon"

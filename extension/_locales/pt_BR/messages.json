@@ -12,7 +12,7 @@
     "message": "O que isso significa?"
   },
   "pendingLater": {
-    "message": "Sem resposta agora — a tradução vai aparecer no aplicativo.",
+    "message": "Sem resposta agora - a tradução vai aparecer no aplicativo.",
     "description": "Shown when no provider answered; the server retries later."
   },
   "listen": {
@@ -267,6 +267,10 @@
   },
   "tourMeaning": {
     "message": "a record - ficha criminal"
+  },
+  "tourLine": {
+    "message": "Ninguém quer ficha criminal.",
+    "description": "The translated subtitle line on the welcome card."
   },
   "tourSaved": {
     "message": "Salvo na sua biblioteca"

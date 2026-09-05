@@ -116,7 +116,7 @@ class _DetailPageState extends State<DetailPage> {
     } on ApiException catch (error) {
       _report(error.message);
     } catch (_) {
-      _report(context.t('No connection — try again later.'));
+      _report(context.t('No connection - try again later.'));
     } finally {
       if (mounted) setState(() => _rereading = false);
     }
@@ -137,7 +137,7 @@ class _DetailPageState extends State<DetailPage> {
     } on ApiException catch (error) {
       _report(error.message);
     } catch (_) {
-      _report(context.t('No connection — try again later.'));
+      _report(context.t('No connection - try again later.'));
     } finally {
       if (mounted) setState(() => _rereading = false);
     }
@@ -361,7 +361,7 @@ class _DetailPageState extends State<DetailPage> {
                                   const SizedBox(width: AppSpace.sm),
                                   Expanded(
                                     child: Text(
-                                      context.t('Saved on this phone — reconnect to refresh it.'),
+                                      context.t('Saved on this phone - reconnect to refresh it.'),
                                       style: font(
                                         size: 13,
                                         weight: 600,
@@ -701,7 +701,7 @@ class _ListSection extends StatelessWidget {
 }
 
 /// Example sentences with their Russian reading underneath. The English line
-/// stays the loud one — the translation is support, not the point.
+/// stays the loud one - the translation is support, not the point.
 class _ExampleSection extends StatelessWidget {
   const _ExampleSection({required this.examples, required this.color});
 

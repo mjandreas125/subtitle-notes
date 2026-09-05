@@ -12,7 +12,7 @@
     "message": "Qu'est-ce que ça veut dire ?"
   },
   "pendingLater": {
-    "message": "Pas de réponse à l’instant — la traduction arrivera dans l’application.",
+    "message": "Pas de réponse à l’instant - la traduction arrivera dans l’application.",
     "description": "Shown when no provider answered; the server retries later."
   },
   "listen": {
@@ -267,6 +267,10 @@
   },
   "tourMeaning": {
     "message": "a record - casier judiciaire"
+  },
+  "tourLine": {
+    "message": "Personne ne veut de casier.",
+    "description": "The translated subtitle line on the welcome card."
   },
   "tourSaved": {
     "message": "Enregistré dans votre bibliothèque"

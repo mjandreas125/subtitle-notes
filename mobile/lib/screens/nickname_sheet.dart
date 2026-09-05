@@ -10,7 +10,7 @@ import '../design/tokens.dart';
 /// again from the profile.
 ///
 /// The nickname is how friends find each other, so it is asked for plainly
-/// rather than derived from the Google name — an e-mail-shaped handle is
+/// rather than derived from the Google name - an e-mail-shaped handle is
 /// something people would not want shown in a feed.
 class NicknameSheet extends StatefulWidget {
   const NicknameSheet({

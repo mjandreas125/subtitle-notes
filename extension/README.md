@@ -41,7 +41,7 @@ reading, and a hostile site can read anything its scripts can reach, so pages
 send a request to the background worker and get back only the finished
 translation.
 
-If the caption layer ever fails to draw — a player changed its markup, say — the
+If the caption layer ever fails to draw - a player changed its markup, say - the
 rule that hides the original captions switches itself off, so you lose the
 clickable words but never the subtitles.
 
@@ -56,7 +56,7 @@ Tested end to end in Edge against the live server:
   chosen in settings, and showed **Отменить**;
 - selecting the same words again reported *Уже в библиотеке* and offered no
   undo;
-- **Отменить** removed the card from the library — the three cards these tests
+- **Отменить** removed the card from the library - the three cards these tests
   created were cleaned up through it;
 - on a real YouTube video the native captions are hidden and the clickable layer
   renders the current line.

@@ -12,7 +12,7 @@
     "message": "Vad betyder det här?"
   },
   "pendingLater": {
-    "message": "Inget svar just nu — översättningen dyker upp i appen.",
+    "message": "Inget svar just nu - översättningen dyker upp i appen.",
     "description": "Shown when no provider answered; the server retries later."
   },
   "listen": {
@@ -267,6 +267,10 @@
   },
   "tourMeaning": {
     "message": "a record - brottsregister"
+  },
+  "tourLine": {
+    "message": "Ingen vill ha ett brottsregister.",
+    "description": "The translated subtitle line on the welcome card."
   },
   "tourSaved": {
     "message": "Sparat i biblioteket"

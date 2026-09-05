@@ -78,7 +78,7 @@ async function reading({ text, context }) {
 
 /// Saving does not send a translation with it. The server reads the line again
 /// with its slower, better model while it stores the card, so anything sent
-/// from here would be thrown away — and waiting for it first would double how
+/// from here would be thrown away - and waiting for it first would double how
 /// long an instant capture takes.
 /// A phrase is usually caught in two or three goes - a word, then the words
 /// around it. Sending each attempt under its own key left the library holding
@@ -153,7 +153,7 @@ async function badge(state) {
 /// there was a film on it. In VLC space is the pause key and nothing else; in a
 /// browser it scrolls, plays, presses whatever is under the cursor and goes
 /// into every comment box, and a translation window on all of those is an
-/// interruption. The new default is off — but a browser that has already saved
+/// interruption. The new default is off - but a browser that has already saved
 /// its settings carries the old value, so it is turned off once here.
 ///
 /// The mark is what makes it once. Anybody who turns it back on keeps it: the
@@ -190,7 +190,7 @@ chrome.runtime.onInstalled.addListener((details) => {
   chrome.contextMenus.removeAll(() => chrome.contextMenus.create({
     id: MENU_ID,
     // %s is the context menu's own placeholder for the selected text, filled
-    // in by Chrome — it survives translation untouched.
+    // in by Chrome - it survives translation untouched.
     title: chrome.i18n.getMessage('menuSave'),
     contexts: ['selection'],
   }));

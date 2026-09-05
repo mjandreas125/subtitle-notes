@@ -12,7 +12,7 @@
     "message": "Wat betekent dit?"
   },
   "pendingLater": {
-    "message": "Nu geen antwoord — de vertaling verschijnt in de app.",
+    "message": "Nu geen antwoord - de vertaling verschijnt in de app.",
     "description": "Shown when no provider answered; the server retries later."
   },
   "listen": {
@@ -267,6 +267,10 @@
   },
   "tourMeaning": {
     "message": "a record - strafblad"
+  },
+  "tourLine": {
+    "message": "Niemand wil een strafblad.",
+    "description": "The translated subtitle line on the welcome card."
   },
   "tourSaved": {
     "message": "Bewaard in je bibliotheek"

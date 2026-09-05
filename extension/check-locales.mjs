@@ -2,7 +2,7 @@
 //
 //   node extension/check-locales.mjs
 //
-// A missing key is invisible in testing — Chrome quietly returns an empty
+// A missing key is invisible in testing - Chrome quietly returns an empty
 // string, and the button it belonged to simply has no label in Polish. This
 // reads the keys out of the code and the markup instead of trusting a list.
 import { readdirSync, readFileSync } from 'node:fs';

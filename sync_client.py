@@ -376,7 +376,7 @@ def parse_timecode(label: str) -> int | None:
 # Notes found a screen asking for a phone and no mention of Google, because the
 # Google button was in the other program.
 #
-# So there is one window now — the library — and it signs itself in. What is
+# So there is one window now - the library - and it signs itself in. What is
 # left here is what the player and the capture helper import, plus a small
 # executable the installer runs to switch VLC's web interface on. Started by
 # hand, from a shortcut left over from before, it opens the program.

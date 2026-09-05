@@ -7,7 +7,7 @@ import '../data.dart';
 import '../i18n.dart';
 import 'tokens.dart';
 
-/// Wraps a child so it squishes on press. Scale only — never a layout change,
+/// Wraps a child so it squishes on press. Scale only - never a layout change,
 /// so nothing around it shifts while a finger is down.
 class Squish extends StatefulWidget {
   const Squish({
@@ -918,7 +918,7 @@ class _SwipeRowState extends State<SwipeRow> with TickerProviderStateMixin {
 }
 
 /// One achievement row: medal, name, what it takes, and how far along it is.
-/// Locked levels stay legible rather than being greyed into nothing — there is
+/// Locked levels stay legible rather than being greyed into nothing - there is
 /// no penalty for not having reached them.
 class AchievementRow extends StatelessWidget {
   const AchievementRow({

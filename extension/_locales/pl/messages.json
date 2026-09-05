@@ -12,7 +12,7 @@
     "message": "Co to znaczy?"
   },
   "pendingLater": {
-    "message": "Teraz brak odpowiedzi — tłumaczenie pojawi się w aplikacji.",
+    "message": "Teraz brak odpowiedzi - tłumaczenie pojawi się w aplikacji.",
     "description": "Shown when no provider answered; the server retries later."
   },
   "listen": {
@@ -268,6 +268,10 @@
   "tourMeaning": {
     "message": "a record - kartoteka karna"
   },
+  "tourLine": {
+    "message": "Nikt nie chce kartoteki.",
+    "description": "The translated subtitle line on the welcome card."
+  },
   "tourSaved": {
     "message": "Zapisano w bibliotece"
   },
@@ -344,6 +348,6 @@
     "message": "Nie ma tu napisów odtwarzacza. Zaznacz dowolny tekst, trzymając Ctrl+Alt."
   },
   "pageOff": {
-    "message": "Na tej stronie Subtitle Notes się nie włącza — tak ustawiłeś."
+    "message": "Na tej stronie Subtitle Notes się nie włącza - tak ustawiłeś."
   }
 }

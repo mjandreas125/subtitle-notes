@@ -12,7 +12,7 @@
     "message": "Mida see tähendab?"
   },
   "pendingLater": {
-    "message": "Praegu vastust ei tulnud — tõlge ilmub rakendusse.",
+    "message": "Praegu vastust ei tulnud - tõlge ilmub rakendusse.",
     "description": "Shown when no provider answered; the server retries later."
   },
   "listen": {
@@ -268,6 +268,10 @@
   "tourMeaning": {
     "message": "a record - karistusregistri kanne"
   },
+  "tourLine": {
+    "message": "Kellelgi pole vaja karistusregistri kannet.",
+    "description": "The translated subtitle line on the welcome card."
+  },
   "tourSaved": {
     "message": "Salvestatud kogusse"
   },
@@ -344,6 +348,6 @@
     "message": "Pleieri subtiitreid siin ei ole. Vali suvaline tekst ja hoia Ctrl+Alt."
   },
   "pageOff": {
-    "message": "Sellel saidil Subtitle Notes ei tööta — nii sa palusid."
+    "message": "Sellel saidil Subtitle Notes ei tööta - nii sa palusid."
   }
 }

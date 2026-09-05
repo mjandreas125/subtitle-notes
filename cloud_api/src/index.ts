@@ -1,6 +1,7 @@
 interface Env { DB: D1Database; TOKEN_SECRET: string; AI: { run(model: string, input: unknown): Promise<any> } }
 
 import { libraryPage } from './library';
+import { homePage } from './home';
 
 const CLIENT_ID = '151185018789-tjda40ks4kb2vo8s30f9359n2b9o4dlb.apps.googleusercontent.com';
 const encoder = new TextEncoder();
@@ -28,7 +29,7 @@ function fromB64(value: string) { return Uint8Array.from(atob(value.replace(/-/g
 async function sign(value: string, secret: string) { const key = await crypto.subtle.importKey('raw', encoder.encode(secret), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']); return b64(new Uint8Array(await crypto.subtle.sign('HMAC', key, encoder.encode(value)))); }
 /// A session lasts a year. Thirty days sounded prudent and meant that every
 /// phone, browser and computer quietly stopped working a month after it was
-/// set up — for a vocabulary notebook that is not prudence, it is a fault.
+/// set up - for a vocabulary notebook that is not prudence, it is a fault.
 async function token(user: { id: string; email: string }, secret: string) { const head = b64(encoder.encode('{"alg":"HS256","typ":"JWT"}')); const body = b64(encoder.encode(JSON.stringify({ sub: user.id, email: user.email, exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 365 }))); return `${head}.${body}.${await sign(`${head}.${body}`, secret)}`; }
 async function userFrom(request: Request, env: Env) { const value = request.headers.get('authorization')?.replace(/^Bearer\s+/i, '') ?? ''; const [head, body, signature] = value.split('.'); if (!head || !body || !signature || signature !== await sign(`${head}.${body}`, env.TOKEN_SECRET)) throw new Error('Unauthorized'); const claims = JSON.parse(new TextDecoder().decode(fromB64(body))); if (claims.exp * 1000 < Date.now()) throw new Error('Session expired'); const user = await env.DB.prepare('SELECT id, email, display_name, language FROM users WHERE id = ?').bind(claims.sub).first(); if (!user) throw new Error('Unauthorized'); return user as { id: string; email: string; display_name: string; language: string }; }
 function failure(error: unknown) { const message = error instanceof Error ? error.message : 'Server error'; const status = /Unauthorized|expired/.test(message) ? 401 : 400; return json({ detail: message }, status); }
@@ -310,7 +311,7 @@ async function translateExamples(env: Env, sentences: string[], language = 'ru',
 ///
 /// A dictionary translates a word on its own, which is how "The kid doesn't
 /// need any more static." became "не нужно больше статики" and how "exclusive"
-/// becomes "эксклюзивный" — true, and of no use to someone learning. A model
+/// becomes "эксклюзивный" - true, and of no use to someone learning. A model
 /// reading the whole line answers with the sense a dubbing translator would
 /// pick, plus ordinary Russian synonyms for it. It runs on Cloudflare next to
 /// this worker, so it costs one call and no second account.
@@ -401,7 +402,7 @@ function synonymsFor(values: any, term: string, language: string): string[] {
   if (!Array.isArray(values)) return [];
   const cyrillic = CYRILLIC_LANGUAGES.has(language);
   // Written in the reader's alphabet and nothing else. A German answer must
-  // not carry Cyrillic, and a Russian one must not carry Latin — either way it
+  // not carry Cyrillic, and a Russian one must not carry Latin - either way it
   // means the model drifted mid-sentence.
   const shape = cyrillic ? /^[\p{Script=Cyrillic}\s'’-]+$/u : /^[^\p{Script=Cyrillic}]+$/u;
   const seen = new Set([term.toLowerCase()]);
@@ -514,8 +515,8 @@ async function smartReading(env: Env, line: string, context = '', model = SMART_
 
 /// Finds or creates the account behind a Google credential.
 ///
-/// Every way into the account ends here — the phone's own sign-in button, and
-/// the page a browser or the Windows program opens — so there is one notion of
+/// Every way into the account ends here - the phone's own sign-in button, and
+/// the page a browser or the Windows program opens - so there is one notion of
 /// who you are and the same library everywhere.
 async function googleAccount(env: Env, idToken: string) {
   const verified: any = await (await fetch(`https://oauth2.googleapis.com/tokeninfo?id_token=${encodeURIComponent(idToken)}`)).json();
@@ -583,7 +584,7 @@ function linkLanguage(url: URL, request: Request): string {
 /// registered Google client, and a desktop program has no browser. Both can
 /// open a web page, so the page does the signing in and hands the finished
 /// session back through the pairing code they already hold. Scanning the same
-/// link with a phone works too — the camera opens this page, and the phone's
+/// link with a phone works too - the camera opens this page, and the phone's
 /// own scanner reads the code out of the address.
 ///
 /// It is opened from a program that has just said "Continue with Google", so
@@ -796,179 +797,13 @@ const PAGE_STYLE = `
   code { padding: .1rem .3rem; border-radius: .25rem; background: rgba(127,127,127,.18); }
   .updated { color: #888; font-size: .9rem; }`;
 
-/// The front door. There was none: the root answered 401, so every address a
-/// person was ever given pointed at a page for somebody who had already
-/// installed something. A store listing asks for the website, and Google will
-/// not show the app's name on its own sign-in screen until this exists.
-const HOME_PAGE = `<!doctype html>
-<html lang="en"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Subtitle Notes — the word you did not know, where you met it</title>
-<meta name="description" content="Highlight a word in a subtitle, on a page or in a PDF and see what it means in that line. It is kept in one library shared by your phone, your browser and your computer.">
-<style>
-  :root {
-    --paper: #faf8f4; --ink: #14201c; --soft: #5d6d67; --hair: #e4dfd5;
-    --accent: #1e7a4c; --wash: #e7f2ea; --card: #ffffff;
-  }
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --paper: #101614; --ink: #eaf1ed; --soft: #93a49c; --hair: #26332e;
-      --accent: #64c795; --wash: #17241f; --card: #151d1a;
-    }
-  }
-  * { box-sizing: border-box; }
-  body {
-    margin: 0; padding: 0; background: var(--paper); color: var(--ink);
-    font: 16px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-    -webkit-font-smoothing: antialiased;
-  }
-  .page { max-width: 62rem; margin: 0 auto; padding: 3.5rem 1.25rem 4rem; }
-  header { display: flex; align-items: center; gap: .7rem; margin-bottom: 4rem; }
-  .glyph {
-    width: 26px; height: 18px; border-radius: 4px; background: var(--accent);
-    position: relative; flex: 0 0 auto;
-  }
-  .glyph::after {
-    content: ""; position: absolute; left: 4px; right: 4px; bottom: 4px; height: 3px;
-    border-radius: 2px; background: var(--paper); opacity: .85;
-  }
-  .wordmark { font-weight: 700; letter-spacing: -.02em; font-size: 1.05rem; }
-  h1 {
-    margin: 0 0 1.1rem; font-size: clamp(2rem, 5.2vw, 3.1rem); line-height: 1.1;
-    letter-spacing: -.035em; font-weight: 700; text-wrap: balance; max-width: 20ch;
-  }
-  .lede { margin: 0 0 2.6rem; font-size: clamp(1.05rem, 2.2vw, 1.22rem); color: var(--soft); max-width: 46ch; }
-  h2 { font-size: 1.02rem; letter-spacing: .06em; text-transform: uppercase; color: var(--soft); font-weight: 650; margin: 4.5rem 0 1.4rem; }
-  h3 { margin: 0 0 .45rem; font-size: 1.05rem; letter-spacing: -.015em; }
-  p { margin: 0 0 1rem; }
-
-  /* The example, which is the whole argument for the thing existing. */
-  .demo {
-    display: grid; gap: 1px; background: var(--hair); border: 1px solid var(--hair);
-    border-radius: 14px; overflow: hidden; grid-template-columns: 1fr;
-  }
-  @media (min-width: 44rem) { .demo { grid-template-columns: 1fr 1fr; } }
-  .demo > div { background: var(--card); padding: 1.3rem 1.4rem 1.5rem; }
-  .demo .label { font-size: .74rem; letter-spacing: .09em; text-transform: uppercase; color: var(--soft); font-weight: 700; margin-bottom: .8rem; }
-  .demo .line { font-size: 1.02rem; color: var(--soft); margin-bottom: .55rem; }
-  .demo mark { background: var(--wash); color: inherit; padding: .05em .25em; border-radius: 4px; font-weight: 600; }
-  .demo .out { font-size: 1.25rem; font-weight: 650; letter-spacing: -.02em; }
-  .demo .wrong .out { color: var(--soft); text-decoration: line-through; text-decoration-thickness: 1px; }
-  .demo .right .out { color: var(--accent); }
-
-  .where { display: grid; gap: 1.1rem; grid-template-columns: 1fr; }
-  @media (min-width: 50rem) { .where { grid-template-columns: repeat(3, 1fr); } }
-  .where section {
-    background: var(--card); border: 1px solid var(--hair); border-left: 3px solid var(--accent);
-    border-radius: 12px; padding: 1.3rem 1.4rem 1.4rem;
-  }
-  .where p { color: var(--soft); margin: 0; font-size: .96rem; }
-  .keys {
-    display: inline-block; margin-top: .9rem; padding: .2rem .5rem; border-radius: 6px;
-    border: 1px solid var(--hair); background: var(--wash); color: var(--accent);
-    font-size: .82rem; font-weight: 650;
-  }
-
-  .rows { border-top: 1px solid var(--hair); }
-  .rows div { border-bottom: 1px solid var(--hair); padding: 1.05rem 0; display: grid; gap: .15rem .9rem; }
-  @media (min-width: 44rem) { .rows div { grid-template-columns: 13rem 1fr; } }
-  .rows b { font-weight: 650; }
-  .rows span { color: var(--soft); }
-
-  .cta { margin-top: 2.4rem; display: flex; flex-wrap: wrap; gap: .7rem; align-items: center; }
-  .button {
-    display: inline-block; padding: .68rem 1.15rem; border-radius: 10px; text-decoration: none;
-    background: var(--accent); color: var(--paper); font-weight: 650; letter-spacing: -.005em;
-  }
-  .button.quiet { background: transparent; color: var(--ink); border: 1px solid var(--hair); }
-  .note { margin-top: 1.1rem; color: var(--soft); font-size: .92rem; max-width: 52ch; }
-
-  footer { margin-top: 5rem; padding-top: 1.5rem; border-top: 1px solid var(--hair); color: var(--soft); font-size: .9rem; }
-  footer a { color: inherit; }
-  footer nav { display: flex; flex-wrap: wrap; gap: 1.1rem; margin-bottom: .8rem; }
-  a { color: var(--accent); }
-</style></head><body>
-<div class="page">
-
-<header><span class="glyph" aria-hidden="true"></span><span class="wordmark">Subtitle Notes</span></header>
-
-<h1>The word you did not know, where you met it.</h1>
-<p class="lede">Highlight it in a subtitle, on a page or in a PDF, and see what it means
-<em>in that line</em> — then find it again later, on any of your devices.</p>
-
-<div class="demo">
-  <div class="wrong">
-    <div class="label">A dictionary</div>
-    <div class="line">No one wants a <mark>record</mark>.</div>
-    <div class="out">никто не хочет рекорд</div>
-  </div>
-  <div class="right">
-    <div class="label">Subtitle Notes</div>
-    <div class="line">No one wants a <mark>record</mark>.</div>
-    <div class="out">никому не нужна судимость</div>
-  </div>
-</div>
-<p class="note">The line is read by a language model that can see the rest of the sentence,
-so a word gets the sense the speaker meant rather than its first entry in a dictionary.</p>
-
-<h2>Where it works</h2>
-<div class="where">
-  <section>
-    <h3>In the browser</h3>
-    <p>Subtitles in web players, any text on a page, and PDFs. Hold the key, drag across
-    the words, let go — the meaning appears where you are looking.</p>
-    <span class="keys">Ctrl + drag</span>
-  </section>
-  <section>
-    <h3>On the phone</h3>
-    <p>The library: search, revision on a schedule, and the card for every word you kept,
-    with the line it came from.</p>
-    <span class="keys">Android</span>
-  </section>
-  <section>
-    <h3>On the computer</h3>
-    <p>Subtitles in VLC while a film plays, and selected text in any program at all —
-    a reader, a mail client, a PDF.</p>
-    <span class="keys">Ctrl + Alt + S</span>
-  </section>
-</div>
-
-<h2>What it does with a word</h2>
-<div class="rows">
-  <div><b>Keeps the line</b><span>The sentence, the film and the episode are stored with the word, because that is what made it mean what it meant.</span></div>
-  <div><b>One library</b><span>Sign in with Google once. What you pick in the browser is on the phone before you reach for it.</span></div>
-  <div><b>Brings it back</b><span>Revision on a widening schedule: a word you struggled with returns sooner than one you knew.</span></div>
-  <div><b>Says it out loud</b><span>In the language of the subtitle, not through an English voice.</span></div>
-  <div><b>Lets you disagree</b><span>Write your own wording on any card. Enough people writing the same one makes it the reading everybody gets.</span></div>
-</div>
-
-<div class="cta">
-  <a class="button" href="/library">Open your library</a>
-  <a class="button quiet" href="https://github.com/mjandreas125/subtitle-notes/releases/latest">Download for Windows</a>
-</div>
-<p class="note">Subtitle Notes is in closed alpha. The browser extension and the Android app
-are on their way to the stores; the Windows installer is not signed yet, so it shows a
-SmartScreen warning the first time it runs.</p>
-
-<footer>
-  <nav>
-    <a href="/privacy">Privacy</a>
-    <a href="/delete-account">Delete your account</a>
-    <a href="/library">Library</a>
-    <a href="https://github.com/mjandreas125/subtitle-notes">Source and releases</a>
-  </nav>
-  <div>Subtitle Notes — a place to keep the words you looked up.</div>
-</footer>
-
-</div></body></html>`;
-
 /// Google Play will not publish an app that collects an email address without
 /// a policy that says so. It is served from the worker for the same reason as
 /// the deletion page: one less thing that can quietly go offline.
 const PRIVACY_PAGE = `<!doctype html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Subtitle Notes — Privacy Policy</title>
+<title>Subtitle Notes - Privacy Policy</title>
 <style>${PAGE_STYLE}</style></head><body>
 <h1>Privacy Policy</h1>
 <p class="updated">Subtitle Notes &middot; last updated 17 August 2026</p>
@@ -994,7 +829,7 @@ sites, and nothing is sold or shared for marketing.</p>
 
 <h2>Who else sees the text</h2>
 <p>To translate a highlighted line, the text of that line is sent to Google
-Translate and to Cloudflare Workers AI. Only the line itself is sent — never
+Translate and to Cloudflare Workers AI. Only the line itself is sent - never
 your email, your name, or anything identifying you. These services translate the
 text and return the result.</p>
 
@@ -1123,7 +958,7 @@ function mergeVariants(...groups: string[][]): string[] {
 
 /// A deliberate two- or three-word selection is kept whole, and the model is
 /// never allowed to break one up. A whole sentence is different: the rule there
-/// can only guess, and it guesses the first content word — which is how "The
+/// can only guess, and it guesses the first content word - which is how "The
 /// kid doesn't need any more static." became a card about "kid". The model may
 /// narrow a sentence, and only that: its answer has to be words that really
 /// appear in the line, and fewer of them than were highlighted.
@@ -1133,7 +968,7 @@ function narrowed(selected: string, suggestion: string | undefined): string | nu
   const size = count(suggestion);
   if (!size || size > PHRASE_MAX_WORDS || size >= count(selected)) return null;
   // "They made her out to be a hero" is worth learning as "made her out to
-  // be". Narrowed to "made" — or to "out to" — it is a card about nothing.
+  // be". Narrowed to "made" - or to "out to" - it is a card about nothing.
   const words = wordsIn(suggestion.toLowerCase());
   // The check is useful for English (it prevents an AI from answering "to"),
   // but other language stop lists would only invent a new source-language
@@ -1185,7 +1020,7 @@ async function agreedCorrection(env: Env, term: string, language: string) {
 ///
 /// `quick` is what the browser waits on while the film is paused: detect the
 /// language, read the line with the fast model, stop. `full` is the version
-/// worth keeping — the slower model that reads idioms properly, plus the
+/// worth keeping - the slower model that reads idioms properly, plus the
 /// dictionary's base form, its usage examples and their translations. The
 /// browser gets the first and the card is quietly replaced by the second, so
 /// nobody waits four seconds for examples they are not looking at yet.
@@ -1284,7 +1119,7 @@ async function upsertSelection(env: Env, owner: string, input: any, enriched?: a
     : '';
   const selectedSense = senseKey(phrase, word, selected, usefulContext);
   // Only the columns the three tests below read. Matching has to happen in
-  // JavaScript — the keys are normalised in ways SQL does not share — but
+  // JavaScript - the keys are normalised in ways SQL does not share - but
   // there is no reason to drag every card's synonyms, examples and variants
   // across the wire to decide whether one of them is this one. A library of a
   // few thousand words is a few thousand rows on every single capture.
@@ -1302,12 +1137,12 @@ async function upsertSelection(env: Env, owner: string, input: any, enriched?: a
       focusKey(row.focus_phrase, row.focus_word, row.selected_text) === focusKey(phrase, word, selected)),
   );
   // Nothing usable came back from any provider. The card is still worth
-  // keeping — the words were deliberately selected — but it is marked as owing
+  // keeping - the words were deliberately selected - but it is marked as owing
   // a translation, so the server can come back to it once the providers answer
   // again instead of leaving English text sitting where the meaning belongs.
   const pending = missingTranslation(data.translation, selected) ? 1 : 0;
   // Where the line was met. A card remembers the first place it was seen, so
-  // meeting the same line again never rewrites its origin — but a card saved
+  // meeting the same line again never rewrites its origin - but a card saved
   // before the browser knew how to read the episode has blanks, and those get
   // filled in. `Web` and `Unknown title` are placeholders, not titles, and
   // count as blank for the same reason.
@@ -1333,8 +1168,8 @@ async function upsertSelection(env: Env, owner: string, input: any, enriched?: a
     } else {
       await env.DB.prepare('UPDATE selections SET archived = 0, created_at = ?, seen_count = seen_count + 1, media_title = COALESCE(NULLIF(NULLIF(NULLIF(NULLIF(media_title, \'\'), \'Web\'), \'Video\'), \'Unknown title\'), ?, media_title), season = COALESCE(season, ?), episode = COALESCE(episode, ?) WHERE id = ?').bind(now(), title, season, episode, existing.id).run();
     }
-    // Marked so a caller that saved without asking — the browser extension's
-    // instant capture — can offer to undo a card it created without offering
+    // Marked so a caller that saved without asking - the browser extension's
+    // instant capture - can offer to undo a card it created without offering
     // to delete one the library already had.
     const row = await env.DB.prepare('SELECT * FROM selections WHERE id = ?').bind(existing.id).first<any>();
     return { ...row, reused: true };
@@ -1399,8 +1234,8 @@ async function refineCapture(env: Env, id: string, language: string) {
 const REPAIR_BATCH = 3;
 
 /// The column doubles as a count of how many times the retry has been tried,
-/// so a card that no provider will ever manage — a whole Wikipedia paragraph
-/// caught by a stray drag — stops costing a translation on every library load.
+/// so a card that no provider will ever manage - a whole Wikipedia paragraph
+/// caught by a stray drag - stops costing a translation on every library load.
 /// Re-selecting it in a player sets the flag back to one and starts again.
 const REPAIR_TRIES = 8;
 
@@ -1435,7 +1270,9 @@ export default { async fetch(request: Request, env: Env, ctx: ExecutionContext):
     // is reachable without installing anything, so it is served here rather
     // than depending on a separate site staying up.
     if (path === '/delete-account') return new Response(DELETE_ACCOUNT_PAGE, { headers: { ...cors, 'Content-Type': 'text/html; charset=utf-8' } });
-    if (path === '/' || path === '/index.html') return new Response(HOME_PAGE, { headers: { ...cors, 'Content-Type': 'text/html; charset=utf-8' } });
+    if (path === '/' || path === '/index.html') {
+      return new Response(homePage(linkLanguage(url, request)), { headers: { ...cors, 'Content-Type': 'text/html; charset=utf-8' } });
+    }
     if (path === '/privacy') return new Response(PRIVACY_PAGE, { headers: { ...cors, 'Content-Type': 'text/html; charset=utf-8' } });
     // Opened by the browser extension and by the Windows program, and by a
     // phone camera pointed at the code they show.

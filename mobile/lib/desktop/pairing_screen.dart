@@ -15,7 +15,7 @@ import 'desktop_config.dart';
 /// First run on Windows: sign in, then write the session where the VLC helper
 /// will find it.
 ///
-/// There used to be a second program for this — a small window of its own that
+/// There used to be a second program for this - a small window of its own that
 /// showed a code and waited for the phone to approve it. A person who had just
 /// installed one program and opened it found no way in at all, because the way
 /// in was in the other program. So the sign-in lives here, where the library

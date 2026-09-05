@@ -242,7 +242,7 @@ def claim_single_instance() -> object | None:
 
     Two overlays draw two transparent windows over the same video, each with
     its own poll timing. On screen that looks like the previous subtitle
-    hanging around on top of the next one and shivering — which is exactly
+    hanging around on top of the next one and shivering - which is exactly
     what a second copy left running produces.
     """
     handle = kernel32.CreateMutexW(None, True, SINGLE_INSTANCE_MUTEX)
@@ -510,7 +510,7 @@ def choose_focus_phrase(text: str) -> tuple[str, str]:
     # they want to learn. Reducing "employment record" to "employment" throws
     # away the meaning they were after.
     if len(matches) <= PHRASE_MAX_WORDS and not looks_like_sentence(text, lowered):
-        phrase = clean_plain_text(text).strip(" \t -–—,;:")
+        phrase = clean_plain_text(text).strip(" \t ---,;:")
         head = next(
             (match.group(0) for match, stem in zip(matches, stems) if stem not in STOP_WORDS),
             matches[0].group(0),
@@ -572,7 +572,7 @@ def translate_selection_smart(
     # longer. Put the first answer on screen instead of leaving a row of dots
     # there until the better one is written.
     # A dictionary preview is useful for a lone word. In a full subtitle it is
-    # often exactly the wrong sense ("cane — трость"), so keep the popup in its
+    # often exactly the wrong sense ("cane - трость"), so keep the popup in its
     # neutral loading state until the contextual reading can replace it.
     if phrase_result is not None and preview is not None and not has_context:
         preview(phrase_result)
@@ -1080,7 +1080,7 @@ class VlcSubtitleOverlay:
     def _cues_for_time(self, current_ms: int) -> tuple[int, ...]:
         """Every cue covering this moment, earliest first.
 
-        Subtitle files overlap constantly — two speakers, or a caption held
+        Subtitle files overlap constantly - two speakers, or a caption held
         under a following line. Taking only the last cue that started made the
         earlier one disappear mid-sentence and flicker back when the later one
         ended.
@@ -1127,7 +1127,7 @@ class VlcSubtitleOverlay:
 
         VLC reports `time` in whole seconds and `position` as a coarse
         fraction, so reading either directly makes the clock jump back and
-        forth across a cue boundary — which is what made cues stutter. The
+        forth across a cue boundary - which is what made cues stutter. The
         estimate runs on the local monotonic clock and is nudged toward VLC
         rather than snapped to it, except on a real seek.
         """
@@ -1598,7 +1598,7 @@ class VlcSubtitleOverlay:
         """Returns the headline and the supporting line for the popup.
 
         The headline is always the translation of what was actually selected.
-        Showing only the key word — which is what this used to do — meant that
+        Showing only the key word - which is what this used to do - meant that
         selecting a whole sentence answered with a single dictionary word.
         """
         if not isinstance(result, TranslationResult):
@@ -1618,7 +1618,7 @@ class VlcSubtitleOverlay:
             and focus_label.lower() != (selected_text or "").strip().lower()
             and result.focus_translation.lower() != result.text.lower()
         ):
-            support = f"{focus_label} — {result.focus_translation}"
+            support = f"{focus_label} - {result.focus_translation}"
         elif result.variants:
             support = result.variants[0]
         return result.text, support

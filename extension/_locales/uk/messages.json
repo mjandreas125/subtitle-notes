@@ -189,7 +189,7 @@
     "message": "Пробіл лише на цих сайтах"
   },
   "optSitesHelp": {
-    "message": "По одній адресі в рядку, наприклад rezka.ag. Порожньо — означає всюди. Усе інше працює всюди в будь-якому разі."
+    "message": "По одній адресі в рядку, наприклад rezka.ag. Порожньо - означає всюди. Усе інше працює всюди в будь-якому разі."
   },
   "optSavedToast": {
     "message": "Збережено"
@@ -268,6 +268,10 @@
   "tourMeaning": {
     "message": "a record - судимість"
   },
+  "tourLine": {
+    "message": "Нікому не потрібна судимість.",
+    "description": "The translated subtitle line on the welcome card."
+  },
   "tourSaved": {
     "message": "Збережено в бібліотеку"
   },
@@ -344,6 +348,6 @@
     "message": "Субтитрів плеєра тут немає. Виділіть будь-який текст і тримайте Ctrl+Alt."
   },
   "pageOff": {
-    "message": "На цьому сайті Subtitle Notes не працює — так ви просили."
+    "message": "На цьому сайті Subtitle Notes не працює - так ви просили."
   }
 }

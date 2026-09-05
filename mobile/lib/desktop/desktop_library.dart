@@ -210,7 +210,7 @@ class _DesktopLibraryState extends State<DesktopLibrary> {
   ///
   /// Without this the program was a library with no way to fill it: somebody
   /// installed it, signed in, and was told that words appear here when a
-  /// subtitle is selected in VLC — with nothing to say how VLC comes into it.
+  /// subtitle is selected in VLC - with nothing to say how VLC comes into it.
   /// The answer was a right-click in Explorer that nobody had been told about.
   /// The practice run, the same one the phone shows. It reads what is due
   /// from the server, so a word answered here is answered everywhere.

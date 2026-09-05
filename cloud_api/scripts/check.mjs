@@ -4,8 +4,8 @@
 //
 // Without a token it checks only what an unauthenticated visitor can see: the
 // pages, the version feed, and that everything private really is private. With
-// one it goes through the whole path a selection takes — dictionary, reading,
-// save, repair, practice, export — and deletes the cards it made on the way out.
+// one it goes through the whole path a selection takes - dictionary, reading,
+// save, repair, practice, export - and deletes the cards it made on the way out.
 //
 // Against a local `wrangler dev`, mint the token with `scripts/local-token.mjs`.
 // A typo in an SQL string only shows up when the statement runs, which is why
@@ -22,7 +22,7 @@ function report(name, ok, detail = '') {
   checks += 1;
   if (!ok) failures += 1;
   const mark = ok ? '  ok  ' : ' FAIL ';
-  console.log(`${mark} ${name}${detail ? `  — ${detail}` : ''}`);
+  console.log(`${mark} ${name}${detail ? `  - ${detail}` : ''}`);
 }
 
 async function call(path, { method = 'GET', body, auth = true } = {}) {

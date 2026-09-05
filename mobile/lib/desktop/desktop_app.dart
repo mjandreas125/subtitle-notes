@@ -10,7 +10,7 @@ import 'desktop_updates.dart';
 import 'pairing_screen.dart';
 
 /// Windows entry point. Same tokens, same components, same account as the
-/// phone — only the layout changes, because a desktop window is wide and the
+/// phone - only the layout changes, because a desktop window is wide and the
 /// pointer is precise.
 class DesktopApp extends StatefulWidget {
   const DesktopApp({super.key});

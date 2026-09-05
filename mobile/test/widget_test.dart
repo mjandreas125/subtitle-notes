@@ -137,8 +137,8 @@ void main() {
       expect(example.translation, 'Он всё хвастался этим.');
     });
 
-    test('splits a legacy "sentence — translation" string', () {
-      final example = StudyExample.fromJson('Nice car — Хорошая машина');
+    test('splits a legacy "sentence - translation" string', () {
+      final example = StudyExample.fromJson('Nice car - Хорошая машина');
       expect(example.text, 'Nice car');
       expect(example.translation, 'Хорошая машина');
     });

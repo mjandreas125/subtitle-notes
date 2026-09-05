@@ -18,7 +18,7 @@ const t = (key, ...args) => {
 };
 
 const SN_DEFAULTS = {
-  /// Held while selecting — or pressed just after — saves without asking.
+  /// Held while selecting - or pressed just after - saves without asking.
   hotkey: { ctrl: true, alt: true, shift: false, meta: false, key: '' },
   /// Where the panel appears: by the selection, or pinned to a corner.
   position: 'selection', // selection | top-left | top-right | bottom-left | bottom-right
@@ -93,8 +93,8 @@ function snSubtitleKeys(settings) {
 }
 
 /// Whether the keys that make subtitles selectable are down right now. Any
-/// event carrying modifier state answers it — a key press, a mouse move, a
-/// click — so the layer can arm itself without tracking presses by hand.
+/// event carrying modifier state answers it - a key press, a mouse move, a
+/// click - so the layer can arm itself without tracking presses by hand.
 ///
 /// Every key in the combination has to be held; extra ones do no harm, which
 /// is what lets Ctrl+Alt both select and save when selecting is set to Ctrl.
@@ -174,8 +174,8 @@ function snBlocked(settings, host) {
 //
 // A card that says only "Silo" is a card you cannot place: the same word turns
 // up in the second episode and in the sixth, and the library shows one line for
-// both. The player on screen always knows which episode is playing — it is what
-// the viewer just clicked — so the page is asked rather than guessed at.
+// both. The player on screen always knows which episode is playing - it is what
+// the viewer just clicked - so the page is asked rather than guessed at.
 
 const SN_SEASON_WORD = '(?:seasons?|сезон[а-яё]*|hooaeg|staffel|saison|temporada|stagione|sezon[ua]?|säsong|kausi)';
 const SN_EPISODE_WORD = '(?:episodes?|épisode|episodio|epizod|odcinek|сери[яию]|серій?|серія|folge|osa|avsnitt|jakso|bölüm|aflevering)';
@@ -189,8 +189,8 @@ const SN_EPISODE_WORD = '(?:episodes?|épisode|episodio|epizod|odcinek|сери[
 /// claimed once: whichever word reaches it first keeps it.
 ///
 /// Word matching is fenced with letter lookarounds rather than `\b`, because
-/// word boundaries are defined on the Latin alphabet — `\bсезон` never matches
-/// at all — while a bare "osa" would otherwise be found inside "Rosa".
+/// word boundaries are defined on the Latin alphabet - `\bсезон` never matches
+/// at all - while a bare "osa" would otherwise be found inside "Rosa".
 function snUnitNumbers(value) {
   const season = new RegExp('^' + SN_SEASON_WORD + '$', 'iu');
   const episode = new RegExp('^' + SN_EPISODE_WORD + '$', 'iu');
@@ -198,7 +198,7 @@ function snUnitNumbers(value) {
   const claimed = new Set();
   const found = { season: '', episode: '' };
 
-  /// The number beside this word, looking behind first — most languages that
+  /// The number beside this word, looking behind first - most languages that
   /// put the digits in front are the ones where the word carries a suffix, so
   /// a one- or two-letter token in between ("2-й сезон") is stepped over.
   const beside = (at) => {
@@ -239,7 +239,7 @@ const SN_CHOSEN = '.active, .selected, .current, .is-active, [aria-selected="tru
 /// The number a chosen item stands for, or nothing.
 ///
 /// "5 серия", "Episode 7", "S2" and a bare "3" are episode numbers. "1080p" is
-/// not, and neither is "Sound: 2 tracks" — a list that merely has the word
+/// not, and neither is "Sound: 2 tracks" - a list that merely has the word
 /// "episode" somewhere in its class name will happily hand over the digits of
 /// whatever else is highlighted inside it, and a card filed under episode 108
 /// is worse than a card filed under no episode at all.
@@ -266,7 +266,7 @@ function snChosenNumber(value) {
 /// chosen inside a list that calls itself seasons or episodes, and finally the
 /// words on screen.
 function snEpisodeFromPage() {
-  // Playerjs shells — rezka and the sites that borrowed its markup — mark the
+  // Playerjs shells - rezka and the sites that borrowed its markup - mark the
   // chosen episode with the numbers themselves, which beats reading labels.
   for (const node of document.querySelectorAll('[data-episode_id]')) {
     if (!node.matches(SN_CHOSEN)) continue;
@@ -372,8 +372,8 @@ function snWithoutEpisode(value) {
   }
 
   // A series writes its name first and the episode after it, so everything
-  // from the episode onwards is the episode. When there is nothing in front —
-  // "5 серия Разделение" — the mention is cut out instead of the name.
+  // from the episode onwards is the episode. When there is nothing in front -
+  // "5 серия Разделение" - the mention is cut out instead of the name.
   if (cut > 0 && (text.slice(0, cut).match(/\p{L}/gu) ?? []).length >= 2) return text.slice(0, cut);
   return text
     .replace(bracketed, ' ')

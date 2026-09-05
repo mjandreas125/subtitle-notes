@@ -1,7 +1,7 @@
 // Highlight text on any page and keep what it means.
 //
 // The panel lives in a shadow root. A page's stylesheet cannot reach inside one,
-// and ours cannot leak out — which matters when the "page" is a news site with
+// and ours cannot leak out - which matters when the "page" is a news site with
 // three competing CSS frameworks, or a reader that restyles every div it finds.
 
 (() => {
@@ -184,7 +184,7 @@
   document.documentElement.appendChild(host);
 
   /// Fullscreen replaces the page with one element, and anything outside it is
-  /// not drawn at all — which is why the card appeared nowhere while a film was
+  /// not drawn at all - which is why the card appeared nowhere while a film was
   /// full screen. It moves inside for the duration.
   function reparent() {
     const parent = document.fullscreenElement ?? document.webkitFullscreenElement ?? document.documentElement;
@@ -440,7 +440,7 @@
   }
 
   /// The whole point of the hotkey: no button, no confirmation. Which is
-  /// exactly why the card that appears offers to undo — a stray drag with the
+  /// exactly why the card that appears offers to undo - a stray drag with the
   /// keys held should not quietly cost you a card you have to hunt down later.
   async function saveNow(rect, text, context, media, timecodeMs = null) {
     close();

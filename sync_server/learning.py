@@ -92,7 +92,7 @@ def _bilingual_examples(examples: list[str]) -> list[str]:
             translation, _, _ = _translate(example)
         except Exception:
             translation = ""
-        result.append(f"{example} — {translation}" if translation else example)
+        result.append(f"{example} - {translation}" if translation else example)
     return result
 
 
@@ -143,7 +143,7 @@ def enrich(text: str) -> Enrichment:
     focus_translation, focus_variants, focus_examples = _translate(focus_phrase or text)
     source_example = []
     if len(WORD_RE.findall(text)) > 1 and whole:
-        source_example = [f"{text.strip()} — {whole}"]
+        source_example = [f"{text.strip()} - {whole}"]
     dictionary_examples = _bilingual_examples(_dictionary_examples(focus_word))
     all_examples = source_example + [
         example

@@ -28,7 +28,7 @@ from the store.
 
 Until the first OAuth client exists, sign-in in the renamed app returns
 `DEVELOPER_ERROR`. You can still get in by pairing with the Windows app's QR
-code — that path issues a session without Google.
+code - that path issues a session without Google.
 
 ## The keystore
 
@@ -36,7 +36,7 @@ code — that path issues a session without Google.
     password in subtitle-notes-upload.password.txt (same folder), alias "upload"
 
 **Back this up somewhere that is not this laptop.** Losing it means you can
-never publish an update to this listing again — Play offers a key reset, but it
+never publish an update to this listing again - Play offers a key reset, but it
 is a support request measured in days, not a button. `key.properties` and `.jks`
 are both gitignored, so they will never reach GitHub.
 
@@ -47,7 +47,7 @@ are both gitignored, so they will never reach GitHub.
     # -> build/app/outputs/bundle/release/app-release.aab
 
 Play wants the `.aab`, not an APK. Bump `version:` in `pubspec.yaml` before each
-new upload — Play refuses a version code it has already seen.
+new upload - Play refuses a version code it has already seen.
 
 ## Store listing answers
 
@@ -55,7 +55,7 @@ new upload — Play refuses a version code it has already seen.
 **Short description** (80 chars max):
 > Save words from subtitles and learn what they really mean.
 
-**Full description** — do not mention VLC, Netflix or any other product by name
+**Full description** - do not mention VLC, Netflix or any other product by name
 in a way that suggests they endorse or are part of the app. Describing that it
 works alongside a media player is fine; putting their trademark in the title is
 not.
@@ -66,7 +66,7 @@ not.
 
 ## Data safety form
 
-Answer it exactly like this — it has to match what the app really does, and the
+Answer it exactly like this - it has to match what the app really does, and the
 privacy policy page already says the same thing.
 
 | Question | Answer |
@@ -84,7 +84,7 @@ privacy policy page already says the same thing.
 
 Answer "no" to every violence, sexual content, drugs and gambling question. Note
 that users can enter free text that other users can see (the nickname and the
-saved words shown to friends) — Play asks about user-generated content, and the
+saved words shown to friends) - Play asks about user-generated content, and the
 honest answer is yes, shared only with people the user added as friends.
 
 ## Still missing before a public launch

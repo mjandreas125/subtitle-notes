@@ -382,7 +382,7 @@ class FeedItem {
     );
   }
 
-  /// "2 h", "3 d" — short enough to sit at the end of a header row.
+  /// "2 h", "3 d" - short enough to sit at the end of a header row.
   String get age {
     final gap = DateTime.now().difference(createdAt);
     if (gap.inMinutes < 1) return 'now';
@@ -561,7 +561,7 @@ class SyncApi {
   }
 
   /// Reads the saved line again with the server's slower, better model. The
-  /// subtitle itself is never touched — only what was worked out from it.
+  /// subtitle itself is never touched - only what was worked out from it.
   Future<StudyDetail> reread(String id) async {
     final response = await http
         .post(_uri('/selections/$id/reenrich'), headers: _headers)
@@ -731,7 +731,7 @@ class SyncApi {
   ///
   /// `/captures`, not `/selections`: the cloud detects which language the
   /// subtitle was in and derives the card itself, where `/selections` would
-  /// store whatever the local dictionary made of it — which is how an English
+  /// store whatever the local dictionary made of it - which is how an English
   /// line could end up filed as its own translation. The Python side has sent
   /// these to `/captures` for a while; this one had not caught up.
   Future<void> postSelection(Map<String, dynamic> payload) async {
@@ -1000,7 +1000,7 @@ class StudyCard {
   /// for display purposes.
   static String bare(String value) => value
       .toLowerCase()
-      .replaceAll(RegExp(r'''[\s.,!?;:'"«»„“”\-–—…()\[\]]+'''), ' ')
+      .replaceAll(RegExp(r'''[\s.,!?;:'"«»„“”\---…()\[\]]+'''), ' ')
       .trim();
 
   Map<String, String> get companionMap => {
@@ -1016,7 +1016,7 @@ class StudyCard {
 ///
 /// A session eventually runs out. When it does, the phone is still signed in
 /// to Google, so it can ask Google for a new identity token and trade that for
-/// a new session — no screen, no interruption. Only if Google refuses does the
+/// a new session - no screen, no interruption. Only if Google refuses does the
 /// person see the sign-in screen again.
 class SessionRenewal {
   static Future<Session?> attempt(Session old) async {
@@ -1076,7 +1076,7 @@ class StudyCache {
 /// The list of words already survives offline; opening one of them used to say
 /// "Details unavailable" and show nothing, which is exactly when someone on a
 /// train wants to read the examples again. Every card that has been opened once
-/// is kept, newest first, up to a few hundred — a few hundred kilobytes.
+/// is kept, newest first, up to a few hundred - a few hundred kilobytes.
 class DetailCache {
   static const _key = 'card_details';
   static const _limit = 300;
@@ -1132,9 +1132,9 @@ class StudyExample {
         translation: translation?.isNotEmpty == true ? translation : null,
       );
     }
-    // Legacy rows packed both halves into "sentence — перевод".
+    // Legacy rows packed both halves into "sentence - перевод".
     final raw = value.toString().trim();
-    for (final separator in const [' — ', ' – ', ' -- ']) {
+    for (final separator in const [' - ', ' - ', ' -- ']) {
       final index = raw.indexOf(separator);
       if (index > 0) {
         return StudyExample(
@@ -1265,7 +1265,7 @@ class StudyStats {
   final int total, active, learned, sources, series, phrases, longestRun;
   final List<Achievement> achievements;
 
-  /// Closest achievement to its next tier — the one worth showing first.
+  /// Closest achievement to its next tier - the one worth showing first.
   Achievement? get nextUp {
     final open = achievements.where((item) => !item.complete).toList()
       ..sort((a, b) => b.progress.compareTo(a.progress));

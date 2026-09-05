@@ -76,7 +76,7 @@ class _ReviewPageState extends State<ReviewPage> {
     setState(() {
       final rest = _queue.skip(1).toList();
       // A word that would not come back goes to the end of the queue rather
-      // than out of it — the point is to leave the session knowing it.
+      // than out of it - the point is to leave the session knowing it.
       _queue = result == 'again' ? [...rest, card] : rest;
       if (result != 'again') _done += 1;
       _revealed = false;

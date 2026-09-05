@@ -1,6 +1,6 @@
 """Re-runs the current word logic over cards saved by an older build.
 
-The saved subtitle text is never changed; only what was derived from it — the
+The saved subtitle text is never changed; only what was derived from it - the
 headword, its meaning, the sense list and the examples. A card is left exactly
 as it was if the translation service is unavailable, so a rate-limited run can
 be repeated safely.

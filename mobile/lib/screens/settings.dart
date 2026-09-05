@@ -61,7 +61,7 @@ class _SettingsTabState extends State<SettingsTab> {
     setState(() => _languageBusy = true);
     // Read before the request: the failure message is needed after it, and by
     // then this screen may already be gone.
-    final offline = context.t('No connection — the language was not changed.');
+    final offline = context.t('No connection - the language was not changed.');
     try {
       widget.onProfileChanged(
         await widget.api.updateProfile(language: code),

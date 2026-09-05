@@ -3,7 +3,7 @@
 //   node scripts/local-token.mjs [user-id] [email]
 //
 // It reads TOKEN_SECRET out of cloud_api/.dev.vars, so it is only ever valid
-// against the local server — the real secret lives in Cloudflare and is not on
+// against the local server - the real secret lives in Cloudflare and is not on
 // this machine. Seed the user first:
 //
 //   npx wrangler d1 execute subtitle-notes-production --local --command \

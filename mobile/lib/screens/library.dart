@@ -44,7 +44,7 @@ class _LibraryTabState extends State<LibraryTab> {
   String _query = '';
 
   /// How many words are waiting to be met again. Fetched here rather than in
-  /// the shell because it changes on its own — a word saved yesterday becomes
+  /// the shell because it changes on its own - a word saved yesterday becomes
   /// due today without anything happening in the app.
   int _due = 0;
 

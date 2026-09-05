@@ -284,8 +284,8 @@ function paintSettings() {
     : t('optSubKeyNow', '').replace('', `<b>${snSubtitleKeyLabel(settings)}</b>`);
 }
 
-/// Records the next combination pressed. Modifiers alone are a valid answer —
-/// "hold Ctrl+Alt and select" is the whole idea — so the recording ends when
+/// Records the next combination pressed. Modifiers alone are a valid answer -
+/// "hold Ctrl+Alt and select" is the whole idea - so the recording ends when
 /// the keys come back up rather than on the first keydown.
 view('capture').addEventListener('click', () => {
   const button = view('capture');

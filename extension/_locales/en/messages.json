@@ -12,7 +12,7 @@
     "message": "What does this mean?"
   },
   "pendingLater": {
-    "message": "No answer just now — it will be translated in the app.",
+    "message": "No answer just now - it will be translated in the app.",
     "description": "Shown when no provider answered; the server retries later."
   },
   "listen": {
@@ -267,6 +267,10 @@
   },
   "tourMeaning": {
     "message": "a record - a criminal record"
+  },
+  "tourLine": {
+    "message": "Nobody wants a criminal record.",
+    "description": "The translated subtitle line on the welcome card."
   },
   "tourSaved": {
     "message": "Saved to your library"

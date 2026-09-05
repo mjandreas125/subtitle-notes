@@ -8,7 +8,7 @@ plugins {
 }
 
 // The upload key lives outside the repository and is named by key.properties,
-// which is not committed either. A checkout without it still builds — it just
+// which is not committed either. A checkout without it still builds - it just
 // falls back to the debug key, which Google Play refuses but `flutter run
 // --release` accepts.
 val keystoreProperties = Properties()
@@ -31,7 +31,7 @@ android {
     defaultConfig {
         // The identity Google already knows. Sign-in only works for a pair of
         // package name and signing certificate that has been registered, and
-        // this is the registered pair — renaming it is what broke sign-in, so
+        // this is the registered pair - renaming it is what broke sign-in, so
         // it stays until a new pair is registered for the store build.
         applicationId = "com.translatedvlc.translated_vlc_mobile"
         minSdk = flutter.minSdkVersion
@@ -55,7 +55,7 @@ android {
         release {
             // Deliberately the debug certificate: it is the one registered
             // with Google for this package, so sign-in works. Google Play will
-            // not accept a build signed this way — before uploading, register
+            // not accept a build signed this way - before uploading, register
             // the upload key's fingerprint and switch this back to "release".
             signingConfig = signingConfigs.getByName("debug")
         }

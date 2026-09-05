@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 ///
 /// The visual language is deliberately tactile: flat saturated colour, a solid
 /// darker "lip" under every pressable surface instead of a blurred shadow, one
-/// rounded type family, and a 4dp spacing rhythm. Nothing here uses gradients —
+/// rounded type family, and a 4dp spacing rhythm. Nothing here uses gradients -
 /// depth comes from the lip and from border weight, which is what keeps the
 /// interface feeling built rather than generated.
 class AppSpace {
@@ -283,7 +283,7 @@ FontWeight _nearestWeight(double weight) {
   return FontWeight.values[index];
 }
 
-/// The type scale. Sizes step 12 / 13 / 15 / 17 / 20 / 24 / 30 / 38 — no
+/// The type scale. Sizes step 12 / 13 / 15 / 17 / 20 / 24 / 30 / 38 - no
 /// arbitrary values anywhere else in the app.
 class AppText {
   const AppText._();
