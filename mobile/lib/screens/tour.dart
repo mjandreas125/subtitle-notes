@@ -81,28 +81,28 @@ class _TourPageState extends State<TourPage> {
                 onPageChanged: (index) => setState(() => _at = index),
                 children: const [
                   _Slide(
-                    show: _PickScene(),
-                    title: 'Pick the word out of the line',
+                    show: _SenseScene(),
+                    title: 'Not the word - what it means here',
                     body:
-                        'Hold the key over a subtitle, drag across the words, let go. The answer appears where you are looking.',
+                        'A dictionary translates the word by itself. Here the whole sentence is read, so the word gets the meaning it has in it.',
                   ),
                   _Slide(
-                    show: _SenseScene(),
-                    title: 'The meaning here, not the one in a dictionary',
+                    show: _PickScene(),
+                    title: 'Saving a word is one movement',
                     body:
-                        'A dictionary answers about the word on its own. The whole line is read, so you get the sense the speaker meant.',
+                        'In the browser and on the computer: hold the key and drag across a word in the subtitles. On the phone: select any text and pick Subtitle Notes from the menu.',
                   ),
                   _Slide(
                     show: _DevicesScene(),
-                    title: 'One library, wherever you read',
+                    title: 'One library on every device',
                     body:
-                        'Phone, browser and computer share one account. A word picked on one of them is already on the others.',
+                        'One Google sign-in. A word saved in the browser is here on the phone straight away.',
                   ),
                   _Slide(
                     show: _ReturnScene(),
-                    title: 'It comes back before you forget it',
+                    title: 'Words come back until they stay',
                     body:
-                        'Words return on a widening schedule, and the ones that were hard come back sooner than the ones that were not.',
+                        'First after a day, then after three, then after a week. What you forget is shown more often.',
                   ),
                 ],
               ),
@@ -119,7 +119,7 @@ class _TourPageState extends State<TourPage> {
                   _Dots(count: 4, at: _at),
                   const SizedBox(height: AppSpace.lg),
                   PushButton(
-                    label: context.t(last ? 'Start' : 'Next'),
+                    label: context.t(last ? 'Begin' : 'Next'),
                     icon: last ? Icons.arrow_forward_rounded : null,
                     onPressed: _forward,
                   ),
@@ -734,7 +734,7 @@ class _ReturnSceneState extends _SceneState<_ReturnScene> {
                 left: 0,
                 right: 0,
                 child: Text(
-                  context.t('days between one look and the next'),
+                  context.t('days between repeats'),
                   textAlign: TextAlign.center,
                   style: AppText.caption(c.ink3),
                 ),
