@@ -7,272 +7,43 @@
       film.html?lang=en&t=13.2     one frame, exactly, in real seconds
       film.html?lang=ru            plays in the browser, for eyeballing
 
-  Every animation is declared paused and seeked with a negative delay, so the
-  frame at t is a pure function of t and nothing depends on wall-clock timing.
-  That is what lets a headless renderer walk the timeline one frame at a time
-  and get the same film every run.
+  This is a real scene in a real renderer: a perspective camera, lights that
+  cast shadows, fog for the depth falloff, points on the GPU for the data. The
+  version before it faked depth with CSS planes and blur - and a filter turns
+  off 3D sorting in CSS, so everything painted in markup order, scenes stacked
+  on top of one another, and the player's chrome sat under the whole film.
 
-  Times in this file are written in STORY seconds and played back at RATE.
-  Both constants are shared with tools/promo-audio.py, and the cut follows the
-  sound design that file already contains - the key at 9.45, three notes for
-  three nodes at 14.1/14.75/15.4, the bell on the answer at 16.9, the swell for
-  the three devices at 22.5, five notes for five languages from 27.5, the last
-  bell at 31.9. Move a beat here and it goes out of sync with the music.
+  Two rules that cut broke, kept here by construction:
 
-  THE SPACE. Everything lives in one perspective, and the camera never stops
-  moving: the subtitle is a plane lying in front of the picture, the machine is
-  a corridor of planes receding away from it, and the answer comes back out of
-  that corridor towards the viewer. The camera is driven from seek(), not from
-  a keyframe, because the canvas layer projects its motes with the same numbers
-  - one space, not a 3D scene with a 2D overlay pasted on top.
+    1. ONE SCENE OWNS THE FRAME. A scene is a Group with a start and an end;
+       outside that window it is not visible at all, so nothing from a finished
+       scene can show through the next one.
+    2. THINGS LEAVE. The television, the subtitle and the card go somewhere on
+       camera. Nothing is disposed of by quietly turning its opacity down while
+       it stays where it was.
+
+  Times are written in STORY seconds and played at RATE, both shared with
+  tools/promo-audio.py, and the cut follows the sound design already in that
+  file: the key at 9.45, three notes for three nodes at 14.1/14.75/15.4, the
+  bell on the answer at 16.9, the swell at 22.5, five notes for five languages
+  from 27.5, the last bell at 31.9.
 -->
 <script src="strings.js"></script>
+<script src="vendor/three.min.js"></script>
 <style>
-  :root {
-    --t: 0;                                  /* the clock, in real seconds */
-    --ink:    #eef3f0;
-    --dim:    #93a49c;
-    --faint:  #6d7f77;
-    --accent: #46d68f;
-    --deep:   #05080a;
-    --out:    cubic-bezier(.16, 1, .3, 1);   /* ease-out-expo */
-    --quart:  cubic-bezier(.25, 1, .5, 1);
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  html, body { background: var(--deep); overflow: hidden; }
-  body {
-    width: 1920px; height: 1080px; position: relative;
-    font: 400 16px/1.5 "Segoe UI", system-ui, -apple-system, sans-serif;
-    color: var(--ink); -webkit-font-smoothing: antialiased;
-  }
-
-  /* Every animated element carries this. The shorthand is never used inline,
-     because the shorthand would reset the delay that does the seeking. */
-  .a {
-    animation-play-state: paused;
-    animation-fill-mode: both;
-    animation-delay: calc((var(--s, 0) - var(--t)) * 1s);
-    animation-timing-function: var(--out);
-  }
-  @media (prefers-reduced-motion: reduce) {
-    html:not([data-motion]) .a { animation: none !important; opacity: 1 !important; }
-  }
-
-  @keyframes fade      { from { opacity: 0 } to { opacity: 1 } }
-  @keyframes out       { from { opacity: 1 } to { opacity: 0 } }
-  @keyframes rise      { from { opacity: 0; transform: translateY(26px) } to { opacity: 1; transform: none } }
-  @keyframes riseSmall { from { opacity: 0; transform: translateY(12px) } to { opacity: 1; transform: none } }
-  @keyframes sink      { from { opacity: 1; transform: none } to { opacity: 0; transform: translateY(18px) } }
-  @keyframes wipe      { from { clip-path: inset(0 100% 0 0) } to { clip-path: inset(0 0 0 0) } }
-  @keyframes strike    { from { transform: scaleX(0) } to { transform: scaleX(1) } }
-  @keyframes press     { from { transform: translateZ(18px) } to { transform: translateZ(4px) } }
-
-  /* Depth entrances. A plane arrives by coming forward out of the dark, which
-     in one perspective is a different thing from growing in place. */
-  @keyframes comeUp    { from { opacity: 0; transform: translate3d(0, 40px, -220px) } to { opacity: 1; transform: none } }
-  @keyframes landHere  { from { opacity: 0; transform: translate3d(0, 0, -560px) scale(.92) } to { opacity: 1; transform: none } }
-  @keyframes lift      { from { transform: translate3d(0, 0, 0) } to { transform: translate3d(0, -26px, 96px) } }
-  @keyframes recede    { from { opacity: 1; transform: translateZ(0) } to { opacity: .16; transform: translateZ(-460px) } }
-  @keyframes sheen     { from { transform: translateX(-120%) skewX(-18deg) } to { transform: translateX(320%) skewX(-18deg) } }
-  @keyframes ring      { from { opacity: .55; transform: scale(.35) } to { opacity: 0; transform: scale(1.9) } }
-  @keyframes chipIn    { from { opacity: 0; transform: translate3d(0, 14px, -60px) } to { opacity: 1; transform: none } }
-
-  /* — the space — */
-  #world { position: absolute; inset: 0; perspective: 1400px; perspective-origin: 50% 45%; }
-  #cam { position: absolute; inset: 0; transform-style: preserve-3d; }
-  .plane {
-    position: absolute; left: 50%; top: 45%;
-    transform-style: preserve-3d;
-    will-change: transform, opacity;
-  }
-
-  /* — the room behind the picture — */
-  #room { width: 2600px; height: 1500px; margin: -750px 0 0 -1300px; }
-  .lamp {
-    position: absolute; border-radius: 50%;
-    background: radial-gradient(circle, rgba(255, 236, 190, .5), rgba(255, 236, 190, 0) 68%);
-    filter: blur(14px);
-  }
-  #haze {
-    position: absolute; inset: 0;
-    background: radial-gradient(60% 55% at 50% 42%, rgba(24, 46, 40, .55), rgba(5, 8, 10, 0) 70%);
-  }
-
-  /* — the series, playing — */
-  #screen {
-    width: 1500px; height: 844px; margin: -470px 0 0 -750px;
-    border-radius: 14px; overflow: hidden;
-    background:
-      radial-gradient(42% 56% at 24% 30%, rgba(70, 214, 143, .30), rgba(0, 0, 0, 0) 66%),
-      radial-gradient(46% 58% at 76% 26%, rgba(150, 186, 255, .20), rgba(0, 0, 0, 0) 64%),
-      radial-gradient(70% 80% at 50% 92%, rgba(255, 226, 178, .10), rgba(0, 0, 0, 0) 70%),
-      linear-gradient(#16211f, #0a1113);
-    box-shadow: 0 60px 140px -60px rgba(0, 0, 0, .9), inset 0 0 120px rgba(0, 0, 0, .7);
-  }
-  #scan {
-    position: absolute; inset: 0; opacity: .5;
-    background: repeating-linear-gradient(to bottom, rgba(255, 255, 255, .022) 0 1px, rgba(0, 0, 0, 0) 1px 3px);
-  }
-  .figure {
-    position: absolute; border-radius: 50% 50% 46% 46%;
-    background: linear-gradient(#0c1417, #05090b);
-  }
-  #bar { position: absolute; left: 60px; right: 60px; bottom: 44px; height: 3px; background: rgba(238, 243, 240, .16); border-radius: 2px; }
-  #bar i { position: absolute; left: 0; top: 0; bottom: 0; width: 66%; background: var(--accent); border-radius: 2px; }
-  #bar b { position: absolute; left: 66%; top: -4px; width: 11px; height: 11px; margin-left: -5px; border-radius: 50%; background: var(--accent); }
-  .meta {
-    position: absolute; bottom: 66px; font: 500 20px/1 "Segoe UI", system-ui, sans-serif;
-    letter-spacing: .1em; color: var(--faint);
-  }
-  .meta.l { left: 60px; }
-  .meta.r { right: 60px; font-variant-numeric: tabular-nums; }
-  #paused {
-    position: absolute; right: 60px; top: 52px;
-    display: flex; align-items: center; gap: 12px;
-    font: 600 20px/1 "Segoe UI", system-ui, sans-serif; letter-spacing: .22em; color: var(--ink);
-  }
-  #paused s { display: inline-block; width: 5px; height: 22px; background: var(--ink); }
-
-  /* — the subtitle, a plane of its own lying in front of the picture — */
-  #subs { width: 1400px; margin: 70px 0 0 -700px; transform: translateZ(120px) rotateX(-9deg); }
-  .cap {
-    display: inline-block; padding: 18px 30px; border-radius: 10px;
-    background: rgba(5, 8, 10, .74);
-    font: 600 54px/1.24 "Segoe UI", system-ui, sans-serif; letter-spacing: -.012em;
-    white-space: nowrap;
-  }
-  .cap em { font-style: normal; position: relative; padding: 0 4px; }
-  #hl {
-    position: absolute; left: 0; right: 0; top: 2px; bottom: 2px;
-    background: var(--accent); border-radius: 5px; z-index: -1;
-  }
-  .cap em.on { color: #06231a; }
-
-  /* — the dictionary's flat, wrong answer — */
-  #dict {
-    width: 1000px; margin: 152px 0 0 -500px; transform: translateZ(80px);
-    text-align: center;
-  }
-  #dict .lbl {
-    font: 500 21px/1 "Segoe UI", system-ui, sans-serif; letter-spacing: .2em;
-    text-transform: uppercase; color: var(--faint); margin-right: 18px;
-  }
-  #dict .val { display: inline-block; position: relative; font: 400 40px/1.2 "Segoe UI", system-ui, sans-serif; color: #bccac3; }
-  #dict .val u { position: absolute; left: -8px; right: -8px; top: 52%; height: 4px; background: #e0736c; transform-origin: left center; text-decoration: none; }
-
-  /* — the corridor: three nodes receding away — */
-  .node { width: 460px; margin: -60px 0 0 -230px; text-align: center; }
-  .node .dot {
-    width: 30px; height: 30px; margin: 0 auto; border-radius: 50%;
-    background: #d9fbea;
-    box-shadow: 0 0 0 14px rgba(70, 214, 143, .16), 0 0 90px 10px rgba(70, 214, 143, .75);
-  }
-  .node .nm {
-    margin-top: 22px; display: inline-block; padding: 10px 22px; border-radius: 999px;
-    background: rgba(8, 26, 21, .9); border: 1px solid rgba(70, 214, 143, .5);
-    font: 600 34px/1 "Segoe UI", system-ui, sans-serif;
-    letter-spacing: .03em; color: var(--ink);
-  }
-
-  /* — the answer, coming back out at the viewer — */
-  #card {
-    width: 1020px; margin: -170px 0 0 -510px; padding: 40px 46px 44px;
-    border-radius: 20px; overflow: hidden;
-    background: linear-gradient(#111c19, #0a1210);
-    border: 1px solid rgba(70, 214, 143, .3);
-    box-shadow: 0 80px 160px -70px rgba(0, 0, 0, .95), 0 0 90px -30px rgba(70, 214, 143, .28);
-    transform: translateZ(150px);
-  }
-  #card .src { font: 400 26px/1 "Segoe UI", system-ui, sans-serif; color: var(--faint); letter-spacing: .02em; }
-  #card .lead { margin-top: 20px; font: 700 62px/1.14 "Segoe UI", system-ui, sans-serif; letter-spacing: -.026em; }
-  #card .term { margin-top: 18px; font: 500 30px/1 "Segoe UI", system-ui, sans-serif; color: var(--accent); }
-  #chips { margin-top: 26px; display: flex; gap: 14px; flex-wrap: wrap; }
-  #chips span {
-    padding: 12px 20px; border-radius: 999px;
-    background: rgba(70, 214, 143, .1); border: 1px solid rgba(70, 214, 143, .22);
-    font: 500 24px/1 "Segoe UI", system-ui, sans-serif; color: #a7e6c6;
-  }
-  #gloss { position: absolute; left: 46px; right: 46px; bottom: 44px; font: 400 26px/1.35 "Segoe UI", system-ui, sans-serif; color: var(--dim); }
-  #shine {
-    position: absolute; top: -20%; bottom: -20%; width: 34%;
-    background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, .07), rgba(255, 255, 255, 0));
-  }
-  #halo {
-    position: absolute; left: 50%; top: 50%; width: 1300px; height: 1300px; margin: -650px 0 0 -650px;
-    border-radius: 50%; border: 2px solid rgba(70, 214, 143, .5);
-  }
-
-  /* — one library, three places — */
-  .dev { width: 380px; margin: -190px 0 0 -190px; }
-  .dev .glass {
-    height: 250px; border-radius: 16px;
-    background: linear-gradient(#0f1a17, #080f0d);
-    border: 1px solid rgba(238, 243, 240, .1);
-    box-shadow: 0 50px 90px -50px rgba(0, 0, 0, .9);
-    position: relative; overflow: hidden;
-  }
-  .dev .glass i {
-    position: absolute; left: 22px; right: 22px; height: 12px; border-radius: 6px;
-    background: rgba(238, 243, 240, .13);
-  }
-  .dev .glass i.k { background: rgba(70, 214, 143, .5); }
-  .dev .nm { margin-top: 22px; text-align: center; font: 600 30px/1 "Segoe UI", system-ui, sans-serif; color: var(--ink); letter-spacing: .04em; }
-
-  /* — the same answer, language after language — */
-  /* Sits exactly where the card's own answer sits, so the language changes
-     inside the card instead of replacing it. */
-  #swap { width: 1000px; margin: -66px 0 0 -500px; height: 88px; transform: translateZ(152px); }
-  #swap div {
-    position: absolute; left: 0; right: 0; text-align: center;
-    font: 700 60px/1.1 "Segoe UI", system-ui, sans-serif; letter-spacing: -.026em;
-  }
-
-  /* — the caption plane: always square to the camera, always legible — */
-  #says {
-    position: absolute; left: 0; right: 0; bottom: 96px; text-align: center;
-    font: 500 40px/1.3 "Segoe UI", system-ui, sans-serif; letter-spacing: -.012em;
-  }
-  #says div { position: absolute; left: 0; right: 0; }
-  #says b { color: var(--accent); font-weight: 500; }
-
-  /* — the end card — */
-  #end { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; }
-  #mark {
-    width: 132px; height: 100px; margin: 0 auto; border-radius: 26px;
-    background: var(--accent); position: relative;
-    box-shadow: 0 0 120px -20px rgba(70, 214, 143, .5);
-  }
-  #mark::before, #mark::after { content: ''; position: absolute; height: 13px; border-radius: 7px; background: #06231a; }
-  #mark::before { top: 30px; left: 24px; right: 24px; }
-  #mark::after { bottom: 30px; left: 24px; width: 34px; }
-  #end h2 { margin-top: 40px; font: 750 86px/1 "Segoe UI", system-ui, sans-serif; letter-spacing: -.038em; }
-  #end p { margin-top: 20px; font: 400 32px/1 "Segoe UI", system-ui, sans-serif; color: var(--dim); }
-  #end small { display: block; margin-top: 44px; font: 400 25px/1 "Segoe UI", system-ui, sans-serif; color: var(--faint); letter-spacing: .04em; }
-
-  /* — the motes, the beams, the grain: one canvas over the whole space — */
-  #fx { position: absolute; inset: 0; pointer-events: none; }
-  #veil { position: absolute; inset: 0; background: var(--deep); opacity: 0; }
+  html, body { margin: 0; background: #05080a; overflow: hidden; }
+  canvas { display: block; }
 </style>
-
-<div id="stage"></div>
-
 <script>
-(() => {
+window.addEventListener('DOMContentLoaded', () => {
   const q = new URLSearchParams(location.search);
   const lang = q.get('lang') || 'en';
   const T = window.STRINGS[lang] || window.STRINGS.en;
-  const esc = (s) => String(s).replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
-  if (q.has('t')) document.documentElement.dataset.motion = '1';
 
   const RATE = 0.75;
   const STORY_END = 36.6;
+  const W = 1920, H = 1080;
 
-  const A = (name, start, dur, ease) =>
-    `--s:${(start * RATE).toFixed(4)}; animation-name:${name};`
-    + `animation-duration:${(dur * RATE).toFixed(4)}s;`
-    + (ease ? `animation-timing-function:${ease};` : '');
-
-  /* The beats, in story seconds, named after what the audio does at them. */
   const B = {
     open: 0.8, lineIn: 2.9, dictIn: 4.4, strike: 6.0, dictOut: 7.4,
     key: 9.45, drag: 9.8, held: 11.05, pause: 11.3,
@@ -281,388 +52,761 @@
     swaps: 27.5, endCard: 31.9,
   };
 
-  const LAMPS = [[300,-560,-180,.5],[210,420,-330,.42],[420,760,120,.3],[170,-780,190,.34],[260,180,300,.26]]
-    .map(([d, x, y, o]) => `<div class="lamp" style="width:${d}px;height:${d}px;left:${1300 + x}px;top:${750 + y}px;opacity:${o * 1.7}"></div>`).join('');
+  const INK = '#eef3f0', DIM = '#93a49c', FAINT = '#6d7f77', ACC = '#46d68f';
+  const FONT = '"Segoe UI", system-ui, -apple-system, sans-serif';
 
-  const FIGURES = [[520,300,-200,470],[300,180,180,300]]
-    .map(([w, h, x, y]) => `<div class="figure" style="width:${w}px;height:${h}px;left:${750 + x}px;top:${422 + y}px"></div>`).join('');
-
-  const cap = (parts, on) => parts.map((p, i) =>
-    i === 1 ? `<em${on ? ' class="on"' : ''}>${on ? '<span id="hl" class="a" style="' + A('wipe', B.drag, 1.25, 'var(--quart)') + '"></span>' : ''}${esc(p)}</em>` : esc(p)).join('');
-
-  const NODE_AT = [[-380, 40, -150], [140, -30, -350], [-150, -110, -560]];
-  const NODES = T.fnodes.map((name, i) =>
-    `<div class="plane node" data-at="${i}">
-       <div class="a" style="${A('landHere', [B.n1, B.n2, B.n3][i] - 0.4, 0.95)}">
-         <div class="dot"></div><div class="nm">${esc(name)}</div>
-       </div>
-     </div>`).join('');
-
-  const DEVS = T.s4dev.map((name, i) => {
-    const rows = [0, 1, 2, 3].map((r) => `<i class="${r === 1 ? 'k' : ''}" style="top:${34 + r * 46}px;width:${[74, 58, 66, 46][r]}%"></i>`).join('');
-    return `<div class="plane dev" data-dev="${i}">
-              <div class="a" style="${A('comeUp', B.dev + i * 0.22, 1.0)}">
-                <div class="glass">${rows}</div><div class="nm">${esc(name)}</div>
-              </div>
-            </div>`;
-  }).join('');
-
-  const SWAPS = T.fswaps.map((word, i) => {
-    const at = B.swaps + i * 0.74;
-    const last = i === T.fswaps.length - 1;
-    return `<div class="a" style="${A('landHere', at, 0.5)}">
-              <div class="a" style="${last ? A('fade', at, 0.01) : A('out', at + 0.6, 0.22)}">${esc(word)}</div>
-            </div>`;
-  }).join('');
-
-  /* One sentence at a time: each is spoken until a beat before the next one,
-     because two of them fading through each other is unreadable. */
-  const LINES = [
-    [T.f1, B.dictIn + 0.25],
-    [T.f2, B.strike + 0.15],
-    [T.f3, B.key - 0.8],
-    [T.f4, B.n1 - 0.4],
-    [T.f5, B.chips + 0.4],
-    [T.f6, B.dev - 0.4],
-    [T.f7, B.swaps - 0.5],
-  ];
-  const SAYS = LINES.map(([text, from], i) => {
-    const until = (i + 1 < LINES.length ? LINES[i + 1][1] : B.endCard - 0.4) - 0.45;
-    return `<div class="a" style="${A('riseSmall', from, 0.7)}">
-              <div class="a" style="${A('out', until, 0.4)}">${esc(text)}</div>
-            </div>`;
-  }).join('');
-
-  document.getElementById('stage').outerHTML = `
-    <div id="world"><div id="cam">
-
-      <div class="plane" id="room" data-z="-1150">${LAMPS}<div id="haze"></div></div>
-
-      <div class="plane" id="screen" data-z="-330">
-        ${FIGURES}<div id="scan"></div>
-        <div id="bar" class="a" style="${A('fade', 0.2, 1.4)}"><i></i><b></b></div>
-        <div class="meta l a" style="${A('fade', 0.2, 1.4)}">${esc(T.fep)}</div>
-        <div class="meta r a" style="${A('fade', 0.2, 1.4)}">${esc(T.ftotal)}</div>
-        <div id="paused" class="a" style="${A('fade', B.pause, 0.5)}"><s></s><s></s> PAUSED</div>
-      </div>
-
-      <div class="plane" id="subs" data-z="120">
-        <div class="cap a" style="${A('rise', B.lineIn, 1.0)}">${cap(T.s1cap, false)}</div>
-      </div>
-
-      <div class="plane" id="dict" data-z="80">
-        <div class="a" style="${A('rise', B.dictIn, 0.8)}">
-          <div class="a" style="${A('sink', B.dictOut, 0.9)}">
-            <span class="lbl">${esc(T.fdict)}</span><span class="val">${esc(T.s2losep)}<u class="a" style="${A('strike', B.strike, 0.5, 'var(--quart)')}"></u></span>
-          </div>
-        </div>
-      </div>
-
-      <div class="plane" id="lifted" data-z="120">
-        <div class="a" style="${A('fade', B.held, 0.25)}">
-          <div class="a" style="${A('lift', B.held, 1.5)}">
-            <div class="cap">${cap(T.s1cap, true)}</div>
-          </div>
-        </div>
-      </div>
-
-      ${NODES}
-
-      <div class="plane" id="card" data-z="150">
-        <div class="a" style="${A('landHere', B.answer, 1.1)}">
-          <div id="halo" class="a" style="${A('ring', B.answer, 1.5, 'var(--quart)')}"></div>
-          <div class="src">${esc(T.s2src.join(''))} &middot; ${esc(T.s2time)}</div>
-          <div class="lead" id="lead">${esc(T.s1card)}</div>
-          <div class="term">${esc(T.s1word)}</div>
-          <div id="chips">${T.s2chips.map((c, i) =>
-            `<span class="a" style="${A('chipIn', B.chips + i * 0.13, 0.5)}">${esc(c)}</span>`).join('')}</div>
-          <div id="shine" class="a" style="${A('sheen', B.answer + 0.25, 1.5, 'var(--quart)')}"></div>
-        </div>
-      </div>
-
-      ${DEVS}
-
-      <div class="plane" id="swap" data-z="152">${SWAPS}</div>
-
-    </div></div>
-
-    <canvas id="fx" width="1920" height="1080"></canvas>
-    <div id="says">${SAYS}</div>
-
-    <div id="veil"></div>
-    <div id="end" class="a" style="${A('fade', B.endCard + 0.35, 1.1)}">
-      <div>
-        <div id="mark" class="a" style="${A('rise', B.endCard + 0.5, 1.0)}"></div>
-        <h2 class="a" style="${A('rise', B.endCard + 0.75, 1.0)}">${esc(T.f8)}</h2>
-        <p class="a" style="${A('rise', B.endCard + 1.0, 1.0)}">${esc(T.f9)}</p>
-        <small class="a" style="${A('fade', B.endCard + 1.6, 1.0)}">subtitlenotes.com</small>
-      </div>
-    </div>
-`;
-
-  const root = document.documentElement;
-  const cam = document.getElementById('cam');
-  const veil = document.getElementById('veil');
-  const fx = document.getElementById('fx');
-  const g = fx.getContext('2d');
-  const planes = [...document.querySelectorAll('.plane')];
-  const screen = document.getElementById('screen');
-  const subs = document.getElementById('subs');
-  const dict = document.getElementById('dict');
-  const lifted = document.getElementById('lifted');
-  const nodes = [...document.querySelectorAll('.node')];
-  const card = document.getElementById('card');
-  const devs = [...document.querySelectorAll('.dev')];
-  const swap = document.getElementById('swap');
-  const lead = document.getElementById('lead');
-  const chips = document.getElementById('chips');
-
-  /* — the camera, and the projection the canvas shares with it — */
-  const F = 1400, CX = 960, CY = 486;
-  const ease = (k) => k <= 0 ? 0 : k >= 1 ? 1 : k * k * (3 - 2 * k);
-  const span = (s, from, to) => ease((s - from) / (to - from));
+  const clamp = (v) => v < 0 ? 0 : v > 1 ? 1 : v;
+  const ease = (k) => { k = clamp(k); return k * k * (3 - 2 * k); };
+  const span = (s, a, b) => ease((s - a) / (b - a));
   const mix = (a, b, k) => a + (b - a) * k;
+  const outCubic = (k) => 1 - Math.pow(1 - clamp(k), 3);
 
-  /* One unbroken move: in towards the subtitle, held while the corridor
-     works, then a slow drift out under the end card. The rotation never
-     settles, so no frame is ever a still. */
-  function camera(s) {
-    const z = mix(-120, 40, span(s, 0, B.held))
-      + mix(0, 150, span(s, B.away, B.answer))
-      - mix(0, 120, span(s, B.devSwell, B.dev + 1.4))
-      + mix(0, 90, span(s, B.swaps, STORY_END));
-    const ry = mix(-3.4, 1.6, span(s, 0, B.answer)) + mix(0, -2.2, span(s, B.devSwell, STORY_END));
-    const rx = mix(2.2, -0.6, span(s, 0, B.pause)) + mix(0, 1.1, span(s, B.devSwell, STORY_END));
-    return { z, ry: ry * Math.PI / 180, rx: rx * Math.PI / 180 };
+  const renderer = new THREE.WebGLRenderer({ antialias: true });
+  renderer.setPixelRatio(1);
+  renderer.setSize(W, H);
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.45;
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+  document.body.appendChild(renderer.domElement);
+
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x070c0e);
+  scene.fog = new THREE.FogExp2(0x070c0e, 0.0125);
+  const camera = new THREE.PerspectiveCamera(38, W / H, 0.1, 400);
+
+  /* 100 canvas pixels are one world unit. Every plane is drawn at twice that
+     so type stays sharp when the camera comes close. */
+  const PX = 100, SS = 2;
+  function texture(w, h, draw) {
+    const c = document.createElement('canvas');
+    c.width = w * SS; c.height = h * SS;
+    const x = c.getContext('2d');
+    x.scale(SS, SS);
+    draw(x, w, h);
+    const t = new THREE.CanvasTexture(c);
+    t.anisotropy = 8;
+    t.colorSpace = THREE.SRGBColorSpace;
+    return t;
+  }
+  /** An unlit plane. Type is not a surface: light on it only makes it muddy. */
+  function flat(w, h, draw, opts = {}) {
+    return new THREE.Mesh(
+      new THREE.PlaneGeometry(w / PX, h / PX),
+      new THREE.MeshBasicMaterial({
+        map: texture(w, h, draw), transparent: true,
+        depthWrite: false, side: THREE.DoubleSide, opacity: opts.opacity ?? 1,
+      }));
+  }
+  /** A surface that takes light: the television, the card, the slabs. */
+  function solid(w, h, draw, opts = {}) {
+    return new THREE.Mesh(
+      new THREE.PlaneGeometry(w / PX, h / PX),
+      new THREE.MeshStandardMaterial({
+        map: texture(w, h, draw), transparent: true,
+        roughness: opts.roughness ?? 0.7, metalness: opts.metalness ?? 0.08,
+        emissive: new THREE.Color(opts.emissive ?? 0x000000),
+        emissiveIntensity: opts.emissiveIntensity ?? 1,
+      }));
+  }
+  function roundRect(x, w, h, radius) {
+    x.beginPath();
+    x.moveTo(radius, 0); x.arcTo(w, 0, w, h, radius); x.arcTo(w, h, 0, h, radius);
+    x.arcTo(0, h, 0, 0, radius); x.arcTo(0, 0, w, 0, radius); x.closePath();
+  }
+  function write(x, text, font, colour, cx, y, align) {
+    x.font = font; x.fillStyle = colour; x.textAlign = align || 'center';
+    x.textBaseline = 'alphabetic';
+    x.fillText(text, cx, y);
+  }
+  const GLOW = (() => {
+    const c = document.createElement('canvas'); c.width = c.height = 256;
+    const x = c.getContext('2d');
+    const g = x.createRadialGradient(128, 128, 0, 128, 128, 128);
+    g.addColorStop(0, 'rgba(255,255,255,1)');
+    g.addColorStop(0.26, 'rgba(255,255,255,.4)');
+    g.addColorStop(1, 'rgba(255,255,255,0)');
+    x.fillStyle = g; x.fillRect(0, 0, 256, 256);
+    const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace;
+    return t;
+  })();
+  function glow(size, colour, opacity) {
+    const s = new THREE.Sprite(new THREE.SpriteMaterial({
+      map: GLOW, color: colour, transparent: true, opacity: opacity,
+      blending: THREE.AdditiveBlending, depthWrite: false,
+    }));
+    s.scale.set(size, size, 1);
+    return s;
   }
 
-  /** World point -> screen, through the same camera CSS is using. */
-  function project(p, c) {
-    // Rx, then Ry, then the camera's own translation: the order the CSS
-    // transform list below applies them in.
-    let { x, y, z } = p;
-    let y1 = y * Math.cos(c.rx) - z * Math.sin(c.rx);
-    let z1 = y * Math.sin(c.rx) + z * Math.cos(c.rx);
-    let x2 = x * Math.cos(c.ry) + z1 * Math.sin(c.ry);
-    let z2 = -x * Math.sin(c.ry) + z1 * Math.cos(c.ry);
-    z2 += c.z;
-    const k = F / (F - z2);
-    return { x: CX + x2 * k, y: CY + y1 * k, k, z: z2 };
-  }
+  // ------------------------------------------------------------------- room
+  const floor = new THREE.Mesh(
+    new THREE.PlaneGeometry(200, 200),
+    new THREE.MeshStandardMaterial({ color: 0x16211e, roughness: 0.92, metalness: 0.05 }));
+  floor.rotation.x = -Math.PI / 2;
+  floor.position.y = -6.4;
+  floor.receiveShadow = true;
+  floor.visible = true;
+  scene.add(floor);
 
-  /* The corridor, in world coordinates. The motes fly it, and the beams are
-     drawn along it, so the picture and the "data" cannot disagree. */
-  const PATH = [
-    { x: 0, y: 70, z: 120 },        // the phrase, on the subtitle plane
-    { x: -380, y: 40, z: -150 },    // the line
-    { x: 140, y: -30, z: -350 },    // the sense
-    { x: -150, y: -110, z: -560 },  // the dub
-    { x: 0, y: -130, z: 150 },      // and back out, into the card
-  ];
-  const curve = (u) => {
-    // Out along the first four points at a steady rate - easing each leg made
-    // every mote hesitate at the same node and the stream turned into a clot -
-    // then home along the last one, which does get an ease, because that is
-    // the leg the eye follows all the way into the card.
-    if (u < 0.66) {
-      const v = (u / 0.66) * 3, i = Math.min(2, Math.floor(v)), f = v - i;
-      const a = PATH[i], b = PATH[i + 1];
-      return { x: mix(a.x, b.x, f), y: mix(a.y, b.y, f), z: mix(a.z, b.z, f) };
+  scene.add(new THREE.HemisphereLight(0x3a6a5c, 0x0a1210, 1.15));
+  const key = new THREE.DirectionalLight(0xdff4ea, 2.1);
+  key.position.set(-8, 12, 10);
+  key.castShadow = true;
+  key.shadow.mapSize.set(1024, 1024);
+  key.shadow.camera.left = -24; key.shadow.camera.right = 24;
+  key.shadow.camera.top = 24; key.shadow.camera.bottom = -24;
+  key.shadow.camera.far = 70; key.shadow.bias = -0.0018;
+  scene.add(key);
+  const rim = new THREE.PointLight(0x46d68f, 90, 80, 2);
+  rim.position.set(5, 2, -7);
+  scene.add(rim);
+
+  // -------------------------------------------------------------- scene one
+  const tvGroup = new THREE.Group();
+  const tv = flat(1500, 844, function (x, w, h) {
+    x.fillStyle = '#05090a'; roundRect(x, w, h, 16); x.fill();
+    x.save(); roundRect(x, w, h, 16); x.clip();
+    x.save(); x.translate(26, 26);
+    const iw = w - 52, ih = h - 52;
+    // Night interior. Cool from the window, warm from the lamp, and the room
+    // between them almost black - the grade a series actually has.
+    const air = x.createLinearGradient(0, 0, iw * 0.4, ih);
+    air.addColorStop(0, '#16232b'); air.addColorStop(1, '#070c0e');
+    x.fillStyle = air; x.fillRect(0, 0, iw, ih);
+    // The window: a cold slab of light with a frame across it.
+    x.save();
+    const win = x.createLinearGradient(iw * 0.08, 0, iw * 0.42, ih * 0.7);
+    win.addColorStop(0, 'rgba(150,186,205,.5)'); win.addColorStop(1, 'rgba(90,130,150,.06)');
+    x.fillStyle = win; x.fillRect(iw * 0.08, ih * 0.06, iw * 0.3, ih * 0.62);
+    x.strokeStyle = 'rgba(8,12,14,.85)'; x.lineWidth = 7;
+    x.strokeRect(iw * 0.08, ih * 0.06, iw * 0.3, ih * 0.62);
+    x.beginPath();
+    x.moveTo(iw * 0.23, ih * 0.06); x.lineTo(iw * 0.23, ih * 0.68);
+    x.moveTo(iw * 0.08, ih * 0.34); x.lineTo(iw * 0.38, ih * 0.34);
+    x.stroke();
+    x.restore();
+    // The light the window throws across the floor.
+    const spill = x.createLinearGradient(iw * 0.1, ih * 0.68, iw * 0.55, ih);
+    spill.addColorStop(0, 'rgba(140,175,196,.22)'); spill.addColorStop(1, 'rgba(0,0,0,0)');
+    x.fillStyle = spill; x.beginPath();
+    x.moveTo(iw * 0.08, ih * 0.68); x.lineTo(iw * 0.38, ih * 0.68);
+    x.lineTo(iw * 0.62, ih); x.lineTo(iw * 0.02, ih); x.closePath(); x.fill();
+    // A practical, warm, and its bloom.
+    const lamp = x.createRadialGradient(iw * 0.79, ih * 0.4, 4, iw * 0.79, ih * 0.4, iw * 0.26);
+    lamp.addColorStop(0, 'rgba(255,214,150,.95)');
+    lamp.addColorStop(0.12, 'rgba(255,196,120,.4)');
+    lamp.addColorStop(1, 'rgba(255,180,100,0)');
+    x.fillStyle = lamp; x.fillRect(iw * 0.4, 0, iw * 0.6, ih);
+    // A figure standing between the lamp and us, rimmed by it.
+    x.save();
+    x.fillStyle = 'rgba(6,10,12,.94)';
+    x.beginPath(); x.ellipse(iw * 0.62, ih * 1.02, iw * 0.13, ih * 0.42, -0.07, 0, 7); x.fill();
+    x.beginPath(); x.ellipse(iw * 0.62, ih * 0.55, iw * 0.052, ih * 0.1, 0, 0, 7); x.fill();
+    x.globalCompositeOperation = 'lighter';
+    x.strokeStyle = 'rgba(255,206,150,.5)'; x.lineWidth = 4;
+    x.beginPath(); x.ellipse(iw * 0.62, ih * 0.55, iw * 0.052, ih * 0.1, 0, -1.1, 1.2); x.stroke();
+    x.beginPath(); x.ellipse(iw * 0.62, ih * 1.02, iw * 0.13, ih * 0.42, -0.07, -1.3, 0.5); x.stroke();
+    x.restore();
+    // Grain, then the bars. A frame with bars on it reads as film before
+    // anything in it has been recognised.
+    for (let i = 0; i < 2600; i++) {
+      x.fillStyle = 'rgba(255,255,255,' + (0.012 + (i % 7) * 0.004) + ')';
+      x.fillRect((i * 6151) % iw, (i * 2749) % ih, 1.3, 1.3);
     }
-    const f = (u - 0.66) / 0.34, a = PATH[3], b = PATH[4];
-    const q = ease(f);
-    return { x: mix(a.x, b.x, q), y: mix(a.y, b.y, q) - Math.sin(f * Math.PI) * 110, z: mix(a.z, b.z, q) };
-  };
+    x.fillStyle = '#040708';
+    x.fillRect(0, 0, iw, ih * 0.075); x.fillRect(0, ih * 0.925, iw, ih * 0.075);
+    const c = x.createLinearGradient(0, ih * 0.45, 0, ih);
+    c.addColorStop(0, 'rgba(4,7,8,0)'); c.addColorStop(1, 'rgba(4,7,8,.85)');
+    x.fillStyle = c; x.fillRect(0, 0, iw, ih);
+    x.restore();
+    x.fillStyle = 'rgba(255,255,255,.02)';
+    for (let y = 0; y < h; y += 3) x.fillRect(0, y, w, 1);
+    x.restore();
+    x.fillStyle = 'rgba(238,243,240,.2)'; x.fillRect(60, h - 46, w - 120, 3);
+    x.fillStyle = ACC; x.fillRect(60, h - 46, (w - 120) * 0.66, 3);
+    x.beginPath(); x.arc(60 + (w - 120) * 0.66, h - 44.5, 8, 0, 7); x.fill();
+    write(x, T.fep, '500 21px ' + FONT, FAINT, 60, h - 70, 'left');
+    write(x, T.ftotal, '500 21px ' + FONT, FAINT, w - 60, h - 70, 'right');
+  });
+  tv.material = new THREE.MeshBasicMaterial({ map: tv.material.map, transparent: true, toneMapped: false });
+  tv.position.set(0, 1.2, -9);
+  tvGroup.add(tv);
+  const tvGlow = glow(11, 0x2c7f5e, 0.07);
+  // The people watching. They are in the room, in front of the television,
+  // which is why the screen rims them - the old film drew them into the
+  // picture itself, where nothing could light them.
+  const watchers = new THREE.Group();
+  [[-4.3, 1.6, 0.86, 1.5], [4.0, 1.9, 0.74, 1.3]].forEach(function (v, i) {
+    const body = new THREE.Mesh(
+      new THREE.CapsuleGeometry(v[2], v[3], 6, 18),
+      new THREE.MeshStandardMaterial({ color: 0x080d0f, roughness: 0.95, metalness: 0 }));
+    body.position.set(v[0], -5.5 + v[3] / 2, -3.2 + v[1]);
+    body.castShadow = true;
+    const head = new THREE.Mesh(
+      new THREE.SphereGeometry(v[2] * 0.62, 20, 14),
+      new THREE.MeshStandardMaterial({ color: 0x080d0f, roughness: 0.95 }));
+    head.position.set(v[0], body.position.y + v[3] / 2 + v[2] * 0.5, body.position.z);
+    head.castShadow = true;
+    watchers.add(body, head);
+  });
+  // Kept out of the cut: at this framing they read as boulders, not people.
+  // watchers stay built but unused; the screen light below is what matters.
+  // The screen itself lights them.
+  const screenLight = new THREE.PointLight(0xa8d6c8, 90, 30, 2);
+  screenLight.position.set(0, 1.2, -6.4);
+  tvGroup.add(screenLight);
+  tvGlow.position.set(0, 1.2, -9.6);
+  tvGroup.add(tvGlow);
 
-  const rand = (seed) => () => (seed = (seed * 1664525 + 1013904223) >>> 0) / 4294967296;
-  const GLYPHS = (T.s2src.join('') + T.s1card).replace(/\s+/g, '').split('');
-  const MOTES = Array.from({ length: 300 }, (_, i) => {
-    const r = rand(i * 2654435761 + 7);
-    return {
-      lead: r() * 0.86,                       // when this one sets off
-      wob: r() * Math.PI * 2, amp: 14 + r() * 46,
-      ch: r() < 0.42 ? GLYPHS[Math.floor(r() * GLYPHS.length)] : null,
-      size: 17 + r() * 22, hot: r(),
+  function capText(on) {
+    return function (x, w, h) {
+      const parts = T.s1cap;
+      x.font = '600 54px ' + FONT;
+      const wa = x.measureText(parts[0]).width;
+      const wb = x.measureText(parts[1]).width;
+      const wc = x.measureText(parts[2]).width;
+      const x0 = (w - (wa + wb + wc)) / 2, y = h / 2 + 19;
+      x.fillStyle = 'rgba(5,8,10,.82)'; roundRect(x, w, h, 12); x.fill();
+      if (on) { x.fillStyle = ACC; x.fillRect(x0 + wa - 7, y - 43, wb + 14, 57); }
+      write(x, parts[0], '600 54px ' + FONT, INK, x0, y, 'left');
+      write(x, parts[1], '600 54px ' + FONT, on ? '#06231a' : INK, x0 + wa, y, 'left');
+      write(x, parts[2], '600 54px ' + FONT, INK, x0 + wa + wb, y, 'left');
     };
+  }
+  function capGone() {
+    return function (x, w, h) {
+      const parts = T.s1cap;
+      x.font = '600 54px ' + FONT;
+      const wa = x.measureText(parts[0]).width;
+      const wb = x.measureText(parts[1]).width;
+      const wc = x.measureText(parts[2]).width;
+      const x0 = (w - (wa + wb + wc)) / 2, y = h / 2 + 19;
+      x.fillStyle = 'rgba(5,8,10,.82)'; roundRect(x, w, h, 12); x.fill();
+      // The words the phrase took with it leave a hole, not a copy.
+      x.strokeStyle = 'rgba(70,214,143,.5)'; x.lineWidth = 2;
+      x.setLineDash([7, 7]);
+      x.strokeRect(x0 + wa - 7, y - 43, wb + 14, 57);
+      x.setLineDash([]);
+      write(x, parts[0], '600 54px ' + FONT, INK, x0, y, 'left');
+      write(x, parts[2], '600 54px ' + FONT, INK, x0 + wa + wb, y, 'left');
+    };
+  }
+  const capMaps = { off: texture(980, 96, capText(false)), on: texture(980, 96, capText(true)), gone: texture(980, 96, capGone()) };
+  const cap = flat(980, 96, capText(false));
+  cap.position.set(0, -2.35, -2.4);
+  tvGroup.add(cap);
+
+  const dict = new THREE.Group();
+  const dictPlate = flat(980, 74, function (x, w, h) {
+    x.font = '500 21px ' + FONT;
+    const lw = x.measureText(T.fdict.toUpperCase()).width + 14;
+    x.font = '400 40px ' + FONT;
+    const vw = x.measureText(T.s2losep).width;
+    const x0 = (w - (lw + 22 + vw)) / 2;
+    write(x, T.fdict.toUpperCase(), '500 21px ' + FONT, FAINT, x0, h / 2 + 6, 'left');
+    write(x, T.s2losep, '400 40px ' + FONT, '#c6d2cb', x0 + lw + 22, h / 2 + 14, 'left');
   });
+  dict.add(dictPlate);
+  const strikeMetrics = (function () {
+    const c = document.createElement('canvas').getContext('2d');
+    c.font = '500 21px ' + FONT;
+    const lw = c.measureText(T.fdict.toUpperCase()).width + 14;
+    c.font = '400 40px ' + FONT;
+    const vw = c.measureText(T.s2losep).width;
+    const x0 = (980 - (lw + 22 + vw)) / 2;
+    return { width: (vw + 16) / 100, centre: (x0 + lw + 22 + vw / 2 - 490) / 100 };
+  })();
+  const strikeWidth = strikeMetrics.width, strikeCentre = strikeMetrics.centre;
+  const strikeBar = new THREE.Mesh(
+    new THREE.PlaneGeometry(1, 0.042),
+    new THREE.MeshBasicMaterial({ color: 0xe0736c, transparent: true, depthWrite: false }));
+  strikeBar.position.set(0, 0.03, 0.02);
+  dict.add(strikeBar);
+  dict.position.set(0, -3.28, -2.35);
+  tvGroup.add(dict);
 
-  const GRAIN = Array.from({ length: 1500 }, (_, i) => {
-    const r = rand(i * 22695477 + 3);
-    return { x: r() * 1920, y: r() * 1080, a: r() };
+  const keyCap = new THREE.Group();
+  const keyTop = new THREE.Mesh(
+    new THREE.BoxGeometry(1.6, 0.95, 0.36),
+    new THREE.MeshStandardMaterial({ color: 0x1b2b27, roughness: 0.5, metalness: 0.25 }));
+  keyTop.castShadow = true;
+  const keyFace = flat(160, 95, function (x, w, h) {
+    write(x, T.s1k, '600 34px ' + FONT, INK, w / 2, h / 2 + 12);
   });
+  keyFace.position.z = 0.19;
+  keyCap.add(keyTop, keyFace);
+  keyCap.position.set(-6.4, -3.6, -0.6);
+  keyCap.rotation.set(-0.55, 0.4, 0);
+  tvGroup.add(keyCap);
+  scene.add(tvGroup);
 
-  function beams(s, c) {
-    // The corridor lights up node by node, in step with the three notes.
-    for (let i = 0; i < 3; i++) {
-      const from = project(PATH[i], c), to = project(PATH[i + 1], c);
-      const lit = span(s, [B.away, B.n1, B.n2][i], [B.n1, B.n2, B.n3][i]);
-      if (lit <= 0) continue;
-      const fade = 1 - span(s, B.back + 0.6, B.devSwell - 1.2);
-      if (fade <= 0) continue;
-      const grad = g.createLinearGradient(from.x, from.y, to.x, to.y);
-      grad.addColorStop(0, 'rgba(70,214,143,0)');
-      grad.addColorStop(Math.max(0.02, lit * 0.5), 'rgba(70,214,143,.62)');
-      grad.addColorStop(Math.min(1, lit), 'rgba(70,214,143,0)');
-      g.strokeStyle = grad;
-      g.lineWidth = Math.max(1.6, 4.2 * to.k);
-      g.globalAlpha = fade;
-      g.beginPath(); g.moveTo(from.x, from.y); g.lineTo(to.x, to.y); g.stroke();
-      g.globalAlpha = 1;
-    }
-  }
+  /* The phrase, once it has come off the subtitle. The caption loses those
+     words at the same instant, so the two never exist at once. */
+  const phraseGroup = new THREE.Group();
+  const phrase = flat(600, 96, function (x, w, h) {
+    x.fillStyle = ACC; roundRect(x, w, h, 12); x.fill();
+    write(x, T.s1cap[1], '600 54px ' + FONT, '#06231a', w / 2, h / 2 + 19);
+  });
+  const phraseGlow = glow(8, 0x46d68f, 0.45);
+  phraseGroup.add(phrase, phraseGlow);
+  scene.add(phraseGroup);
 
-  function motes(s, c) {
-    const flight = (s - B.away) / (B.answer - B.away);
-    if (flight <= -0.05 || flight > 1.7) return;
-    g.textAlign = 'center';
-    g.textBaseline = 'middle';
-    for (const m of MOTES) {
-      const u = (flight - m.lead * 0.5) / (1 - m.lead * 0.5);
-      if (u <= 0 || u >= 1) continue;
-      const p = curve(u);
-      // A little wander, so a stream reads as many things and not one ribbon.
-      const leg = Math.abs(Math.sin(u * Math.PI * 3.03));   // 0 at the waypoints
-      const w = Math.sin(u * 7.4 + m.wob) * m.amp * leg;
-      const sp = project({
-        x: p.x + w,
-        y: p.y + Math.cos(u * 5.9 + m.wob) * m.amp * 0.55 * leg,
-        z: p.z,
-      }, c);
-      if (sp.z >= F - 40) continue;
-      // Brightest in the middle of the trip, gone as it arrives in the card.
-      const a = Math.min(1, u * 6) * Math.min(1, (1 - u) * 5.5) * (0.35 + m.hot * 0.65);
-      if (a <= 0.01) continue;
-      g.globalAlpha = a * Math.min(1, sp.k * 1.1);
-      if (m.ch) {
-        g.fillStyle = m.hot > 0.72 ? '#eef3f0' : 'rgba(70,214,143,.92)';
-        g.font = `500 ${Math.max(7, m.size * sp.k)}px "Segoe UI", system-ui, sans-serif`;
-        g.fillText(m.ch, sp.x, sp.y);
-      } else {
-        g.fillStyle = 'rgba(70,214,143,.95)';
-        const r = Math.max(0.8, 2.4 * sp.k);
-        g.beginPath(); g.arc(sp.x, sp.y, r, 0, 6.2832); g.fill();
-      }
-    }
-    g.globalAlpha = 1;
-  }
-
-  function flow(s, c) {
-    // Four cards crossing between the three devices, on the four soft ticks.
-    const k = span(s, B.flow, B.flow + 2.2);
-    if (k <= 0 || s > B.swaps + 0.6) return;
-    const spots = devs.map((_, i) => ({ x: -560 + i * 560, y: -250, z: -40 }));
-    for (let i = 0; i < 4; i++) {
-      const u = ease(Math.min(1, Math.max(0, (s - B.flow - i * 0.15) / 1.5)));
-      if (u <= 0 || u >= 1) continue;
-      const a = spots[i % 3], b = spots[(i + 1) % 3];
-      const p = { x: mix(a.x, b.x, u), y: mix(a.y, b.y, u) - Math.sin(u * Math.PI) * 130, z: mix(a.z, b.z, u) + Math.sin(u * Math.PI) * 120 };
-      const sp = project(p, c);
-      g.globalAlpha = Math.min(1, u * 5) * Math.min(1, (1 - u) * 5) * 0.9;
-      g.fillStyle = 'rgba(70,214,143,.9)';
-      const w = 46 * sp.k, h = 13 * sp.k;
-      g.beginPath();
-      g.roundRect(sp.x - w / 2, sp.y - h / 2, w, h, h / 2);
-      g.fill();
-      g.globalAlpha = 1;
-    }
-  }
-
-  function atmosphere(s) {
-    // A vignette that tightens as the picture dims, and grain over everything.
-    const vg = g.createRadialGradient(CX, CY, 620, CX, CY, 1500);
-    vg.addColorStop(0, 'rgba(5,8,10,0)');
-    vg.addColorStop(1, `rgba(5,8,10,${0.28 + 0.12 * span(s, B.devSwell, STORY_END)})`);
-    g.fillStyle = vg;
-    g.fillRect(0, 0, 1920, 1080);
-    g.fillStyle = '#eef3f0';
-    for (const p of GRAIN) {
-      g.globalAlpha = 0.005 + p.a * 0.011;
-      g.fillRect(p.x, p.y, 1.4, 1.4);
-    }
-    g.globalAlpha = 1;
-  }
-
-  /* Which planes exist when. Keeping them out of the way is what stops the
-     corridor from standing behind the end card. */
-  const windows = [
-    ['#dict', B.dictIn - 0.4, B.dictOut + 1.2],
-    ['#lifted', B.held - 0.1, B.away + 0.9],
-    ['.node', B.n1 - 0.9, B.devSwell - 0.8],
-    ['#card', B.answer - 0.3, B.endCard + 0.4],
-    ['.dev', B.dev - 0.9, B.swaps - 0.2],
-    ['#swap', B.swaps - 0.3, B.endCard + 0.6],
-    ['#subs', 0, B.answer + 0.2],
+  // ------------------------------------------------------------ the machine
+  const machine = new THREE.Group();
+  const NODE_AT = [
+    new THREE.Vector3(-4.6, 1.6, -15),
+    new THREE.Vector3(4.0, 0.4, -23),
+    new THREE.Vector3(-2.4, 2.2, -31),
   ];
+  const nodes = NODE_AT.map(function (at, i) {
+    const g = new THREE.Group();
+    const ring = new THREE.Mesh(
+      new THREE.TorusGeometry(0.66, 0.08, 16, 48),
+      new THREE.MeshStandardMaterial({
+        color: 0x0f2a20, emissive: 0x46d68f, emissiveIntensity: 2,
+        roughness: 0.35, metalness: 0.3, transparent: true,
+      }));
+    ring.castShadow = true;
+    const core = new THREE.Mesh(
+      new THREE.SphereGeometry(0.22, 24, 16),
+      new THREE.MeshBasicMaterial({ color: 0xdcfced, transparent: true }));
+    const lamp = new THREE.PointLight(0x46d68f, 0, 34, 2);
+    const halo = glow(7, 0x46d68f, 0.5);
+    const label = flat(620, 96, function (x, w, h) {
+      x.font = '600 34px ' + FONT;
+      const tw = x.measureText(T.fnodes[i]).width + 48;
+      x.save(); x.translate((w - tw) / 2, 16);
+      x.fillStyle = 'rgba(8,26,21,.95)';
+      x.strokeStyle = 'rgba(70,214,143,.6)'; x.lineWidth = 2;
+      roundRect(x, tw, 64, 32); x.fill(); x.stroke();
+      x.restore();
+      write(x, T.fnodes[i], '600 34px ' + FONT, INK, w / 2, h / 2 + 13);
+    });
+    label.position.y = -1.55;
+    g.add(ring, core, lamp, halo, label);
+    g.position.copy(at);
+    g.userData = { lamp: lamp, ring: ring, halo: halo, core: core, label: label };
+    machine.add(g);
+    return g;
+  });
+  scene.add(machine);
+
+  const PATH = [new THREE.Vector3(0, -1.9, -2.6)]
+    .concat(NODE_AT)
+    .concat([new THREE.Vector3(0, 0.3, 4.6)]);
+  function onPath(u) {
+    const v = clamp(u);
+    if (v < 0.72) {
+      const f = (v / 0.72) * 3, i = Math.min(2, Math.floor(f)), k = f - i;
+      return PATH[i].clone().lerp(PATH[i + 1], k);
+    }
+    const k = outCubic((v - 0.72) / 0.28);
+    const p = PATH[3].clone().lerp(PATH[4], k);
+    p.y += Math.sin(k * Math.PI) * 2.4;
+    return p;
+  }
+
+  const COUNT = 900;
+  function seedRand(n) { let s = n >>> 0; return function () { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; }; }
+  const MOTE = (function () {
+    const r = seedRand(12345);
+    return Array.from({ length: COUNT }, function () {
+      return { lead: r() * 0.82, wob: r() * 6.283, amp: 0.2 + r() * 1.6, hot: r() };
+    });
+  })();
+  const motePos = new Float32Array(COUNT * 3);
+  const moteCol = new Float32Array(COUNT * 3);
+  const moteGeo = new THREE.BufferGeometry();
+  moteGeo.setAttribute('position', new THREE.BufferAttribute(motePos, 3));
+  moteGeo.setAttribute('color', new THREE.BufferAttribute(moteCol, 3));
+  const motes = new THREE.Points(moteGeo, new THREE.PointsMaterial({
+    size: 0.2, map: GLOW, vertexColors: true, transparent: true,
+    blending: THREE.AdditiveBlending, depthWrite: false, sizeAttenuation: true,
+  }));
+  scene.add(motes);
+
+  // ------------------------------------------------------------- the answer
+  const cardGroup = new THREE.Group();
+  const cardBody = solid(1080, 470, function (x, w, h) {
+    const g = x.createLinearGradient(0, 0, 0, h);
+    g.addColorStop(0, '#172620'); g.addColorStop(1, '#0b1411');
+    x.fillStyle = g; roundRect(x, w, h, 22); x.fill();
+    x.strokeStyle = 'rgba(70,214,143,.45)'; x.lineWidth = 3;
+    x.save(); x.translate(2, 2); roundRect(x, w - 4, h - 4, 21); x.stroke(); x.restore();
+  }, { roughness: 0.6, metalness: 0.18 });
+  cardBody.castShadow = true;
+  cardGroup.add(cardBody);
+  const cardFace = flat(1080, 470, function (x, w, h) {
+    write(x, T.s2src.join('') + ' · ' + T.s2time, '400 26px ' + FONT, FAINT, 46, 66, 'left');
+    write(x, T.s1card, '700 60px ' + FONT, INK, 46, 156, 'left');
+    write(x, T.s1word, '500 30px ' + FONT, ACC, 46, 210, 'left');
+  });
+  cardFace.position.z = 0.03;
+  cardGroup.add(cardFace);
+  const chips = T.s2chips.map(function (c, i) {
+    const m = flat(430, 76, function (x, w, h) {
+      x.font = '500 24px ' + FONT;
+      const tw = x.measureText(c).width + 44;
+      x.save(); x.translate(0, 10);
+      x.fillStyle = 'rgba(70,214,143,.16)';
+      x.strokeStyle = 'rgba(70,214,143,.34)'; x.lineWidth = 2;
+      roundRect(x, tw, 56, 28); x.fill(); x.stroke();
+      x.restore();
+      write(x, c, '500 24px ' + FONT, '#a7e6c6', 22, h / 2 + 12, 'left');
+    });
+    cardGroup.add(m);
+    return m;
+  });
+  const cardGlow = glow(22, 0x46d68f, 0.26);
+  cardGlow.position.z = -0.7;
+  cardGroup.add(cardGlow);
+  scene.add(cardGroup);
+
+  const swaps = T.fswaps.map(function (word) {
+    const m = flat(1080, 120, function (x, w, h) {
+      write(x, word, '700 62px ' + FONT, INK, w / 2, h / 2 + 22);
+    });
+    m.position.set(0, 0.2, 0.06);
+    cardGroup.add(m);
+    return m;
+  });
+
+  // -------------------------------------------------- one library, three places
+  const devices = new THREE.Group();
+  const devs = T.s4dev.map(function (name, i) {
+    const g = new THREE.Group();
+    const slab = new THREE.Mesh(
+      new THREE.BoxGeometry(5.0, 3.4, 0.22),
+      new THREE.MeshStandardMaterial({ color: 0x22332e, roughness: 0.45, metalness: 0.3, transparent: true }));
+    slab.castShadow = false; slab.receiveShadow = true;
+    // The same library on every surface: the answer, then the lines under it.
+    const face = flat(500, 340, function (x, w, h) {
+      x.save(); x.translate(26, 26);
+      x.fillStyle = 'rgba(70,214,143,.1)';
+      x.strokeStyle = 'rgba(70,214,143,.34)'; x.lineWidth = 2;
+      roundRect(x, w - 52, 116, 12); x.fill(); x.stroke();
+      write(x, T.s1card, '700 27px ' + FONT, INK, 18, 48, 'left');
+      write(x, T.s1word, '500 18px ' + FONT, ACC, 18, 82, 'left');
+      x.restore();
+      const rows = [0.82, 0.6, 0.72, 0.5, 0.66];
+      rows.forEach(function (wide, r) {
+        x.fillStyle = 'rgba(238,243,240,.16)';
+        x.save(); x.translate(26, 172 + r * 32);
+        roundRect(x, (w - 52) * wide, 11, 6); x.fill(); x.restore();
+      });
+    });
+    face.position.z = 0.13;
+    const label = flat(420, 74, function (x, w, h) {
+      write(x, name, '600 30px ' + FONT, INK, w / 2, h / 2 + 11);
+    });
+    label.position.y = -2.2;
+    g.add(slab, face, label);
+    g.position.set(-5.9 + i * 5.9, 0.6, -6.5);
+    g.rotation.y = (1 - i) * 0.3;
+    devices.add(g);
+    return g;
+  });
+  scene.add(devices);
+
+  const flowers = Array.from({ length: 4 }, function () {
+    const m = new THREE.Mesh(
+      new THREE.PlaneGeometry(1, 0.28),
+      new THREE.MeshBasicMaterial({
+        color: 0x46d68f, transparent: true,
+        blending: THREE.AdditiveBlending, depthWrite: false,
+      }));
+    scene.add(m);
+    return m;
+  });
+
+  // ------------------------------------------------------------- the end card
+  const endGroup = new THREE.Group();
+  const markMesh = new THREE.Mesh(
+    new THREE.BoxGeometry(2, 1.5, 0.36),
+    new THREE.MeshStandardMaterial({
+      color: 0x46d68f, roughness: 0.3, metalness: 0.2,
+      emissive: 0x2c9c68, emissiveIntensity: 0.55, transparent: true,
+    }));
+  markMesh.castShadow = true;
+  const markFace = flat(200, 150, function (x, w, h) {
+    x.fillStyle = '#06231a';
+    x.save(); x.translate(38, 44); roundRect(x, w - 76, 20, 10); x.fill(); x.restore();
+    x.save(); x.translate(38, 88); roundRect(x, 52, 20, 10); x.fill(); x.restore();
+  });
+  markFace.position.z = 0.19;
+  markMesh.add(markFace);
+  markMesh.position.y = 1.75;
+  const endText = flat(1500, 330, function (x, w, h) {
+    write(x, T.f8, '700 92px ' + FONT, INK, w / 2, 100);
+    write(x, T.f9, '400 34px ' + FONT, DIM, w / 2, 162);
+    write(x, 'subtitlenotes.com', '400 27px ' + FONT, FAINT, w / 2, 240);
+  });
+  endText.position.y = -0.95;
+  const endGlow = glow(18, 0x46d68f, 0.2);
+  endGlow.position.y = 1.75;
+  endGroup.add(markMesh, endText, endGlow);
+  scene.add(endGroup);
+
+  // -------------------------------------------------------------- the caption
+  const LINES = [
+    [T.f1, B.dictIn + 0.25], [T.f2, B.strike + 0.15], [T.f3, B.key - 0.8],
+    [T.f4, B.n1 - 0.4], [T.f5, B.chips + 0.4], [T.f6, B.dev - 0.4], [T.f7, B.swaps - 0.5],
+  ];
+  const says = LINES.map(function (row) {
+    const m = flat(1600, 96, function (x, w, h) {
+      write(x, row[0], '500 40px ' + FONT, INK, w / 2, h / 2 + 14);
+    });
+    m.material.depthTest = false;
+    m.renderOrder = 20;
+    m.position.set(0, -2.34, -6.4);
+    m.scale.setScalar(0.62);
+    camera.add(m);
+    return m;
+  });
+  scene.add(camera);
+
+  /* A scene owns the frame between these two times, and is invisible outside
+     them. This is the whole defence against two scenes at once. */
+  const CUT = [
+    [tvGroup, -1, B.away + 0.7],
+    [machine, B.away - 0.3, B.back + 1.3],
+    [cardGroup, B.answer - 0.6, B.endCard - 0.1],
+    [devices, B.devSwell - 0.4, B.swaps - 0.2],
+    [endGroup, B.endCard - 0.1, 99],
+  ];
+
+  let capState = '';
+  function setCap(state) {
+    if (capState === state) return;
+    capState = state;
+    cap.material.map = capMaps[state];
+    cap.material.needsUpdate = true;
+  }
+
+  /* How far back the camera has to stand for something `width` units wide to
+     take up `fill` of the frame. Aiming shots by eye is what put the card
+     half off the edge; this cannot. */
+  const ASPECT = W / H;
+  function backOff(width, fill) {
+    const visW = width / fill;
+    const visH = visW / ASPECT;
+    return (visH / 2) / Math.tan(camera.fov * Math.PI / 360);
+  }
+
+  /* Each shot: when it is held, what it looks at, how wide its subject is and
+     how much of the frame that should take. Between two shots the camera
+     travels from one to the other. */
+  const SHOTS = [
+    { at: 0,          look: [0, 0.4, -8],    w: 17.5, fill: 0.84, tilt: 0.5 },
+    { at: B.key - 1,  look: [0, -1.5, -4.6], w: 12.0, fill: 0.80, tilt: 0.3 },
+    { at: B.held,     look: [0, -1.0, -4.2], w: 11.0, fill: 0.80, tilt: 0.2 },
+    { at: B.n1,       look: [-1.0, 0.5, -18], w: 25.0, fill: 0.9,  tilt: 0.5 },
+    { at: B.n3,       look: [0.4, 0.7, -23],  w: 27.0, fill: 0.9,  tilt: 0.4 },
+    { at: B.answer + 0.6, look: [0, 0.1, -2], w: 12.4, fill: 0.78, tilt: 0.1 },
+    { at: B.dev + 0.8, look: [0, 0.2, -6.5], w: 19.5, fill: 0.88, tilt: 0.15 },
+    { at: B.swaps + 0.4, look: [0, 0.2, -2], w: 12.4, fill: 0.78, tilt: 0.1 },
+    { at: B.endCard + 1.4, look: [0, 0.3, 1.4], w: 15.5, fill: 0.78, tilt: 0.1 },
+  ];
+  function shotAt(s) {
+    let i = 0;
+    while (i < SHOTS.length - 1 && s >= SHOTS[i + 1].at) i++;
+    const a = SHOTS[i], b = SHOTS[Math.min(i + 1, SHOTS.length - 1)];
+    const k = b === a ? 1 : ease((s - a.at) / (b.at - a.at));
+    const look = new THREE.Vector3(
+      mix(a.look[0], b.look[0], k),
+      mix(a.look[1], b.look[1], k),
+      mix(a.look[2], b.look[2], k));
+    const width = mix(a.w, b.w, k);
+    const fill = mix(a.fill, b.fill, k);
+    const tilt = mix(a.tilt, b.tilt, k);
+    return { look: look, dist: backOff(width, fill), tilt: tilt };
+  }
+
+  function place(s) {
+    const shot = shotAt(s);
+    // A slow drift so no shot is ever locked off, and a touch of parallax.
+    const drift = Math.sin(s * 0.21) * 0.28;
+    camera.position.set(
+      shot.look.x + drift,
+      shot.look.y + shot.tilt + Math.sin(s * 0.17) * 0.12,
+      shot.look.z + shot.dist);
+    camera.lookAt(shot.look);
+
+    if (tvGroup.visible) {
+      const leaving = span(s, B.away - 0.1, B.away + 0.7);
+      tvGroup.position.set(0, leaving * 3.2, -leaving * 30);
+      tv.material.opacity = 1 - leaving;
+      tvGlow.material.opacity = 0.2 * (1 - leaving);
+
+      setCap(s >= B.held ? 'gone' : s >= B.drag ? 'on' : 'off');
+      cap.material.opacity = span(s, B.lineIn, B.lineIn + 0.6) * (1 - leaving);
+
+      dict.visible = s > B.dictIn - 0.3 && s < B.dictOut + 1.2;
+      if (dict.visible) {
+        const inK = span(s, B.dictIn, B.dictIn + 0.7);
+        const outK = span(s, B.dictOut, B.dictOut + 1.0);
+        dictPlate.material.opacity = inK * (1 - outK);
+        dict.position.y = -3.45 - outK * 0.6;
+        // Only across the words, and starting where they start.
+        const st = span(s, B.strike, B.strike + 0.5);
+        const from = -strikeWidth / 2, wide = st * strikeWidth;
+        strikeBar.scale.x = Math.max(0.001, wide);
+        strikeBar.material.opacity = st * (1 - outK);
+        strikeBar.position.x = strikeCentre + from + wide / 2;
+      }
+
+      keyCap.visible = s > B.key - 1.3 && s < B.away;
+      const press = span(s, B.key, B.key + 0.16) - span(s, B.key + 0.55, B.key + 0.95);
+      keyCap.position.z = -0.6 - press * 0.18;
+      keyTop.material.emissive.setHex(0x000000).lerp(new THREE.Color(0x1f6f4d), press);
+    }
+
+    const lifted = s >= B.held && s < B.answer - 0.4;
+    phraseGroup.visible = lifted;
+    if (lifted) {
+      const rise = span(s, B.held, B.held + 1.0);
+      const fly = clamp((s - B.away) / (B.answer - 0.6 - B.away));
+      const home = new THREE.Vector3(0, -2.3 + rise * 1.5, -3.6 + rise * 1.4);
+      phraseGroup.position.copy(fly > 0 ? onPath(fly) : home);
+      phraseGroup.scale.setScalar(mix(1, 0.72, rise) * (1 - fly * 0.5));
+      phraseGroup.lookAt(camera.position);
+      phrase.material.opacity = rise * (1 - span(s, B.n1 + 0.2, B.n1 + 0.8));
+      phraseGlow.material.opacity = 0.45 * rise * (1 - fly * 0.6);
+    }
+
+    if (machine.visible) {
+      const fade = 1 - span(s, B.back + 0.4, B.back + 1.3);
+      nodes.forEach(function (n, i) {
+        const at = [B.n1, B.n2, B.n3][i];
+        const k = span(s, at - 0.6, at + 0.2) * fade;
+        const pulse = Math.exp(-Math.max(0, s - at) * 1.6);
+        n.scale.setScalar(mix(0.45, 1, span(s, at - 0.6, at + 0.2)));
+        n.userData.lamp.intensity = k * (14 + pulse * 46);
+        n.userData.ring.material.emissiveIntensity = k * (1.5 + pulse * 3);
+        n.userData.ring.material.opacity = k;
+        n.userData.core.material.opacity = k;
+        n.userData.halo.material.opacity = k * (0.18 + pulse * 0.5);
+        n.userData.label.material.opacity = k;
+        n.lookAt(camera.position.x, n.position.y, camera.position.z);
+      });
+    }
+
+    const flight = (s - B.away) / (B.answer - B.away);
+    motes.visible = flight > -0.05 && flight < 1.2;
+    if (motes.visible) {
+      const c1 = new THREE.Color(0x46d68f), c2 = new THREE.Color(0xeef3f0);
+      for (let i = 0; i < COUNT; i++) {
+        const m = MOTE[i];
+        const u = (flight - m.lead * 0.5) / (1 - m.lead * 0.5);
+        const p = onPath(u);
+        const leg = Math.abs(Math.sin(clamp(u) * Math.PI * 3.05));
+        const a = (u > 0 && u < 1) ? Math.min(1, u * 7) * Math.min(1, (1 - u) * 6) : 0;
+        motePos[i * 3] = p.x + Math.sin(u * 9 + m.wob) * m.amp * leg;
+        motePos[i * 3 + 1] = p.y + Math.cos(u * 7 + m.wob) * m.amp * 0.7 * leg;
+        motePos[i * 3 + 2] = p.z + Math.sin(u * 5 + m.wob * 2) * m.amp * 0.5 * leg;
+        const col = m.hot > 0.78 ? c2 : c1;
+        moteCol[i * 3] = col.r * a; moteCol[i * 3 + 1] = col.g * a; moteCol[i * 3 + 2] = col.b * a;
+      }
+      moteGeo.attributes.position.needsUpdate = true;
+      moteGeo.attributes.color.needsUpdate = true;
+    }
+
+    if (cardGroup.visible) {
+      const land = outCubic((s - B.answer) / 1.3);
+      const docked = span(s, B.devSwell, B.dev + 0.35) * (1 - span(s, B.swaps - 1.1, B.swaps - 0.1));
+      cardGroup.position.set(0, mix(0.1, 0.6, docked), mix(mix(-13, -2.0, land), -6.5, docked));
+      cardGroup.scale.setScalar(mix(1, 0.2, docked));
+      cardGroup.rotation.y = mix(0.55, 0, land);
+      cardBody.material.opacity = land * (1 - docked);
+      const before = 1 - span(s, B.swaps - 0.55, B.swaps - 0.1);
+      cardFace.material.opacity = land * before * (1 - docked);
+      cardGlow.material.opacity = 0.26 * land * (1 - docked);
+      chips.forEach(function (c, i) {
+        const k = span(s, B.chips + i * 0.13, B.chips + i * 0.13 + 0.45);
+        c.material.opacity = k * before * (1 - docked);
+        c.position.set(-3.55 + i * 3.15, -1.45, 0.05);
+      });
+      swaps.forEach(function (m, i) {
+        const at = B.swaps + i * 0.74;
+        const k = span(s, at, at + 0.32);
+        const off = i === swaps.length - 1 ? 0 : span(s, at + 0.6, at + 0.76);
+        m.material.opacity = k * (1 - off);
+        m.rotation.x = mix(-1.2, 0, k) + off * 1.0;
+      });
+    }
+
+    if (devices.visible) {
+      const off = span(s, B.swaps - 1.0, B.swaps - 0.35);
+      devs.forEach(function (d, i) {
+        const k = span(s, B.dev + i * 0.22, B.dev + i * 0.22 + 0.9);
+        d.position.y = mix(-4.2, 0.5, k) + off * 2.2;
+        d.children.forEach(function (c) {
+          if (c.material) { c.material.transparent = true; c.material.opacity = k * (1 - off); }
+        });
+      });
+    }
+    flowers.forEach(function (f, i) {
+      const u = clamp((s - B.flow - i * 0.15) / 1.5);
+      f.visible = devices.visible && u > 0 && u < 1;
+      if (f.visible) {
+        const a = devs[i % 3].position, b = devs[(i + 1) % 3].position;
+        f.position.lerpVectors(a, b, ease(u));
+        f.position.y += Math.sin(u * Math.PI) * 1.8;
+        f.position.z += Math.sin(u * Math.PI) * 1.6;
+        f.material.opacity = Math.min(1, u * 5) * Math.min(1, (1 - u) * 5);
+        f.lookAt(camera.position);
+      }
+    });
+
+    if (endGroup.visible) {
+      const k = span(s, B.endCard + 0.3, B.endCard + 1.5);
+      endGroup.position.set(0, mix(-0.8, 0.1, k), mix(-3.5, 1.4, k));
+      markMesh.rotation.y = mix(-0.8, 0, k);
+      markMesh.material.opacity = k;
+      endText.material.opacity = span(s, B.endCard + 0.9, B.endCard + 1.9);
+      endGlow.material.opacity = 0.2 * k;
+    }
+
+    says.forEach(function (m, i) {
+      const from = LINES[i][1];
+      const until = (i + 1 < LINES.length ? LINES[i + 1][1] : B.endCard - 0.5) - 0.45;
+      const k = span(s, from, from + 0.55) * (1 - span(s, until, until + 0.4));
+      m.material.opacity = k;
+      m.visible = k > 0.004;
+    });
+
+    rim.intensity = 90 * (1 - span(s, B.away, B.n1)) + 55 * span(s, B.back, B.answer);
+    scene.fog.density = mix(0.0125, 0.019, span(s, B.away, B.n2))
+      * (1 - 0.45 * span(s, B.back, B.answer));
+  }
 
   function seek(time) {
     const s = time / RATE;
-    root.style.setProperty('--t', time);
-
-    const c = camera(s);
-    cam.style.transform =
-      `translate3d(0,0,${c.z.toFixed(2)}px) rotateY(${(c.ry * 180 / Math.PI).toFixed(3)}deg)`
-      + ` rotateX(${(c.rx * 180 / Math.PI).toFixed(3)}deg)`;
-
-    // Each plane sits at its own depth, and blurs as it gets far from the
-    // camera - the cheapest honest depth cue there is.
-    for (const el of planes) {
-      const z = el.dataset.at !== undefined ? NODE_AT[Number(el.dataset.at)][2]
-        : el.dataset.dev !== undefined ? -40
-        : Number(el.dataset.z || 0);
-      const dist = Math.abs(z + c.z);
-      const blur = Math.min(4, Math.max(0, (dist - 560) / 260));
-      el.style.filter = blur > 0.05 ? `blur(${blur.toFixed(2)}px)` : 'none';
-    }
-    // The dev planes fan out in 3D rather than sitting in a row.
-    devs.forEach((el, i) => {
-      el.style.transform = `translate3d(${-560 + i * 560}px, -250px, -40px)`
-        + ` rotateY(${(-24 + i * 24).toFixed(1)}deg)`;
-    });
-    nodes.forEach((el, i) => {
-      const [x, y, z] = NODE_AT[i];
-      el.style.transform = `translate3d(${x}px, ${y}px, ${z}px)`;
-    });
-
-    for (const [sel, from, to] of windows) {
-      for (const el of document.querySelectorAll(sel)) {
-        el.style.visibility = s >= from - 0.02 && s <= to ? 'visible' : 'hidden';
-      }
-    }
-
-    // The picture stays where it is and dims - it is the same room all the
-    // way through, not a rectangle that gets cropped away.
-    const dim = span(s, B.pause, B.pause + 1.2) * 0.34 + span(s, B.devSwell, B.devSwell + 1.1) * 0.3;
-    screen.style.opacity = String(Math.max(0.32, 1 - dim));
-    subs.style.opacity = String(1 - span(s, B.back, B.answer));
-    // Forward for the answer, back to sit behind the three surfaces as the
-    // library they share, forward again for the languages.
-    const back = span(s, B.devSwell, B.dev + 0.6) * (1 - span(s, B.swaps - 1.1, B.swaps));
-    card.style.transform = `translate3d(0, ${(back * 150).toFixed(1)}px, ${(150 - back * 470).toFixed(1)}px)`;
-    card.style.opacity = String((1 - 0.55 * back) * (1 - span(s, B.endCard - 0.6, B.endCard + 0.2)));
-    lead.style.opacity = String(1 - span(s, B.swaps - 0.5, B.swaps + 0.1));
-    chips.style.opacity = String(1 - span(s, B.swaps - 0.5, B.swaps + 0.1));
-    swap.style.opacity = String(1 - span(s, B.endCard - 0.5, B.endCard + 0.3));
-    veil.style.opacity = String(0.86 * span(s, B.endCard - 0.4, B.endCard + 0.5));
-
-    g.clearRect(0, 0, 1920, 1080);
-    beams(s, c);
-    motes(s, c);
-    flow(s, c);
-    atmosphere(s);
+    // The floor is there for the room the television stands in. After that
+    // the film is in the dark, and a lit floor only collects stray shapes.
+    floor.visible = s < B.away + 1.0;
+    for (let i = 0; i < CUT.length; i++) CUT[i][0].visible = s >= CUT[i][1] && s <= CUT[i][2];
+    place(s);
+    renderer.render(scene, camera);
   }
 
-  window.FILM = { seek, duration: +(STORY_END * RATE).toFixed(3), rate: RATE };
+  window.FILM = { seek: seek, duration: +(STORY_END * RATE).toFixed(3), rate: RATE };
   const at = q.get('t');
   if (at !== null) {
     seek(Number(at));
-    document.fonts.ready.then(() => { document.documentElement.dataset.ready = '1'; });
+    document.fonts.ready.then(function () {
+      seek(Number(at));
+      document.documentElement.dataset.ready = '1';
+    });
   } else {
     const t0 = performance.now();
-    const tick = () => {
+    const tick = function () {
       seek(((performance.now() - t0) / 1000) % window.FILM.duration);
       requestAnimationFrame(tick);
     };
-    tick();
+    document.fonts.ready.then(tick);
   }
-})();
+});
 </script>
