@@ -11,10 +11,10 @@ const encoder = new TextEncoder();
 /// The program has no store to update it, so it asks here on startup and says
 /// when it is behind. Bump the version when a new installer is published.
 const DESKTOP_LATEST = {
-  version: '1.9.1',
+  version: '1.9.2',
   // Straight to the file: the button should start a download, not land
   // somebody on a page of assets to choose from.
-  url: 'https://github.com/mjandreas125/subtitle-notes/releases/latest/download/SubtitleNotesSetup-1.9.1.exe',
+  url: 'https://github.com/mjandreas125/subtitle-notes/releases/latest/download/SubtitleNotesSetup-1.9.2.exe',
   notes: '',
 };
 /// The other two ways in, kept here for the same reason as the installer: a
@@ -22,7 +22,7 @@ const DESKTOP_LATEST = {
 /// points at it. When the app reaches Google Play, this one line changes and
 /// every button in the extension and on the site follows.
 const ANDROID_LATEST = {
-  version: '1.8.0',
+  version: '1.8.1',
   url: 'https://github.com/mjandreas125/subtitle-notes/releases/latest/download/SubtitleNotes.apk',
   // What it is, so a page can warn about installing outside a store.
   source: 'github',
