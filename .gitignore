@@ -17,10 +17,19 @@ mobile/android/.gradle/
 release_package/*.exe
 release_package/*.zip
 release_package/*.aab
+release_package/*.apk
+# The promo films: 10 MB each, rebuilt from release_package/promo by
+# `node tools/build-promo.mjs film`, and they live on YouTube once uploaded.
+# The store screenshots beside them are small and stay tracked.
+release_package/promo/*.mp4
 release_package/dist/
 cloud_api/.wrangler/
 cloud_api/node_modules/
 node_modules/
+
+# Screenshots the CDP driver writes while a check runs. Neither the bench nor
+# the promo pages read any of them back.
+tools/*.png
 
 # Local runtime and scratch.
 __pycache__/

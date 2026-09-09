@@ -22,7 +22,7 @@ document.getElementById('connect').addEventListener('click', () => {
 // signed installer - without anybody reinstalling this.
 async function openLatest(what) {
   try {
-    const reply = await fetch(`https://app.subtitlenotes.workers.dev/${what}/latest`);
+    const reply = await fetch(`https://subtitlenotes.com/${what}/latest`);
     const latest = await reply.json();
     if (latest?.url) window.open(latest.url, '_blank');
   } catch (_) {

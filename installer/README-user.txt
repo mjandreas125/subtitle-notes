@@ -30,7 +30,7 @@
 субтитров, Ctrl+Alt для текста и отдельное разрешение для PDF с диска.
 
 Вход везде через один и тот же аккаунт Google. Библиотека открывается и в
-браузере: https://app.subtitlenotes.workers.dev/library
+браузере: https://subtitlenotes.com/library
 
 Подробнее
 -

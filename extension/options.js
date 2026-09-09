@@ -3,8 +3,8 @@
 // would die halfway through. This page is open for as long as the person is
 // looking at the code.
 
-const API_BASE = 'https://app.subtitlenotes.workers.dev/v1';
-const LINK_PAGE = 'https://app.subtitlenotes.workers.dev/link';
+const API_BASE = 'https://subtitlenotes.com/v1';
+const LINK_PAGE = 'https://subtitlenotes.com/link';
 const view = (id) => document.getElementById(id);
 
 /// Named in their own language: a person looking for Estonian is looking for

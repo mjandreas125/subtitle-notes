@@ -14,8 +14,18 @@ const googleServerClientId =
 
 // Permanent public API. This is a Cloudflare Worker, so it does not depend on
 // the creator's computer, a home IP address, or a short-lived tunnel.
-const defaultApiBase =
-    'https://app.subtitlenotes.workers.dev/v1';
+const defaultApiBase = 'https://subtitlenotes.com/v1';
+
+/// Addresses the product answered on before it had a domain of its own. Both
+/// were the same Worker, and the Worker issues the token rather than the
+/// hostname, so a stored session survives being moved to the new address.
+const retiredApiHosts = [
+  'andreas-sultseng228.workers.dev',
+  'app.subtitlenotes.workers.dev',
+];
+
+bool isRetiredApiBase(String url) =>
+    retiredApiHosts.any((host) => url.contains(host));
 
 class IncomingText {
   static const _channel = MethodChannel(
@@ -73,13 +83,13 @@ class SessionStore {
       await data.remove(_tokenKey);
       return null;
     }
-    // The Workers subdomain used to carry the owner's e-mail. Only the address
-    // moved; the address is rewritten here and whether there is a session at
-    // all is decided below, as for anyone else. Handing back a session with an
-    // empty token made the app believe it was signed in and refuse every
-    // request it then made.
-    final resolved =
-        base.contains('andreas-sultseng228.workers.dev') ? defaultApiBase : base;
+    // The address moved twice: off the Workers subdomain that carried the
+    // owner's e-mail, and then onto the product's own domain. Only the address
+    // moved; it is rewritten here and whether there is a session at all is
+    // decided below, as for anyone else. Handing back a session with an empty
+    // token made the app believe it was signed in and refuse every request it
+    // then made.
+    final resolved = isRetiredApiBase(base) ? defaultApiBase : base;
     if (resolved != base) await data.setString(_baseKey, resolved);
     if (resolved.isEmpty || token.isEmpty) return null;
     return Session(

@@ -39,7 +39,13 @@
 
 `cloud_api/src/index.ts` - основной файл, `cloud_api/src/library.ts` - страница
 веб-библиотеки (вынесена отдельно, потому что она большая).
-Адрес: `https://app.subtitlenotes.workers.dev`
+Адрес: `https://subtitlenotes.com` (домен куплен 9 сентября 2026 в Cloudflare
+Registrar, привязан к воркеру как custom domain в `wrangler.jsonc`; `www`
+отвечает редиректом на корень внутри самого воркера, без правил в панели).
+Старый `https://app.subtitlenotes.workers.dev` **оставлен включённым** -
+на него смотрят все копии, собранные до переезда. `workers_dev: true` в
+`wrangler.jsonc` стоит именно поэтому: добавление `routes` выключает
+workers.dev по умолчанию, и одна такая выкладка уже успела его отключить.
 
 **База** D1 `subtitle-notes-production`, миграции `0001…0007`:
 `users`, `selections`, `device_pairings`, `friendships`, `selection_likes`,
@@ -222,7 +228,7 @@ node cloud_api/scripts/check.mjs <адрес> [токен]  # весь серв�
 
 `check.mjs` без токена проверяет только публичную половину (страницы, версия,
 что приватное действительно приватно) - так его можно наводить прямо на
-`https://app.subtitlenotes.workers.dev`. С токеном он проходит весь путь
+`https://subtitlenotes.com`. С токеном он проходит весь путь
 выделения: словарь, разбор строки, сохранение, повтор, починка непереведённых,
 повторение, экспорт - и удаляет за собой карточки, которые создал.
 

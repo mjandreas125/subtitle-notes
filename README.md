@@ -25,7 +25,7 @@
   подписан, поэтому SmartScreen покажет предупреждение.
 
 Вход везде через один аккаунт Google. Библиотека доступна и в браузере:
-<https://app.subtitlenotes.workers.dev/library>
+<https://subtitlenotes.com/library>
 
 Публичные файлы выпуска и руководство появляются на странице
 [Releases](https://github.com/mjandreas125/subtitle-notes/releases). До

@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "__MSG_appName__",
-  "version": "2.9.7",
+  "version": "2.9.8",
   "description": "__MSG_appDescription__",
   "default_locale": "en",
   "permissions": [
@@ -9,6 +9,7 @@
     "contextMenus"
   ],
   "host_permissions": [
+    "https://subtitlenotes.com/*",
     "https://app.subtitlenotes.workers.dev/*"
   ],
   "background": {

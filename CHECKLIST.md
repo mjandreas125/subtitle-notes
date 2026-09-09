@@ -12,7 +12,19 @@ https://chromewebstore.google.com/detail/subtitle-notes/lkajlfbpeinegffgmmmiemkn
 дальше, поэтому очередное дело - загрузить свежий
 `release_package/subtitle-notes-extension-<версия>.zip` тем же порядком:
 позиция -> Package -> Upload new package -> Submit for review. Тексты карточки
-при этом не трогаются.
+при этом не трогаются. Грузить архив **без** `-for-testing`: в том всё лежит
+внутри папки, и магазин не находит манифест.
+
+Заодно готово к заливке (подробности в `STORE-LISTING.md`):
+
+- **Скриншоты на двух языках** - `release_package/store-en/` и `store-ru/`,
+  по пять штук 1280x800. Магазин локализует скриншоты, так что английский
+  посетитель больше не увидит русские картинки.
+- **Промо-ролик** - `release_package/promo/subtitle-notes-en.mp4` и `-ru.mp4`,
+  1920x1080, 27 секунд, со звуком. Надо залить на YouTube и вставить ссылку в
+  поле видео (своя на каждый язык). Видео показывается **перед** скриншотами.
+
+Пересобирается всё одной командой: `node tools/build-promo.mjs`.
 
 ## Название на экране входа Google
 
@@ -47,7 +59,7 @@ https://chromewebstore.google.com/detail/subtitle-notes/lkajlfbpeinegffgmmmiemkn
 
 ## Что можно проверить своими глазами
 
-- **Вход**: <https://app.subtitlenotes.workers.dev/library>
+- **Вход**: <https://subtitlenotes.com/library>
   Проверено 19 августа: переход к Google и обратно, библиотека открывается.
 - **Привязка компьютера**: окно «Подключить этот компьютер» в программе.
   Проверено: код подтверждается, компьютер подключается.

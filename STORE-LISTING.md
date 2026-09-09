@@ -26,19 +26,59 @@
 3. Тот же дропдаун **Keel** -> добавить `vene - ru` -> вставить русский текст
    из раздела **Русский**.
 4. Ещё раз -> добавить `eesti - et` -> текст из раздела **Eesti**.
-5. **Üldised ekraanipildid** (общие скриншоты): перетащить
-   `release_package/store/shot-1.png` ... `shot-5.png` (все уже 1280x800).
-   Они общие для всех языков, отдельно для каждого языка загружать не нужно.
-6. **Väike reklaamipaan** -> `release_package/store/tile-440x280.png`.
+5. **Ekraanipildid** (скриншоты) - теперь свои на каждый язык. Магазин
+   локализует скриншоты и промо-видео; не локализуются только две плитки.
+   Выбрав язык в том же дропдауне **Keel**, перетащить в секцию
+   *Lokaliseeritud ekraanipildid*:
+   - `inglise - en` -> `release_package/store-en/shot-1.png` ... `shot-5.png`
+   - `vene - ru`    -> `release_package/store-ru/shot-1.png` ... `shot-5.png`
+
+   Порядок показа у магазина такой: локализованное видео, локализованные
+   скриншоты, общее видео, общие скриншоты. Старый общий набор
+   `release_package/store/shot-*.png` остаётся запасным для тех языков, у
+   которых своего набора нет; перезаливать его не нужно.
+6. **Промо-видео** (`YouTube video`): загрузить на YouTube
+   `release_package/promo/subtitle-notes-en.mp4` и `...-ru.mp4` (1920x1080,
+   27 с, со звуком), доступ «по ссылке» или публичный, без рекламы. Ссылку
+   вставить в поле видео - для каждого языка свою. Видео показывается **перед**
+   скриншотами, это самое заметное место карточки.
+7. **Väike reklaamipaan** -> `release_package/store/tile-440x280.png`.
    **Silmapaistev reklaamipaan** -> `release_package/store/marquee-1400x560.png`.
-7. **Kodulehe URL** поменять на `https://app.subtitlenotes.workers.dev`
+   Эти две - общие на все языки, локализовать их магазин не даёт.
+8. **Kodulehe URL** поменять на `https://subtitlenotes.com`
    (сейчас там GitHub - это исходники, а не сайт продукта).
    **Toe URL**: `https://github.com/mjandreas125/subtitle-notes/issues`.
-8. **Ametlik URL** оставить `Puudub`: это поле требует, чтобы домен был
-   подтверждён в Google Search Console, а домен пока не наш.
-9. **Kategooria**: `Haridus` - оставить.
+9. **Ametlik URL** - теперь можно указать `https://subtitlenotes.com`, но
+   сначала домен нужно подтвердить в Google Search Console тем же аккаунтом,
+   под которым открыт кабинет разработчика. Не подтвердишь - оставь `Puudub`,
+   поле необязательное.
+10. **Kategooria**: `Haridus` - оставить.
    **Täiskasvanutele mõeldud sisu**: нет.
-10. Сохранить и отправить на проверку.
+11. Сохранить и отправить на проверку.
+
+## Как пересобрать картинки и ролик
+
+Всё рисуется из двух страниц и одного словаря строк, локаль - параметр:
+
+```
+release_package/promo/strings.js   все видимые строки, en и ru
+release_package/promo/shots.html   пять кадров витрины, ?lang=en&n=1..5
+release_package/promo/film.html    ролик, ?lang=en&t=17.6 - один кадр
+```
+
+```
+node tools/build-promo.mjs           # всё: 10 скриншотов + 2 ролика
+node tools/build-promo.mjs shots     # только скриншоты, это быстро
+node tools/build-promo.mjs film ru   # только русский ролик
+```
+
+Ролик собирается покадрово: `tools/render-film.mjs` водит headless Chrome по
+таймлайну (`FILM.seek(t)`), `tools/promo-audio.py` синтезирует дорожку из
+арифметики - никакой лицензионной музыки, - а ffmpeg склеивает. Кадры уходят во
+временную папку и удаляются после сборки.
+
+Новый язык = новый ключ в `strings.js` плюс строка в `LANGS` в
+`tools/build-promo.mjs`. Разметку трогать не нужно.
 
 Дальше каждая новая версия - поднять номер в `extension/manifest.json`,
 пересобрать `powershell -ExecutionPolicy Bypass -File pack-extension.ps1`,
@@ -58,28 +98,29 @@ Subtitle Notes
 **Kokkuvõte paketist / Summary** (до 132 знаков):
 
 ```
-Translates the word you select, taking the whole line into account. Works in subtitles, on any page and in PDF.
+Understands subtitle lines in context. One library for the extension, phone, VLC and the Windows app.
 ```
 
 **Kirjeldus / Description:**
 
 ```
-A dictionary translates the word. Subtitle Notes translates what the word meant in the line you found it in.
+Subtitle Notes helps you watch series and films in the original language. It translates the meaning of the whole subtitle line, not a word in isolation. Highlight a line to get a natural translation, synonyms and an explanation of the figurative meaning.
 
-Word for word, "Il n'est pas dans son assiette" is "he is not in his plate" - which is what a dictionary gives you and not what anybody said. The line is read by a language model that sees the whole utterance, and it answers the way a dubbing translator would: he is not feeling well. Every word comes with synonyms, and a figure of speech also comes with the literal image it grew out of.
+"No one wants a record" is not about a sporting record. Subtitle Notes reads the full line and explains it as a dubbing translator would: "nobody wants a criminal record". For an idiom, it also shows the literal image and the meaning it gives in that scene.
 
-WHILE YOU WATCH
-Hold Ctrl and a subtitle in a web player becomes ordinary text you can drag across: YouTube, Netflix, Playerjs and the rest. The film pauses by itself while you read the answer. Let go of the key and the player is yours again - the line drags, a click pauses.
+WHILE WATCHING SERIES AND FILMS
+Hold Ctrl to make subtitles selectable in web players. It works on YouTube, Netflix, Playerjs and other sites. The video pauses while you select the line and read the answer. Release Ctrl and the player works normally again.
 
-WHILE YOU READ
-Highlight anything on any page and a card says what it means in this context. In PDFs, where highlighting is awkward, the right-click item in Chrome's viewer does the same. Hold Ctrl+Alt while you highlight and the word is kept without a button and without a dialogue - with an undo, in case the drag was a mistake.
+WHILE READING
+Highlight text on any page to see what it means in that exact context. In Chrome's PDF viewer, use the right-click menu. Hold Ctrl+Alt while selecting to save the word or phrase directly to your library. An accidental save can be undone.
 
-AFTERWARDS
-Everything lands in one library, and revision brings each word back on a widening schedule: the ones you struggled with sooner than the ones you knew. The same Google account puts that library on your phone and in the Windows program, which also reads subtitles in VLC and text in any program on the desktop.
+ONE LIBRARY FOR THE EXTENSION, PHONE AND WINDOWS
+The extension saves words and lines you find while watching into one shared library. Sign in with the same Google account to open it on your phone and in the Windows app. The Windows app also works with VLC subtitles and text from other desktop programs. Find a line in the browser, then review it on your phone or computer.
 
-Also: read out loud in the language of the subtitle, a counter of how often you have met a word, Anki export, a list of sites to leave alone, and an interface in 14 languages chosen by your browser.
+REVIEW
+Spaced repetition brings difficult words back sooner and familiar words later. Also included: pronunciation, encounter counts, Anki export, an excluded-sites list and an interface in 14 languages.
 
-Nothing is sent anywhere until you highlight something yourself. https://app.subtitlenotes.workers.dev
+Nothing is sent for translation until you select text yourself. https://subtitlenotes.com
 ```
 
 ---
@@ -95,28 +136,29 @@ Subtitle Notes
 **Короткое описание** (до 132 знаков):
 
 ```
-Переводит выделенное слово с учётом всей фразы. Работает в субтитрах, на любой странице и в PDF.
+Переводит реплики в субтитрах по смыслу. Одна библиотека для расширения, телефона, VLC и Windows.
 ```
 
 **Подробное описание:**
 
 ```
-Словарь переводит слово. Subtitle Notes переводит то, что это слово значило в строке, где вы его встретили.
+Subtitle Notes помогает смотреть сериалы и фильмы на языке оригинала. Расширение переводит не отдельное слово, а всю реплику с учётом контекста. Выделите строку в субтитрах и получите естественный перевод, синонимы и объяснение образного выражения.
 
-"No one wants a record" - это не про рекорд. Строку читает языковая модель, которая видит всю реплику, и отвечает так, как перевёл бы её дубляж: "никому не нужна судимость". К каждому слову - синонимы, а к образным выражениям ещё и буквальный смысл, из которого они выросли.
+"No one wants a record" - это не про рекорд. Subtitle Notes читает всю реплику и объясняет её так, как перевёл бы дубляж: "никому не нужна судимость". Для идиом показывает буквальный образ и смысл, который он даёт в этой сцене.
 
-КОГДА ВЫ СМОТРИТЕ
-Держите Ctrl - и субтитр в веб-плеере становится обычным текстом, который можно выделить: YouTube, Netflix, Playerjs и остальные. Фильм сам встаёт на паузу, пока вы читаете ответ. Отпустили клавишу - плеер снова ваш: субтитры перетаскиваются, клик ставит на паузу.
+ПРИ ПРОСМОТРЕ СЕРИАЛОВ И ФИЛЬМОВ
+Зажмите Ctrl, чтобы сделать субтитры в веб-плеере выделяемым текстом. Это работает на YouTube, Netflix, Playerjs и других сайтах. Пока вы выделяете реплику и читаете перевод, видео само ставится на паузу. Отпустите Ctrl, и плеер снова работает как обычно.
 
-КОГДА ВЫ ЧИТАЕТЕ
-Выделите что угодно на любой странице - и карточка скажет, что это значит именно здесь. В PDF, где выделять неудобно, то же самое делает пункт правого меню в просмотрщике Chrome. Ctrl+Alt при выделении - слово уходит в библиотеку без кнопок и без диалогов, с возможностью отменить, если рука дрогнула.
+ПРИ ЧТЕНИИ
+Выделите текст на любой странице, чтобы понять его именно в этом контексте. В PDF используйте пункт правого меню Chrome. Если выделять с Ctrl+Alt, слово или выражение сразу сохранится в библиотеку. Случайное сохранение можно отменить.
 
-ПОТОМ
-Всё попадает в одну библиотеку, а повторение возвращает слова с растущими интервалами: то, что далось тяжело, приходит раньше того, что вы знали. Тот же аккаунт Google - та же библиотека в приложении на телефоне и в программе для компьютера, которая читает ещё и субтитры в VLC и текст в любой программе.
+ОДНА БИБЛИОТЕКА ДЛЯ РАСШИРЕНИЯ, ТЕЛЕФОНА И WINDOWS
+Расширение сохраняет найденные в сериале слова и реплики в общую библиотеку. С тем же Google-аккаунтом она появляется в приложении на телефоне и в программе для Windows. В Windows программа работает также с субтитрами VLC и текстом из других приложений. Всё, что вы нашли в браузере, можно повторять на телефоне или компьютере.
 
-Кроме того: произношение вслух на языке субтитра, счётчик встреч со словом, выгрузка для Anki, список сайтов, куда лучше не лезть, и интерфейс на 14 языках по языку браузера.
+ПОВТОРЕНИЕ
+Интервальные повторения возвращают сложные слова раньше, а знакомые позже. Есть произношение, счётчик встреч со словом, экспорт в Anki, список исключённых сайтов и интерфейс на 14 языках.
 
-Ничего никуда не отправляется, пока вы сами не выделите текст. https://app.subtitlenotes.workers.dev
+Ничего не отправляется на перевод, пока вы сами не выделите текст. https://subtitlenotes.com
 ```
 
 ---
@@ -153,7 +195,7 @@ Kõik jõuab ühte kogusse ja kordamine toob sõnad tagasi üha pikemate vahedeg
 
 Lisaks: ettelugemine subtiitri keeles, loendur mitu korda oled sõna kohanud, Anki eksport, saitide nimekiri, kuhu mitte sekkuda, ja liides 14 keeles brauseri keele järgi.
 
-Midagi ei saadeta kuhugi enne, kui sa ise teksti valid. https://app.subtitlenotes.workers.dev
+Midagi ei saadeta kuhugi enne, kui sa ise teksti valid. https://subtitlenotes.com
 ```
 
 ---
@@ -166,9 +208,10 @@ Midagi ei saadeta kuhugi enne, kui sa ise teksti valid. https://app.subtitlenote
 The extension makes subtitles in web video players selectable and translates
 text the user highlights. Neither can be limited to a list of hosts: people
 watch on many different sites, and a word can be on any page. Nothing is read
-or sent until the user holds the key and highlights something. The only host
-the extension talks to is app.subtitlenotes.workers.dev, which holds the user's
-own library.
+or sent until the user holds the key and highlights something. The only hosts
+the extension talks to are subtitlenotes.com and subtitlenotes.com
+- the same service under its own domain and under the address earlier versions
+were built with. It holds the user's own library.
 ```
 
 `storage` - настройки и токен сессии на устройстве пользователя.

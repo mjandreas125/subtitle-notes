@@ -49,10 +49,10 @@ class DesktopConfig {
     final config = _read();
     var base = (config['api_url'] as String? ?? '').trim();
     final token = (config['token'] as String? ?? '').trim();
-    // The Workers subdomain used to carry the owner's e-mail; that host no
-    // longer resolves, and a settings file written before the move points at
-    // it. Only the address changed.
-    if (base.contains('andreas-sultseng228.workers.dev')) {
+    // A settings file written before one of the two moves - off the Workers
+    // subdomain that carried the owner's e-mail, or onto the product's own
+    // domain - still points at the old address. Only the address changed.
+    if (isRetiredApiBase(base)) {
       base = defaultApiBase;
       final updated = _read()..['api_url'] = defaultApiBase;
       try {

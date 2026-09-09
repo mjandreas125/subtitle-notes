@@ -21,11 +21,18 @@ APP_FOLDER = Path(os.environ.get("APPDATA", Path.home())) / "Translated VLC"
 CONFIG_PATH = APP_FOLDER / "sync_config.json"
 OUTBOX_PATH = APP_FOLDER / "sync_outbox.jsonl"
 SYNC_LOG_PATH = APP_FOLDER / "sync.log"
-DEFAULT_API_URL = "https://app.subtitlenotes.workers.dev/v1"
-# The address the product used while the Workers subdomain still carried the
-# owner's e-mail. It no longer resolves; it is kept only to recognise it in a
-# settings file written before the move.
-PREVIOUS_API_URL = "https://subtitle-notes-api.andreas-sultseng228.workers.dev/v1"
+DEFAULT_API_URL = "https://subtitlenotes.com/v1"
+# The same Worker under the name every copy installed before the domain was
+# bought was built with. It still answers, so it is a real fallback for a
+# network that dislikes the shared workers.dev domain - not a spare server.
+FALLBACK_API_URL = "https://app.subtitlenotes.workers.dev/v1"
+# Addresses a settings file written before a move can still point at. The
+# Worker issues the token, not the hostname, so the session survives being
+# moved; only the address changes.
+PREVIOUS_API_URLS = (
+    "https://subtitle-notes-api.andreas-sultseng228.workers.dev/v1",
+    FALLBACK_API_URL,
+)
 
 # Anything that is not the permanent cloud service. Sessions issued by these
 # hosts cannot be used by the Worker, so the address is reset and the computer
@@ -43,7 +50,7 @@ def reachable_api_url() -> str:
     The token is issued by the Worker, not by the hostname, so a session made
     on one address keeps working on the other.
     """
-    for candidate in (DEFAULT_API_URL,):
+    for candidate in (DEFAULT_API_URL, FALLBACK_API_URL):
         try:
             request = urllib.request.Request(
                 candidate.replace("/v1", "/desktop/latest"),
@@ -69,9 +76,11 @@ def load_sync_config() -> dict[str, str]:
             value.pop("token", None)
             save_sync_config(value)
             return value
-        # The address moved off the owner's e-mail. Same Worker, same session:
-        # only the hostname is different, so the token is kept.
-        if PREVIOUS_API_URL.rsplit("/", 1)[0] in str(value.get("api_url", "")):
+        # The address moved: first off the owner's e-mail, then onto the
+        # product's own domain. Same Worker, same session either time, so only
+        # the hostname is rewritten and the token is kept.
+        current = str(value.get("api_url", ""))
+        if any(old.rsplit("/", 1)[0] in current for old in PREVIOUS_API_URLS):
             value["api_url"] = reachable_api_url()
             save_sync_config(value)
         return value

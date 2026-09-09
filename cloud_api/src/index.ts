@@ -66,6 +66,11 @@ const sentenceAuxiliaries = new Set(['am','is','are','was','were','do','does','d
 /// only counts in front, so the "it" inside "take it for granted" does not
 /// disqualify the idiom.
 function looksLikeSentence(text: string, words: string[]) {
+  // One word is one word, whatever it is. Reading "it", "was", "don't" or a
+  // "static." picked off the end of a subtitle as a clause is how highlighting
+  // a single word came back with the whole line translated - the one answer
+  // the person who highlighted one word did not ask for.
+  if (words.length <= 1) return false;
   if (/[.!?]\s*$/.test(text)) return true;
   // "She's" is still a subject: compare on the part before the contraction.
   if (words.length && subjectPronouns.has(words[0].split("'")[0])) return true;
@@ -75,18 +80,49 @@ function looksLikeSentence(text: string, words: string[]) {
 
 const wordsIn = (text: string) => text.match(/[\p{L}]+(?:[-'][\p{L}]+)?/gu) ?? [];
 
+/// The word in a line a learner is least likely to already know.
+///
+/// The first content word is the wrong guess: in "The kid doesn't need any
+/// more static." it is "kid", and the lesson is "static". Length is a crude
+/// stand-in for rarity, and crude is enough here - the model names the
+/// expression whenever it answers, and this only has to be sensible when it
+/// does not. Contractions are grammar rather than vocabulary, and a name in
+/// the middle of a line is not a word anybody looks up, so both step aside
+/// while another candidate is left.
+function hardestIndex(words: string[], allowed: (index: number) => boolean) {
+  const pick = (extra: (index: number) => boolean) => {
+    let best = -1;
+    for (let index = 0; index < words.length; index += 1) {
+      if (!allowed(index) || !extra(index)) continue;
+      if (best < 0 || words[index].length > words[best].length) best = index;
+    }
+    return best;
+  };
+  const shouted = words.every((word) => word === word.toUpperCase());
+  const plain = pick((index) =>
+    !words[index].includes("'") &&
+    (shouted || index === 0 || words[index][0] === words[index][0].toLowerCase()));
+  return plain >= 0 ? plain : pick(() => true);
+}
+
 function focus(text: string, sourceLanguage = 'en') {
   const words = wordsIn(text);
   const lowered = words.map((word) => word.toLowerCase());
   // The stop-word and phrasal-verb rules below are English-specific. A short
   // selection in another language is already the expression its reader chose;
   // whole lines are narrowed by the language model before they arrive here.
-  if (sourceLanguage !== 'en') {
-    const phrase = text.trim().replace(/^\P{L}+|\P{L}+$/gu, '') || words[0] || '';
-    return {
-      word: words[0] ?? '',
-      phrase: words.length <= PHRASE_MAX_WORDS ? phrase : (words[0] ?? ''),
-    };
+  // An unknown source language is read as English: the stop list can only ever
+  // take a word out of the running, and skipping it is how a whole line came
+  // back with "The" as the thing to learn.
+  if (sourceLanguage && sourceLanguage !== 'en') {
+    if (words.length <= PHRASE_MAX_WORDS) {
+      const phrase = text.trim().replace(/^\P{L}+|\P{L}+$/gu, '') || words[0] || '';
+      return { word: words[0] ?? '', phrase };
+    }
+    // A whole line with no stop list to lean on still has to yield a word
+    // worth a card, and the first one never is.
+    const pick = Math.max(0, hardestIndex(words, () => true));
+    return { word: words[pick] ?? '', phrase: words[pick] ?? '' };
   }
   // "She's" and "I'm" carry a subject the stop list only knows as "she"/"i".
   const stems = lowered.map((word) => word.split("'")[0]);
@@ -100,7 +136,7 @@ function focus(text: string, sourceLanguage = 'en') {
     return { word: head, phrase };
   }
 
-  const index = Math.max(0, stems.findIndex(word => !stop.has(word)));
+  const index = Math.max(0, hardestIndex(words, (at) => !stop.has(stems[at])));
   const word = words[index] ?? '';
   const next = lowered[index + 1];
   const phrase = next && ['about','for','from','into','off','on','out','over','through','to','up','with'].includes(next) ? `${word} ${words[index + 1]}` : word;
@@ -1094,7 +1130,13 @@ async function enrich(env: Env, selected: string, context = '', language = 'ru',
   // a phrase rather than a bare word.
   const isSentence = wordsIn(selected).length > 1;
   if (isSentence) examples.unshift({ text: selected, translation: main.text });
-  const variants = focusResult.variants.length ? focusResult.variants : main.variants;
+  // Alternatives for the whole line are alternatives for the line, never for
+  // the word picked out of it. Reading a headword's meaning out of them is how
+  // a card came back claiming that "The" means "встретил"; when the focus
+  // lookup has nothing, a sentence card is better off with nothing.
+  const variants = focusResult.variants.length
+    ? focusResult.variants
+    : (isSentence ? [] : main.variants);
   const isSingleWord = wordsIn(selected).length === 1;
   // What enough readers have already agreed this expression means, if they
   // have. Their wording wins over the model's.
@@ -1113,7 +1155,7 @@ async function enrich(env: Env, selected: string, context = '', language = 'ru',
     focus_translation:
       agreed ||
       (smart?.term ||
-        ((isSingleWord ? null : contextualSense(variants, main.text)) ??
+        ((isSingleWord ? null : contextualSense(focusResult.variants, main.text)) ??
             focusResult.text)),
     synonyms: smart?.synonyms ?? variants,
     sense_note: smart?.note ?? null,
@@ -1280,6 +1322,12 @@ async function repairPending(env: Env, owner: string, language: string) {
 export default { async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
   if (request.method === 'OPTIONS') return new Response(null, { headers: cors });
   const url = new URL(request.url); const path = url.pathname;
+  // www is a habit, not a second site: it answers so that nobody typing it
+  // lands on an error, and then hands the reader the one real address.
+  if (url.hostname.startsWith('www.')) {
+    url.hostname = url.hostname.slice(4);
+    return Response.redirect(url.toString(), 301);
+  }
   try {
     if (path === '/health') return json({ status: 'ok' });
     if (path === '/desktop/latest') return json(DESKTOP_LATEST);
@@ -1577,7 +1625,11 @@ export default { async fetch(request: Request, env: Env, ctx: ExecutionContext):
         // its contextual sense; return a full sentence only when it was itself
         // selected.
         translation: (deliberatePhrase ? smart?.term : smart?.line) || dictionary.text,
-        focus_translation: smart?.term || dictionary.text,
+        // The dictionary read the whole selection. That is a meaning for the
+        // expression only when the expression is what was selected; for a line
+        // it is the line again, and the player would print it under the
+        // headword as if it were that word's meaning.
+        focus_translation: smart?.term || (deliberatePhrase ? dictionary.text : ''),
         synonyms: smart?.synonyms || dictionary.variants,
         sense_note: smart?.note || null,
         source_language: dictionary.source,

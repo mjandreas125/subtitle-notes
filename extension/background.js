@@ -4,14 +4,22 @@
 // anything its scripts can reach. So the pairing token lives here, in the
 // extension's own world, and pages only ever receive the finished translation.
 
-// The one address. It was briefly two, while the account subdomain still
-// carried the owner's e-mail; that one is gone.
-const API_HOSTS = ['https://app.subtitlenotes.workers.dev/v1'];
+// The product's own domain first, and the Workers subdomain behind it. The
+// second one is not a spare server: it is the same Worker under the name that
+// every already-installed copy was built with, and it also answers when a
+// network filter takes a dislike to the shared workers.dev domain.
+const API_HOSTS = [
+  'https://subtitlenotes.com/v1',
+  'https://app.subtitlenotes.workers.dev/v1',
+];
 let apiBase = API_HOSTS[0];
 
 async function pickHost() {
+  // Only the first host is taken on trust. A copy that remembered the old
+  // address would otherwise keep it for ever, and the whole point of the move
+  // is that the product answers on a name of its own.
   const remembered = (await chrome.storage.local.get('apiBase')).apiBase;
-  if (remembered && API_HOSTS.includes(remembered)) {
+  if (remembered && remembered === API_HOSTS[0]) {
     apiBase = remembered;
     return;
   }

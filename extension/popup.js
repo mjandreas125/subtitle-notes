@@ -72,7 +72,7 @@ function setActionLabel(button, label) {
   setActionLabel(libraryButton, t('popupLibrary'));
   libraryButton.addEventListener('click', () => {
     chrome.tabs.create({
-      url: 'https://app.subtitlenotes.workers.dev/library#t=' +
+      url: 'https://subtitlenotes.com/library#t=' +
         encodeURIComponent(token),
     });
     window.close();
@@ -85,7 +85,7 @@ function setActionLabel(button, label) {
   setActionLabel(exportButton, t('popupExport'));
   exportButton.addEventListener('click', async () => {
     const response = await fetch(
-      'https://app.subtitlenotes.workers.dev/v1/export/anki',
+      'https://subtitlenotes.com/v1/export/anki',
       { headers: { Authorization: `Bearer ${token}` } },
     );
     if (!response.ok) { setActionLabel(exportButton, t('failed')); return; }
