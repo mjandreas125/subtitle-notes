@@ -58,14 +58,27 @@ https://chromewebstore.google.com/detail/subtitle-notes/lkajlfbpeinegffgmmmiemkn
 
 ## Google Play - 25 долларов разово
 
-1. В `mobile/android/app/build.gradle.kts` вернуть строки (помечены
-   комментарием): `applicationId = "ee.subtitlenotes.app"` и
-   `signingConfig = signingConfigs.getByName("release")`.
-2. Зарегистрировать новую пару «пакет + сертификат» в Google Cloud Console,
-   иначе вход через Google в приложении перестанет работать.
-3. Пересобрать: `flutter build appbundle --release`.
-4. Картинки готовы: `release_package/play/` - иконка 512×512, баннер 1024×500,
-   скриншоты. Порядок действий - `PLAY-RELEASE.md`.
+Имя пакета и подпись уже переключены на магазинные: `com.subtitlenotes` -
+домен наоборот, и ничего сверху - плюс upload-ключ. Имя пакета после первой
+публикации не меняется никогда, поэтому оно и приведено в порядок до неё.
+Бандл собран: `release_package/play/`.
+
+Осталось твоё:
+
+1. **Android-клиент** в Cloud Console до первой сборки, иначе вход в
+   Play-версии не работает: тип Android, package `com.subtitlenotes`,
+   SHA-1 `2E:02:D5:95:83:E2:66:AC:E2:A0:46:08:1B:E4:B2:CD:0A:49:01:CE`.
+2. Загрузить `.aab` в **Internal testing** - там нет требования про 12
+   тестеров и 14 дней, ссылку можно сразу открыть на другом телефоне.
+3. После первой загрузки: Play Console → Setup → **App signing** → взять
+   оттуда SHA-1 сертификата Google Play и завести **второй** Android-клиент с
+   тем же package. Play перешивает подпись своим ключом, поэтому у
+   пользователя отпечаток будет другой.
+4. Картинки: `release_package/play/` - иконка 512×512, баннер 1024×500,
+   скриншоты (от 18 августа, интерфейс с тех пор изменился - стоит
+   перерендерить). Порядок действий - `PLAY-RELEASE.md`.
+5. Для Production личному аккаунту, созданному после 13 ноября 2023, нужен
+   закрытый тест: 12 тестеров, 14 дней подряд.
 
 ## Ключ подписи
 

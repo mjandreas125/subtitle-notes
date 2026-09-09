@@ -1,4 +1,4 @@
-package ee.subtitlenotes.app
+package com.subtitlenotes
 
 import android.appwidget.AppWidgetManager
 import android.content.ComponentName
@@ -10,8 +10,8 @@ import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 
 class MainActivity : FlutterActivity() {
-    private val channelName = "ee.subtitlenotes.app/selection"
-    private val companionChannelName = "ee.subtitlenotes.app/companion"
+    private val channelName = "com.subtitlenotes/selection"
+    private val companionChannelName = "com.subtitlenotes/companion"
     private var pendingText: String? = null
     private var pendingPairCode: String? = null
     private var channel: MethodChannel? = null

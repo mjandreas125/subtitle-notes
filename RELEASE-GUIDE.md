@@ -37,7 +37,7 @@ Web Store и не заменяет тестовый ZIP. До отправки �
 они помечены комментарием:
 
 ```kotlin
-applicationId = "ee.subtitlenotes.app"
+applicationId = "com.subtitlenotes"
 signingConfig = signingConfigs.getByName("release")
 ```
 
@@ -45,7 +45,7 @@ signingConfig = signingConfigs.getByName("release")
 не зарегистрирована, поэтому сразу после этого:
 
 1. В той же консоли Google -> **Create credentials** -> **OAuth client ID** ->
-   **Android**. Package name: `ee.subtitlenotes.app`. SHA-1: отпечаток
+   **Android**. Package name: `com.subtitlenotes`. SHA-1: отпечаток
    upload-ключа `2E:02:D5:95:83:E2:66:AC:E2:A0:46:08:1B:E4:B2:CD:0A:49:01:CE`.
 2. Собрать пакет для магазина:
    `flutter build appbundle --release` (получится `build/app/outputs/bundle/release/app-release.aab`).

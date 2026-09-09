@@ -13,7 +13,7 @@ OAuth client ID → Android**
 
 | Field | Value |
 |---|---|
-| Package name | `ee.subtitlenotes.app` |
+| Package name | `com.subtitlenotes` |
 | SHA-1 (upload key) | `2E:02:D5:95:83:E2:66:AC:E2:A0:46:08:1B:E4:B2:CD:0A:49:01:CE` |
 
 Use the same Google Cloud project that owns the web client

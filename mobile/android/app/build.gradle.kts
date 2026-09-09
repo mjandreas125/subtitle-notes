@@ -19,7 +19,7 @@ if (hasUploadKey) {
 }
 
 android {
-    namespace = "ee.subtitlenotes.app"
+    namespace = "com.subtitlenotes"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -29,11 +29,19 @@ android {
     }
 
     defaultConfig {
-        // The identity Google already knows. Sign-in only works for a pair of
-        // package name and signing certificate that has been registered, and
-        // this is the registered pair - renaming it is what broke sign-in, so
-        // it stays until a new pair is registered for the store build.
-        applicationId = "com.translatedvlc.translated_vlc_mobile"
+        // The identity the app is published under. It can never change again:
+        // Google Play keys a listing to its package name for the life of the
+        // app, so this line is one of the two decisions in this file that are
+        // permanent.
+        //
+        // Sign-in works only for a pair of package name and signing
+        // certificate registered with Google, so an Android OAuth client has
+        // to exist for this package and the upload key's fingerprint
+        // (2E:02:D5:95:83:E2:66:AC:E2:A0:46:08:1B:E4:B2:CD:0A:49:01:CE).
+        // before a build of it can sign anybody in - and a second one for the
+        // fingerprint Play App Signing shows after the first upload. The order
+        // is in PLAY-RELEASE.md.
+        applicationId = "com.subtitlenotes"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
@@ -53,11 +61,17 @@ android {
 
     buildTypes {
         release {
-            // Deliberately the debug certificate: it is the one registered
-            // with Google for this package, so sign-in works. Google Play will
-            // not accept a build signed this way - before uploading, register
-            // the upload key's fingerprint and switch this back to "release".
-            signingConfig = signingConfigs.getByName("debug")
+            // The upload key when this machine has it, the debug certificate
+            // when it does not. Play refuses a debug-signed bundle, so a
+            // release built without `android/key.properties` is for a phone
+            // over a cable and nothing else - it is not a store build, and it
+            // will not sign anybody in either, because its certificate is not
+            // the registered one.
+            signingConfig = if (hasUploadKey) {
+                signingConfigs.getByName("release")
+            } else {
+                signingConfigs.getByName("debug")
+            }
         }
     }
 }

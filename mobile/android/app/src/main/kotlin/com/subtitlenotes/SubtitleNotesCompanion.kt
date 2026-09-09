@@ -1,4 +1,4 @@
-package ee.subtitlenotes.app
+package com.subtitlenotes
 
 import android.app.AlarmManager
 import android.app.PendingIntent
@@ -114,7 +114,7 @@ class LockScreenPhraseReceiver : BroadcastReceiver() {
 }
 
 internal object WidgetRefreshSchedule {
-    private const val action = "ee.subtitlenotes.app.REFRESH_WIDGET"
+    private const val action = "com.subtitlenotes.REFRESH_WIDGET"
     private const val intervalMs = 5 * 60 * 1000L
 
     fun schedule(context: Context, enabled: Boolean) {

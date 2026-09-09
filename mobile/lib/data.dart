@@ -29,7 +29,7 @@ bool isRetiredApiBase(String url) =>
 
 class IncomingText {
   static const _channel = MethodChannel(
-    'ee.subtitlenotes.app/selection',
+    'com.subtitlenotes/selection',
   );
   static final value = ValueNotifier<String?>(null);
 
@@ -221,7 +221,7 @@ class AppSettings {
 
 class NativeBridge {
   static const _channel = MethodChannel(
-    'ee.subtitlenotes.app/companion',
+    'com.subtitlenotes/companion',
   );
 
   static Future<void> syncCompanionCards(List<StudyCard> cards) async {
