@@ -1,0 +1,44 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Subtitle Notes - installer side panel</title>
+<!--
+  The panel down the left of the setup wizard, one per language.
+
+  164x314 is what Inno asks for at 100% scaling, and the script sets
+  WizardImageStretch=no, so these are real pixels: the geometry below was
+  measured off the hand-made image this replaces, and nothing should move by
+  one without looking at the result.
+
+  The sentence is not written here. `tools/build-installer-art.mjs` passes it
+  in `?t=`, reading it from the landing page's own headline in
+  cloud_api/src/home.ts - so a language has one headline, in one place, and
+  the installer cannot drift away from the site.
+-->
+<style>
+  html, body { margin: 0; padding: 0; width: 164px; height: 314px; overflow: hidden; }
+  body {
+    background: #f7f4ee;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .stripe { position: absolute; left: 0; top: 0; width: 4px; height: 314px; background: #2e9668; }
+  .mark { position: absolute; left: 55px; top: 88px; width: 54px; height: 48px; }
+  .name {
+    position: absolute; left: 27px; top: 188px;
+    font-size: 19px; line-height: 22px; font-weight: 700;
+    letter-spacing: -.015em; color: #10221b;
+  }
+  .name b { display: block; font-weight: 700; color: #2e9668; }
+  .tag {
+    position: absolute; left: 27px; top: 242px; width: 114px;
+    font-size: 11.5px; line-height: 16px; color: #6b7a74;
+  }
+</style>
+<div class="stripe"></div>
+<img class="mark" src="wizard-mark.png" alt="">
+<div class="name">Subtitle<b>Notes</b></div>
+<div class="tag" id="tag"></div>
+<script>
+  document.getElementById('tag').textContent =
+    new URLSearchParams(location.search).get('t') || '';
+</script>

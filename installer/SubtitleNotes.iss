@@ -21,6 +21,9 @@ WizardImageFile=wizard-side.bmp
 WizardSmallImageFile=wizard-badge.bmp
 WizardImageStretch=no
 DisableWelcomePage=no
+; Follow the system: with no dialog Inno matches the Windows UI language
+; and falls back to the first entry, English.
+ShowLanguageDialog=no
 AppCopyright=Subtitle Notes
 PrivilegesRequired=admin
 ArchitecturesInstallIn64BitMode=x64compatible
@@ -29,7 +32,31 @@ ArchitecturesInstallIn64BitMode=x64compatible
 CloseApplications=force
 RestartApplications=no
 
+[Languages]
+; The wizard speaks whatever Windows speaks. Estonian is not among the
+; translations Inno ships, so the community one from jrsoftware's own site
+; sits next to this script: it is the home market, and somebody installing
+; an Estonian product should not be handed English buttons.
+; The panel down the left is a bitmap, and a directive cannot choose one
+; per language - it is swapped at run time in [Code], from installer\side.
+Name: "en"; MessagesFile: "compiler:Default.isl"
+Name: "ru"; MessagesFile: "compiler:Languages\Russian.isl"
+Name: "et"; MessagesFile: "Estonian.isl"
+Name: "de"; MessagesFile: "compiler:Languages\German.isl"
+Name: "fr"; MessagesFile: "compiler:Languages\French.isl"
+Name: "es"; MessagesFile: "compiler:Languages\Spanish.isl"
+Name: "it"; MessagesFile: "compiler:Languages\Italian.isl"
+Name: "pt"; MessagesFile: "compiler:Languages\Portuguese.isl"
+Name: "pl"; MessagesFile: "compiler:Languages\Polish.isl"
+Name: "uk"; MessagesFile: "compiler:Languages\Ukrainian.isl"
+Name: "nl"; MessagesFile: "compiler:Languages\Dutch.isl"
+Name: "tr"; MessagesFile: "compiler:Languages\Turkish.isl"
+Name: "sv"; MessagesFile: "compiler:Languages\Swedish.isl"
+Name: "fi"; MessagesFile: "compiler:Languages\Finnish.isl"
+
 [Files]
+; Unpacked at run time by InitializeWizard, never installed.
+Source: "side\*.bmp"; Flags: dontcopy
 Source: "..\dist\OpenWithTranslatedVLC.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\dist\VlcSubtitleOverlay.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\dist\TranslatedVLCSyncSetup.exe"; DestDir: "{app}"; Flags: ignoreversion
@@ -104,7 +131,7 @@ Filename: "{app}\TranslatedVLCSyncSetup.exe"; Parameters: "--configure-vlc"; Fla
 ; The Ctrl+Alt+S helper has no window and nothing to decide, so it is simply
 ; started rather than offered as a choice nobody can evaluate.
 Filename: "{app}\SubtitleNotesQuickCapture.exe"; Flags: nowait runhidden
-Filename: "{app}\Library\translated_vlc_mobile.exe"; Description: "Open Subtitle Notes"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\Library\translated_vlc_mobile.exe"; Description: "{cm:LaunchProgram,Subtitle Notes}"; Flags: nowait postinstall skipifsilent
 
 [Code]
 // Anything of ours that may still be running: the background capture helper,
@@ -122,7 +149,7 @@ begin
   ours[4] := 'SubtitleNotesServer.exe';
   ours[5] := 'translated_vlc_mobile.exe';
   for index := 0 to 5 do
-    Exec(ExpandConstant('{sys}	askkill.exe'), '/f /im ' + ours[index], '',
+    Exec(ExpandConstant('{sys}\taskkill.exe'), '/f /im ' + ours[index], '',
          SW_HIDE, ewWaitUntilTerminated, code);
 end;
 
@@ -135,4 +162,23 @@ end;
 procedure InitializeUninstallProgressForm();
 begin
   StopOurPrograms();
+end;
+
+procedure InitializeWizard();
+var
+  panel: String;
+begin
+  // A bitmap cannot be chosen per language by a directive, so the one matching
+  // the language the wizard picked is unpacked and loaded over the English
+  // panel that WizardImageFile compiled in. Both the welcome page and the
+  // finished page show it.
+  panel := ActiveLanguage + '.bmp';
+  try
+    ExtractTemporaryFile(panel);
+    WizardForm.WizardBitmapImage.Bitmap.LoadFromFile(ExpandConstant('{tmp}\') + panel);
+    WizardForm.WizardBitmapImage2.Bitmap.LoadFromFile(ExpandConstant('{tmp}\') + panel);
+  except
+    // An unreadable panel is not worth failing an installation over: the
+    // English one is already in place.
+  end;
 end;
