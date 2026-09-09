@@ -1,0 +1,377 @@
+{
+  "appName": {
+    "message": "Subtitle Notes"
+  },
+  "appDescription": {
+    "message": "Kääntää valitun sanan koko lauseen perusteella. Toimii tekstityksissä, millä tahansa sivulla ja PDF-tiedostoissa."
+  },
+  "menuSave": {
+    "message": "Tallenna ”%s” Subtitle Notesiin"
+  },
+  "chipAsk": {
+    "message": "Mitä tämä tarkoittaa?"
+  },
+  "pendingLater": {
+    "message": "Ei vastausta juuri nyt - käännös ilmestyy sovellukseen.",
+    "description": "Shown when no provider answered; the server retries later."
+  },
+  "listen": {
+    "message": "Kuuntele"
+  },
+  "rerun": {
+    "message": "Käännös on väärin"
+  },
+  "rerunning": {
+    "message": "Luetaan uudelleen…"
+  },
+  "seenBefore": {
+    "message": "kohdattu $COUNT$ kertaa",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "connectTitle": {
+    "message": "Yhdistä puhelimesi"
+  },
+  "connectBody": {
+    "message": "Tätä selainta ei ole vielä liitetty kokoelmaasi."
+  },
+  "connectAction": {
+    "message": "Yhdistä"
+  },
+  "close": {
+    "message": "Sulje"
+  },
+  "save": {
+    "message": "Tallenna"
+  },
+  "saving": {
+    "message": "Tallennetaan…"
+  },
+  "saved": {
+    "message": "Tallennettu ✓"
+  },
+  "savedAlready": {
+    "message": "Oli jo ✓"
+  },
+  "inLibrary": {
+    "message": "Jo kokoelmassasi"
+  },
+  "notSaved": {
+    "message": "Ei tallennettu"
+  },
+  "failed": {
+    "message": "Ei onnistunut"
+  },
+  "undo": {
+    "message": "Kumoa"
+  },
+  "undoing": {
+    "message": "Poistetaan…"
+  },
+  "undone": {
+    "message": "Poistettu"
+  },
+  "reloaded": {
+    "message": "Laajennus ladattiin uudelleen. Päivitä sivu."
+  },
+  "popupNotPaired": {
+    "message": "Tätä selainta ei ole liitetty kokoelmaasi."
+  },
+  "popupConnectGoogle": {
+    "message": "Jatka Google-tilillä",
+    "description": "Popup button that signs in with Google"
+  },
+  "popupConnectCode": {
+    "message": "Näytä koodi",
+    "description": "Popup button that shows the pairing code"
+  },
+  "popupExport": {
+    "message": "Vie Ankiin"
+  },
+  "popupLibrary": {
+    "message": "Koko kirjasto",
+    "description": "Popup button that opens the web library"
+  },
+  "optTitle": {
+    "message": "Subtitle Notes selaimessa"
+  },
+  "optSub": {
+    "message": "Maalaa sanoja millä tahansa sivustolla, PDF-tiedostoissa ja tekstityksissä - ne päätyvät samaan sovellukseen puhelimeesi."
+  },
+  "optConnected": {
+    "message": "Yhdistetty"
+  },
+  "optForget": {
+    "message": "Katkaise tämän selaimen yhteys"
+  },
+  "optWaiting": {
+    "message": "Odotetaan vahvistusta…"
+  },
+  "optPaired": {
+    "message": "Valmis. Maalaa tekstiä millä tahansa sivulla."
+  },
+  "optExpired": {
+    "message": "Koodi vanheni. Hae uusi."
+  },
+  "optCancel": {
+    "message": "Peruuta"
+  },
+  "optHotkeyTitle": {
+    "message": "Tallennus ilman painiketta"
+  },
+  "optHotkeyHelp": {
+    "message": "Pidä tätä näppäinyhdistelmää pohjassa maalatessasi, niin sana menee suoraan kokoelmaan. Tai maalaa tavalliseen tapaan ja paina sen jälkeen."
+  },
+  "optHotkeyPress": {
+    "message": "Paina yhdistelmää…"
+  },
+  "optReset": {
+    "message": "Palauta"
+  },
+  "optWhereTitle": {
+    "message": "Missä ikkuna näkyy"
+  },
+  "optAtSelection": {
+    "message": "Maalauksen vieressä"
+  },
+  "optTopRight": {
+    "message": "Oikeassa yläkulmassa"
+  },
+  "optTopLeft": {
+    "message": "Vasemmassa yläkulmassa"
+  },
+  "optBottomRight": {
+    "message": "Oikeassa alakulmassa"
+  },
+  "optBottomLeft": {
+    "message": "Vasemmassa alakulmassa"
+  },
+  "optDragHint": {
+    "message": "Kulmaan kiinnitettyä ikkunaa voi raahata hiirellä - se muistaa paikkansa."
+  },
+  "optHideAfter": {
+    "message": "Piilota viiveellä"
+  },
+  "optHideAfterHelp": {
+    "message": "Sekunteja, jotka ikkuna pysyy näkyvissä pikatallennuksen jälkeen."
+  },
+  "optVideoTitle": {
+    "message": "Video ja sivustot"
+  },
+  "optSubtitles": {
+    "message": "Klikattavat tekstitykset"
+  },
+  "optSubtitlesHelp": {
+    "message": "YouTubessa ja Netflixissä korvaa tekstitykset kopiolla, jossa voit klikata sanaa tai vetää ilmauksen yli."
+  },
+  "optPause": {
+    "message": "Keskeytä video"
+  },
+  "optPauseHelp": {
+    "message": "Kun valitset sanan tekstityksestä."
+  },
+  "optSpeak": {
+    "message": "Lue sana ääneen"
+  },
+  "optSpeakHelp": {
+    "message": "Ääntää englanninkielisen sanan, kun kortti avautuu."
+  },
+  "optBlocked": {
+    "message": "Älä toimi näillä sivustoilla"
+  },
+  "optBlockedHelp": {
+    "message": "Yksi osoite riviä kohden, esimerkiksi mail.google.com."
+  },
+  "optSites": {
+    "message": "Välilyönti vain näillä sivustoilla"
+  },
+  "optSitesHelp": {
+    "message": "Yksi osoite riviä kohden, esimerkiksi rezka.ag. Tyhjä tarkoittaa kaikkia sivustoja. Muu toimii joka tapauksessa kaikkialla."
+  },
+  "optSavedToast": {
+    "message": "Tallennettu"
+  },
+  "optAccountTitle": {
+    "message": "Tili"
+  },
+  "optGoogle": {
+    "message": "Jatka Google-tilillä"
+  },
+  "optGoogleHelp": {
+    "message": "Kirjaudu samalla Google-tilillä kuin puhelimessa - kaikki tallentamasi päätyy samaan kirjastoon."
+  },
+  "optOtherWay": {
+    "message": "Yhdistä puhelimesta"
+  },
+  "optScanHelp": {
+    "message": "Suuntaa puhelimen kamera tähän ruutuun tai kirjoita koodi sovelluksessa: Asetukset → Yhdistetyt laitteet."
+  },
+  "optLangTitle": {
+    "message": "Korttien kieli"
+  },
+  "optLangHelp": {
+    "message": "Uudet kortit selitetään tällä kielellä. Jo tallennetut säilyvät ennallaan."
+  },
+  "optPrivacy": {
+    "message": "Tietosuojakäytäntö"
+  },
+  "optSubKeyTitle": {
+    "message": "Sanojen poimiminen tekstityksestä"
+  },
+  "optSubKeyHelp": {
+    "message": "Kun näppäin on pohjassa, rivistä tulee valittavaa tekstiä. Kun päästät irti, hiiri on taas soittimella: tekstityksen raahaus, napsautus taukoon ja tekstityksen koko toimivat entiseen tapaan."
+  },
+  "optSubKeyNone": {
+    "message": "Ilman näppäintä"
+  },
+  "optOr": {
+    "message": "tai"
+  },
+  "optSubKeyNow": {
+    "message": "Nyt: $KEYS$",
+    "placeholders": {
+      "keys": {
+        "content": "$1"
+      }
+    }
+  },
+  "optSubKeyNoneNow": {
+    "message": "Nyt: ilman näppäintä - rivi on aina valittavissa"
+  },
+  "optLangLocked": {
+    "message": "Yhdistä ensin tili - kieli tallentuu sen mukana."
+  },
+  "mine": {
+    "message": "Oma käännös"
+  },
+  "minePlaceholder": {
+    "message": "Mitä se tarkoittaa tässä"
+  },
+  "mineThanks": {
+    "message": "Tallennettu. Jos muutkin kirjoittavat saman, siitä tulee oletus."
+  },
+  "mineAgreed": {
+    "message": "Tallennettu - tarpeeksi moni on samaa mieltä, tämä on nyt oletus."
+  },
+  "popupSettings": {
+    "message": "Asetukset"
+  },
+  "tourTitle": {
+    "message": "Subtitle Notes"
+  },
+  "tourLede": {
+    "message": "Näin se toimii"
+  },
+  "tourMeaning": {
+    "message": "a record - rikosrekisteri"
+  },
+  "tourSubtitle": {
+    "message": "No one wants a record.",
+    "description": "The subtitle shown on the welcome card."
+  },
+  "tourPick": {
+    "message": "a record",
+    "description": "The part of that subtitle that is picked out."
+  },
+  "tourLine": {
+    "message": "Kukaan ei halua rikosrekisteriä.",
+    "description": "The translated subtitle line on the welcome card."
+  },
+  "tourSaved": {
+    "message": "Tallennettu kirjastoon"
+  },
+  "tourStep1": {
+    "message": "Pidä Ctrl pohjassa ja vedä tekstityksen yli"
+  },
+  "tourStep1Body": {
+    "message": "Ilman näppäintä soitin pysyy ennallaan: riviä voi raahata, napsautus pysäyttää."
+  },
+  "tourStep2": {
+    "message": "Muualla riittää maalaaminen"
+  },
+  "tourStep2Body": {
+    "message": "Sivu, PDF, kommentti. Ctrl+Alt tallentaa heti."
+  },
+  "tourStep3": {
+    "message": "Kaikki päätyy samaan kirjastoon"
+  },
+  "tourStep3Body": {
+    "message": "Sama Google-tili puhelimessa, selaimessa ja tietokoneella."
+  },
+  "tourConnect": {
+    "message": "Yhdistä tili"
+  },
+  "tourLater": {
+    "message": "Myöhemmin"
+  },
+  "optDesktopTitle": {
+    "message": "Tietokoneella"
+  },
+  "optDesktopHelp": {
+    "message": "Tekstitykset VLC:ssä ja teksti mistä tahansa ohjelmasta samaan kirjastoon."
+  },
+  "optDesktopGet": {
+    "message": "Lataa Windowsille"
+  },
+  "optPhoneTitle": {
+    "message": "Puhelimessa",
+    "description": "The offer of the Android app in settings."
+  },
+  "optPhoneHelp": {
+    "message": "Samat sanat, kertauksella ja haulla. Toistaiseksi Android; tiedosto asennetaan kaupan ohi, joten puhelin kysyy kerran.",
+    "description": "The offer of the Android app in settings."
+  },
+  "optPhoneGet": {
+    "message": "Lataa Androidille",
+    "description": "The offer of the Android app in settings."
+  },
+  "tourDesktop": {
+    "message": "Myös tietokoneelle"
+  },
+  "tourPhone": {
+    "message": "Ja puhelimeen",
+    "description": "The offer of the Android app on the welcome page."
+  },
+  "optCompact": {
+    "message": "Lyhyt kortti"
+  },
+  "optCompactHelp": {
+    "message": "Vain merkitys: ei synonyymejä eikä huomioita."
+  },
+  "optSpaceLine": {
+    "message": "Väli lukee repliikin",
+    "description": "Options toggle for translating the caption with space"
+  },
+  "optSpaceLineHelp": {
+    "message": "Näytöllä oleva rivi käännetään, kun pysäytät."
+  },
+  "optSpaceSaves": {
+    "message": "Tallenna se, minkä väli lukee"
+  },
+  "optSpaceSavesHelp": {
+    "message": "Muuten rivi vain näytetään."
+  },
+  "pageSubtitles": {
+    "message": "Täällä on tekstitys. Pidä $KEYS$ pohjassa ja vedä sanan yli.",
+    "placeholders": {
+      "keys": {
+        "content": "$1"
+      }
+    }
+  },
+  "pageNoKey": {
+    "message": "ilman näppäintä"
+  },
+  "pageSubtitlesOff": {
+    "message": "Täällä on tekstitys, mutta napsautettavat tekstitykset ovat pois päältä."
+  },
+  "pageText": {
+    "message": "Täällä ei ole soittimen tekstitystä. Maalaa mitä tahansa tekstiä ja pidä Ctrl+Alt."
+  },
+  "pageOff": {
+    "message": "Subtitle Notes pysyy poissa tältä sivustolta, kuten pyysit."
+  }
+}

@@ -486,6 +486,11 @@ def looks_like_sentence(text: str, words: list[str]) -> bool:
     is "high". A pronoun only counts in front, so the "it" inside "take it for
     granted" does not disqualify the idiom.
     """
+    # One word is one word, whatever it is. Reading "it", "was", "don't" or a
+    # "static." picked off the end of a subtitle as a clause is how clicking a
+    # single word came back with the whole line translated.
+    if len(words) <= 1:
+        return False
     if text.strip().endswith((".", "!", "?")):
         return True
     # "She's" is still a subject: compare on the part before the contraction.
@@ -495,6 +500,34 @@ def looks_like_sentence(text: str, words: list[str]) -> bool:
     if any("'" in word for word in words):
         return True
     return any(word in SENTENCE_AUXILIARIES for word in words)
+
+
+def hardest_index(matches: list, stems: list[str], start: int = 0) -> int | None:
+    """The word in a line a viewer is least likely to know already.
+
+    The first content word is the wrong guess: in "The kid doesn't need any
+    more static." it is "kid", and the lesson is "static". Length is a crude
+    stand-in for rarity, and crude is enough - the server names the expression
+    whenever it answers, and this only has to be sensible when it does not.
+    Contractions are grammar rather than vocabulary and a capitalised word
+    mid-line is usually a name, so both step aside while anything else is left.
+    """
+    shouted = all(match.group(0).isupper() for match in matches)
+    best: int | None = None
+    for index in range(start, len(matches)):
+        word = matches[index].group(0)
+        if stems[index] in STOP_WORDS or "'" in word:
+            continue
+        if not shouted and index > 0 and word[:1].isupper():
+            continue
+        if best is None or len(word) > len(matches[best].group(0)):
+            best = index
+    if best is not None:
+        return best
+    for index in range(start, len(matches)):
+        if stems[index] not in STOP_WORDS:
+            return index
+    return None
 
 
 def choose_focus_phrase(text: str) -> tuple[str, str]:
@@ -510,7 +543,10 @@ def choose_focus_phrase(text: str) -> tuple[str, str]:
     # they want to learn. Reducing "employment record" to "employment" throws
     # away the meaning they were after.
     if len(matches) <= PHRASE_MAX_WORDS and not looks_like_sentence(text, lowered):
-        phrase = clean_plain_text(text).strip(" \t ---,;:")
+        # Terminal punctuation belongs to the subtitle, not to the expression:
+        # a click on the last word of a line saved "static." and then
+        # looked it up with the full stop attached.
+        phrase = clean_plain_text(text).strip(" \t ---,;:.!?…\'\"")
         head = next(
             (match.group(0) for match, stem in zip(matches, stems) if stem not in STOP_WORDS),
             matches[0].group(0),
@@ -519,20 +555,16 @@ def choose_focus_phrase(text: str) -> tuple[str, str]:
 
     focus_index: int | None = None
 
+    # A finite verb splits a line into who is doing something and what is being
+    # done; the lesson is on the far side of the verb.
     for index, word in enumerate(stems[:-1]):
         if word in AUXILIARY_WORDS:
-            for next_index in range(index + 1, len(matches)):
-                if stems[next_index] not in STOP_WORDS:
-                    focus_index = next_index
-                    break
+            focus_index = hardest_index(matches, stems, index + 1)
             if focus_index is not None:
                 break
 
     if focus_index is None:
-        for index, word in enumerate(stems):
-            if word not in STOP_WORDS:
-                focus_index = index
-                break
+        focus_index = hardest_index(matches, stems)
 
     if focus_index is None:
         focus_index = 0

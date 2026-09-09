@@ -180,7 +180,7 @@
     "message": "Pronuncia la parola inglese quando la scheda si apre."
   },
   "optBlocked": {
-    "message": "Non funzionare su questi siti"
+    "message": "Non attivare su questi siti"
   },
   "optBlockedHelp": {
     "message": "Un indirizzo per riga, per esempio mail.google.com."

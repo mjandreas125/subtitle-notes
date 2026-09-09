@@ -59,6 +59,24 @@ class PhraseSelection(unittest.TestCase):
             self.phrase("I am chanting the right words"), "chanting"
         )
 
+    def test_a_sentence_yields_its_least_predictable_word(self):
+        # Not "kid": the first content word in a line is almost never the one
+        # that stopped the viewer.
+        self.assertEqual(
+            self.phrase("The kid doesn't need any more static."), "static"
+        )
+
+    def test_one_word_is_never_a_clause(self):
+        # These used to be read as lines of dialogue, and a line of dialogue is
+        # answered with the whole subtitle translated.
+        for word in ("it", "was", "don't", "static."):
+            self.assertFalse(
+                ov.looks_like_sentence(word, [word.strip(".").lower()]), word
+            )
+
+    def test_the_last_word_of_a_line_loses_its_full_stop(self):
+        self.assertEqual(self.phrase("static."), "static")
+
 
 class TranslationFallback(unittest.TestCase):
     """A provider failure must not turn into the old English error marker."""

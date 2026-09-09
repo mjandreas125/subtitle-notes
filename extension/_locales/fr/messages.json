@@ -180,7 +180,7 @@
     "message": "Prononce le mot anglais à l'ouverture de la carte."
   },
   "optBlocked": {
-    "message": "Ne pas fonctionner sur ces sites"
+    "message": "Désactiver sur ces sites"
   },
   "optBlockedHelp": {
     "message": "Une adresse par ligne, par exemple mail.google.com."

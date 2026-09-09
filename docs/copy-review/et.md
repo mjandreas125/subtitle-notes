@@ -3,10 +3,11 @@
 Left: the English the key stands for. Right: what this language says.
 Empty English means the key is its own source text.
 
-## app  (377)
+## app  (378)
 
 | key | English | et |
 |---|---|---|
+| Connect your phone | Connect your phone | Ühenda telefon |
 | Not the word - what it means here | Not the word - what it means here | Ei tõlgita sõna, vaid tähendust |
 | A dictionary translates the word by itself. Here the whole s | A dictionary translates the word by itself. Here the whole sentence is read, so the word gets the meaning it has in it. | Sõnaraamat tõlgib sõna eraldi. Siin loetakse kogu lauset, nii et sõna saab selle tähenduse, mis tal seal on. |
 | Saving a word is one movement | Saving a word is one movement | Sõna salvestamine on üks liigutus |
@@ -111,14 +112,14 @@ Empty English means the key is its own source text.
 | 1 word saved | 1 word saved | 1 sõna on salvestatud |
 | 1 word to revisit | 1 word to revisit | 1 sõna, mida uuesti vaadata |
 | A card on your home screen that rotates through your saved w | A card on your home screen that rotates through your saved words. Tap it to open the full explanation. | Kaart teie avakuval, mis pöörleb läbi teie salvestatud sõnade. Puudutage seda täieliku selgituse avamiseks. |
-| A line from something you watched, with one word missing. Pi | A line from something you watched, with one word missing. Pick the one that belongs. | Rida millestki, mida vaatasite, millest üks sõna puudub. Valige see, mis kuulub. |
+| A line from something you watched, with one word missing. Pi | A line from something you watched, with one word missing. Pick the one that belongs. | Rida millestki, mida vaatasid, kus üks sõna puudub. Vali sobiv sõna. |
 | A preview opens first so you can edit the phrase and its sou | A preview opens first so you can edit the phrase and its source. | Esmalt avaneb eelvaade, et saaksite fraasi ja selle allikat redigeerida. |
 | Achievements | Achievements | Saavutused |
 | Add | Add | Lisa |
 | Add to home screen | Add to home screen | Lisa avakuvale |
 | Added | Added | Lisatud |
 | Again | Again | Uuesti |
-| All $saved saved ${saved == 1 ?  | All $saved saved ${saved == 1 ?  | Kõik $saved salvestatud ${salvestatud == 1 ? |
+| All $saved saved ${saved == 1 ?  | All $saved saved ${saved == 1 ?  | Kõik $saved salvestatud ${saved == 1 ? |
 | All ${stats.unlocked} levels. Keep saving what you like. | All ${stats.unlocked} levels. Keep saving what you like. | Kõik ${stats.unlocked} tasemed. Jätkake selle salvestamist, mis teile meeldib. |
 | All meanings | All meanings | Kõik tähendused |
 | All of them | All of them | Kõik need |
@@ -139,9 +140,9 @@ Empty English means the key is its own source text.
 | Change your nickname | Change your nickname | Muutke oma hüüdnime |
 | Clear search | Clear search | Tühjenda otsing |
 | Close | Close | Sulge |
-| Close practice | Close practice | Tihe praktika |
+| Close practice | Close practice | Sulge harjutamine |
 | Close the scanner | Close the scanner | Sulgege skanner |
-| Code ${widget.code} came from a Subtitle Notes window. It ca | Code ${widget.code} came from a Subtitle Notes window. It can then send words into your library. | Kood ${widget.code} tuli subtiitrite märkuste aknast. Seejärel saab see teie teeki sõnu saata. |
+| Code ${widget.code} came from a Subtitle Notes window. It ca | Code ${widget.code} came from a Subtitle Notes window. It can then send words into your library. | Kood ${widget.code} tuli Subtitle Notes aknast. Seejärel saab see teie teeki sõnu saata. |
 | Compact cards | Compact cards | Kompaktsed kaardid |
 | Computer connected | Computer connected | Arvuti ühendatud |
 | Confirm the placement on your home screen. | Confirm the placement on your home screen. | Kinnitage paigutus oma avakuval. |
@@ -172,14 +173,14 @@ Empty English means the key is its own source text.
 | Easy | Easy | Lihtne |
 | Every level unlocked | Every level unlocked | Iga tase on lukustamata |
 | Every line filled correctly. | Every line filled correctly. | Iga rida on õigesti täidetud. |
-| Every word you stop to look up, kept in one place and transl | Every word you stop to look up, kept in one place and translated where you found it. | Iga sõna, mille vaatamiseks peatute, hoitakse ühes kohas ja tõlgitakse sealt, kus te selle leidsite. |
+| Every word you stop to look up, kept in one place and transl | Every word you stop to look up, kept in one place and translated where you found it. | Kõik sõnad, mille tähendust otsid, on ühes kohas ja tõlgitakse leitud kontekstis. |
 | Everything unlocked | Everything unlocked | Kõik lukustamata |
 | Examples | Examples | Näited |
 | Fill the line | Fill the line | Täitke rida |
 | Film, series or source | Film, series or source | Film, sari või allikas |
 | Find someone by nickname | Find someone by nickname | Otsige kedagi hüüdnime järgi |
 | Fit more words on one screen. | Fit more words on one screen. | Mahutage ühele ekraanile rohkem sõnu. |
-| Follow your phone, or choose the language Subtitle Notes use | Follow your phone, or choose the language Subtitle Notes uses. | Järgige oma telefoni või valige keel, mida subtiitrite märkmed kasutavad. |
+| Follow your phone, or choose the language Subtitle Notes use | Follow your phone, or choose the language Subtitle Notes uses. | Kasuta süsteemi keelt või vali Subtitle Notes keel. |
 | Found in $_moves turns. | Found in $_moves turns. | Leitud $_moves pööretega. |
 | Friends | Friends | Sõbrad |
 | Friends find you as @${widget.profile!.nickname}. | Friends find you as @${widget.profile!.nickname}. | Sõbrad leiavad teid kui @${widget.profile!.nickname}. |
@@ -206,7 +207,7 @@ Empty English means the key is its own source text.
 | Letters, numbers, dots and underscores only | Letters, numbers, dots and underscores only | Ainult tähed, numbrid, punktid ja allkriipsud |
 | Library | Library | Kogu |
 | Light | Light | Hele |
-| Like this word | Like this word | Nagu see sõna |
+| Like this word | Like this word | Mulle meeldib see sõna |
 | List | List | Loend |
 | Lock screen | Lock screen | Lukusta ekraan |
 | Lock screen updated with your latest word. | Lock screen updated with your latest word. | Lukustuskuva värskendati teie uusima sõnaga. |
@@ -218,7 +219,7 @@ Empty English means the key is its own source text.
 | No connection | No connection | Ühendus puudub |
 | No connection. The account was not deleted. | No connection. The account was not deleted. | Ühendust pole. Kontot ei kustutatud. |
 | No matches | No matches | Vasteid pole |
-| Nobody found | Nobody found | Keegi ei leidnud |
+| Nobody found | Nobody found | Kedagi ei leitud |
 | Not a single wrong turn. | Not a single wrong turn. | Mitte ühtegi vale pööret. |
 | Not now | Not now | Mitte praegu |
 | Nothing due right now | Nothing due right now | Hetkel ei tasu midagi |
@@ -232,7 +233,7 @@ Empty English means the key is its own source text.
 | On a computer | On a computer | Arvutis |
 | On this phone | On this phone | Sellel telefonil |
 | One account connects your phone, computer and browser. No pa | One account connects your phone, computer and browser. No password to remember. | Üks konto ühendab teie telefoni, arvuti ja brauseri. Parooli pole meeles pidada. |
-| People are found by nickname. Ask your friend which one they | People are found by nickname. Ask your friend which one they picked in Subtitle Notes. | Inimesi leitakse hüüdnimede järgi. Küsige oma sõbralt, millise subtiitrite märkmete hulgast ta valis. |
+| People are found by nickname. Ask your friend which one they | People are found by nickname. Ask your friend which one they picked in Subtitle Notes. | Inimesi leitakse hüüdnime järgi. Küsi sõbralt, millise hüüdnime ta Subtitle Notesis valis. |
 | Phone | Phone | Telefon |
 | Pick a nickname | Pick a nickname | Valige hüüdnimi |
 | Pick a nickname so friends can find you. | Pick a nickname so friends can find you. | Valige hüüdnimi, et sõbrad teid leiaksid. |
@@ -263,8 +264,8 @@ Empty English means the key is its own source text.
 | Scene context | Scene context | Stseeni kontekst |
 | Search a nickname above to add someone. Words you both save  | Search a nickname above to add someone. Words you both save show up here, and you can like them. | Kellegi lisamiseks otsige ülalolevast hüüdnimest. Siin kuvatakse teie mõlema salvestatud sõnad ja need võivad teile meeldida. |
 | Search your words | Search your words | Otsi sõnu |
-| Select text anywhere, then pick Subtitle Notes from the menu | Select text anywhere, then pick Subtitle Notes from the menu. | Valige suvalises kohas tekst ja seejärel valige menüüst Subtiitrite märkmed. |
-| Select text in any app, tap Share, then Subtitle Notes. | Select text in any app, tap Share, then Subtitle Notes. | Valige mis tahes rakenduses tekst, puudutage Share (Jaga) ja seejärel Subtiitrite märkmed. |
+| Select text anywhere, then pick Subtitle Notes from the menu | Select text anywhere, then pick Subtitle Notes from the menu. | Vali tekst ükskõik kus ja seejärel vali menüüst Subtitle Notes. |
+| Select text in any app, tap Share, then Subtitle Notes. | Select text in any app, tap Share, then Subtitle Notes. | Vali tekst mis tahes rakenduses, puuduta Jaga ja seejärel Subtitle Notes. |
 | Selected subtitle | Selected subtitle | Valitud alapealkiri |
 | Selected text | Selected text | Valitud tekst |
 | Settings | Settings | Seaded |
@@ -282,7 +283,7 @@ Empty English means the key is its own source text.
 | Start | Start | Alusta |
 | Stay signed in | Stay signed in | Jääge sisselogituks |
 | Subtitle Notes | Subtitle Notes | Subtitle Notes |
-| Subtitle Notes | Subtitle Notes | Alapealkiri Märkused |
+| Subtitle Notes | Subtitle Notes | Subtitle Notes |
 | Subtitles in VLC and text in PDFs, through the Windows progr | Subtitles in VLC and text in PDFs, through the Windows program. | Subtiitrid VLC-s ja tekst PDF-is Windowsi programmi kaudu. |
 | Swipe a card right when a word feels familiar. It moves here | Swipe a card right when a word feels familiar. It moves here and stops crowding your library. | Pühkige kaarti paremale, kui mõni sõna tundub tuttav. See liigub siia ja lõpetab teie raamatukogu tunglemise. |
 | Switch to grid layout | Switch to grid layout | Lülitu ruudustiku paigutusele |
@@ -319,7 +320,7 @@ Empty English means the key is its own source text.
 | You | You | Sina |
 | Your account, and anything saved under it, is erased from th | Your account, and anything saved under it, is erased from the server for good. This cannot be undone. | Teie konto ja kõik selle alla salvestatud kustutatakse serverist lõplikult. Seda ei saa tagasi võtta. |
 | Your feed is empty | Your feed is empty | Teie voog on tühi |
-| Your launcher cannot add it directly. Long-press the home sc | Your launcher cannot add it directly. Long-press the home screen, choose Widgets, then Subtitle Notes. | Teie käivitaja ei saa seda otse lisada. Vajutage pikalt avakuva, valige Vidinad ja seejärel Subtiitrite märkmed. |
+| Your launcher cannot add it directly. Long-press the home sc | Your launcher cannot add it directly. Long-press the home screen, choose Widgets, then Subtitle Notes. | Sinu käivitaja ei saa seda otse lisada. Vajuta avakuval pikalt, vali Vidinad ja seejärel Subtitle Notes. |
 | Your library is safe in the cloud. Pull down or try again on | Your library is safe in the cloud. Pull down or try again once you are back online. | Teie kogu on pilves turvaliselt kaitstud. Tõmmake alla või proovige uuesti, kui olete uuesti võrgus. |
 | Your library starts empty | Your library starts empty | Teie raamatukogu hakkab tühjaks saama |
 | Your words stay in the cloud. Signing back in restores them. | Your words stay in the cloud. Signing back in restores them. | Sinu sõnad jäävad pilve. Uuesti sisselogimine taastab need. |
@@ -573,7 +574,7 @@ Empty English means the key is its own source text.
 | mark | assiette | record |
 | title | Subtitle Notes - translated by the line, not by the word | Subtitle Notes - tõlge lause järgi, mitte sõna järgi |
 | h1 | Translated by the line, not by the word | Tõlge lause järgi, mitte sõna järgi |
-| lede | Highlight an unfamiliar word in subtitles, on a page or in a PDF. It is translated the way it sounds in that sentence, and it stays in your library. | Vali tundmatu sõna subtiitrist, lehelt või PDF-ist. See tõlgitakse nii, nagu see selles lauses kõlab, ja jääb sinu kogusse. |
+| lede | Highlight an unfamiliar word in subtitles, on a page or in a PDF. It is translated the way it sounds in that sentence, and it stays in your library. | Vali tundmatu sõna subtiitrist, lehelt või PDF-ist. See tõlgitakse selles lauses kasutatud tähenduses ja jääb sinu kogusse. |
 | dict | A dictionary | Sõnaraamat |
 | ours | Subtitle Notes | Subtitle Notes |
 | wrong | He is not in his plate. | keegi ei taha rekordit |

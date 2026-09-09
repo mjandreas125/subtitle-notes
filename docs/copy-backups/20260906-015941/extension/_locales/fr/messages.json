@@ -1,0 +1,377 @@
+{
+  "appName": {
+    "message": "Subtitle Notes"
+  },
+  "appDescription": {
+    "message": "Traduit le mot sélectionné en tenant compte de toute la phrase. Fonctionne dans les sous-titres, sur toute page et en PDF."
+  },
+  "menuSave": {
+    "message": "Enregistrer « %s » dans Subtitle Notes"
+  },
+  "chipAsk": {
+    "message": "Qu'est-ce que ça veut dire ?"
+  },
+  "pendingLater": {
+    "message": "Pas de réponse à l’instant - la traduction arrivera dans l’application.",
+    "description": "Shown when no provider answered; the server retries later."
+  },
+  "listen": {
+    "message": "Écouter"
+  },
+  "rerun": {
+    "message": "Traduction incorrecte"
+  },
+  "rerunning": {
+    "message": "Nouvelle lecture…"
+  },
+  "seenBefore": {
+    "message": "rencontré $COUNT$ fois",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "connectTitle": {
+    "message": "Connectez votre téléphone"
+  },
+  "connectBody": {
+    "message": "Ce navigateur n'est pas encore relié à votre bibliothèque."
+  },
+  "connectAction": {
+    "message": "Connecter"
+  },
+  "close": {
+    "message": "Fermer"
+  },
+  "save": {
+    "message": "Enregistrer"
+  },
+  "saving": {
+    "message": "Enregistrement…"
+  },
+  "saved": {
+    "message": "Enregistré ✓"
+  },
+  "savedAlready": {
+    "message": "Déjà présent ✓"
+  },
+  "inLibrary": {
+    "message": "Déjà dans votre bibliothèque"
+  },
+  "notSaved": {
+    "message": "Non enregistré"
+  },
+  "failed": {
+    "message": "Ça n'a pas marché"
+  },
+  "undo": {
+    "message": "Annuler"
+  },
+  "undoing": {
+    "message": "Suppression…"
+  },
+  "undone": {
+    "message": "Supprimé"
+  },
+  "reloaded": {
+    "message": "L'extension a été rechargée. Actualisez la page."
+  },
+  "popupNotPaired": {
+    "message": "Ce navigateur n'est pas relié à votre bibliothèque."
+  },
+  "popupConnectGoogle": {
+    "message": "Continuer avec Google",
+    "description": "Popup button that signs in with Google"
+  },
+  "popupConnectCode": {
+    "message": "Afficher un code",
+    "description": "Popup button that shows the pairing code"
+  },
+  "popupExport": {
+    "message": "Exporter vers Anki"
+  },
+  "popupLibrary": {
+    "message": "Bibliothèque complète",
+    "description": "Popup button that opens the web library"
+  },
+  "optTitle": {
+    "message": "Subtitle Notes dans le navigateur"
+  },
+  "optSub": {
+    "message": "Surlignez des mots sur n'importe quel site, dans des PDF et dans les sous-titres - ils arrivent dans la même application sur votre téléphone."
+  },
+  "optConnected": {
+    "message": "Connecté"
+  },
+  "optForget": {
+    "message": "Déconnecter ce navigateur"
+  },
+  "optWaiting": {
+    "message": "En attente de confirmation…"
+  },
+  "optPaired": {
+    "message": "C'est fait. Surlignez du texte sur n'importe quelle page."
+  },
+  "optExpired": {
+    "message": "Le code a expiré. Demandez-en un nouveau."
+  },
+  "optCancel": {
+    "message": "Annuler"
+  },
+  "optHotkeyTitle": {
+    "message": "Enregistrer sans bouton"
+  },
+  "optHotkeyHelp": {
+    "message": "Maintenez cette combinaison pendant que vous surlignez et le mot part directement dans votre bibliothèque. Ou surlignez normalement puis appuyez dessus."
+  },
+  "optHotkeyPress": {
+    "message": "Appuyez sur une combinaison…"
+  },
+  "optReset": {
+    "message": "Réinitialiser"
+  },
+  "optWhereTitle": {
+    "message": "Où la fenêtre apparaît"
+  },
+  "optAtSelection": {
+    "message": "Près de la sélection"
+  },
+  "optTopRight": {
+    "message": "En haut à droite"
+  },
+  "optTopLeft": {
+    "message": "En haut à gauche"
+  },
+  "optBottomRight": {
+    "message": "En bas à droite"
+  },
+  "optBottomLeft": {
+    "message": "En bas à gauche"
+  },
+  "optDragHint": {
+    "message": "Une fenêtre fixée dans un coin peut être déplacée à la souris - elle retient sa place."
+  },
+  "optHideAfter": {
+    "message": "Masquer après"
+  },
+  "optHideAfterHelp": {
+    "message": "Secondes pendant lesquelles la fenêtre reste après un enregistrement instantané."
+  },
+  "optVideoTitle": {
+    "message": "Vidéo et sites"
+  },
+  "optSubtitles": {
+    "message": "Sous-titres cliquables"
+  },
+  "optSubtitlesHelp": {
+    "message": "Sur YouTube et Netflix, remplace les sous-titres par une copie où l'on peut cliquer un mot ou glisser sur une expression."
+  },
+  "optPause": {
+    "message": "Mettre la vidéo en pause"
+  },
+  "optPauseHelp": {
+    "message": "Quand vous choisissez un mot dans un sous-titre."
+  },
+  "optSpeak": {
+    "message": "Lire le mot à voix haute"
+  },
+  "optSpeakHelp": {
+    "message": "Prononce le mot anglais à l'ouverture de la carte."
+  },
+  "optBlocked": {
+    "message": "Ne pas fonctionner sur ces sites"
+  },
+  "optBlockedHelp": {
+    "message": "Une adresse par ligne, par exemple mail.google.com."
+  },
+  "optSites": {
+    "message": "La barre d’espace seulement sur ces sites"
+  },
+  "optSitesHelp": {
+    "message": "Une adresse par ligne, par exemple rezka.ag. Vide signifie partout. Le reste fonctionne partout de toute façon."
+  },
+  "optSavedToast": {
+    "message": "Enregistré"
+  },
+  "optAccountTitle": {
+    "message": "Compte"
+  },
+  "optGoogle": {
+    "message": "Continuer avec Google"
+  },
+  "optGoogleHelp": {
+    "message": "Connectez-vous avec le compte Google de votre téléphone : tout ce que vous enregistrez ici rejoint la même bibliothèque."
+  },
+  "optOtherWay": {
+    "message": "Connecter depuis le téléphone"
+  },
+  "optScanHelp": {
+    "message": "Dirigez la caméra du téléphone vers ce carré, ou saisissez le code dans l’application : Réglages → Appareils connectés."
+  },
+  "optLangTitle": {
+    "message": "Langue des fiches"
+  },
+  "optLangHelp": {
+    "message": "Les nouvelles fiches seront expliquées dans cette langue. Celles déjà enregistrées ne changent pas."
+  },
+  "optPrivacy": {
+    "message": "Politique de confidentialité"
+  },
+  "optSubKeyTitle": {
+    "message": "Prendre des mots dans les sous-titres"
+  },
+  "optSubKeyHelp": {
+    "message": "Tant que la touche est maintenue, la ligne devient du texte sélectionnable. Relâchez et le lecteur récupère la souris : déplacer les sous-titres, cliquer pour mettre en pause et régler leur taille continuent de fonctionner."
+  },
+  "optSubKeyNone": {
+    "message": "Sans touche"
+  },
+  "optOr": {
+    "message": "ou"
+  },
+  "optSubKeyNow": {
+    "message": "Actuellement : $KEYS$",
+    "placeholders": {
+      "keys": {
+        "content": "$1"
+      }
+    }
+  },
+  "optSubKeyNoneNow": {
+    "message": "Actuellement : sans touche - la ligne est toujours sélectionnable"
+  },
+  "optLangLocked": {
+    "message": "Connectez d’abord un compte : la langue y est enregistrée."
+  },
+  "mine": {
+    "message": "Ma version"
+  },
+  "minePlaceholder": {
+    "message": "Ce que cela veut dire ici"
+  },
+  "mineThanks": {
+    "message": "Enregistré. Si d’autres écrivent la même chose, cela deviendra la version par défaut."
+  },
+  "mineAgreed": {
+    "message": "Enregistré - assez de personnes sont d’accord, c’est désormais la version par défaut."
+  },
+  "popupSettings": {
+    "message": "Réglages"
+  },
+  "tourTitle": {
+    "message": "Subtitle Notes"
+  },
+  "tourLede": {
+    "message": "Comment ça marche"
+  },
+  "tourMeaning": {
+    "message": "a record - casier judiciaire"
+  },
+  "tourSubtitle": {
+    "message": "No one wants a record.",
+    "description": "The subtitle shown on the welcome card."
+  },
+  "tourPick": {
+    "message": "a record",
+    "description": "The part of that subtitle that is picked out."
+  },
+  "tourLine": {
+    "message": "Personne ne veut de casier.",
+    "description": "The translated subtitle line on the welcome card."
+  },
+  "tourSaved": {
+    "message": "Enregistré dans votre bibliothèque"
+  },
+  "tourStep1": {
+    "message": "Maintenez Ctrl et faites glisser sur le sous-titre"
+  },
+  "tourStep1Body": {
+    "message": "Sans la touche, le lecteur reste intact : la ligne se déplace, un clic met en pause."
+  },
+  "tourStep2": {
+    "message": "Ailleurs, il suffit de surligner"
+  },
+  "tourStep2Body": {
+    "message": "Une page, un PDF, un commentaire. Avec Ctrl+Alt, c’est enregistré sans rien demander."
+  },
+  "tourStep3": {
+    "message": "Tout arrive dans une seule bibliothèque"
+  },
+  "tourStep3Body": {
+    "message": "Le même compte Google sur le téléphone, dans le navigateur et sur l’ordinateur."
+  },
+  "tourConnect": {
+    "message": "Connecter le compte"
+  },
+  "tourLater": {
+    "message": "Plus tard"
+  },
+  "optDesktopTitle": {
+    "message": "Sur l’ordinateur"
+  },
+  "optDesktopHelp": {
+    "message": "Les sous-titres dans VLC et le texte de n’importe quel programme, dans la même bibliothèque."
+  },
+  "optDesktopGet": {
+    "message": "Télécharger pour Windows"
+  },
+  "optPhoneTitle": {
+    "message": "Sur le téléphone",
+    "description": "The offer of the Android app in settings."
+  },
+  "optPhoneHelp": {
+    "message": "Les mêmes mots, avec révision et recherche. Android pour l'instant ; le fichier s'installe hors magasin, le téléphone demande une fois.",
+    "description": "The offer of the Android app in settings."
+  },
+  "optPhoneGet": {
+    "message": "Télécharger pour Android",
+    "description": "The offer of the Android app in settings."
+  },
+  "tourDesktop": {
+    "message": "Aussi pour l’ordinateur"
+  },
+  "tourPhone": {
+    "message": "Et sur le téléphone",
+    "description": "The offer of the Android app on the welcome page."
+  },
+  "optCompact": {
+    "message": "Fiche courte"
+  },
+  "optCompactHelp": {
+    "message": "Seulement le sens : ni synonymes ni notes."
+  },
+  "optSpaceLine": {
+    "message": "Espace lit la réplique",
+    "description": "Options toggle for translating the caption with space"
+  },
+  "optSpaceLineHelp": {
+    "message": "La ligne à l’écran, traduite quand vous mettez en pause."
+  },
+  "optSpaceSaves": {
+    "message": "Garder ce que la barre d’espace lit"
+  },
+  "optSpaceSavesHelp": {
+    "message": "Sinon la ligne est seulement affichée."
+  },
+  "pageSubtitles": {
+    "message": "Des sous-titres ici. Maintenez $KEYS$ et glissez sur un mot.",
+    "placeholders": {
+      "keys": {
+        "content": "$1"
+      }
+    }
+  },
+  "pageNoKey": {
+    "message": "sans touche"
+  },
+  "pageSubtitlesOff": {
+    "message": "Des sous-titres ici, mais les sous-titres cliquables sont désactivés."
+  },
+  "pageText": {
+    "message": "Pas de sous-titres de lecteur ici. Surlignez du texte en maintenant Ctrl+Alt."
+  },
+  "pageOff": {
+    "message": "Subtitle Notes reste à l’écart de ce site, comme demandé."
+  }
+}

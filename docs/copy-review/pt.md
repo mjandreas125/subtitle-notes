@@ -3,10 +3,15 @@
 Left: the English the key stands for. Right: what this language says.
 Empty English means the key is its own source text.
 
-## app  (373)
+## app  (378)
 
 | key | English | pt |
 |---|---|---|
+| As in the file | As in the file | Como no ficheiro |
+| Connect your phone | Connect your phone | Ligue o telefone |
+| Settings | Settings | Definições |
+| Sources | Sources | Fontes |
+| System language | System language | Idioma do sistema |
 | Not the word - what it means here | Not the word - what it means here | Não a palavra, mas o sentido |
 | A dictionary translates the word by itself. Here the whole s | A dictionary translates the word by itself. Here the whole sentence is read, so the word gets the meaning it has in it. | Um dicionário traduz a palavra sozinha. Aqui lê-se a frase inteira, por isso a palavra recebe o sentido que tem nela. |
 | Saving a word is one movement | Saving a word is one movement | Guardar uma palavra é um só gesto |
@@ -124,7 +129,7 @@ Empty English means the key is its own source text.
 | Add to home screen | Add to home screen | Adicionar à tela inicial |
 | Added | Added | Adicionado |
 | Again | Again | Novamente |
-| All $saved saved ${saved == 1 ?  | All $saved saved ${saved == 1 ?  | Todos $saved salvos ${salvos == 1 ? |
+| All $saved saved ${saved == 1 ?  | All $saved saved ${saved == 1 ?  | Todos $saved guardados ${saved == 1 ? |
 | All ${stats.unlocked} levels. Keep saving what you like. | All ${stats.unlocked} levels. Keep saving what you like. | Todos os níveis ${stats.unlocked}. Continue salvando o que você gosta. |
 | All meanings | All meanings | Todos os significados |
 | All of them | All of them | Todos eles |
@@ -144,9 +149,9 @@ Empty English means the key is its own source text.
 | Change your nickname | Change your nickname | Mude seu apelido |
 | Clear search | Clear search | Limpar pesquisa |
 | Close | Close | Fechar |
-| Close practice | Close practice | Fechar prática |
+| Close practice | Close practice | Fechar a revisão |
 | Close the scanner | Close the scanner | Feche o scanner |
-| Code ${widget.code} came from a Subtitle Notes window. It ca | Code ${widget.code} came from a Subtitle Notes window. It can then send words into your library. | O código ${widget.code} veio de uma janela de notas de legenda. Ele pode então enviar palavras para sua biblioteca. |
+| Code ${widget.code} came from a Subtitle Notes window. It ca | Code ${widget.code} came from a Subtitle Notes window. It can then send words into your library. | O código ${widget.code} veio de uma janela do Subtitle Notes. Pode depois enviar palavras para a tua biblioteca. |
 | Compact cards | Compact cards | Cartões compactos |
 | Computer connected | Computer connected | Computador conectado |
 | Confirm the placement on your home screen. | Confirm the placement on your home screen. | Confirme o posicionamento na tela inicial. |
@@ -232,7 +237,7 @@ Empty English means the key is its own source text.
 | On a computer | On a computer | Em um computador |
 | On this phone | On this phone | Neste telefone |
 | One account connects your phone, computer and browser. No pa | One account connects your phone, computer and browser. No password to remember. | Uma conta conecta seu telefone, computador e navegador. Nenhuma senha para lembrar. |
-| People are found by nickname. Ask your friend which one they | People are found by nickname. Ask your friend which one they picked in Subtitle Notes. | As pessoas são encontradas pelo apelido. Pergunte ao seu amigo qual ele escolheu nas Notas de Legenda. |
+| People are found by nickname. Ask your friend which one they | People are found by nickname. Ask your friend which one they picked in Subtitle Notes. | As pessoas são encontradas pelo apelido. Pergunta ao teu amigo qual escolheu no Subtitle Notes. |
 | Phone | Phone | Telefone |
 | Pick a nickname | Pick a nickname | Escolha um apelido |
 | Pick a nickname so friends can find you. | Pick a nickname so friends can find you. | Escolha um apelido para que seus amigos possam encontrar você. |
@@ -279,7 +284,7 @@ Empty English means the key is its own source text.
 | Start | Start | Começar |
 | Stay signed in | Stay signed in | Permaneça conectado |
 | Subtitle Notes | Subtitle Notes | Subtitle Notes |
-| Subtitle Notes | Subtitle Notes | Legenda Notas |
+| Subtitle Notes | Subtitle Notes | Subtitle Notes |
 | Subtitles in VLC and text in PDFs, through the Windows progr | Subtitles in VLC and text in PDFs, through the Windows program. | Legendas em VLC e texto em PDFs, através do programa Windows. |
 | Swipe a card right when a word feels familiar. It moves here | Swipe a card right when a word feels familiar. It moves here and stops crowding your library. | Passe um cartão para a direita quando uma palavra parecer familiar. Ele se move para cá e para de lotar sua biblioteca. |
 | Switch to grid layout | Switch to grid layout | Mudar para layout de grade |
@@ -442,7 +447,7 @@ Empty English means the key is its own source text.
 | optPauseHelp | When you pick a word out of a subtitle. | Quando você escolhe uma palavra de uma legenda. |
 | optSpeak | Read the word aloud | Ler a palavra em voz alta |
 | optSpeakHelp | Says the English out loud when the card opens. | Pronuncia a palavra em inglês quando o cartão abre. |
-| optBlocked | Stay off these sites | Não funcionar nestes sites |
+| optBlocked | Stay off these sites | Não ativar nestes sites |
 | optBlockedHelp | One address per line, for example mail.google.com. | Um endereço por linha, por exemplo mail.google.com. |
 | optSites | Space only on these sites | O espaço só nestes sites |
 | optSitesHelp | One address per line, for example rezka.ag. Empty means every site. Everything else works everywhere either way. | Um endereço por linha, por exemplo rezka.ag. Vazio significa em todo o lado. O resto funciona em todo o lado de qualquer forma. |
@@ -494,7 +499,7 @@ Empty English means the key is its own source text.
 | optCompactHelp | Only the meaning: no synonyms, no notes. | Apenas o significado: sem sinónimos nem notas. |
 | optSpaceLine | Space reads the line | Espaço lê a fala |
 | optSpaceLineHelp | The caption on screen, translated when you pause. | A linha no ecrã, traduzida quando faz pausa. |
-| optSpaceSaves | Keep what space read | Guardar o que o espaço lê |
+| optSpaceSaves | Keep what space read | Guardar o que a barra de espaço lê |
 | optSpaceSavesHelp | Otherwise the line is only shown. | Caso contrário, a linha é apenas mostrada. |
 | pageSubtitles | Subtitles found here. Hold $KEYS$ and drag across a word. | Há legendas aqui. Mantenha $KEYS$ e arraste sobre uma palavra. |
 | pageNoKey | no key | sem tecla |
@@ -510,7 +515,7 @@ Empty English means the key is its own source text.
 | mark | assiette | record |
 | title | Subtitle Notes - translated by the line, not by the word | Subtitle Notes - traduzido pela frase, não pela palavra |
 | h1 | Translated by the line, not by the word | Traduzido pela frase, não pela palavra |
-| lede | Highlight an unfamiliar word in subtitles, on a page or in a PDF. It is translated the way it sounds in that sentence, and it stays in your library. | Selecione uma palavra desconhecida numa legenda, numa página ou num PDF. É traduzida como soa naquela frase e fica na sua biblioteca. |
+| lede | Highlight an unfamiliar word in subtitles, on a page or in a PDF. It is translated the way it sounds in that sentence, and it stays in your library. | Selecione uma palavra desconhecida numa legenda, numa página ou num PDF. É traduzida no sentido que tem nessa frase e fica na sua biblioteca. |
 | dict | A dictionary | Um dicionário |
 | ours | Subtitle Notes | Subtitle Notes |
 | wrong | He is not in his plate. | ninguém quer um recorde |

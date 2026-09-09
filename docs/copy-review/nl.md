@@ -3,10 +3,15 @@
 Left: the English the key stands for. Right: what this language says.
 Empty English means the key is its own source text.
 
-## app  (373)
+## app  (378)
 
 | key | English | nl |
 |---|---|---|
+| As in the file | As in the file | Zoals in het bestand |
+| Connect your phone | Connect your phone | Verbind je telefoon |
+| Settings | Settings | Instellingen |
+| Sources | Sources | Bronnen |
+| System language | System language | Systeemtaal |
 | Not the word - what it means here | Not the word - what it means here | Niet het woord, maar de betekenis |
 | A dictionary translates the word by itself. Here the whole s | A dictionary translates the word by itself. Here the whole sentence is read, so the word gets the meaning it has in it. | Een woordenboek vertaalt het woord op zichzelf. Hier wordt de hele zin gelezen, dus krijgt het woord de betekenis die het daarin heeft. |
 | Saving a word is one movement | Saving a word is one movement | Een woord bewaren is één beweging |
@@ -145,9 +150,9 @@ Empty English means the key is its own source text.
 | Change your nickname | Change your nickname | Verander je bijnaam |
 | Clear search | Clear search | Duidelijke zoekopdracht |
 | Close | Close | Sluiten |
-| Close practice | Close practice | Praktijk sluiten |
+| Close practice | Close practice | Oefenen sluiten |
 | Close the scanner | Close the scanner | Sluit de scanner |
-| Code ${widget.code} came from a Subtitle Notes window. It ca | Code ${widget.code} came from a Subtitle Notes window. It can then send words into your library. | Code ${widget.code} kwam uit een venster met ondertitelnotities. Vervolgens kan het woorden naar uw bibliotheek sturen. |
+| Code ${widget.code} came from a Subtitle Notes window. It ca | Code ${widget.code} came from a Subtitle Notes window. It can then send words into your library. | Code ${widget.code} kwam uit een venster van Subtitle Notes. Het kan daarna woorden naar je bibliotheek sturen. |
 | Compact cards | Compact cards | Compacte kaarten |
 | Computer connected | Computer connected | Computer aangesloten |
 | Confirm the placement on your home screen. | Confirm the placement on your home screen. | Bevestig de plaatsing op uw startscherm. |
@@ -232,7 +237,7 @@ Empty English means the key is its own source text.
 | On a computer | On a computer | Op een computer |
 | On this phone | On this phone | Op deze telefoon |
 | One account connects your phone, computer and browser. No pa | One account connects your phone, computer and browser. No password to remember. | Eén account verbindt uw telefoon, computer en browser. Geen wachtwoord om te onthouden. |
-| People are found by nickname. Ask your friend which one they | People are found by nickname. Ask your friend which one they picked in Subtitle Notes. | Mensen worden gevonden op bijnaam. Vraag je vriend welke hij of zij heeft gekozen in Ondertitelopmerkingen. |
+| People are found by nickname. Ask your friend which one they | People are found by nickname. Ask your friend which one they picked in Subtitle Notes. | Mensen zijn te vinden via hun bijnaam. Vraag je vriend welke bijnaam hij of zij in Subtitle Notes heeft gekozen. |
 | Phone | Phone | Telefoon |
 | Pick a nickname | Pick a nickname | Kies een bijnaam |
 | Pick a nickname so friends can find you. | Pick a nickname so friends can find you. | Kies een bijnaam zodat vrienden je kunnen vinden. |
@@ -247,14 +252,14 @@ Empty English means the key is its own source text.
 | Remove like | Remove like | Verwijder like |
 | Retry | Retry | Opnieuw proberen |
 | Return ${card.learningLabel} to the library | Return ${card.learningLabel} to the library | Stuur ${card.learningLabel} terug naar de bibliotheek |
-| Review | Review | Beoordeling |
+| Review | Review | Herhalen |
 | Round complete | Round complete | Rond compleet |
 | SAVED WORD | SAVED WORD | OPGESLAGEN WOORD |
 | Same in other words | Same in other words | Hetzelfde met andere woorden |
 | Save | Save | Opslaan |
 | Save a few more words | Save a few more words | Bewaar nog een paar woorden |
 | Save a word first. | Save a word first. | Bewaar eerst een woord. |
-| Save now | Save now | Bespaar nu |
+| Save now | Save now | Nu opslaan |
 | Save this selection | Save this selection | Bewaar deze selectie |
 | Saved and translated instantly, without an extra tap. | Saved and translated instantly, without an extra tap. | Direct opgeslagen en vertaald, zonder extra tik. |
 | Saving to your library | Saving to your library | Opslaan in uw bibliotheek |
@@ -262,8 +267,8 @@ Empty English means the key is its own source text.
 | Scene context | Scene context | Scènecontext |
 | Search a nickname above to add someone. Words you both save  | Search a nickname above to add someone. Words you both save show up here, and you can like them. | Zoek hierboven een bijnaam om iemand toe te voegen. Woorden die jullie allebei opslaan, worden hier weergegeven en je kunt ze leuk vinden. |
 | Search your words | Search your words | Zoek je woorden |
-| Select text anywhere, then pick Subtitle Notes from the menu | Select text anywhere, then pick Subtitle Notes from the menu. | Selecteer ergens tekst en kies vervolgens Ondertitelnotities in het menu. |
-| Select text in any app, tap Share, then Subtitle Notes. | Select text in any app, tap Share, then Subtitle Notes. | Selecteer tekst in een app, tik op Delen en vervolgens op Ondertitelnotities. |
+| Select text anywhere, then pick Subtitle Notes from the menu | Select text anywhere, then pick Subtitle Notes from the menu. | Selecteer ergens tekst en kies vervolgens Subtitle Notes in het menu. |
+| Select text in any app, tap Share, then Subtitle Notes. | Select text in any app, tap Share, then Subtitle Notes. | Selecteer tekst in een app, tik op Delen en vervolgens op Subtitle Notes. |
 | Selected subtitle | Selected subtitle | Geselecteerde ondertitel |
 | Selected text | Selected text | Geselecteerde tekst |
 | Show my words to friends | Show my words to friends | Laat mijn woorden aan vrienden zien |
@@ -279,7 +284,7 @@ Empty English means the key is its own source text.
 | Start | Start | Begin |
 | Stay signed in | Stay signed in | Blijf ingelogd |
 | Subtitle Notes | Subtitle Notes | Subtitle Notes |
-| Subtitle Notes | Subtitle Notes | Ondertitel Opmerkingen |
+| Subtitle Notes | Subtitle Notes | Subtitle Notes |
 | Subtitles in VLC and text in PDFs, through the Windows progr | Subtitles in VLC and text in PDFs, through the Windows program. | Ondertiteling in VLC en tekst in PDF's, via het Windows-programma. |
 | Swipe a card right when a word feels familiar. It moves here | Swipe a card right when a word feels familiar. It moves here and stops crowding your library. | Veeg een kaart naar rechts als een woord bekend aanvoelt. Het verplaatst zich hierheen en stopt met het verdringen van uw bibliotheek. |
 | Switch to grid layout | Switch to grid layout | Schakel over naar rasterindeling |
@@ -315,7 +320,7 @@ Empty English means the key is its own source text.
 | You | You | Jij |
 | Your account, and anything saved under it, is erased from th | Your account, and anything saved under it, is erased from the server for good. This cannot be undone. | Uw account en alles wat eronder is opgeslagen, wordt voorgoed van de server verwijderd. Dit kan niet ongedaan worden gemaakt. |
 | Your feed is empty | Your feed is empty | Je feed is leeg |
-| Your launcher cannot add it directly. Long-press the home sc | Your launcher cannot add it directly. Long-press the home screen, choose Widgets, then Subtitle Notes. | Uw opstartprogramma kan het niet rechtstreeks toevoegen. Houd het startscherm lang ingedrukt, kies Widgets en vervolgens Ondertitelnotities. |
+| Your launcher cannot add it directly. Long-press the home sc | Your launcher cannot add it directly. Long-press the home screen, choose Widgets, then Subtitle Notes. | Je launcher kan dit niet rechtstreeks toevoegen. Houd het startscherm lang ingedrukt, kies Widgets en vervolgens Subtitle Notes. |
 | Your library is safe in the cloud. Pull down or try again on | Your library is safe in the cloud. Pull down or try again once you are back online. | Uw bibliotheek staat veilig in de cloud. Haal het omlaag of probeer het opnieuw zodra je weer online bent. |
 | Your library starts empty | Your library starts empty | Uw bibliotheek begint leeg |
 | Your words stay in the cloud. Signing back in restores them. | Your words stay in the cloud. Signing back in restores them. | Je woorden blijven in de cloud. Als u zich opnieuw aanmeldt, worden ze hersteld. |

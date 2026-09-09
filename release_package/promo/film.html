@@ -1,0 +1,561 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>Subtitle Notes - promo</title>
+<!--
+  The promo film, 1920x1080, as a seekable page.
+
+      film.html?lang=en&t=13.2     one frame, exactly, in real seconds
+      film.html?lang=ru            plays in the browser, for eyeballing
+
+  Every animation is declared paused and seeked with a negative delay, so the
+  frame at t is a pure function of t and nothing depends on wall-clock timing.
+  That is what lets a headless renderer walk the timeline one frame at a time
+  and get the same film every run.
+
+  Times in this file are written in STORY seconds and played back at RATE.
+  Changing RATE re-times the whole film - the picture, and the sound too if the
+  same constant is changed in tools/promo-audio.py.
+-->
+<script src="strings.js"></script>
+<style>
+  :root {
+    --t: 0;                                  /* the clock, in real seconds */
+    --ink:    #eef3f0;
+    --dim:    #93a49c;
+    --accent: #46d68f;
+    --out:    cubic-bezier(.16, 1, .3, 1);   /* ease-out-expo */
+    --quart:  cubic-bezier(.25, 1, .5, 1);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: #05080a; overflow: hidden; }
+  body {
+    width: 1920px; height: 1080px; position: relative;
+    font: 400 16px/1.5 "Segoe UI", system-ui, -apple-system, sans-serif;
+    color: var(--ink); -webkit-font-smoothing: antialiased;
+  }
+
+  /* Every animated element carries this. The shorthand is never used inline,
+     because the shorthand would reset the delay that does the seeking. */
+  .a {
+    animation-play-state: paused;
+    animation-fill-mode: both;
+    animation-delay: calc((var(--s, 0) - var(--t)) * 1s);
+    animation-timing-function: var(--out);
+  }
+  /* A reader with motion turned off gets the film's conclusion rather than an
+     empty stage. The renderer is exempt: a headless Chrome reports "reduce" by
+     default, and honouring that would render one end card a thousand times. */
+  @media (prefers-reduced-motion: reduce) {
+    html:not([data-motion]) .a { animation: none !important; opacity: 1 !important; transform: none !important; }
+  }
+
+  @keyframes fade      { from { opacity: 0 } to { opacity: 1 } }
+  @keyframes out       { from { opacity: 1 } to { opacity: 0 } }
+  @keyframes rise      { from { opacity: 0; transform: translateY(26px) } to { opacity: 1; transform: none } }
+  @keyframes riseSmall { from { opacity: 0; transform: translateY(12px) } to { opacity: 1; transform: none } }
+  @keyframes sink      { from { opacity: 1; transform: none } to { opacity: 0; transform: translateY(18px) } }
+  @keyframes pop       { from { opacity: 0; transform: translateY(14px) scale(.94) } to { opacity: 1; transform: none } }
+  @keyframes drift     { from { transform: scale(1.06) } to { transform: scale(1) } }
+  @keyframes press     { from { transform: none } to { transform: translateY(3px); border-bottom-width: 1px } }
+  @keyframes wipe      { from { clip-path: inset(0 100% 0 0) } to { clip-path: inset(0 0 0 0) } }
+  @keyframes strike    { from { transform: scaleX(0) } to { transform: scaleX(1) } }
+  @keyframes draw      { from { stroke-dashoffset: var(--len) } to { stroke-dashoffset: 0 } }
+  @keyframes travel    { from { offset-distance: 0% } to { offset-distance: 100% } }
+  @keyframes lift      { from { opacity: 0; transform: translate(0,0) scale(1) } to { opacity: 1; transform: translate(0,-286px) scale(1.06) } }
+  @keyframes markIn    { from { opacity: 0; transform: scale(.86) } to { opacity: 1; transform: none } }
+  @keyframes grow      { from { transform: scaleX(.530) } to { transform: scaleX(.552) } }
+  @keyframes creep     { from { transform: translateX(768px) } to { transform: translateX(800px) } }
+  @keyframes drag      { from { transform: translate(872px, 918px) } to { transform: translate(1288px, 918px) } }
+
+  /* A running picture, not a photograph of one: the figure and the window
+     lights drift at different rates, and the screen light flickers the way a
+     screen light does. */
+  @keyframes swayA     { from { transform: translateX(0) } to { transform: translateX(-38px) } }
+  @keyframes swayB     { from { transform: translateX(0) } to { transform: translateX(22px) } }
+  @keyframes flick     { 0%, 100% { opacity: .02 } 17% { opacity: .07 } 41% { opacity: .012 } 63% { opacity: .085 } 82% { opacity: .03 } }
+
+  /* --- the film frame, full bleed ------------------------------------------- */
+  #film { position: absolute; inset: 0; transform-origin: 50% 46%; overflow: hidden; }
+  #scene { position: absolute; inset: -4%; }
+  #scene::before, #scene::after { content: ''; position: absolute; border-radius: 50%; filter: blur(90px); }
+  #scene::before {
+    width: 1000px; height: 760px; left: -120px; top: -200px;
+    background: radial-gradient(circle, rgba(94,132,148,.72), transparent 68%);
+  }
+  #scene::after {
+    width: 1120px; height: 820px; right: -200px; bottom: -260px;
+    background: radial-gradient(circle, rgba(196,146,74,.5), transparent 66%);
+  }
+  #lamps { position: absolute; inset: 0; }
+  .lamp { position: absolute; border-radius: 50%; filter: blur(22px); background: rgba(255,226,168,.72); }
+  .silh { position: absolute; left: 96px; bottom: -40px; width: 690px; height: 512px; }
+  .silh::before {
+    content: ''; position: absolute; left: -80px; right: -120px; top: -120px; bottom: -60px;
+    border-radius: 50%; filter: blur(70px);
+    background: radial-gradient(60% 55% at 62% 34%, rgba(196,164,110,.42), transparent 72%);
+  }
+  .silh .head {
+    position: absolute; left: 190px; bottom: 238px; width: 244px; height: 282px;
+    border-radius: 50% 50% 42% 42%; background: #04070a;
+    box-shadow: 11px -11px 0 -5px rgba(255,214,150,.32);
+  }
+  .silh .body {
+    position: absolute; left: 0; bottom: 0; width: 640px; height: 286px;
+    border-radius: 240px 210px 0 0; background: #04070a;
+    box-shadow: 17px -14px 0 -11px rgba(255,214,150,.19);
+  }
+  #blinds {
+    position: absolute; right: 0; top: 0; width: 46%; height: 74%;
+    background: repeating-linear-gradient(to bottom, rgba(255,224,176,.1) 0 8px, transparent 8px 34px);
+    mask-image: radial-gradient(80% 70% at 80% 30%, #000 20%, transparent 78%);
+  }
+  #tvglow {
+    position: absolute; inset: 0; mix-blend-mode: screen;
+    background: radial-gradient(72% 62% at 38% 44%, rgba(176,202,224,.55), transparent 70%);
+  }
+  #grain {
+    position: absolute; inset: 0; opacity: .9;
+    background-image: radial-gradient(rgba(255,255,255,.05) 1px, transparent 1px);
+    background-size: 4px 4px;
+  }
+  #vignette {
+    position: absolute; inset: 0;
+    background: radial-gradient(120% 92% at 50% 44%, transparent 38%, rgba(0,0,0,.78));
+  }
+  #black { position: absolute; inset: 0; background: #05080a; z-index: 90; }
+
+  /* --- the player's own furniture -------------------------------------------- */
+  #hud {
+    position: absolute; left: 0; right: 0; bottom: 0; height: 132px; z-index: 33;
+    padding: 0 64px 30px; display: flex; align-items: flex-end; gap: 26px;
+    background: linear-gradient(to top, rgba(0,0,0,.66), transparent);
+    font-size: 21px; font-weight: 600; color: #c9d7d0;
+  }
+  #ep { flex: none; letter-spacing: .1em; }
+  #bar {
+    flex: none; width: 1420px; height: 5px; border-radius: 3px;
+    background: rgba(255,255,255,.2); position: relative; margin-bottom: 8px;
+  }
+  #fill { position: absolute; inset: 0; border-radius: 3px; background: var(--accent); transform-origin: left center; }
+  #head {
+    position: absolute; top: 50%; left: 0; width: 15px; height: 15px; margin: -7.5px 0 0 -7.5px;
+    border-radius: 50%; background: #eafff4; box-shadow: 0 0 16px rgba(70,214,143,.75);
+  }
+  #tc {
+    flex: none; position: relative; width: 172px; height: 32px; margin-bottom: 2px;
+    text-align: right; font-variant-numeric: tabular-nums;
+  }
+  #tc > span { position: absolute; right: 0; bottom: 0; white-space: nowrap; }
+
+  /* --- narration -------------------------------------------------------------- */
+  .sayslot { position: absolute; left: 104px; top: 88px; z-index: 50; }
+  .say {
+    position: relative; padding-left: 26px; max-width: 760px;
+    font-size: 36px; font-weight: 600; line-height: 1.28; letter-spacing: -.018em;
+    color: #f2f7f4; text-shadow: 0 2px 24px rgba(0,0,0,.75);
+  }
+  .say::before {
+    content: ''; position: absolute; left: 0; top: 10px; bottom: 10px;
+    width: 3px; border-radius: 2px; background: var(--accent);
+  }
+
+  /* --- the subtitles ---------------------------------------------------------- */
+  .cap {
+    position: absolute; left: 50%; bottom: 178px; translate: -50% 0; z-index: 30;
+    padding: 16px 28px; border-radius: 12px; background: rgba(0,0,0,.6);
+    font-size: 52px; font-weight: 600; white-space: nowrap; color: #fff;
+    text-shadow: 0 3px 10px rgba(0,0,0,.6);
+  }
+  #pick { position: relative; border-radius: 8px; padding: 3px 10px; margin: 0 -4px; }
+  /* The highlight is a layer under the word, wiped in left to right, so the
+     text never moves while it fills. */
+  #pickbg { position: absolute; inset: 0; border-radius: 8px; background: var(--accent); z-index: -1; }
+  #pause {
+    position: absolute; right: 112px; top: 104px; z-index: 40;
+    display: flex; align-items: center; gap: 14px;
+    font-size: 22px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: #cfe0d7;
+  }
+  #pause i { display: block; width: 7px; height: 26px; border-radius: 2px; background: #cfe0d7; }
+
+  /* The gesture: a key going down and a pointer crossing the words. */
+  #keyslot { position: absolute; left: 138px; bottom: 214px; z-index: 38; }
+  #key {
+    padding: 15px 26px; border-radius: 13px; background: #f4f1ea;
+    border: 1px solid #cfc8ba; border-bottom-width: 5px;
+    font-size: 25px; font-weight: 700; color: #2c352f;
+    box-shadow: 0 10px 26px rgba(0,0,0,.45);
+  }
+  #cur {
+    position: absolute; left: 0; top: 0; width: 34px; height: 34px; z-index: 39;
+    filter: drop-shadow(0 3px 7px rgba(0,0,0,.65));
+  }
+
+  /* --- the dictionary's answer, struck through -------------------------------- */
+  /* The visible card is the inner element, not #dict itself: the outer one
+     only arrives, the inner one leaves, and if the background lived on the
+     outer it stayed behind as an empty white box while the text sank. */
+  #dict { position: absolute; left: 50%; bottom: 292px; translate: -50% 0; z-index: 32; }
+  #dict > div {
+    padding: 18px 26px; border-radius: 13px; background: rgba(240,238,232,.95);
+    color: #3a4642; text-align: center; box-shadow: 0 18px 44px rgba(0,0,0,.42);
+  }
+  #dict em { display: block; font-style: normal; font-size: 15px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: #8b948f; }
+  #dict span { position: relative; display: inline-block; margin-top: 7px; font-size: 34px; font-weight: 620; }
+  #dict span b { position: absolute; left: -4px; right: -4px; top: 52%; height: 3px; background: #b0453c; transform-origin: left center; }
+
+  /* --- the round trip ---------------------------------------------------------- */
+  #token {
+    position: absolute; left: 50%; bottom: 194px; translate: -50% 0; z-index: 34;
+    padding: 12px 22px; border-radius: 10px; background: var(--accent); color: #04140c;
+    font-size: 40px; font-weight: 700; white-space: nowrap;
+    box-shadow: 0 0 44px rgba(70,214,143,.5);
+  }
+  #wires { position: absolute; inset: 0; z-index: 20; overflow: visible; }
+  #wires path { fill: none; stroke: rgba(70,214,143,.5); stroke-width: 2.5; stroke-linecap: round; }
+  .node { position: absolute; top: 300px; z-index: 26; width: 232px; text-align: center; }
+  .node u {
+    display: block; width: 88px; height: 88px; margin: 0 auto; border-radius: 26px;
+    background: rgba(20,32,28,.9); border: 1.5px solid rgba(70,214,143,.42);
+    text-decoration: none; position: relative;
+  }
+  .node u::after { content: ''; position: absolute; inset: 30px; border-radius: 10px; background: var(--accent); }
+  .node span { display: block; margin-top: 16px; font-size: 21px; font-weight: 600; color: #cfe0d7; }
+  .packet {
+    position: absolute; width: 15px; height: 15px; border-radius: 50%; background: #b6ffd9;
+    box-shadow: 0 0 20px 5px rgba(120,255,190,.6); z-index: 28; offset-rotate: 0deg;
+  }
+
+  /* --- the answer card ---------------------------------------------------------- */
+  #answer {
+    position: absolute; left: 50%; bottom: 300px; translate: -50% 0; z-index: 36;
+    width: 760px; padding: 26px 32px; border-radius: 18px;
+    background: rgba(14,22,19,.96); border: 1px solid rgba(255,255,255,.11);
+    box-shadow: 0 34px 90px rgba(0,0,0,.6);
+  }
+  #answer .lead { font-size: 44px; font-weight: 660; letter-spacing: -.02em; line-height: 1.18; }
+  #answer .term { margin-top: 12px; font-size: 24px; color: var(--accent); }
+  #answer .syn { display: flex; gap: 11px; margin-top: 18px; flex-wrap: wrap; }
+  #answer .syn span {
+    padding: 8px 16px; border-radius: 999px; background: rgba(70,214,143,.14);
+    color: #a8f0c8; font-size: 20px; font-weight: 600;
+  }
+  #stack { position: absolute; inset: 0; }
+
+  /* --- one library, three places ------------------------------------------------
+     Everything here stays in the film's own colour world. An earlier cut laid
+     white paper panels over the dark scene and shrank the film into a corner
+     beside them; it looked like two different films spliced together. */
+  #devices { position: absolute; left: 50%; top: 292px; translate: -50% 0; z-index: 46; width: 1120px; }
+  .drow { display: flex; justify-content: space-between; }
+  .dev {
+    display: flex; align-items: center; gap: 13px; padding: 15px 30px; border-radius: 999px;
+    background: rgba(20,30,26,.94); border: 1px solid rgba(255,255,255,.1);
+    font-size: 24px; font-weight: 650; color: #dfe9e4;
+  }
+  .dev i { width: 9px; height: 9px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 14px rgba(70,214,143,.8); }
+  #dwire { display: block; width: 100%; height: 58px; overflow: visible; }
+  #dwire path { fill: none; stroke: rgba(70,214,143,.45); stroke-width: 2; stroke-linecap: round; }
+  .lib {
+    border-radius: 20px; overflow: hidden; background: rgba(16,24,21,.95);
+    border: 1px solid rgba(255,255,255,.1); box-shadow: 0 44px 110px rgba(0,0,0,.6);
+  }
+  .lib h4 {
+    display: flex; justify-content: space-between; padding: 19px 30px;
+    font-size: 18px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
+    color: #8fa39a; border-bottom: 1px solid rgba(255,255,255,.08);
+  }
+  .lib .r {
+    display: flex; align-items: baseline; gap: 20px; padding: 17px 30px;
+    border-top: 1px solid rgba(255,255,255,.05); font-size: 25px;
+  }
+  .lib .r b { font-weight: 650; color: #eef3f0; }
+  .lib .r u { text-decoration: none; font-size: 23px; font-weight: 600; color: var(--accent); }
+  .lib .r s { margin-left: auto; text-decoration: none; font-size: 19px; color: #7e8f87; }
+
+  /* --- the language grid --------------------------------------------------------- */
+  #langs {
+    position: absolute; left: 50%; top: 620px; transform: translateX(-50%); z-index: 48;
+    width: 1180px; display: flex; flex-wrap: wrap; gap: 14px; justify-content: center;
+  }
+  #langs span {
+    padding: 13px 24px; border-radius: 999px; font-size: 25px; font-weight: 600;
+    background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.13); color: #b9c9c2;
+  }
+  #langs span.on {
+    background: var(--accent); border-color: var(--accent); color: #04140c; font-weight: 700;
+    box-shadow: 0 0 34px rgba(70,214,143,.4);
+  }
+  #swap { position: absolute; left: 50%; top: 400px; transform: translateX(-50%); z-index: 48; text-align: center; width: 1200px; }
+  #swap b { display: block; font-size: 40px; font-weight: 650; color: #dfe9e4; }
+  #swap u { display: block; margin-top: 14px; text-decoration: none; font-size: 62px; font-weight: 720; letter-spacing: -.028em; color: var(--accent); }
+  .flip { position: absolute; left: 0; right: 0; }
+
+  /* --- end card ------------------------------------------------------------------ */
+  #end { position: absolute; inset: 0; z-index: 60; display: grid; place-content: center; justify-items: center; }
+  #end .glyph {
+    width: 104px; height: 104px; border-radius: 30px; background: var(--accent); position: relative;
+    box-shadow: 0 0 70px rgba(70,214,143,.35);
+  }
+  #end .glyph::after {
+    content: ''; position: absolute; left: 20px; right: 20px; bottom: 22px; height: 15px;
+    border-radius: 7px; background: #05080a; opacity: .9;
+  }
+  #end h2 { margin-top: 34px; font-size: 78px; font-weight: 750; letter-spacing: -.035em; }
+  #end p { margin-top: 16px; font-size: 30px; color: var(--dim); }
+  #end small { display: block; margin-top: 40px; font-size: 24px; color: #6d7f77; }
+</style>
+
+<!-- Opens the body. Without an element here the parser keeps everything in
+     head, and `document.body` is null when the script below runs. -->
+<div id="stage"></div>
+
+<script>
+(() => {
+  const q = new URLSearchParams(location.search);
+  const lang = q.get('lang') || 'en';
+  const t = window.STRINGS[lang] || window.STRINGS.en;
+  const esc = (s) => String(s).replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
+  // Frame rendering always animates, whatever the host says about motion.
+  if (q.has('t')) document.documentElement.dataset.motion = '1';
+
+  /* How fast the story is told. Everything below is written in story seconds;
+     this is the only place they turn into real ones. */
+  const RATE = 0.75;
+  const STORY_END = 36.6;
+
+  /* One animation, seeked by the shared clock. Longhands only: the `animation`
+     shorthand would wipe out the delay that does the seeking. */
+  const A = (name, start, dur, ease) =>
+    `--s:${(start * RATE).toFixed(4)}; animation-name:${name};`
+    + `animation-duration:${(dur * RATE).toFixed(4)}s;`
+    + (ease ? `animation-timing-function:${ease};` : '');
+
+  const LAMPS = [[46,1310,190,.8],[30,1418,296,.55],[66,1520,140,.45],[24,1140,318,.4],[38,1620,250,.5]]
+    .map(([d,x,y,o]) => `<div class="lamp" style="width:${d}px;height:${d}px;left:${x}px;top:${y}px;opacity:${o}"></div>`).join('');
+
+  /* A clock that ticks. More than anything else on screen, a timecode moving
+     second by second is what says a film is running rather than paused on a
+     still - and it stops dead when the film does. */
+  const TC_FROM = 27 * 60 + 38;
+  const TICKS = 12;
+  const clock = (s) => `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`;
+  const TIMECODE = Array.from({ length: TICKS }, (_, i) => {
+    const at = 0.6 + i * 0.95;
+    const inner = i < TICKS - 1
+      ? `<div class="a" style="${A('out', at + 0.9, .05)}">`
+      : '<div>';
+    return `<span class="a" style="${A('fade', at, .05)}">${inner}`
+      + `${clock(TC_FROM + i)} / ${esc(t.ftotal)}</div></span>`;
+  }).join('');
+
+  /* --- the three nodes of the round trip, and the wires between them --------- */
+  const NX = [636, 844, 1052];
+  const CX = NX.map((x) => x + 116);
+  const NODES = t.fnodes.map((label, i) => `
+    <div class="node a" style="left:${NX[i]}px; ${A('pop', 14.1 + i * 0.65, 0.62)}">
+      <u></u><span>${esc(label)}</span>
+    </div>`).join('');
+
+  const upPath = `M 960 900 C 960 720, ${CX[0]} 660, ${CX[0]} 432`;
+  const acrossA = `M ${CX[0]} 344 L ${CX[1]} 344`;
+  const acrossB = `M ${CX[1]} 344 L ${CX[2]} 344`;
+  const downPath = `M ${CX[2]} 432 C ${CX[2]} 660, 960 700, 960 796`;
+
+  const wire = (d, start, dur, len) =>
+    `<path class="a" d="${d}" style="--len:${len}; stroke-dasharray:${len}; ${A('draw', start, dur, 'var(--quart)')}" />`;
+  let packetNo = 0;
+  // Each packet is its own element with its own window, or the one that has
+  // not set off yet sits parked at the head of its path as a stray dot.
+  const packet = (d, start, dur) =>
+    `<div id="p${++packetNo}" class="packet a" style="offset-path:path('${d}'); ${A('travel', start, dur, 'linear')}"></div>`;
+
+  /* The seven things the film says, one at a time, in the same place. The slot
+     fades in and the line inside fades out, so one element never needs two
+     animations and the accent bar leaves with its text. */
+  const SAY = [
+    [t.f1, 4.0, 7.0], [t.f2, 7.3, 8.8], [t.f3, 9.0, 12.6],
+    [t.f4, 17.0, 20.0], [t.f5, 20.3, 22.4], [t.f6, 23.0, 26.8], [t.f7, 27.8, 31.3],
+  ].map(([text, from, to]) => `
+    <div class="sayslot a" style="${A('fade', from, .5)}">
+      <div class="say a" style="${A('out', to - 0.4, .4)}">${esc(text)}</div>
+    </div>`).join('');
+
+  const LANG_CHIPS = window.LANGS.map(([code, name], i) =>
+    `<span class="a ${code === lang ? 'on' : ''}" style="${A('riseSmall', 27.6 + i * 0.13, 0.45)}">${esc(name)}</span>`).join('');
+
+  /* The answer, said in one language after another. Each line overlaps the
+     next, or there is a blank frame between them - a flicker, not a cut. */
+  const SWAP_LINES = t.fswaps.map((line, i) => {
+    const at = 27.5 + i * 0.74;
+    return `<div class="flip"><div class="a" style="${A('fade', at, .26)}">
+      <div class="a" style="${A('out', at + 0.66, .2)}"><u>${esc(line)}</u></div></div></div>`;
+  }).join('');
+
+  const LIB = [
+    [t.s5rows[0][0], t.s1card.replace(/\.$/, ''), '27:44'],
+    [t.s4rows[1][0], t.s4rows[1][1], t.s4rows[1][2].split('·').pop().trim()],
+    [t.s4rows[2][0], t.s4rows[2][1], t.s4rows[2][2].split('·').pop().trim()],
+    [t.s4rows[3][0], t.s4rows[3][1], t.s4rows[3][2].split('·').pop().trim()],
+  ].map(([w, m, at], i) => `
+    <div class="r a" style="${A('riseSmall', 24.3 + i * 0.15, 0.5)}">
+      <b>${esc(w)}</b><u>${esc(m)}</u><s>${esc(at)}</s>
+    </div>`).join('');
+
+  const DEVS = t.s4dev.map((d, i) =>
+    `<div class="dev a" style="${A('pop', 23.2 + i * 0.22, 0.55)}"><i></i>${esc(d)}</div>`).join('');
+
+  document.body.innerHTML = `
+    <div id="stack">
+      <div id="film" class="a" style="${A('drift', 0, 23, 'linear')}">
+        <div id="scene"></div><div id="blinds"></div>
+        <div id="lamps" class="a" style="${A('swayB', 0, 23, 'linear')}">${LAMPS}</div>
+        <div class="silh a" style="${A('swayA', 0, 23, 'linear')}"><div class="body"></div><div class="head"></div></div>
+        <div id="tvglow" class="a" style="${A('flick', 0, 3.1, 'ease-in-out')} animation-iteration-count:infinite;"></div>
+        <div id="grain"></div><div id="vignette"></div>
+      </div>
+
+      <div id="hud" class="a" style="${A('fade', 0.6, .8)}">
+        <span id="ep">${esc(t.fep)}</span>
+        <div id="bar">
+          <div id="fill" class="a" style="${A('grow', 0.6, 10.7, 'linear')}"></div>
+          <div id="head" class="a" style="${A('creep', 0.6, 10.7, 'linear')}"></div>
+        </div>
+        <div id="tc">${TIMECODE}</div>
+      </div>
+
+      <div id="pause" class="a" style="${A('fade', 11.3, .45)}"><i></i><i></i>PAUSED</div>
+
+      <div id="cap0" class="cap a" style="${A('fade', 0.8, .5)}">
+        <div class="a" style="${A('out', 2.45, .35)}">${esc(t.s0cap)}</div>
+      </div>
+      <div id="cap" class="cap a" style="${A('rise', 2.9, .8)}">
+        <span>${esc(t.s1cap[0])}</span><span id="pick"><span id="pickbg" class="a"
+          style="${A('wipe', 9.8, 1.3, 'var(--quart)')}"></span>${esc(t.s1cap[1])}</span><span>${esc(t.s1cap[2])}</span>
+      </div>
+
+      <div id="keyslot" class="a" style="${A('pop', 9.0, .45)}">
+        <div id="key" class="a" style="${A('press', 9.45, .15)}">${esc(t.s1k)}</div>
+      </div>
+      <svg id="cur" class="a" viewBox="0 0 24 24" style="${A('drag', 9.8, 1.3, 'var(--quart)')}">
+        <path d="M4 2 L4 21 L9.6 15 L13 22.6 L16.1 21.2 L12.7 13.9 L21 13.9 Z"
+              fill="#fff" stroke="#0d1512" stroke-width="1.3" stroke-linejoin="round" />
+      </svg>
+
+      <div id="dict" class="a" style="${A('pop', 4.4, .65)}">
+        <div class="a" style="${A('sink', 7.4, .65)}">
+          <em>${esc(t.fdict)}</em>
+          <span>${esc(t.s2losep)}<b class="a" style="${A('strike', 6.0, .5)}"></b></span>
+        </div>
+      </div>
+
+      <svg id="wires" viewBox="0 0 1920 1080">
+        ${wire(upPath, 13.4, 0.85, 520)}
+        ${wire(acrossA, 14.9, 0.4, 208)}
+        ${wire(acrossB, 15.55, 0.4, 208)}
+        ${wire(downPath, 16.2, 0.75, 500)}
+      </svg>
+      ${packet(upPath, 13.4, 0.85)}
+      ${packet(acrossA, 14.9, 0.4)}
+      ${packet(acrossB, 15.55, 0.4)}
+      ${packet(downPath, 16.2, 0.75)}
+      ${NODES}
+
+      <div id="token" class="a" style="${A('lift', 13.0, 0.85)}">${esc(t.s1cap[1])}</div>
+
+      <div id="answer" class="a" style="${A('pop', 16.9, .75)}">
+        <div class="lead">${esc(t.s1card)}</div>
+        <div class="term">${esc(t.s1word)}</div>
+        <div class="syn">${t.s2chips.map((c, i) =>
+          `<span class="a" style="${A('riseSmall', 18.6 + i * 0.13, .42)}">${esc(c)}</span>`).join('')}</div>
+      </div>
+    </div>
+
+    <div id="devices">
+      <div class="drow">${DEVS}</div>
+      <svg id="dwire" viewBox="0 0 1120 58" preserveAspectRatio="none">
+        ${wire('M 96 2 L 96 28 L 1024 28 L 1024 2', 23.9, 0.5, 1010)}
+        ${wire('M 560 2 L 560 56', 24.1, 0.3, 54)}
+      </svg>
+      <div class="lib a" style="${A('rise', 24.0, .7)}">
+        <h4><span>${esc(t.s4lib)}</span><span>${esc(t.s4libsub)}</span></h4>
+        ${LIB}
+      </div>
+    </div>
+
+    <div id="swap"><b class="a" style="${A('fade', 27.3, .45)}">${esc(t.s1cap[1])}</b>${SWAP_LINES}</div>
+    <div id="langs">${LANG_CHIPS}</div>
+
+    <div id="end" class="a" style="${A('fade', 31.9, .7)}">
+      <div class="glyph a" style="${A('markIn', 32.1, .8)}"></div>
+      <h2 class="a" style="${A('rise', 32.5, .7)}">${esc(t.f8)}</h2>
+      <p class="a" style="${A('rise', 32.9, .7)}">${esc(t.f9)}</p>
+      <small class="a" style="${A('fade', 33.5, .7)}">subtitlenotes.com</small>
+    </div>
+
+    ${SAY}
+    <div id="black" class="a" style="${A('out', 0, 1.0)}"></div>
+    <div id="black2" style="position:absolute;inset:0;background:#05080a;z-index:95;opacity:0"></div>
+  `;
+
+  /* Pieces whose visibility is a window rather than a single event. Two
+     animation-names on one element is one too many for the seeking trick, so
+     anything that both arrives and leaves is hidden outright outside its slot. */
+  const windows = [
+    ['#cap0',     0.8,  2.85],
+    ['#cap',      2.9, 22.5],
+    ['#hud',      0.6, 22.5],
+    ['#dict',     4.4,  8.3],
+    ['#keyslot',  9.0, 12.9],
+    ['#cur',      9.8, 12.3],
+    ['#pause',   11.3, 22.5],
+    ['#token',   13.0, 17.2],
+    ['#wires',   13.4, 21.8],
+    ['#p1',      13.4, 14.35],
+    ['#p2',      14.9, 15.4],
+    ['#p3',      15.55, 16.05],
+    ['#p4',      16.2, 17.05],
+    ['.node',    14.1, 21.8],
+    ['#answer',  16.9, 22.5],
+    ['#devices', 22.9, 27.1],
+    ['#dwire',   23.9, 27.1],
+    ['#swap',    27.2, 31.4],
+    ['#langs',   27.5, 31.4],
+  ];
+  const veil = document.getElementById('black2');
+  const stack = document.getElementById('stack');
+
+  /** The frame at real time `time`. Everything inside works in story seconds. */
+  function seek(time) {
+    document.documentElement.style.setProperty('--t', time);
+    const s = time / RATE;
+    for (const [sel, from, to] of windows) {
+      for (const el of document.querySelectorAll(sel)) {
+        // A hair of tolerance, so an element is never blanked on the very frame
+        // its entrance is meant to start.
+        el.style.visibility = s >= from - 0.02 && s <= to ? 'visible' : 'hidden';
+      }
+    }
+    // The film no longer shrinks into a corner. It dims and stays where it is,
+    // so everything that follows sits inside the same picture rather than
+    // beside a cropped rectangle of it.
+    const k = Math.min(1, Math.max(0, (s - 22.5) / 0.9));
+    stack.style.opacity = String(1 - 0.87 * (k * k * (3 - 2 * k)));
+    veil.style.opacity = String(s > 35.2 ? Math.min(1, (s - 35.2) / 1.1) : 0);
+  }
+
+  window.FILM = { seek, duration: +(STORY_END * RATE).toFixed(3), rate: RATE };
+  const at = q.get('t');
+  if (at !== null) {
+    seek(Number(at));
+    document.fonts.ready.then(() => { document.documentElement.dataset.ready = '1'; });
+  } else {
+    // Eyeballing mode: run it in real time, on a loop.
+    const t0 = performance.now();
+    const tick = () => {
+      seek(((performance.now() - t0) / 1000) % window.FILM.duration);
+      requestAnimationFrame(tick);
+    };
+    tick();
+  }
+})();
+</script>

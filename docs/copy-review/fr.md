@@ -3,10 +3,14 @@
 Left: the English the key stands for. Right: what this language says.
 Empty English means the key is its own source text.
 
-## app  (374)
+## app  (378)
 
 | key | English | fr |
 |---|---|---|
+| Connect your phone | Connect your phone | Connectez votre téléphone |
+| Settings | Settings | Paramètres |
+| Sources | Sources | Sources |
+| System language | System language | Langue du système |
 | Not the word - what it means here | Not the word - what it means here | Pas le mot, mais le sens |
 | A dictionary translates the word by itself. Here the whole s | A dictionary translates the word by itself. Here the whole sentence is read, so the word gets the meaning it has in it. | Un dictionnaire traduit le mot tout seul. Ici toute la phrase est lue, et le mot reçoit le sens qu'il a dedans. |
 | Saving a word is one movement | Saving a word is one movement | Garder un mot tient en un geste |
@@ -118,7 +122,7 @@ Empty English means the key is its own source text.
 | 1 word saved | 1 word saved | 1 mot enregistré |
 | 1 word to revisit | 1 word to revisit | 1 mot à revisiter |
 | A card on your home screen that rotates through your saved w | A card on your home screen that rotates through your saved words. Tap it to open the full explanation. | Une carte sur votre écran d'accueil qui tourne à travers vos mots enregistrés. Appuyez dessus pour ouvrir l'explication complète. |
-| A line from something you watched, with one word missing. Pi | A line from something you watched, with one word missing. Pick the one that belongs. | Une ligne de quelque chose que vous avez regardé, avec un mot manquant. Choisissez celui qui appartient. |
+| A line from something you watched, with one word missing. Pi | A line from something you watched, with one word missing. Pick the one that belongs. | Une phrase de ce que vous avez regardé, avec un mot manquant. Choisissez le mot qui convient. |
 | A preview opens first so you can edit the phrase and its sou | A preview opens first so you can edit the phrase and its source. | Un aperçu s'ouvre d'abord afin que vous puissiez modifier la phrase et sa source. |
 | Achievements | Achievements | Réalisations |
 | Add | Add | Ajouter |
@@ -145,9 +149,9 @@ Empty English means the key is its own source text.
 | Change your nickname | Change your nickname | Change ton pseudo |
 | Clear search | Clear search | Effacer la recherche |
 | Close | Close | Fermer |
-| Close practice | Close practice | Pratique rapprochée |
+| Close practice | Close practice | Fermer l'exercice |
 | Close the scanner | Close the scanner | Fermez le scanner |
-| Code ${widget.code} came from a Subtitle Notes window. It ca | Code ${widget.code} came from a Subtitle Notes window. It can then send words into your library. | Le code ${widget.code} provenait d'une fenêtre Notes de sous-titres. Il peut ensuite envoyer des mots dans votre bibliothèque. |
+| Code ${widget.code} came from a Subtitle Notes window. It ca | Code ${widget.code} came from a Subtitle Notes window. It can then send words into your library. | Le code ${widget.code} vient d'une fenêtre Subtitle Notes. Il permet ensuite d'envoyer des mots dans votre bibliothèque. |
 | Compact cards | Compact cards | Cartes compactes |
 | Computer connected | Computer connected | Ordinateur connecté |
 | Confirm the placement on your home screen. | Confirm the placement on your home screen. | Confirmez l'emplacement sur votre écran d'accueil. |
@@ -176,7 +180,7 @@ Empty English means the key is its own source text.
 | Easy | Easy | Facile |
 | Every level unlocked | Every level unlocked | Chaque niveau débloqué |
 | Every line filled correctly. | Every line filled correctly. | Chaque ligne est remplie correctement. |
-| Every word you stop to look up, kept in one place and transl | Every word you stop to look up, kept in one place and translated where you found it. | Chaque mot que vous arrêtez de rechercher, conservé au même endroit et traduit là où vous l'avez trouvé. |
+| Every word you stop to look up, kept in one place and transl | Every word you stop to look up, kept in one place and translated where you found it. | Chaque mot dont vous cherchez le sens reste au même endroit et est traduit dans son contexte. |
 | Everything unlocked | Everything unlocked | Tout débloqué |
 | Examples | Examples | Exemples |
 | Fill the line | Fill the line | Remplissez la ligne |
@@ -209,7 +213,7 @@ Empty English means the key is its own source text.
 | Letters, numbers, dots and underscores only | Letters, numbers, dots and underscores only | Lettres, chiffres, points et traits de soulignement uniquement |
 | Library | Library | Bibliothèque |
 | Light | Light | Lumière |
-| Like this word | Like this word | Comme ce mot |
+| Like this word | Like this word | J'aime ce mot |
 | List | List | Liste |
 | Lock screen | Lock screen | Écran de verrouillage |
 | Lock screen updated with your latest word. | Lock screen updated with your latest word. | Écran de verrouillage mis à jour avec votre dernier mot. |
@@ -233,7 +237,7 @@ Empty English means the key is its own source text.
 | On a computer | On a computer | Sur un ordinateur |
 | On this phone | On this phone | Sur ce téléphone |
 | One account connects your phone, computer and browser. No pa | One account connects your phone, computer and browser. No password to remember. | Un compte connecte votre téléphone, votre ordinateur et votre navigateur. Aucun mot de passe à retenir. |
-| People are found by nickname. Ask your friend which one they | People are found by nickname. Ask your friend which one they picked in Subtitle Notes. | Les gens sont trouvés par surnom. Demandez à votre ami lequel il a choisi dans les notes de sous-titres. |
+| People are found by nickname. Ask your friend which one they | People are found by nickname. Ask your friend which one they picked in Subtitle Notes. | Les personnes sont trouvées par surnom. Demandez à votre ami quel surnom il a choisi dans Subtitle Notes. |
 | Phone | Phone | Téléphone |
 | Pick a nickname | Pick a nickname | Choisissez un surnom |
 | Pick a nickname so friends can find you. | Pick a nickname so friends can find you. | Choisissez un surnom pour que vos amis puissent vous trouver. |
@@ -248,14 +252,14 @@ Empty English means the key is its own source text.
 | Remove like | Remove like | Supprimer j'aime |
 | Retry | Retry | Réessayer |
 | Return ${card.learningLabel} to the library | Return ${card.learningLabel} to the library | Renvoyez ${card.learningLabel} à la bibliothèque |
-| Review | Review | Examen |
+| Review | Review | Révision |
 | Round complete | Round complete | Tour terminé |
 | SAVED WORD | SAVED WORD | MOT ENREGISTRÉ |
 | Same in other words | Same in other words | Pareil en d'autres termes |
 | Save | Save | Enregistrer |
 | Save a few more words | Save a few more words | Enregistrez quelques mots supplémentaires |
 | Save a word first. | Save a word first. | Enregistrez d'abord un mot. |
-| Save now | Save now | Économisez maintenant |
+| Save now | Save now | Enregistrer maintenant |
 | Save this selection | Save this selection | Enregistrez cette sélection |
 | Saved and translated instantly, without an extra tap. | Saved and translated instantly, without an extra tap. | Enregistré et traduit instantanément, sans appui supplémentaire. |
 | Saving to your library | Saving to your library | Sauvegarder dans votre bibliothèque |
@@ -263,8 +267,8 @@ Empty English means the key is its own source text.
 | Scene context | Scene context | Contexte de la scène |
 | Search a nickname above to add someone. Words you both save  | Search a nickname above to add someone. Words you both save show up here, and you can like them. | Recherchez un pseudo ci-dessus pour ajouter quelqu'un. Les mots que vous enregistrez tous les deux apparaissent ici et vous pouvez les aimer. |
 | Search your words | Search your words | Recherchez vos mots |
-| Select text anywhere, then pick Subtitle Notes from the menu | Select text anywhere, then pick Subtitle Notes from the menu. | Sélectionnez du texte n'importe où, puis choisissez Notes de sous-titres dans le menu. |
-| Select text in any app, tap Share, then Subtitle Notes. | Select text in any app, tap Share, then Subtitle Notes. | Sélectionnez du texte dans n'importe quelle application, appuyez sur Partager, puis sur Notes de sous-titres. |
+| Select text anywhere, then pick Subtitle Notes from the menu | Select text anywhere, then pick Subtitle Notes from the menu. | Sélectionnez du texte n'importe où, puis choisissez Subtitle Notes dans le menu. |
+| Select text in any app, tap Share, then Subtitle Notes. | Select text in any app, tap Share, then Subtitle Notes. | Sélectionnez du texte dans n'importe quelle application, appuyez sur Partager, puis sur Subtitle Notes. |
 | Selected subtitle | Selected subtitle | Sous-titre sélectionné |
 | Selected text | Selected text | Texte sélectionné |
 | Show my words to friends | Show my words to friends | Montre mes mots à mes amis |
@@ -280,7 +284,7 @@ Empty English means the key is its own source text.
 | Start | Start | Commencer |
 | Stay signed in | Stay signed in | Restez connecté |
 | Subtitle Notes | Subtitle Notes | Subtitle Notes |
-| Subtitle Notes | Subtitle Notes | Sous-titre Remarques |
+| Subtitle Notes | Subtitle Notes | Subtitle Notes |
 | Subtitles in VLC and text in PDFs, through the Windows progr | Subtitles in VLC and text in PDFs, through the Windows program. | Sous-titres en VLC et texte en PDF, via le programme Windows. |
 | Swipe a card right when a word feels familiar. It moves here | Swipe a card right when a word feels familiar. It moves here and stops crowding your library. | Glissez une carte dès qu'un mot vous semble familier. Il se déplace ici et cesse d'encombrer votre bibliothèque. |
 | Switch to grid layout | Switch to grid layout | Passer à la disposition en grille |
@@ -316,7 +320,7 @@ Empty English means the key is its own source text.
 | You | You | Profil |
 | Your account, and anything saved under it, is erased from th | Your account, and anything saved under it, is erased from the server for good. This cannot be undone. | Votre compte, et tout ce qui y est enregistré, est définitivement effacé du serveur. Cela ne peut pas être annulé. |
 | Your feed is empty | Your feed is empty | Votre flux est vide |
-| Your launcher cannot add it directly. Long-press the home sc | Your launcher cannot add it directly. Long-press the home screen, choose Widgets, then Subtitle Notes. | Votre lanceur ne peut pas l'ajouter directement. Appuyez longuement sur l'écran d'accueil, choisissez Widgets, puis Notes de sous-titres. |
+| Your launcher cannot add it directly. Long-press the home sc | Your launcher cannot add it directly. Long-press the home screen, choose Widgets, then Subtitle Notes. | Votre lanceur ne peut pas l'ajouter directement. Appuyez longuement sur l'écran d'accueil, choisissez Widgets, puis Subtitle Notes. |
 | Your library is safe in the cloud. Pull down or try again on | Your library is safe in the cloud. Pull down or try again once you are back online. | Votre bibliothèque est en sécurité dans le cloud. Déroulez ou réessayez une fois que vous êtes de nouveau en ligne. |
 | Your library starts empty | Your library starts empty | Votre bibliothèque commence vide |
 | Your words stay in the cloud. Signing back in restores them. | Your words stay in the cloud. Signing back in restores them. | Vos mots restent dans le cloud. Se reconnecter les restaure. |
@@ -395,7 +399,7 @@ Empty English means the key is its own source text.
 | not_a_film | This needs a video file or an .srt subtitle file. | Il faut un fichier vidéo ou un fichier de sous-titres .srt. |
 | no_vlc | VLC was not found. Install VLC and try again. | VLC est introuvable. Installez VLC et réessayez. |
 | no_subtitles | No subtitles were found next to this film or inside it. | Aucun sous-titre trouvé à côté du film ni à l’intérieur. |
-| tour_line | Nobody wants a criminal record. | Personne ne veut de casier. |
+| tour_line | Nobody wants a criminal record. | Personne ne veut de casier judiciaire. |
 | tour_meaning | a record - a criminal record | a record - casier judiciaire |
 | tour_steps | Open a film through "Open with Subtitle Notes" and pick a word out of the subtitle. Ctrl+Alt+S does the same for text in any program. Everything lands in the same library as on the phone. | Ouvrez un film via "Open with Subtitle Notes" et choisissez un mot dans le sous-titre. Ctrl+Alt+S fait de même avec le texte de n’importe quel programme. Tout rejoint la bibliothèque du téléphone. |
 | update_ready | Version {version} is out. | La version {version} est disponible. |
@@ -502,7 +506,7 @@ Empty English means the key is its own source text.
 | optPauseHelp | When you pick a word out of a subtitle. | Quand vous choisissez un mot dans un sous-titre. |
 | optSpeak | Read the word aloud | Lire le mot à voix haute |
 | optSpeakHelp | Says the English out loud when the card opens. | Prononce le mot anglais à l'ouverture de la carte. |
-| optBlocked | Stay off these sites | Ne pas fonctionner sur ces sites |
+| optBlocked | Stay off these sites | Désactiver sur ces sites |
 | optBlockedHelp | One address per line, for example mail.google.com. | Une adresse par ligne, par exemple mail.google.com. |
 | optSites | Space only on these sites | La barre d’espace seulement sur ces sites |
 | optSitesHelp | One address per line, for example rezka.ag. Empty means every site. Everything else works everywhere either way. | Une adresse par ligne, par exemple rezka.ag. Vide signifie partout. Le reste fonctionne partout de toute façon. |
@@ -570,7 +574,7 @@ Empty English means the key is its own source text.
 | mark | assiette | record |
 | title | Subtitle Notes - translated by the line, not by the word | Subtitle Notes - traduit d'après la phrase, pas d'après le mot |
 | h1 | Translated by the line, not by the word | Traduit d'après la phrase, pas d'après le mot |
-| lede | Highlight an unfamiliar word in subtitles, on a page or in a PDF. It is translated the way it sounds in that sentence, and it stays in your library. | Sélectionnez un mot inconnu dans un sous-titre, sur une page ou dans un PDF. Il est traduit tel qu'il sonne dans cette phrase, et il reste dans votre bibliothèque. |
+| lede | Highlight an unfamiliar word in subtitles, on a page or in a PDF. It is translated the way it sounds in that sentence, and it stays in your library. | Sélectionnez un mot inconnu dans un sous-titre, sur une page ou dans un PDF. Il est traduit dans le sens qu'il a dans cette phrase et reste dans votre bibliothèque. |
 | dict | A dictionary | Un dictionnaire |
 | ours | Subtitle Notes | Subtitle Notes |
 | wrong | He is not in his plate. | personne ne veut un record |

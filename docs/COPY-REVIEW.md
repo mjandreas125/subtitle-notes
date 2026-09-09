@@ -182,7 +182,7 @@ file`, `Auto`). В остальных поверхностях пробелов 
 node extension/check-locales.mjs          # каждая строка расширения в 15 языках, без дыр
 node extension/check-episode-parsing.mjs  # разбор сезона и серии
 node extension/check-answer.mjs           # какой из двух ответов показывает карточка
-node cloud_api/scripts/check.mjs https://app.subtitlenotes.workers.dev
+node cloud_api/scripts/check.mjs https://subtitlenotes.com
 cd mobile && flutter analyze --no-pub lib/     # ловит дубли ключей в i18n.dart
 python test_overlay_logic.py
 python tools/collect-copy.py              # пересобрать выгрузку

@@ -1,0 +1,377 @@
+{
+  "appName": {
+    "message": "Subtitle Notes"
+  },
+  "appDescription": {
+    "message": "Översätter det markerade ordet utifrån hela meningen. Fungerar i undertexter, på vilken sida som helst och i PDF."
+  },
+  "menuSave": {
+    "message": "Spara ”%s” i Subtitle Notes"
+  },
+  "chipAsk": {
+    "message": "Vad betyder det här?"
+  },
+  "pendingLater": {
+    "message": "Inget svar just nu - översättningen dyker upp i appen.",
+    "description": "Shown when no provider answered; the server retries later."
+  },
+  "listen": {
+    "message": "Lyssna"
+  },
+  "rerun": {
+    "message": "Fel översättning"
+  },
+  "rerunning": {
+    "message": "Läser igen…"
+  },
+  "seenBefore": {
+    "message": "stött på $COUNT$ gånger",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "connectTitle": {
+    "message": "Anslut din telefon"
+  },
+  "connectBody": {
+    "message": "Den här webbläsaren är ännu inte kopplad till din samling."
+  },
+  "connectAction": {
+    "message": "Anslut"
+  },
+  "close": {
+    "message": "Stäng"
+  },
+  "save": {
+    "message": "Spara"
+  },
+  "saving": {
+    "message": "Sparar…"
+  },
+  "saved": {
+    "message": "Sparat ✓"
+  },
+  "savedAlready": {
+    "message": "Fanns redan ✓"
+  },
+  "inLibrary": {
+    "message": "Finns redan i din samling"
+  },
+  "notSaved": {
+    "message": "Inte sparat"
+  },
+  "failed": {
+    "message": "Det gick inte"
+  },
+  "undo": {
+    "message": "Ångra"
+  },
+  "undoing": {
+    "message": "Tar bort…"
+  },
+  "undone": {
+    "message": "Borttaget"
+  },
+  "reloaded": {
+    "message": "Tillägget laddades om. Uppdatera sidan."
+  },
+  "popupNotPaired": {
+    "message": "Den här webbläsaren är inte kopplad till din samling."
+  },
+  "popupConnectGoogle": {
+    "message": "Fortsätt med Google",
+    "description": "Popup button that signs in with Google"
+  },
+  "popupConnectCode": {
+    "message": "Visa en kod",
+    "description": "Popup button that shows the pairing code"
+  },
+  "popupExport": {
+    "message": "Exportera till Anki"
+  },
+  "popupLibrary": {
+    "message": "Hela biblioteket",
+    "description": "Popup button that opens the web library"
+  },
+  "optTitle": {
+    "message": "Subtitle Notes i webbläsaren"
+  },
+  "optSub": {
+    "message": "Markera ord på vilken sajt som helst, i PDF:er och i undertexter - de hamnar i samma app i telefonen."
+  },
+  "optConnected": {
+    "message": "Ansluten"
+  },
+  "optForget": {
+    "message": "Koppla från den här webbläsaren"
+  },
+  "optWaiting": {
+    "message": "Väntar på bekräftelse…"
+  },
+  "optPaired": {
+    "message": "Klart. Markera text på vilken sida som helst."
+  },
+  "optExpired": {
+    "message": "Koden har gått ut. Hämta en ny."
+  },
+  "optCancel": {
+    "message": "Avbryt"
+  },
+  "optHotkeyTitle": {
+    "message": "Spara utan knapp"
+  },
+  "optHotkeyHelp": {
+    "message": "Håll den här tangentkombinationen medan du markerar, så går ordet direkt till samlingen. Eller markera vanligt och tryck efteråt."
+  },
+  "optHotkeyPress": {
+    "message": "Tryck en kombination…"
+  },
+  "optReset": {
+    "message": "Återställ"
+  },
+  "optWhereTitle": {
+    "message": "Var fönstret visas"
+  },
+  "optAtSelection": {
+    "message": "Vid markeringen"
+  },
+  "optTopRight": {
+    "message": "Uppe till höger"
+  },
+  "optTopLeft": {
+    "message": "Uppe till vänster"
+  },
+  "optBottomRight": {
+    "message": "Nere till höger"
+  },
+  "optBottomLeft": {
+    "message": "Nere till vänster"
+  },
+  "optDragHint": {
+    "message": "Ett fönster som är fäst i ett hörn går att dra med musen - det minns platsen."
+  },
+  "optHideAfter": {
+    "message": "Dölj efter"
+  },
+  "optHideAfterHelp": {
+    "message": "Sekunder som fönstret står kvar efter en direktsparning."
+  },
+  "optVideoTitle": {
+    "message": "Video och sajter"
+  },
+  "optSubtitles": {
+    "message": "Klickbara undertexter"
+  },
+  "optSubtitlesHelp": {
+    "message": "På YouTube och Netflix ersätts undertexterna med en kopia där du kan klicka på ett ord eller dra över ett uttryck."
+  },
+  "optPause": {
+    "message": "Pausa videon"
+  },
+  "optPauseHelp": {
+    "message": "När du väljer ett ord ur en undertext."
+  },
+  "optSpeak": {
+    "message": "Läs upp ordet"
+  },
+  "optSpeakHelp": {
+    "message": "Uttalar det engelska ordet när kortet öppnas."
+  },
+  "optBlocked": {
+    "message": "Arbeta inte på dessa sajter"
+  },
+  "optBlockedHelp": {
+    "message": "En adress per rad, till exempel mail.google.com."
+  },
+  "optSites": {
+    "message": "Mellanslag bara på dessa webbplatser"
+  },
+  "optSitesHelp": {
+    "message": "En adress per rad, till exempel rezka.ag. Tomt betyder alla webbplatser. Resten fungerar överallt ändå."
+  },
+  "optSavedToast": {
+    "message": "Sparat"
+  },
+  "optAccountTitle": {
+    "message": "Konto"
+  },
+  "optGoogle": {
+    "message": "Fortsätt med Google"
+  },
+  "optGoogleHelp": {
+    "message": "Logga in med samma Google-konto som i telefonen - allt du sparar hamnar i samma bibliotek."
+  },
+  "optOtherWay": {
+    "message": "Anslut från telefonen i stället"
+  },
+  "optScanHelp": {
+    "message": "Rikta telefonens kamera mot rutan, eller skriv koden i appen: Inställningar → Anslutna enheter."
+  },
+  "optLangTitle": {
+    "message": "Kortens språk"
+  },
+  "optLangHelp": {
+    "message": "Nya kort förklaras på det här språket. Redan sparade behåller sitt språk."
+  },
+  "optPrivacy": {
+    "message": "Integritetspolicy"
+  },
+  "optSubKeyTitle": {
+    "message": "Plocka ord ur undertexter"
+  },
+  "optSubKeyHelp": {
+    "message": "Medan tangenten hålls nere blir raden markerbar text. Släpp den så får spelaren tillbaka musen: dra undertexten, klicka för paus och spelarens egen textstorlek fungerar som förut."
+  },
+  "optSubKeyNone": {
+    "message": "Ingen tangent"
+  },
+  "optOr": {
+    "message": "eller"
+  },
+  "optSubKeyNow": {
+    "message": "Nu: $KEYS$",
+    "placeholders": {
+      "keys": {
+        "content": "$1"
+      }
+    }
+  },
+  "optSubKeyNoneNow": {
+    "message": "Nu: ingen tangent - raden går alltid att markera"
+  },
+  "optLangLocked": {
+    "message": "Anslut ett konto först - språket sparas med det."
+  },
+  "mine": {
+    "message": "Min version"
+  },
+  "minePlaceholder": {
+    "message": "Vad det betyder här"
+  },
+  "mineThanks": {
+    "message": "Sparat. Skriver fler samma sak blir det standard."
+  },
+  "mineAgreed": {
+    "message": "Sparat - tillräckligt många håller med, nu är det standard."
+  },
+  "popupSettings": {
+    "message": "Inställningar"
+  },
+  "tourTitle": {
+    "message": "Subtitle Notes"
+  },
+  "tourLede": {
+    "message": "Så fungerar det"
+  },
+  "tourMeaning": {
+    "message": "a record - brottsregister"
+  },
+  "tourSubtitle": {
+    "message": "No one wants a record.",
+    "description": "The subtitle shown on the welcome card."
+  },
+  "tourPick": {
+    "message": "a record",
+    "description": "The part of that subtitle that is picked out."
+  },
+  "tourLine": {
+    "message": "Ingen vill ha ett brottsregister.",
+    "description": "The translated subtitle line on the welcome card."
+  },
+  "tourSaved": {
+    "message": "Sparat i biblioteket"
+  },
+  "tourStep1": {
+    "message": "Håll ned Ctrl och dra över undertexten"
+  },
+  "tourStep1Body": {
+    "message": "Utan tangenten är spelaren orörd: raden går att dra, ett klick pausar."
+  },
+  "tourStep2": {
+    "message": "Överallt annars räcker det att markera"
+  },
+  "tourStep2Body": {
+    "message": "En sida, en PDF, en kommentar. Med Ctrl+Alt sparas det direkt."
+  },
+  "tourStep3": {
+    "message": "Allt hamnar i ett bibliotek"
+  },
+  "tourStep3Body": {
+    "message": "Samma Google-konto i telefonen, i webbläsaren och på datorn."
+  },
+  "tourConnect": {
+    "message": "Anslut kontot"
+  },
+  "tourLater": {
+    "message": "Senare"
+  },
+  "optDesktopTitle": {
+    "message": "På datorn"
+  },
+  "optDesktopHelp": {
+    "message": "Undertexter i VLC och text i valfritt program, till samma bibliotek."
+  },
+  "optDesktopGet": {
+    "message": "Hämta för Windows"
+  },
+  "optPhoneTitle": {
+    "message": "I telefonen",
+    "description": "The offer of the Android app in settings."
+  },
+  "optPhoneHelp": {
+    "message": "Samma ord, med repetition och sökning. Android tills vidare; filen installeras utanför butiken, så telefonen frågar en gång.",
+    "description": "The offer of the Android app in settings."
+  },
+  "optPhoneGet": {
+    "message": "Ladda ner för Android",
+    "description": "The offer of the Android app in settings."
+  },
+  "tourDesktop": {
+    "message": "Även till datorn"
+  },
+  "tourPhone": {
+    "message": "Och i telefonen",
+    "description": "The offer of the Android app on the welcome page."
+  },
+  "optCompact": {
+    "message": "Kort kort"
+  },
+  "optCompactHelp": {
+    "message": "Bara betydelsen: inga synonymer, inga noteringar."
+  },
+  "optSpaceLine": {
+    "message": "Mellanslag läser repliken",
+    "description": "Options toggle for translating the caption with space"
+  },
+  "optSpaceLineHelp": {
+    "message": "Raden på skärmen, översatt när du pausar."
+  },
+  "optSpaceSaves": {
+    "message": "Spara det mellanslag läser"
+  },
+  "optSpaceSavesHelp": {
+    "message": "Annars visas raden bara."
+  },
+  "pageSubtitles": {
+    "message": "Undertexter finns här. Håll $KEYS$ och dra över ett ord.",
+    "placeholders": {
+      "keys": {
+        "content": "$1"
+      }
+    }
+  },
+  "pageNoKey": {
+    "message": "utan tangent"
+  },
+  "pageSubtitlesOff": {
+    "message": "Undertexter finns här, men klickbara undertexter är avstängda."
+  },
+  "pageText": {
+    "message": "Inga spelarundertexter här. Markera text och håll Ctrl+Alt."
+  },
+  "pageOff": {
+    "message": "Subtitle Notes håller sig borta från den här webbplatsen, som du bad om."
+  }
+}

@@ -141,7 +141,7 @@ Empty English means the key is its own source text.
 | Close | Close | Закрыть |
 | Close practice | Close practice | Закрыть тренировку |
 | Close the scanner | Close the scanner | Закройте сканер |
-| Code ${widget.code} came from a Subtitle Notes window. It ca | Code ${widget.code} came from a Subtitle Notes window. It can then send words into your library. | Код ${widget.code} получен из окна примечаний к субтитрам. Затем он может отправлять слова в вашу библиотеку. |
+| Code ${widget.code} came from a Subtitle Notes window. It ca | Code ${widget.code} came from a Subtitle Notes window. It can then send words into your library. | Код ${widget.code} получен из окна Subtitle Notes. С его помощью можно отправлять слова в библиотеку. |
 | Compact cards | Compact cards | Компактные карты |
 | Computer connected | Computer connected | Компьютер подключен |
 | Confirm the placement on your home screen. | Confirm the placement on your home screen. | Подтвердите размещение на главном экране. |
@@ -180,7 +180,7 @@ Empty English means the key is its own source text.
 | Film, series or source | Film, series or source | Фильм, сериал или источник |
 | Find someone by nickname | Find someone by nickname | Найти кого-то по нику |
 | Fit more words on one screen. | Fit more words on one screen. | Поместите больше слов на один экран. |
-| Follow your phone, or choose the language Subtitle Notes use | Follow your phone, or choose the language Subtitle Notes uses. | Следуйте инструкциям на телефоне или выберите язык, на котором используются примечания к субтитрам. |
+| Follow your phone, or choose the language Subtitle Notes use | Follow your phone, or choose the language Subtitle Notes uses. | Использовать язык системы или выбрать язык Subtitle Notes. |
 | Found in $_moves turns. | Found in $_moves turns. | Найден за $_moves ходов. |
 | Friends | Friends | Друзья |
 | Friends find you as @${widget.profile!.nickname}. | Friends find you as @${widget.profile!.nickname}. | Друзья находят вас как @${widget.profile!.nickname}. |
@@ -233,7 +233,7 @@ Empty English means the key is its own source text.
 | On a computer | On a computer | На компьютере |
 | On this phone | On this phone | На телефоне |
 | One account connects your phone, computer and browser. No pa | One account connects your phone, computer and browser. No password to remember. | Одна учетная запись соединяет ваш телефон, компьютер и браузер. Нет пароля, который нужно запомнить. |
-| People are found by nickname. Ask your friend which one they | People are found by nickname. Ask your friend which one they picked in Subtitle Notes. | Людей находят по нику. Спросите своего друга, какой из них он выбрал в примечаниях к субтитрам. |
+| People are found by nickname. Ask your friend which one they | People are found by nickname. Ask your friend which one they picked in Subtitle Notes. | Людей находят по нику. Спросите друга, какой ник он выбрал в Subtitle Notes. |
 | Phone | Phone | Телефон |
 | Pick a nickname | Pick a nickname | Выберите никнейм |
 | Pick a nickname so friends can find you. | Pick a nickname so friends can find you. | Выберите псевдоним, чтобы друзья могли вас найти. |
@@ -283,7 +283,7 @@ Empty English means the key is its own source text.
 | Start | Start | Старт |
 | Stay signed in | Stay signed in | Остаться |
 | Subtitle Notes | Subtitle Notes | Subtitle Notes |
-| Subtitle Notes | Subtitle Notes | Субтитры Примечания |
+| Subtitle Notes | Subtitle Notes | Subtitle Notes |
 | Subtitles in VLC and text in PDFs, through the Windows progr | Subtitles in VLC and text in PDFs, through the Windows program. | Субтитры в VLC и текст в PDF-файлах через программу Windows. |
 | Swipe a card right when a word feels familiar. It moves here | Swipe a card right when a word feels familiar. It moves here and stops crowding your library. | Проведите карточкой вправо, если слово покажется вам знакомым. Он перемещается сюда и перестает заполнять вашу библиотеку. |
 | Switch to grid layout | Switch to grid layout | Переключиться на макет сетки |
@@ -574,7 +574,7 @@ Empty English means the key is its own source text.
 | mark | assiette | record |
 | title | Subtitle Notes - translated by the line, not by the word | Subtitle Notes - перевод по смыслу, а не по словарю |
 | h1 | Translated by the line, not by the word | Перевод по смыслу, а не по словарю |
-| lede | Highlight an unfamiliar word in subtitles, on a page or in a PDF. It is translated the way it sounds in that sentence, and it stays in your library. | Выделите незнакомое слово в субтитрах, на странице или в PDF. Оно переведётся так, как звучит в этой фразе, и останется в вашей библиотеке. |
+| lede | Highlight an unfamiliar word in subtitles, on a page or in a PDF. It is translated the way it sounds in that sentence, and it stays in your library. | Выделите незнакомое слово в субтитрах, на странице или в PDF. Оно переведётся в том значении, в котором используется в этой фразе, и останется в вашей библиотеке. |
 | dict | A dictionary | Словарь |
 | ours | Subtitle Notes | Subtitle Notes |
 | wrong | He is not in his plate. | никто не хочет рекорд |

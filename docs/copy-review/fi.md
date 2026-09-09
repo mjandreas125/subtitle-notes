@@ -3,10 +3,16 @@
 Left: the English the key stands for. Right: what this language says.
 Empty English means the key is its own source text.
 
-## app  (372)
+## app  (378)
 
 | key | English | fi |
 |---|---|---|
+| As in the file | As in the file | Kuten tiedostossa |
+| Auto | Auto | Automaattinen |
+| Connect your phone | Connect your phone | Yhdistä puhelimesi |
+| Settings | Settings | Asetukset |
+| Sources | Sources | Lähteet |
+| System language | System language | Järjestelmän kieli |
 | Not the word - what it means here | Not the word - what it means here | Ei sanaa, vaan merkitys |
 | A dictionary translates the word by itself. Here the whole s | A dictionary translates the word by itself. Here the whole sentence is read, so the word gets the meaning it has in it. | Sanakirja kääntää sanan yksinään. Täällä luetaan koko lause, joten sana saa sen merkityksen, joka sillä siinä on. |
 | Saving a word is one movement | Saving a word is one movement | Sanan tallentaminen on yksi liike |
@@ -116,14 +122,14 @@ Empty English means the key is its own source text.
 | 1 word saved | 1 word saved | 1 sana tallennettu |
 | 1 word to revisit | 1 word to revisit | 1 sana uudelleen |
 | A card on your home screen that rotates through your saved w | A card on your home screen that rotates through your saved words. Tap it to open the full explanation. | Aloitusnäytölläsi oleva kortti, joka kiertää tallennettuja sanojasi. Napauta sitä avataksesi täydellisen selityksen. |
-| A line from something you watched, with one word missing. Pi | A line from something you watched, with one word missing. Pick the one that belongs. | Rivi jostakin katsomastasi, josta puuttuu yksi sana. Valitse se joka kuuluu. |
+| A line from something you watched, with one word missing. Pi | A line from something you watched, with one word missing. Pick the one that belongs. | Lause jostakin katsomastasi, josta puuttuu yksi sana. Valitse sopiva sana. |
 | A preview opens first so you can edit the phrase and its sou | A preview opens first so you can edit the phrase and its source. | Esikatselu avautuu ensin, jotta voit muokata lausetta ja sen lähdettä. |
 | Achievements | Achievements | Saavutukset |
 | Add | Add | Lisää |
 | Add to home screen | Add to home screen | Lisää aloitusnäyttöön |
 | Added | Added | Lisätty |
 | Again | Again | Taas |
-| All $saved saved ${saved == 1 ?  | All $saved saved ${saved == 1 ?  | Kaikki $saved tallennettu ${tallennettu == 1 ? |
+| All $saved saved ${saved == 1 ?  | All $saved saved ${saved == 1 ?  | Kaikki $saved tallennettu ${saved == 1 ? |
 | All ${stats.unlocked} levels. Keep saving what you like. | All ${stats.unlocked} levels. Keep saving what you like. | Kaikki ${stats.unlocked} tasot. Jatka sen tallentamista, mistä pidät. |
 | All meanings | All meanings | Kaikki merkitykset |
 | All of them | All of them | ne kaikki |
@@ -142,9 +148,9 @@ Empty English means the key is its own source text.
 | Change your nickname | Change your nickname | Vaihda lempinimesi |
 | Clear search | Clear search | Tyhjennä haku |
 | Close | Close | Sulje |
-| Close practice | Close practice | Tiivis harjoitus |
+| Close practice | Close practice | Sulje harjoitus |
 | Close the scanner | Close the scanner | Sulje skanneri |
-| Code ${widget.code} came from a Subtitle Notes window. It ca | Code ${widget.code} came from a Subtitle Notes window. It can then send words into your library. | Koodi ${widget.code} tuli Tekstityshuomautukset-ikkunasta. Se voi sitten lähettää sanoja kirjastoosi. |
+| Code ${widget.code} came from a Subtitle Notes window. It ca | Code ${widget.code} came from a Subtitle Notes window. It can then send words into your library. | Koodi ${widget.code} tuli Subtitle Notes -ikkunasta. Se voi sitten lähettää sanoja kirjastoosi. |
 | Compact cards | Compact cards | Kompaktit kortit |
 | Computer connected | Computer connected | Tietokone kytketty |
 | Confirm the placement on your home screen. | Confirm the placement on your home screen. | Vahvista sijainti aloitusnäytölläsi. |
@@ -173,14 +179,14 @@ Empty English means the key is its own source text.
 | Easy | Easy | Helppoa |
 | Every level unlocked | Every level unlocked | Jokainen taso avattu |
 | Every line filled correctly. | Every line filled correctly. | Jokainen rivi täytetty oikein. |
-| Every word you stop to look up, kept in one place and transl | Every word you stop to look up, kept in one place and translated where you found it. | Jokainen sana, jonka pysähdyt katsomaan, säilytetään yhdessä paikassa ja käännetään sieltä, missä sen löysit. |
+| Every word you stop to look up, kept in one place and transl | Every word you stop to look up, kept in one place and translated where you found it. | Jokainen sana, jonka merkitystä etsit, säilyy yhdessä paikassa ja käännetään löytökontekstissa. |
 | Everything unlocked | Everything unlocked | Kaikki avattu |
 | Examples | Examples | Esimerkkejä |
 | Fill the line | Fill the line | Täytä rivi |
 | Film, series or source | Film, series or source | Elokuva, sarja tai lähde |
 | Find someone by nickname | Find someone by nickname | Etsi joku lempinimellä |
 | Fit more words on one screen. | Fit more words on one screen. | Sovita enemmän sanoja yhdelle näytölle. |
-| Follow your phone, or choose the language Subtitle Notes use | Follow your phone, or choose the language Subtitle Notes uses. | Seuraa puhelintasi tai valitse tekstitysmuistiinpanojen käyttämä kieli. |
+| Follow your phone, or choose the language Subtitle Notes use | Follow your phone, or choose the language Subtitle Notes uses. | Käytä järjestelmän kieltä tai valitse Subtitle Notesin kieli. |
 | Found in $_moves turns. | Found in $_moves turns. | Löytyy $_moves käännöksistä. |
 | Friends | Friends | Ystävät |
 | Friends find you as @${widget.profile!.nickname}. | Friends find you as @${widget.profile!.nickname}. | Ystävät löytävät sinut nimellä @${widget.profile!.nickname}. |
@@ -207,7 +213,7 @@ Empty English means the key is its own source text.
 | Letters, numbers, dots and underscores only | Letters, numbers, dots and underscores only | Vain kirjaimet, numerot, pisteet ja alaviivat |
 | Library | Library | Kirjasto |
 | Light | Light | Kevyt |
-| Like this word | Like this word | Kuten tämä sana |
+| Like this word | Like this word | Tykkään tästä sanasta |
 | List | List | Luettelo |
 | Lock screen | Lock screen | Lukitusnäyttö |
 | Lock screen updated with your latest word. | Lock screen updated with your latest word. | Lukitusnäyttö päivitetty uusimmalla sanallasi. |
@@ -218,7 +224,7 @@ Empty English means the key is its own source text.
 | No camera access | No camera access | Ei pääsyä kameraan |
 | No connection | No connection | Ei yhteyttä |
 | No connection. The account was not deleted. | No connection. The account was not deleted. | Ei yhteyttä. Tiliä ei poistettu. |
-| Nobody found | Nobody found | Kukaan ei löytänyt |
+| Nobody found | Nobody found | Ketää ei löytynyt |
 | Not a single wrong turn. | Not a single wrong turn. | Ei ainuttakaan väärää käännettä. |
 | Not now | Not now | Ei nyt |
 | Nothing due right now | Nothing due right now | Ei juuri nyt mitään |
@@ -231,7 +237,7 @@ Empty English means the key is its own source text.
 | On a computer | On a computer | tietokoneella |
 | On this phone | On this phone | Tässä puhelimessa |
 | One account connects your phone, computer and browser. No pa | One account connects your phone, computer and browser. No password to remember. | Yksi tili yhdistää puhelimen, tietokoneen ja selaimen. Salasanaa ei muisteta. |
-| People are found by nickname. Ask your friend which one they | People are found by nickname. Ask your friend which one they picked in Subtitle Notes. | Ihmiset löytyvät lempinimen perusteella. Kysy ystävältäsi, kumman he valitsivat Tekstitysmuistiinpanoista. |
+| People are found by nickname. Ask your friend which one they | People are found by nickname. Ask your friend which one they picked in Subtitle Notes. | Ihmiset löytyvät lempinimen perusteella. Kysy ystävältäsi, minkä lempinimen hän valitsi Subtitle Notesissa. |
 | Phone | Phone | Puhelin |
 | Pick a nickname | Pick a nickname | Valitse lempinimi |
 | Pick a nickname so friends can find you. | Pick a nickname so friends can find you. | Valitse lempinimi, jotta ystäväsi löytävät sinut. |
@@ -261,8 +267,8 @@ Empty English means the key is its own source text.
 | Scene context | Scene context | Kohtauksen konteksti |
 | Search a nickname above to add someone. Words you both save  | Search a nickname above to add someone. Words you both save show up here, and you can like them. | Hae yllä olevaa lempinimeä lisätäksesi henkilön. Molempien tallentamasi sanat näkyvät täällä, ja voit pitää niistä. |
 | Search your words | Search your words | Etsi sanojasi |
-| Select text anywhere, then pick Subtitle Notes from the menu | Select text anywhere, then pick Subtitle Notes from the menu. | Valitse teksti missä tahansa ja valitse sitten valikosta Tekstityshuomautukset. |
-| Select text in any app, tap Share, then Subtitle Notes. | Select text in any app, tap Share, then Subtitle Notes. | Valitse teksti missä tahansa sovelluksessa, napauta Jaa ja sitten Tekstitys. |
+| Select text anywhere, then pick Subtitle Notes from the menu | Select text anywhere, then pick Subtitle Notes from the menu. | Valitse teksti missä tahansa ja valitse sitten valikosta Subtitle Notes. |
+| Select text in any app, tap Share, then Subtitle Notes. | Select text in any app, tap Share, then Subtitle Notes. | Valitse teksti missä tahansa sovelluksessa, napauta Jaa ja sitten Subtitle Notes. |
 | Selected subtitle | Selected subtitle | Valittu tekstitys |
 | Selected text | Selected text | Valittu teksti |
 | Show my words to friends | Show my words to friends | Näytä sanani ystäville |
@@ -278,7 +284,7 @@ Empty English means the key is its own source text.
 | Start | Start | Aloita |
 | Stay signed in | Stay signed in | Pysy kirjautuneena |
 | Subtitle Notes | Subtitle Notes | Subtitle Notes |
-| Subtitle Notes | Subtitle Notes | Tekstitys Huomioitavaa |
+| Subtitle Notes | Subtitle Notes | Subtitle Notes |
 | Subtitles in VLC and text in PDFs, through the Windows progr | Subtitles in VLC and text in PDFs, through the Windows program. | Tekstitykset VLC-muodossa ja teksti PDF-tiedostoina Windows-ohjelman kautta. |
 | Swipe a card right when a word feels familiar. It moves here | Swipe a card right when a word feels familiar. It moves here and stops crowding your library. | Pyyhkäise korttia oikealle, kun sana tuntuu tutulta. Se siirtyy tänne ja lakkaa täyttämästä kirjastoasi. |
 | Switch to grid layout | Switch to grid layout | Vaihda ruudukkoasetteluun |
@@ -314,7 +320,7 @@ Empty English means the key is its own source text.
 | You | You | sinä |
 | Your account, and anything saved under it, is erased from th | Your account, and anything saved under it, is erased from the server for good. This cannot be undone. | Tilisi ja kaikki sen alle tallennetut tiedot poistetaan palvelimelta lopullisesti. Tätä ei voi kumota. |
 | Your feed is empty | Your feed is empty | Syötteesi on tyhjä |
-| Your launcher cannot add it directly. Long-press the home sc | Your launcher cannot add it directly. Long-press the home screen, choose Widgets, then Subtitle Notes. | Käynnistysohjelmasi ei voi lisätä sitä suoraan. Paina aloitusnäyttöä pitkään, valitse Widgetit ja sitten Tekstitys. |
+| Your launcher cannot add it directly. Long-press the home sc | Your launcher cannot add it directly. Long-press the home screen, choose Widgets, then Subtitle Notes. | Käynnistysohjelmasi ei voi lisätä sitä suoraan. Paina aloitusnäyttöä pitkään, valitse Widgetit ja sitten Subtitle Notes. |
 | Your library is safe in the cloud. Pull down or try again on | Your library is safe in the cloud. Pull down or try again once you are back online. | Kirjastosi on turvassa pilvessä. Vedä alas tai yritä uudelleen, kun olet taas online-tilassa. |
 | Your library starts empty | Your library starts empty | Kirjastosi alkaa tyhjä |
 | Your words stay in the cloud. Signing back in restores them. | Your words stay in the cloud. Signing back in restores them. | Sanasi pysyvät pilvessä. Kirjautuminen takaisin sisään palauttaa ne. |

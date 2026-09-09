@@ -1,0 +1,82 @@
+﻿[
+    {
+        "Path":  "D:\\LiisbetSystem\\vlc_subtitle_translator\\docs\\copy-backups\\20260906-015941\\desktop_i18n.py",
+        "Hash":  "9E321A16E9415BF9C1F3C70A1E890E864CC882EB7207C1F62FC80B1413CB17E2"
+    },
+    {
+        "Path":  "D:\\LiisbetSystem\\vlc_subtitle_translator\\docs\\copy-backups\\20260906-015941\\cloud_api\\src\\home.ts",
+        "Hash":  "2A7846E1FC3A5D56EF2BF20DDDE28A9D931BBD80B8A27E6C8B0816FAA688B8E8"
+    },
+    {
+        "Path":  "D:\\LiisbetSystem\\vlc_subtitle_translator\\docs\\copy-backups\\20260906-015941\\cloud_api\\src\\index.ts",
+        "Hash":  "8EC68529A242412B096790F3AABA23DDDE50A1EA8B06D164A8A7C2176EC5BE00"
+    },
+    {
+        "Path":  "D:\\LiisbetSystem\\vlc_subtitle_translator\\docs\\copy-backups\\20260906-015941\\cloud_api\\src\\library.ts",
+        "Hash":  "F33493A21FBE88CEC49A8FB942F64195898499804C2DFE923BBD3C3CDFD9023B"
+    },
+    {
+        "Path":  "D:\\LiisbetSystem\\vlc_subtitle_translator\\docs\\copy-backups\\20260906-015941\\extension\\_locales\\de\\messages.json",
+        "Hash":  "ADAB059EDD48B9E9766818CB2177C11E59E2E8FCD8DC0CF2512CF9A537A03BD4"
+    },
+    {
+        "Path":  "D:\\LiisbetSystem\\vlc_subtitle_translator\\docs\\copy-backups\\20260906-015941\\extension\\_locales\\en\\messages.json",
+        "Hash":  "6D2BA9B59B52669D118838FBB89B24DFCB924A185AB7E45556A6E82394897C5D"
+    },
+    {
+        "Path":  "D:\\LiisbetSystem\\vlc_subtitle_translator\\docs\\copy-backups\\20260906-015941\\extension\\_locales\\es\\messages.json",
+        "Hash":  "9404C9FFDC9B104972A08265FCC2121B97F5966073C84D230DC0AF0E01657521"
+    },
+    {
+        "Path":  "D:\\LiisbetSystem\\vlc_subtitle_translator\\docs\\copy-backups\\20260906-015941\\extension\\_locales\\et\\messages.json",
+        "Hash":  "0CF319FD2F2F27BD26B3BAC7F0C5538317AA0A3C45A48AA0EBC704EF05D5FA3C"
+    },
+    {
+        "Path":  "D:\\LiisbetSystem\\vlc_subtitle_translator\\docs\\copy-backups\\20260906-015941\\extension\\_locales\\fi\\messages.json",
+        "Hash":  "F53BB318E2AA90B841E113D914E02ABBF5BEFA34F92649705F916AF627DC5F86"
+    },
+    {
+        "Path":  "D:\\LiisbetSystem\\vlc_subtitle_translator\\docs\\copy-backups\\20260906-015941\\extension\\_locales\\fr\\messages.json",
+        "Hash":  "76F13A10A20DB9A86F091F1C22AFFC09BFB5AD04F5EEABD221772030684D96C6"
+    },
+    {
+        "Path":  "D:\\LiisbetSystem\\vlc_subtitle_translator\\docs\\copy-backups\\20260906-015941\\extension\\_locales\\it\\messages.json",
+        "Hash":  "3FC6ADB6B0AFD2ABFD8362328E3AA55BE693CC941F37720D04FF5906C39313DB"
+    },
+    {
+        "Path":  "D:\\LiisbetSystem\\vlc_subtitle_translator\\docs\\copy-backups\\20260906-015941\\extension\\_locales\\nl\\messages.json",
+        "Hash":  "4595FE593F9517852F05BB7F864A583F8DEB3BBADD5851FA3C0AE9BEAAD6444C"
+    },
+    {
+        "Path":  "D:\\LiisbetSystem\\vlc_subtitle_translator\\docs\\copy-backups\\20260906-015941\\extension\\_locales\\pl\\messages.json",
+        "Hash":  "3992D82A447544569F10DA7A39F4D4E1429079043CEB399FC4F56971D3FB51D3"
+    },
+    {
+        "Path":  "D:\\LiisbetSystem\\vlc_subtitle_translator\\docs\\copy-backups\\20260906-015941\\extension\\_locales\\pt\\messages.json",
+        "Hash":  "1ADCDB7A082D81B6C68F80ED0315D3170C9FC069166759611F236140A87C0429"
+    },
+    {
+        "Path":  "D:\\LiisbetSystem\\vlc_subtitle_translator\\docs\\copy-backups\\20260906-015941\\extension\\_locales\\pt_BR\\messages.json",
+        "Hash":  "D412520BA8BA00BE729C63002381ACBDA34A364FCDD8E69ED016BAD4CFEB62B8"
+    },
+    {
+        "Path":  "D:\\LiisbetSystem\\vlc_subtitle_translator\\docs\\copy-backups\\20260906-015941\\extension\\_locales\\ru\\messages.json",
+        "Hash":  "31267C7B4CA545BB82C49858D103962DFFE3EAA8067691971E8DC2B70F8730F2"
+    },
+    {
+        "Path":  "D:\\LiisbetSystem\\vlc_subtitle_translator\\docs\\copy-backups\\20260906-015941\\extension\\_locales\\sv\\messages.json",
+        "Hash":  "CDF73032AC279D59572057E9A1CB043441167ABC3F0EEBEE397BBC97DC9C1914"
+    },
+    {
+        "Path":  "D:\\LiisbetSystem\\vlc_subtitle_translator\\docs\\copy-backups\\20260906-015941\\extension\\_locales\\tr\\messages.json",
+        "Hash":  "0CB06B4760280D89F0E71CA55D37CD9E7B9FE9DC975DD97A9AA810C4FBAAF3CE"
+    },
+    {
+        "Path":  "D:\\LiisbetSystem\\vlc_subtitle_translator\\docs\\copy-backups\\20260906-015941\\extension\\_locales\\uk\\messages.json",
+        "Hash":  "913FBF880DE20214E417DDE6D3E996E3CD49B8F15023348D27EB5352ECF7F3F5"
+    },
+    {
+        "Path":  "D:\\LiisbetSystem\\vlc_subtitle_translator\\docs\\copy-backups\\20260906-015941\\mobile\\lib\\i18n.dart",
+        "Hash":  "3D74657649DE26B1DB9F3677B9BA1EBEE7C0B5A2CD36A9244DB38B9ADB818BC9"
+    }
+]

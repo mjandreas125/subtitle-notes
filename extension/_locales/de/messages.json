@@ -180,7 +180,7 @@
     "message": "Spricht das englische Wort aus, wenn die Karte erscheint."
   },
   "optBlocked": {
-    "message": "Auf diesen Seiten nicht arbeiten"
+    "message": "Auf diesen Websites deaktivieren"
   },
   "optBlockedHelp": {
     "message": "Eine Adresse pro Zeile, zum Beispiel mail.google.com."

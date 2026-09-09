@@ -277,7 +277,7 @@
     "description": "The part of that subtitle that is picked out."
   },
   "tourLine": {
-    "message": "Nikt nie chce kartoteki.",
+    "message": "Nikt nie chce kartoteki karnej.",
     "description": "The translated subtitle line on the welcome card."
   },
   "tourSaved": {

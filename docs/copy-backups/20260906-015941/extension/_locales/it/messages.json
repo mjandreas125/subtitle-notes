@@ -1,0 +1,377 @@
+{
+  "appName": {
+    "message": "Subtitle Notes"
+  },
+  "appDescription": {
+    "message": "Traduce la parola selezionata tenendo conto dell’intera frase. Funziona nei sottotitoli, su qualsiasi pagina e nei PDF."
+  },
+  "menuSave": {
+    "message": "Salva «%s» in Subtitle Notes"
+  },
+  "chipAsk": {
+    "message": "Che cosa significa?"
+  },
+  "pendingLater": {
+    "message": "Nessuna risposta ora: la traduzione arriverà nell’app.",
+    "description": "Shown when no provider answered; the server retries later."
+  },
+  "listen": {
+    "message": "Ascolta"
+  },
+  "rerun": {
+    "message": "Traduzione sbagliata"
+  },
+  "rerunning": {
+    "message": "Rileggo…"
+  },
+  "seenBefore": {
+    "message": "incontrato $COUNT$ volte",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "connectTitle": {
+    "message": "Collega il telefono"
+  },
+  "connectBody": {
+    "message": "Questo browser non è ancora collegato alla tua raccolta."
+  },
+  "connectAction": {
+    "message": "Collega"
+  },
+  "close": {
+    "message": "Chiudi"
+  },
+  "save": {
+    "message": "Salva"
+  },
+  "saving": {
+    "message": "Salvataggio…"
+  },
+  "saved": {
+    "message": "Salvato ✓"
+  },
+  "savedAlready": {
+    "message": "C'era già ✓"
+  },
+  "inLibrary": {
+    "message": "Già nella tua raccolta"
+  },
+  "notSaved": {
+    "message": "Non salvato"
+  },
+  "failed": {
+    "message": "Non ha funzionato"
+  },
+  "undo": {
+    "message": "Annulla"
+  },
+  "undoing": {
+    "message": "Rimuovo…"
+  },
+  "undone": {
+    "message": "Rimosso"
+  },
+  "reloaded": {
+    "message": "L'estensione è stata ricaricata. Aggiorna la pagina."
+  },
+  "popupNotPaired": {
+    "message": "Questo browser non è collegato alla tua raccolta."
+  },
+  "popupConnectGoogle": {
+    "message": "Continua con Google",
+    "description": "Popup button that signs in with Google"
+  },
+  "popupConnectCode": {
+    "message": "Mostra un codice",
+    "description": "Popup button that shows the pairing code"
+  },
+  "popupExport": {
+    "message": "Esporta per Anki"
+  },
+  "popupLibrary": {
+    "message": "Raccolta completa",
+    "description": "Popup button that opens the web library"
+  },
+  "optTitle": {
+    "message": "Subtitle Notes nel browser"
+  },
+  "optSub": {
+    "message": "Evidenzia parole su qualsiasi sito, nei PDF e nei sottotitoli: finiscono nella stessa app sul telefono."
+  },
+  "optConnected": {
+    "message": "Collegato"
+  },
+  "optForget": {
+    "message": "Scollega questo browser"
+  },
+  "optWaiting": {
+    "message": "Attendo conferma…"
+  },
+  "optPaired": {
+    "message": "Fatto. Evidenzia del testo su qualsiasi pagina."
+  },
+  "optExpired": {
+    "message": "Il codice è scaduto. Chiedine uno nuovo."
+  },
+  "optCancel": {
+    "message": "Annulla"
+  },
+  "optHotkeyTitle": {
+    "message": "Salvare senza pulsante"
+  },
+  "optHotkeyHelp": {
+    "message": "Tieni premuta questa combinazione mentre evidenzi e la parola va subito nella raccolta. Oppure evidenzia normalmente e premila dopo."
+  },
+  "optHotkeyPress": {
+    "message": "Premi una combinazione…"
+  },
+  "optReset": {
+    "message": "Reimposta"
+  },
+  "optWhereTitle": {
+    "message": "Dove appare la finestra"
+  },
+  "optAtSelection": {
+    "message": "Vicino alla selezione"
+  },
+  "optTopRight": {
+    "message": "In alto a destra"
+  },
+  "optTopLeft": {
+    "message": "In alto a sinistra"
+  },
+  "optBottomRight": {
+    "message": "In basso a destra"
+  },
+  "optBottomLeft": {
+    "message": "In basso a sinistra"
+  },
+  "optDragHint": {
+    "message": "Una finestra fissata in un angolo si può trascinare col mouse: ricorda dove l'hai messa."
+  },
+  "optHideAfter": {
+    "message": "Nascondi dopo"
+  },
+  "optHideAfterHelp": {
+    "message": "Secondi in cui la finestra resta dopo un salvataggio immediato."
+  },
+  "optVideoTitle": {
+    "message": "Video e siti"
+  },
+  "optSubtitles": {
+    "message": "Sottotitoli cliccabili"
+  },
+  "optSubtitlesHelp": {
+    "message": "Su YouTube e Netflix sostituisce i sottotitoli con una copia in cui puoi cliccare una parola o trascinare su un'espressione."
+  },
+  "optPause": {
+    "message": "Metti in pausa il video"
+  },
+  "optPauseHelp": {
+    "message": "Quando scegli una parola da un sottotitolo."
+  },
+  "optSpeak": {
+    "message": "Leggi la parola ad alta voce"
+  },
+  "optSpeakHelp": {
+    "message": "Pronuncia la parola inglese quando la scheda si apre."
+  },
+  "optBlocked": {
+    "message": "Non funzionare su questi siti"
+  },
+  "optBlockedHelp": {
+    "message": "Un indirizzo per riga, per esempio mail.google.com."
+  },
+  "optSites": {
+    "message": "La barra spaziatrice solo su questi siti"
+  },
+  "optSitesHelp": {
+    "message": "Un indirizzo per riga, per esempio rezka.ag. Vuoto significa ovunque. Il resto funziona ovunque comunque."
+  },
+  "optSavedToast": {
+    "message": "Salvato"
+  },
+  "optAccountTitle": {
+    "message": "Account"
+  },
+  "optGoogle": {
+    "message": "Continua con Google"
+  },
+  "optGoogleHelp": {
+    "message": "Accedi con lo stesso account Google del telefono: tutto ciò che salvi qui finisce nella stessa raccolta."
+  },
+  "optOtherWay": {
+    "message": "Collega dal telefono"
+  },
+  "optScanHelp": {
+    "message": "Inquadra questo quadrato con la fotocamera del telefono oppure digita il codice nell’app: Impostazioni → Dispositivi collegati."
+  },
+  "optLangTitle": {
+    "message": "Lingua delle schede"
+  },
+  "optLangHelp": {
+    "message": "Le nuove schede saranno spiegate in questa lingua. Quelle già salvate restano come sono."
+  },
+  "optPrivacy": {
+    "message": "Informativa sulla privacy"
+  },
+  "optSubKeyTitle": {
+    "message": "Prendere parole dai sottotitoli"
+  },
+  "optSubKeyHelp": {
+    "message": "Finché il tasto è premuto, la riga diventa testo selezionabile. Rilasciandolo il lettore riprende il mouse: trascinare i sottotitoli, cliccare per mettere in pausa e la loro dimensione continuano a funzionare."
+  },
+  "optSubKeyNone": {
+    "message": "Senza tasto"
+  },
+  "optOr": {
+    "message": "oppure"
+  },
+  "optSubKeyNow": {
+    "message": "Ora: $KEYS$",
+    "placeholders": {
+      "keys": {
+        "content": "$1"
+      }
+    }
+  },
+  "optSubKeyNoneNow": {
+    "message": "Ora: senza tasto - la riga è sempre selezionabile"
+  },
+  "optLangLocked": {
+    "message": "Collega prima un account: la lingua è salvata con esso."
+  },
+  "mine": {
+    "message": "La mia versione"
+  },
+  "minePlaceholder": {
+    "message": "Che cosa significa qui"
+  },
+  "mineThanks": {
+    "message": "Salvato. Se altri scrivono lo stesso, diventerà la versione predefinita."
+  },
+  "mineAgreed": {
+    "message": "Salvato: abbastanza persone concordano, ora è la versione predefinita."
+  },
+  "popupSettings": {
+    "message": "Impostazioni"
+  },
+  "tourTitle": {
+    "message": "Subtitle Notes"
+  },
+  "tourLede": {
+    "message": "Come funziona"
+  },
+  "tourMeaning": {
+    "message": "a record - precedenti penali"
+  },
+  "tourSubtitle": {
+    "message": "No one wants a record.",
+    "description": "The subtitle shown on the welcome card."
+  },
+  "tourPick": {
+    "message": "a record",
+    "description": "The part of that subtitle that is picked out."
+  },
+  "tourLine": {
+    "message": "Nessuno vuole precedenti penali.",
+    "description": "The translated subtitle line on the welcome card."
+  },
+  "tourSaved": {
+    "message": "Salvato nella raccolta"
+  },
+  "tourStep1": {
+    "message": "Tieni premuto Ctrl e trascina sul sottotitolo"
+  },
+  "tourStep1Body": {
+    "message": "Senza il tasto il lettore resta com’è: la riga si trascina, un clic mette in pausa."
+  },
+  "tourStep2": {
+    "message": "Altrove basta selezionare"
+  },
+  "tourStep2Body": {
+    "message": "Una pagina, un PDF, un commento. Con Ctrl+Alt viene salvato senza chiedere."
+  },
+  "tourStep3": {
+    "message": "Tutto finisce in un’unica raccolta"
+  },
+  "tourStep3Body": {
+    "message": "Lo stesso account Google sul telefono, nel browser e sul computer."
+  },
+  "tourConnect": {
+    "message": "Collega l’account"
+  },
+  "tourLater": {
+    "message": "Più tardi"
+  },
+  "optDesktopTitle": {
+    "message": "Sul computer"
+  },
+  "optDesktopHelp": {
+    "message": "Sottotitoli in VLC e testo di qualsiasi programma, nella stessa raccolta."
+  },
+  "optDesktopGet": {
+    "message": "Scarica per Windows"
+  },
+  "optPhoneTitle": {
+    "message": "Sul telefono",
+    "description": "The offer of the Android app in settings."
+  },
+  "optPhoneHelp": {
+    "message": "Le stesse parole, con ripasso e ricerca. Per ora Android; il file si installa fuori dallo store, quindi il telefono chiede una volta.",
+    "description": "The offer of the Android app in settings."
+  },
+  "optPhoneGet": {
+    "message": "Scarica per Android",
+    "description": "The offer of the Android app in settings."
+  },
+  "tourDesktop": {
+    "message": "Anche per il computer"
+  },
+  "tourPhone": {
+    "message": "E sul telefono",
+    "description": "The offer of the Android app on the welcome page."
+  },
+  "optCompact": {
+    "message": "Scheda breve"
+  },
+  "optCompactHelp": {
+    "message": "Solo il significato: niente sinonimi né note."
+  },
+  "optSpaceLine": {
+    "message": "Spazio legge la battuta",
+    "description": "Options toggle for translating the caption with space"
+  },
+  "optSpaceLineHelp": {
+    "message": "La riga sullo schermo, tradotta quando metti in pausa."
+  },
+  "optSpaceSaves": {
+    "message": "Conserva ciò che legge la barra spaziatrice"
+  },
+  "optSpaceSavesHelp": {
+    "message": "Altrimenti la riga viene solo mostrata."
+  },
+  "pageSubtitles": {
+    "message": "Qui ci sono sottotitoli. Tieni premuto $KEYS$ e trascina su una parola.",
+    "placeholders": {
+      "keys": {
+        "content": "$1"
+      }
+    }
+  },
+  "pageNoKey": {
+    "message": "senza tasto"
+  },
+  "pageSubtitlesOff": {
+    "message": "Qui ci sono sottotitoli, ma i sottotitoli cliccabili sono disattivati."
+  },
+  "pageText": {
+    "message": "Qui non ci sono sottotitoli del player. Evidenzia del testo tenendo Ctrl+Alt."
+  },
+  "pageOff": {
+    "message": "Su questo sito Subtitle Notes resta fuori, come hai chiesto."
+  }
+}

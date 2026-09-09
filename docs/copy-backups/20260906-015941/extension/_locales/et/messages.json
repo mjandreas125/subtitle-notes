@@ -1,0 +1,377 @@
+{
+  "appName": {
+    "message": "Subtitle Notes"
+  },
+  "appDescription": {
+    "message": "Tõlgib valitud sõna, arvestades kogu lauset. Töötab subtiitrites, igal lehel ja PDF-is."
+  },
+  "menuSave": {
+    "message": "Salvesta „%s“ Subtitle Notesi"
+  },
+  "chipAsk": {
+    "message": "Mida see tähendab?"
+  },
+  "pendingLater": {
+    "message": "Praegu vastust ei tulnud - tõlge ilmub rakendusse.",
+    "description": "Shown when no provider answered; the server retries later."
+  },
+  "listen": {
+    "message": "Kuula"
+  },
+  "rerun": {
+    "message": "Tõlge on vale"
+  },
+  "rerunning": {
+    "message": "Loen uuesti…"
+  },
+  "seenBefore": {
+    "message": "kohatud $COUNT$ korda",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "connectTitle": {
+    "message": "Ühenda telefon"
+  },
+  "connectBody": {
+    "message": "See brauser pole veel sinu kogusse ühendatud."
+  },
+  "connectAction": {
+    "message": "Ühenda"
+  },
+  "close": {
+    "message": "Sulge"
+  },
+  "save": {
+    "message": "Salvesta"
+  },
+  "saving": {
+    "message": "Salvestan…"
+  },
+  "saved": {
+    "message": "Salvestatud ✓"
+  },
+  "savedAlready": {
+    "message": "Oli juba olemas ✓"
+  },
+  "inLibrary": {
+    "message": "Juba sinu kogus"
+  },
+  "notSaved": {
+    "message": "Ei salvestunud"
+  },
+  "failed": {
+    "message": "Ei õnnestunud"
+  },
+  "undo": {
+    "message": "Võta tagasi"
+  },
+  "undoing": {
+    "message": "Eemaldan…"
+  },
+  "undone": {
+    "message": "Eemaldatud"
+  },
+  "reloaded": {
+    "message": "Laiendus laaditi uuesti. Värskenda lehte."
+  },
+  "popupNotPaired": {
+    "message": "See brauser pole sinu kogusse ühendatud."
+  },
+  "popupConnectGoogle": {
+    "message": "Jätka Google’iga",
+    "description": "Popup button that signs in with Google"
+  },
+  "popupConnectCode": {
+    "message": "Näita koodi",
+    "description": "Popup button that shows the pairing code"
+  },
+  "popupExport": {
+    "message": "Ekspordi Ankisse"
+  },
+  "popupLibrary": {
+    "message": "Kogu kogu",
+    "description": "Popup button that opens the web library"
+  },
+  "optTitle": {
+    "message": "Subtitle Notes brauseris"
+  },
+  "optSub": {
+    "message": "Märgi sõnu mis tahes saidil, PDF-ides ja subtiitrites - need jõuavad samasse rakendusse telefonis."
+  },
+  "optConnected": {
+    "message": "Ühendatud"
+  },
+  "optForget": {
+    "message": "Ühenda see brauser lahti"
+  },
+  "optWaiting": {
+    "message": "Ootan kinnitust…"
+  },
+  "optPaired": {
+    "message": "Valmis. Märgi teksti mis tahes lehel."
+  },
+  "optExpired": {
+    "message": "Kood aegus. Küsi uus."
+  },
+  "optCancel": {
+    "message": "Loobu"
+  },
+  "optHotkeyTitle": {
+    "message": "Salvestamine ilma nuputa"
+  },
+  "optHotkeyHelp": {
+    "message": "Hoia seda kombinatsiooni all, kui märgid teksti - sõna läheb kohe kogusse. Või märgi tavaliselt ja vajuta pärast."
+  },
+  "optHotkeyPress": {
+    "message": "Vajuta kombinatsiooni…"
+  },
+  "optReset": {
+    "message": "Lähtesta"
+  },
+  "optWhereTitle": {
+    "message": "Kus aken ilmub"
+  },
+  "optAtSelection": {
+    "message": "Märgistuse juures"
+  },
+  "optTopRight": {
+    "message": "Üleval paremal"
+  },
+  "optTopLeft": {
+    "message": "Üleval vasakul"
+  },
+  "optBottomRight": {
+    "message": "All paremal"
+  },
+  "optBottomLeft": {
+    "message": "All vasakul"
+  },
+  "optDragHint": {
+    "message": "Nurka kinnitatud akent saab hiirega lohistada - see jätab koha meelde."
+  },
+  "optHideAfter": {
+    "message": "Peida pärast"
+  },
+  "optHideAfterHelp": {
+    "message": "Mitu sekundit aken pärast kohest salvestust püsib."
+  },
+  "optVideoTitle": {
+    "message": "Video ja saidid"
+  },
+  "optSubtitles": {
+    "message": "Klõpsatavad subtiitrid"
+  },
+  "optSubtitlesHelp": {
+    "message": "YouTube'is ja Netflixis asendab subtiitrid koopiaga, kus saab sõnal klõpsata või fraasi üle lohistada."
+  },
+  "optPause": {
+    "message": "Pane video pausile"
+  },
+  "optPauseHelp": {
+    "message": "Kui valid subtiitrist sõna."
+  },
+  "optSpeak": {
+    "message": "Ütle sõna ette"
+  },
+  "optSpeakHelp": {
+    "message": "Loeb ingliskeelse sõna ette, kui kaart avaneb."
+  },
+  "optBlocked": {
+    "message": "Ära tööta neil saitidel"
+  },
+  "optBlockedHelp": {
+    "message": "Üks aadress rea kohta, näiteks mail.google.com."
+  },
+  "optSites": {
+    "message": "Tühik ainult neil saitidel"
+  },
+  "optSitesHelp": {
+    "message": "Üks aadress real, näiteks rezka.ag. Tühi tähendab kõikjal. Kõik muu töötab niikuinii igal pool."
+  },
+  "optSavedToast": {
+    "message": "Salvestatud"
+  },
+  "optAccountTitle": {
+    "message": "Konto"
+  },
+  "optGoogle": {
+    "message": "Jätka Google’iga"
+  },
+  "optGoogleHelp": {
+    "message": "Logi sisse sama Google’i kontoga nagu telefonis - kõik salvestatu jõuab samasse kogusse."
+  },
+  "optOtherWay": {
+    "message": "Ühenda hoopis telefonist"
+  },
+  "optScanHelp": {
+    "message": "Suuna telefoni kaamera sellele ruudule või sisesta kood rakenduses: Seaded → Ühendatud seadmed."
+  },
+  "optLangTitle": {
+    "message": "Kaartide keel"
+  },
+  "optLangHelp": {
+    "message": "Uued kaardid seletatakse selles keeles. Juba salvestatud jäävad endisesse keelde."
+  },
+  "optPrivacy": {
+    "message": "Privaatsuspoliitika"
+  },
+  "optSubKeyTitle": {
+    "message": "Sõnade valimine subtiitritest"
+  },
+  "optSubKeyHelp": {
+    "message": "Kuni klahv on all, muutub rida tavaliseks tekstiks. Lased lahti - hiir on jälle mängijal: subtiitrit saab lohistada, klõps paneb pausile, suurust muudad mängija enda seadetest."
+  },
+  "optSubKeyNone": {
+    "message": "Ilma klahvita"
+  },
+  "optOr": {
+    "message": "või"
+  },
+  "optSubKeyNow": {
+    "message": "Praegu: $KEYS$",
+    "placeholders": {
+      "keys": {
+        "content": "$1"
+      }
+    }
+  },
+  "optSubKeyNoneNow": {
+    "message": "Praegu: ilma klahvita - rida on alati valitav"
+  },
+  "optLangLocked": {
+    "message": "Ühenda esmalt konto - keel hoitakse selle juures."
+  },
+  "mine": {
+    "message": "Oma sõnastus"
+  },
+  "minePlaceholder": {
+    "message": "Mida see siin tähendab"
+  },
+  "mineThanks": {
+    "message": "Salvestatud. Kui teised kirjutavad sama, saab sellest üldine vastus."
+  },
+  "mineAgreed": {
+    "message": "Salvestatud - piisavalt inimesi nõustub, see on nüüd üldine vastus."
+  },
+  "popupSettings": {
+    "message": "Seaded"
+  },
+  "tourTitle": {
+    "message": "Subtitle Notes"
+  },
+  "tourLede": {
+    "message": "Kuidas see töötab"
+  },
+  "tourMeaning": {
+    "message": "a record - karistusregistri kanne"
+  },
+  "tourSubtitle": {
+    "message": "No one wants a record.",
+    "description": "The subtitle shown on the welcome card."
+  },
+  "tourPick": {
+    "message": "a record",
+    "description": "The part of that subtitle that is picked out."
+  },
+  "tourLine": {
+    "message": "Kellelgi pole vaja karistusregistri kannet.",
+    "description": "The translated subtitle line on the welcome card."
+  },
+  "tourSaved": {
+    "message": "Salvestatud kogusse"
+  },
+  "tourStep1": {
+    "message": "Hoia Ctrl all ja tõmba üle subtiitri"
+  },
+  "tourStep1Body": {
+    "message": "Ilma klahvita jääb mängija puutumata: rida saab lohistada, klõps paneb pausile."
+  },
+  "tourStep2": {
+    "message": "Mujal lihtsalt märgi ära"
+  },
+  "tourStep2Body": {
+    "message": "Leht, PDF, kommentaar. Hoia valides Ctrl+Alt all ja see salvestub kohe."
+  },
+  "tourStep3": {
+    "message": "Kõik jõuab ühte kogusse"
+  },
+  "tourStep3Body": {
+    "message": "Sama Google’i konto telefonis, brauseris ja arvutis."
+  },
+  "tourConnect": {
+    "message": "Ühenda konto"
+  },
+  "tourLater": {
+    "message": "Hiljem"
+  },
+  "optDesktopTitle": {
+    "message": "Arvutis"
+  },
+  "optDesktopHelp": {
+    "message": "Subtiitrid VLC-s ja tekst igas programmis - samasse kogusse."
+  },
+  "optDesktopGet": {
+    "message": "Laadi alla Windowsile"
+  },
+  "optPhoneTitle": {
+    "message": "Telefonis",
+    "description": "The offer of the Android app in settings."
+  },
+  "optPhoneHelp": {
+    "message": "Samad sõnad, kordamise ja otsinguga. Praegu Android; fail paigaldatakse poest mööda, nii et telefon küsib korra üle.",
+    "description": "The offer of the Android app in settings."
+  },
+  "optPhoneGet": {
+    "message": "Laadi alla Androidile",
+    "description": "The offer of the Android app in settings."
+  },
+  "tourDesktop": {
+    "message": "Ka arvutisse"
+  },
+  "tourPhone": {
+    "message": "Ja telefoni",
+    "description": "The offer of the Android app on the welcome page."
+  },
+  "optCompact": {
+    "message": "Lühike kaart"
+  },
+  "optCompactHelp": {
+    "message": "Ainult tähendus: ilma sünonüümide ja märkusteta."
+  },
+  "optSpaceLine": {
+    "message": "Tühik loeb rea",
+    "description": "Options toggle for translating the caption with space"
+  },
+  "optSpaceLineHelp": {
+    "message": "Ekraanil olev rida tõlgitakse, kui paned pausile."
+  },
+  "optSpaceSaves": {
+    "message": "Salvesta see, mida tühik luges"
+  },
+  "optSpaceSavesHelp": {
+    "message": "Muidu rida ainult näidatakse."
+  },
+  "pageSubtitles": {
+    "message": "Siin on subtiitrid. Hoia $KEYS$ ja tõmba üle sõna.",
+    "placeholders": {
+      "keys": {
+        "content": "$1"
+      }
+    }
+  },
+  "pageNoKey": {
+    "message": "ilma klahvita"
+  },
+  "pageSubtitlesOff": {
+    "message": "Siin on subtiitrid, aga klõpsatavad subtiitrid on välja lülitatud."
+  },
+  "pageText": {
+    "message": "Pleieri subtiitreid siin ei ole. Vali suvaline tekst ja hoia Ctrl+Alt."
+  },
+  "pageOff": {
+    "message": "Sellel saidil Subtitle Notes ei tööta - nii sa palusid."
+  }
+}

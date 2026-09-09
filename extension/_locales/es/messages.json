@@ -180,7 +180,7 @@
     "message": "Pronuncia la palabra en inglés al abrirse la tarjeta."
   },
   "optBlocked": {
-    "message": "No funcionar en estos sitios"
+    "message": "No activar en estos sitios"
   },
   "optBlockedHelp": {
     "message": "Una dirección por línea, por ejemplo mail.google.com."
@@ -349,7 +349,7 @@
     "message": "La línea en pantalla, traducida al pausar."
   },
   "optSpaceSaves": {
-    "message": "Guardar lo que lee el espacio"
+    "message": "Guardar lo que lee la barra espaciadora"
   },
   "optSpaceSavesHelp": {
     "message": "Si no, la línea solo se muestra."

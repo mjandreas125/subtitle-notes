@@ -3,10 +3,14 @@
 Left: the English the key stands for. Right: what this language says.
 Empty English means the key is its own source text.
 
-## app  (374)
+## app  (378)
 
 | key | English | de |
 |---|---|---|
+| Connect your phone | Connect your phone | Verbinde dein Telefon |
+| Settings | Settings | Einstellungen |
+| Sources | Sources | Quellen |
+| System language | System language | Systemsprache |
 | Not the word - what it means here | Not the word - what it means here | Nicht das Wort, sondern die Bedeutung |
 | A dictionary translates the word by itself. Here the whole s | A dictionary translates the word by itself. Here the whole sentence is read, so the word gets the meaning it has in it. | Ein Wörterbuch übersetzt das Wort für sich. Hier wird der ganze Satz gelesen, also bekommt das Wort die Bedeutung, die es darin hat. |
 | Saving a word is one movement | Saving a word is one movement | Ein Wort zu speichern ist eine Bewegung |
@@ -118,7 +122,7 @@ Empty English means the key is its own source text.
 | 1 word saved | 1 word saved | 1 Wort gespeichert |
 | 1 word to revisit | 1 word to revisit | 1 Wort zum Wiederholen |
 | A card on your home screen that rotates through your saved w | A card on your home screen that rotates through your saved words. Tap it to open the full explanation. | Eine Karte auf Ihrem Startbildschirm, die durch Ihre gespeicherten Wörter rotiert. Tippen Sie darauf, um die vollständige Erklärung zu öffnen. |
-| A line from something you watched, with one word missing. Pi | A line from something you watched, with one word missing. Pick the one that belongs. | Eine Zeile aus etwas, das Sie gesehen haben, in der ein Wort fehlt. Wählen Sie das aus, das dazugehört. |
+| A line from something you watched, with one word missing. Pi | A line from something you watched, with one word missing. Pick the one that belongs. | Ein Satz aus etwas, das Sie gesehen haben, mit einem fehlenden Wort. Wählen Sie das passende Wort. |
 | A preview opens first so you can edit the phrase and its sou | A preview opens first so you can edit the phrase and its source. | Zunächst wird eine Vorschau geöffnet, sodass Sie die Phrase und ihre Quelle bearbeiten können. |
 | Achievements | Achievements | Erfolge |
 | Add | Add | Hinzufügen |
@@ -145,7 +149,7 @@ Empty English means the key is its own source text.
 | Change your nickname | Change your nickname | Ändern Sie Ihren Spitznamen |
 | Clear search | Clear search | Suche löschen |
 | Close | Close | Schließen |
-| Close practice | Close practice | Enge Praxis |
+| Close practice | Close practice | Übung schließen |
 | Close the scanner | Close the scanner | Schließen Sie den Scanner |
 | Code ${widget.code} came from a Subtitle Notes window. It ca | Code ${widget.code} came from a Subtitle Notes window. It can then send words into your library. | Der Code ${widget.code} stammt aus einem Fenster mit Subtitle Notes. Anschließend können Wörter in Ihre Bibliothek gesendet werden. |
 | Compact cards | Compact cards | Kompakte Karten |
@@ -176,7 +180,7 @@ Empty English means the key is its own source text.
 | Easy | Easy | Einfach |
 | Every level unlocked | Every level unlocked | Jedes Level freigeschaltet |
 | Every line filled correctly. | Every line filled correctly. | Jede Zeile wurde korrekt ausgefüllt. |
-| Every word you stop to look up, kept in one place and transl | Every word you stop to look up, kept in one place and translated where you found it. | Jedes Wort, das Sie anhalten, um nachzuschlagen, wird an einem Ort aufbewahrt und dort übersetzt, wo Sie es gefunden haben. |
+| Every word you stop to look up, kept in one place and transl | Every word you stop to look up, kept in one place and translated where you found it. | Alle Wörter, deren Bedeutung Sie nachschlagen, bleiben an einem Ort und werden im passenden Kontext übersetzt. |
 | Everything unlocked | Everything unlocked | Alles freigeschaltet |
 | Examples | Examples | Beispiele |
 | Fill the line | Fill the line | Füllen Sie die Zeile |
@@ -210,7 +214,7 @@ Empty English means the key is its own source text.
 | Letters, numbers, dots and underscores only | Letters, numbers, dots and underscores only | Nur Buchstaben, Zahlen, Punkte und Unterstriche |
 | Library | Library | Bibliothek |
 | Light | Light | Licht |
-| Like this word | Like this word | Wie dieses Wort |
+| Like this word | Like this word | Dieses Wort gefällt mir |
 | List | List | Liste |
 | Lock screen | Lock screen | Bildschirm sperren |
 | Lock screen updated with your latest word. | Lock screen updated with your latest word. | Sperrbildschirm mit Ihrem neuesten Wort aktualisiert. |
@@ -248,14 +252,14 @@ Empty English means the key is its own source text.
 | Remove like | Remove like | Like entfernen |
 | Retry | Retry | Versuchen Sie es noch einmal |
 | Return ${card.learningLabel} to the library | Return ${card.learningLabel} to the library | Geben Sie ${card.learningLabel} an die Bibliothek zurück |
-| Review | Review | Rezension |
+| Review | Review | Wiederholen |
 | Round complete | Round complete | Runde abgeschlossen |
 | SAVED WORD | SAVED WORD | GESPEICHERTES WORT |
 | Same in other words | Same in other words | Das Gleiche mit anderen Worten |
 | Save | Save | Speichern |
 | Save a few more words | Save a few more words | Sparen Sie sich noch ein paar Worte |
 | Save a word first. | Save a word first. | Speichern Sie zuerst ein Wort. |
-| Save now | Save now | Jetzt sparen |
+| Save now | Save now | Jetzt speichern |
 | Save this selection | Save this selection | Speichern Sie diese Auswahl |
 | Saved and translated instantly, without an extra tap. | Saved and translated instantly, without an extra tap. | Sofort gespeichert und übersetzt, ohne zusätzliches Tippen. |
 | Saving to your library | Saving to your library | Speichern in Ihrer Bibliothek |
@@ -280,7 +284,7 @@ Empty English means the key is its own source text.
 | Start | Start | Starten |
 | Stay signed in | Stay signed in | Bleiben Sie angemeldet |
 | Subtitle Notes | Subtitle Notes | Subtitle Notes |
-| Subtitle Notes | Subtitle Notes | Untertitel Anmerkungen |
+| Subtitle Notes | Subtitle Notes | Subtitle Notes |
 | Subtitles in VLC and text in PDFs, through the Windows progr | Subtitles in VLC and text in PDFs, through the Windows program. | Untertitel in VLC und Text in PDFs über das Windows-Programm. |
 | Swipe a card right when a word feels familiar. It moves here | Swipe a card right when a word feels familiar. It moves here and stops crowding your library. | Wischen Sie eine Karte nach rechts, wenn Ihnen ein Wort bekannt vorkommt. Es bewegt sich hierher und überfüllt Ihre Bibliothek nicht mehr. |
 | Switch to grid layout | Switch to grid layout | Wechseln Sie zum Rasterlayout |
@@ -502,7 +506,7 @@ Empty English means the key is its own source text.
 | optPauseHelp | When you pick a word out of a subtitle. | Wenn du ein Wort aus einem Untertitel wählst. |
 | optSpeak | Read the word aloud | Wort vorlesen |
 | optSpeakHelp | Says the English out loud when the card opens. | Spricht das englische Wort aus, wenn die Karte erscheint. |
-| optBlocked | Stay off these sites | Auf diesen Seiten nicht arbeiten |
+| optBlocked | Stay off these sites | Auf diesen Websites deaktivieren |
 | optBlockedHelp | One address per line, for example mail.google.com. | Eine Adresse pro Zeile, zum Beispiel mail.google.com. |
 | optSites | Space only on these sites | Leertaste nur auf diesen Seiten |
 | optSitesHelp | One address per line, for example rezka.ag. Empty means every site. Everything else works everywhere either way. | Eine Adresse pro Zeile, zum Beispiel rezka.ag. Leer heißt überall. Alles andere arbeitet ohnehin überall. |

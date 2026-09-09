@@ -3,10 +3,14 @@
 Left: the English the key stands for. Right: what this language says.
 Empty English means the key is its own source text.
 
-## app  (374)
+## app  (378)
 
 | key | English | uk |
 |---|---|---|
+| Connect your phone | Connect your phone | Підключіть телефон |
+| Settings | Settings | Налаштування |
+| Sources | Sources | Джерела |
+| System language | System language | Мова системи |
 | Not the word - what it means here | Not the word - what it means here | Не слово, а сенс |
 | A dictionary translates the word by itself. Here the whole s | A dictionary translates the word by itself. Here the whole sentence is read, so the word gets the meaning it has in it. | Словник перекладає слово окремо. Тут читається вся фраза - і слово отримує той сенс, який має в ній. |
 | Saving a word is one movement | Saving a word is one movement | Зберегти слово - один рух |
@@ -144,9 +148,9 @@ Empty English means the key is its own source text.
 | Change your nickname | Change your nickname | Змініть свій псевдонім |
 | Clear search | Clear search | Очистити пошук |
 | Close | Close | Закрити |
-| Close practice | Close practice | Близька практика |
+| Close practice | Close practice | Закрити тренування |
 | Close the scanner | Close the scanner | Закрийте сканер |
-| Code ${widget.code} came from a Subtitle Notes window. It ca | Code ${widget.code} came from a Subtitle Notes window. It can then send words into your library. | Код ${widget.code} надійшов із вікна приміток субтитрів. Потім він може надсилати слова у вашу бібліотеку. |
+| Code ${widget.code} came from a Subtitle Notes window. It ca | Code ${widget.code} came from a Subtitle Notes window. It can then send words into your library. | Код ${widget.code} надійшов із вікна Subtitle Notes. З його допомогою можна надсилати слова до бібліотеки. |
 | Compact cards | Compact cards | Компактні карти |
 | Computer connected | Computer connected | Комп'ютер підключений |
 | Confirm the placement on your home screen. | Confirm the placement on your home screen. | Підтвердьте розташування на головному екрані. |
@@ -182,7 +186,7 @@ Empty English means the key is its own source text.
 | Film, series or source | Film, series or source | Фільм, серіал або джерело |
 | Find someone by nickname | Find someone by nickname | Знайдіть когось за нікнеймом |
 | Fit more words on one screen. | Fit more words on one screen. | Розмістити більше слів на одному екрані. |
-| Follow your phone, or choose the language Subtitle Notes use | Follow your phone, or choose the language Subtitle Notes uses. | Слідкуйте за своїм телефоном або виберіть мову, яку використовують Нотатки субтитрів. |
+| Follow your phone, or choose the language Subtitle Notes use | Follow your phone, or choose the language Subtitle Notes uses. | Використовувати мову системи або вибрати мову Subtitle Notes. |
 | Found in $_moves turns. | Found in $_moves turns. | Знайдено в $_moves поворотах. |
 | Friends | Friends | друзі |
 | Friends find you as @${widget.profile!.nickname}. | Friends find you as @${widget.profile!.nickname}. | Друзі знаходять вас як @${widget.profile!.nickname}. |
@@ -233,7 +237,7 @@ Empty English means the key is its own source text.
 | On a computer | On a computer | На комп'ютері |
 | On this phone | On this phone | На цьому телефоні |
 | One account connects your phone, computer and browser. No pa | One account connects your phone, computer and browser. No password to remember. | Один обліковий запис з’єднує телефон, комп’ютер і браузер. Немає пароля для запам'ятовування. |
-| People are found by nickname. Ask your friend which one they | People are found by nickname. Ask your friend which one they picked in Subtitle Notes. | Людей знаходять по ніку. Запитайте свого друга, який він вибрав у Примітках до субтитрів. |
+| People are found by nickname. Ask your friend which one they | People are found by nickname. Ask your friend which one they picked in Subtitle Notes. | Людей знаходять за ніком. Запитайте друга, який нік він вибрав у Subtitle Notes. |
 | Phone | Phone | Телефон |
 | Pick a nickname | Pick a nickname | Виберіть псевдонім |
 | Pick a nickname so friends can find you. | Pick a nickname so friends can find you. | Виберіть псевдонім, щоб друзі могли вас знайти. |
@@ -248,7 +252,7 @@ Empty English means the key is its own source text.
 | Remove like | Remove like | Зняти лайк |
 | Retry | Retry | Повторіть спробу |
 | Return ${card.learningLabel} to the library | Return ${card.learningLabel} to the library | Повернути ${card.learningLabel} до бібліотеки |
-| Review | Review | огляд |
+| Review | Review | Повторення |
 | Round complete | Round complete | Круглий завершений |
 | SAVED WORD | SAVED WORD | ЗБЕРЕЖЕНЕ СЛОВО |
 | Same in other words | Same in other words | Те ж саме іншими словами |
@@ -280,7 +284,7 @@ Empty English means the key is its own source text.
 | Start | Start | старт |
 | Stay signed in | Stay signed in | Залишайтеся в системі |
 | Subtitle Notes | Subtitle Notes | Subtitle Notes |
-| Subtitle Notes | Subtitle Notes | Підзаголовок Примітки |
+| Subtitle Notes | Subtitle Notes | Subtitle Notes |
 | Subtitles in VLC and text in PDFs, through the Windows progr | Subtitles in VLC and text in PDFs, through the Windows program. | Субтитри у VLC та текст у PDF через програму Windows. |
 | Swipe a card right when a word feels familiar. It moves here | Swipe a card right when a word feels familiar. It moves here and stops crowding your library. | Проведіть пальцем по картці вправо, коли слово здасться вам знайомим. Він переміщується сюди й перестає переповнювати вашу бібліотеку. |
 | Switch to grid layout | Switch to grid layout | Перейти до макета сітки |
@@ -570,7 +574,7 @@ Empty English means the key is its own source text.
 | mark | assiette | record |
 | title | Subtitle Notes - translated by the line, not by the word | Subtitle Notes - переклад за змістом, а не за словником |
 | h1 | Translated by the line, not by the word | Переклад за змістом, а не за словником |
-| lede | Highlight an unfamiliar word in subtitles, on a page or in a PDF. It is translated the way it sounds in that sentence, and it stays in your library. | Виділіть незнайоме слово в субтитрі, на сторінці або в PDF. Воно перекладеться так, як звучить у цій фразі, і лишиться у вашій бібліотеці. |
+| lede | Highlight an unfamiliar word in subtitles, on a page or in a PDF. It is translated the way it sounds in that sentence, and it stays in your library. | Виділіть незнайоме слово в субтитрі, на сторінці або в PDF. Воно перекладеться в тому значенні, яке має в цій фразі, і лишиться у вашій бібліотеці. |
 | dict | A dictionary | Словник |
 | ours | Subtitle Notes | Subtitle Notes |
 | wrong | He is not in his plate. | ніхто не хоче рекорд |

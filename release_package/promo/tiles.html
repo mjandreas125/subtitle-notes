@@ -1,0 +1,228 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>Store promo tiles</title>
+<!--
+  The two Chrome Web Store promo tiles.
+
+      tiles.html?n=small       440 x 280
+      tiles.html?n=marquee     1400 x 560
+      tiles.html               both, stacked, for eyeballing
+
+  These are the one part of the listing the store will NOT localise: whatever is
+  uploaded here is shown in every country. So the words are English and the
+  example is French - a viewer who reads neither still sees a line of dialogue
+  turn into a meaning, which is the whole claim.
+
+  The small tile is shown at a third of this size in category lists. Nothing on
+  it is allowed to be decorative: an earlier pair put a full subtitle, a card
+  and a Russian answer on 440x280, and at list size it was three grey smudges.
+-->
+<script src="strings.js"></script>
+<style>
+  :root {
+    --accent: #46d68f;
+    --deep:   #0d1512;
+    --ink:    #f2f7f4;
+    --dim:    #9fb3aa;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: #6c716b;
+    font: 400 16px/1.5 "Segoe UI", system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  body.one { background: #000; }
+  #root { display: flex; flex-direction: column; align-items: center; gap: 24px; padding: 24px; }
+  body.one #root { gap: 0; padding: 0; }
+
+  /* --- the shared dark scene ------------------------------------------------ */
+  .tile {
+    position: relative; overflow: hidden; flex: none;
+    background: #05080a; color: var(--ink);
+  }
+  .scene { position: absolute; inset: 0; }
+  .scene::before, .scene::after { content: ''; position: absolute; border-radius: 50%; }
+  .grain {
+    position: absolute; inset: 0;
+    background-image: radial-gradient(rgba(255,255,255,.055) 1px, transparent 1px);
+  }
+  .vignette { position: absolute; inset: 0; }
+  .body-c { position: relative; z-index: 2; height: 100%; }
+
+  /* The wordmark, at both sizes. */
+  .mark { display: flex; align-items: center; }
+  .mark i { position: relative; flex: none; background: var(--accent); }
+  .mark i::after {
+    content: ''; position: absolute; background: #05080a; opacity: .92; border-radius: 2px;
+  }
+  .mark b { font-weight: 760; letter-spacing: -.028em; }
+
+  /* The subtitle strip and its highlight - the brand's one gesture. */
+  .sub {
+    display: inline-block; background: rgba(0,0,0,.62); color: #fff;
+    font-weight: 600; white-space: nowrap;
+  }
+  .sub .pick { background: var(--accent); color: #04140c; }
+
+  /* ============================ small, 440x280 ============================= */
+  .small { width: 440px; height: 280px; }
+  .small .scene::before {
+    width: 380px; height: 300px; left: -70px; top: -90px; filter: blur(46px);
+    background: radial-gradient(circle, rgba(94,132,148,.8), transparent 68%);
+  }
+  .small .scene::after {
+    width: 420px; height: 320px; right: -90px; bottom: -110px; filter: blur(46px);
+    background: radial-gradient(circle, rgba(196,146,74,.55), transparent 66%);
+  }
+  .small .grain { background-size: 3px 3px; }
+  .small .vignette { background: radial-gradient(115% 95% at 50% 42%, transparent 34%, rgba(0,0,0,.8)); }
+  .small .body-c { padding: 24px 26px; display: flex; flex-direction: column; }
+  .small .group { margin: auto 0 4px; }
+  .small .join {
+    width: 3px; height: 24px; margin: 8px 0 8px 16px; border-radius: 2px;
+    background: linear-gradient(to bottom, var(--accent), rgba(70,214,143,.18));
+    box-shadow: 0 0 12px rgba(70,214,143,.45);
+  }
+  .small .mark { gap: 9px; }
+  .small .mark i { width: 22px; height: 22px; border-radius: 7px; }
+  .small .mark i::after { left: 4px; right: 4px; bottom: 4.5px; height: 4px; }
+  .small .mark b { font-size: 22px; }
+  .small .sub { padding: 7px 11px; border-radius: 7px; font-size: 20px; }
+  .small .sub .pick { border-radius: 4px; padding: 1px 5px; margin: 0 -2px; }
+  .small .meaning {
+    font-size: 27px; font-weight: 700;
+    letter-spacing: -.022em; color: var(--accent); line-height: 1.1;
+  }
+
+  /* ========================== marquee, 1400x560 =========================== */
+  .marquee { width: 1400px; height: 560px; }
+  .marquee .scene::before {
+    width: 900px; height: 700px; left: -140px; top: -220px; filter: blur(94px);
+    background: radial-gradient(circle, rgba(94,132,148,.72), transparent 68%);
+  }
+  .marquee .scene::after {
+    width: 1000px; height: 760px; right: -200px; bottom: -280px; filter: blur(94px);
+    background: radial-gradient(circle, rgba(196,146,74,.5), transparent 66%);
+  }
+  .marquee .grain { background-size: 4px 4px; }
+  .marquee .vignette { background: radial-gradient(118% 92% at 46% 44%, transparent 36%, rgba(0,0,0,.8)); }
+  /* The blinds and the rim-lit figure, so the marquee is recognisably the same
+     room as the screenshots and the film. */
+  .blinds {
+    position: absolute; right: 0; top: 0; width: 42%; height: 76%; z-index: 1;
+    background: repeating-linear-gradient(to bottom, rgba(255,224,176,.1) 0 6px, transparent 6px 26px);
+    mask-image: radial-gradient(78% 70% at 78% 28%, #000 20%, transparent 78%);
+  }
+  .lamp { position: absolute; border-radius: 50%; filter: blur(17px); background: rgba(255,226,168,.7); z-index: 1; }
+  .silh {
+    position: absolute; left: -134px; bottom: -196px; width: 420px; height: 320px; z-index: 1;
+    transform: scale(.92);
+  }
+  .silh::before {
+    content: ''; position: absolute; left: -60px; right: -90px; top: -80px; bottom: -40px;
+    border-radius: 50%; filter: blur(52px);
+    background: radial-gradient(58% 55% at 62% 34%, rgba(196,164,110,.4), transparent 72%);
+  }
+  .silh .head {
+    position: absolute; left: 116px; bottom: 150px; width: 150px; height: 176px;
+    border-radius: 50% 50% 42% 42%; background: #04070a;
+    box-shadow: 8px -8px 0 -3px rgba(255,214,150,.32);
+  }
+  .silh .body {
+    position: absolute; left: 0; bottom: 0; width: 392px; height: 180px;
+    border-radius: 150px 130px 0 0; background: #04070a;
+    box-shadow: 12px -10px 0 -8px rgba(255,214,150,.19);
+  }
+  .marquee .body-c {
+    display: grid; grid-template-columns: 1fr 640px; align-items: center;
+    gap: 60px; padding: 0 68px;
+  }
+  .marquee .mark { gap: 15px; }
+  .marquee .mark i { width: 46px; height: 46px; border-radius: 14px; }
+  .marquee .mark i::after { left: 9px; right: 9px; bottom: 10px; height: 7px; border-radius: 3px; }
+  .marquee .mark b { font-size: 52px; }
+  .marquee .line {
+    margin-top: 22px; font-size: 31px; font-weight: 600; line-height: 1.26;
+    letter-spacing: -.02em; color: #dce8e2; max-width: 18ch; text-wrap: balance;
+  }
+  .marquee .line em { font-style: normal; color: var(--accent); }
+
+  /* The proof, on the right: what a dictionary says, ruled through, and what
+     the line actually meant. */
+  .proof { display: grid; gap: 14px; }
+  .proof .sub { padding: 12px 18px; border-radius: 10px; font-size: 30px; justify-self: start; }
+  .proof .sub .pick { border-radius: 6px; padding: 2px 8px; margin: 0 -3px; }
+  .row {
+    display: flex; align-items: center; gap: 18px; padding: 15px 22px; border-radius: 13px;
+    border: 1px solid rgba(255,255,255,.1); background: rgba(14,22,19,.86);
+  }
+  .row em {
+    flex: none; width: 132px; font-style: normal; font-size: 14px; font-weight: 700;
+    letter-spacing: .12em; text-transform: uppercase; color: #82968e; white-space: nowrap;
+  }
+  .row span { font-size: 27px; font-weight: 620; letter-spacing: -.02em; }
+  .row.no span { color: #8b968f; text-decoration: line-through; text-decoration-thickness: 2px; }
+  .row.yes { border-color: rgba(70,214,143,.4); background: rgba(16,30,24,.9); }
+  .row.yes em { color: var(--accent); }
+  .row.yes span { color: var(--accent); }
+</style>
+
+<div id="root"></div>
+
+<script>
+(() => {
+  const q = new URLSearchParams(location.search);
+  const only = q.get('n');
+  const T = window.TILES;
+  const esc = (s) => String(s).replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
+  const sub = () => esc(T.sub[0]) + '<span class="pick">' + esc(T.sub[1]) + '</span>' + esc(T.sub[2]);
+  const mark = () => `<div class="mark"><i></i><b>${esc(T.name)}</b></div>`;
+  const ground = () => '<div class="scene"></div><div class="grain"></div><div class="vignette"></div>';
+
+  const LAMPS = [[26, 980, 118, .8], [17, 1060, 196, .55], [38, 1140, 84, .45], [14, 900, 214, .4]]
+    .map(([d, x, y, o]) =>
+      `<div class="lamp" style="width:${d}px;height:${d}px;left:${x}px;top:${y}px;opacity:${o}"></div>`).join('');
+
+  /* 440x280. Three things only: whose it is, the gesture, the answer. */
+  const small = () => `
+    <section class="tile small">
+      ${ground()}
+      <div class="body-c">
+        ${mark()}
+        <div class="group">
+          <div class="sub">${sub()}</div>
+          <div class="join"></div>
+          <div class="meaning">${esc(T.meaning)}</div>
+        </div>
+      </div>
+    </section>`;
+
+  /* 1400x560. Room for the claim and the proof of it side by side. */
+  const marquee = () => `
+    <section class="tile marquee">
+      ${ground()}
+      <div class="blinds"></div>${LAMPS}
+      <div class="silh"><div class="body"></div><div class="head"></div></div>
+      <div class="body-c">
+        <div>
+          ${mark()}
+          <div class="line">It translates the <em>line</em>, not the word.</div>
+        </div>
+        <div class="proof">
+          <div class="sub">${sub()}</div>
+          <div class="row no"><em>${esc(T.wrongLabel)}</em><span>${esc(T.wrong)}</span></div>
+          <div class="row yes"><em>${esc(T.rightLabel)}</em><span>${esc(T.meaning)}</span></div>
+        </div>
+      </div>
+    </section>`;
+
+  const root = document.getElementById('root');
+  if (only) {
+    document.body.classList.add('one');
+    root.innerHTML = only === 'small' ? small() : marquee();
+  } else {
+    root.innerHTML = small() + marquee();
+  }
+  document.fonts.ready.then(() => { document.documentElement.dataset.ready = '1'; });
+})();
+</script>

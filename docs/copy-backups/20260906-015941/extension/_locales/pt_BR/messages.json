@@ -1,0 +1,377 @@
+{
+  "appName": {
+    "message": "Subtitle Notes"
+  },
+  "appDescription": {
+    "message": "Traduz a palavra selecionada levando em conta a frase inteira. Funciona em legendas, em qualquer página e em PDF."
+  },
+  "menuSave": {
+    "message": "Salvar “%s” no Subtitle Notes"
+  },
+  "chipAsk": {
+    "message": "O que isso significa?"
+  },
+  "pendingLater": {
+    "message": "Sem resposta agora - a tradução vai aparecer no aplicativo.",
+    "description": "Shown when no provider answered; the server retries later."
+  },
+  "listen": {
+    "message": "Ouvir"
+  },
+  "rerun": {
+    "message": "Tradução errada"
+  },
+  "rerunning": {
+    "message": "Lendo de novo…"
+  },
+  "seenBefore": {
+    "message": "visto $COUNT$ vezes",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "connectTitle": {
+    "message": "Conecte seu telefone"
+  },
+  "connectBody": {
+    "message": "Este navegador ainda não está ligado à sua biblioteca."
+  },
+  "connectAction": {
+    "message": "Conectar"
+  },
+  "close": {
+    "message": "Fechar"
+  },
+  "save": {
+    "message": "Salvar"
+  },
+  "saving": {
+    "message": "Salvando…"
+  },
+  "saved": {
+    "message": "Salvo ✓"
+  },
+  "savedAlready": {
+    "message": "Já estava lá ✓"
+  },
+  "inLibrary": {
+    "message": "Já está na sua biblioteca"
+  },
+  "notSaved": {
+    "message": "Não salvo"
+  },
+  "failed": {
+    "message": "Não deu certo"
+  },
+  "undo": {
+    "message": "Desfazer"
+  },
+  "undoing": {
+    "message": "Removendo…"
+  },
+  "undone": {
+    "message": "Removido"
+  },
+  "reloaded": {
+    "message": "A extensão foi recarregada. Atualize a página."
+  },
+  "popupNotPaired": {
+    "message": "Este navegador não está ligado à sua biblioteca."
+  },
+  "popupConnectGoogle": {
+    "message": "Continuar com Google",
+    "description": "Popup button that signs in with Google"
+  },
+  "popupConnectCode": {
+    "message": "Mostrar um código",
+    "description": "Popup button that shows the pairing code"
+  },
+  "popupExport": {
+    "message": "Exportar para o Anki"
+  },
+  "popupLibrary": {
+    "message": "Biblioteca completa",
+    "description": "Popup button that opens the web library"
+  },
+  "optTitle": {
+    "message": "Subtitle Notes no navegador"
+  },
+  "optSub": {
+    "message": "Destaque palavras em qualquer site, em PDFs e nas legendas - elas chegam ao mesmo aplicativo no seu telefone."
+  },
+  "optConnected": {
+    "message": "Conectado"
+  },
+  "optForget": {
+    "message": "Desconectar este navegador"
+  },
+  "optWaiting": {
+    "message": "Aguardando confirmação…"
+  },
+  "optPaired": {
+    "message": "Pronto. Destaque texto em qualquer página."
+  },
+  "optExpired": {
+    "message": "O código expirou. Peça um novo."
+  },
+  "optCancel": {
+    "message": "Cancelar"
+  },
+  "optHotkeyTitle": {
+    "message": "Salvar sem botão"
+  },
+  "optHotkeyHelp": {
+    "message": "Segure esta combinação enquanto destaca e a palavra vai direto para a biblioteca. Ou destaque normalmente e pressione depois."
+  },
+  "optHotkeyPress": {
+    "message": "Pressione uma combinação…"
+  },
+  "optReset": {
+    "message": "Redefinir"
+  },
+  "optWhereTitle": {
+    "message": "Onde a janela aparece"
+  },
+  "optAtSelection": {
+    "message": "Junto à seleção"
+  },
+  "optTopRight": {
+    "message": "Canto superior direito"
+  },
+  "optTopLeft": {
+    "message": "Canto superior esquerdo"
+  },
+  "optBottomRight": {
+    "message": "Canto inferior direito"
+  },
+  "optBottomLeft": {
+    "message": "Canto inferior esquerdo"
+  },
+  "optDragHint": {
+    "message": "Uma janela fixada num canto pode ser arrastada com o mouse - ela lembra o lugar."
+  },
+  "optHideAfter": {
+    "message": "Ocultar após"
+  },
+  "optHideAfterHelp": {
+    "message": "Segundos que a janela permanece após um salvamento instantâneo."
+  },
+  "optVideoTitle": {
+    "message": "Vídeo e sites"
+  },
+  "optSubtitles": {
+    "message": "Legendas clicáveis"
+  },
+  "optSubtitlesHelp": {
+    "message": "No YouTube e na Netflix substitui as legendas por uma cópia onde dá para clicar numa palavra ou arrastar sobre uma expressão."
+  },
+  "optPause": {
+    "message": "Pausar o vídeo"
+  },
+  "optPauseHelp": {
+    "message": "Quando você escolhe uma palavra de uma legenda."
+  },
+  "optSpeak": {
+    "message": "Ler a palavra em voz alta"
+  },
+  "optSpeakHelp": {
+    "message": "Pronuncia a palavra em inglês quando o cartão abre."
+  },
+  "optBlocked": {
+    "message": "Não funcionar nestes sites"
+  },
+  "optBlockedHelp": {
+    "message": "Um endereço por linha, por exemplo mail.google.com."
+  },
+  "optSites": {
+    "message": "O espaço só nestes sites"
+  },
+  "optSitesHelp": {
+    "message": "Um endereço por linha, por exemplo rezka.ag. Vazio significa em todos os sites. O resto funciona em todos eles de qualquer forma."
+  },
+  "optSavedToast": {
+    "message": "Salvo"
+  },
+  "optAccountTitle": {
+    "message": "Conta"
+  },
+  "optGoogle": {
+    "message": "Continuar com o Google"
+  },
+  "optGoogleHelp": {
+    "message": "Entre com a mesma conta do Google do celular - tudo o que você salvar aqui vai para a mesma biblioteca."
+  },
+  "optOtherWay": {
+    "message": "Conectar pelo celular"
+  },
+  "optScanHelp": {
+    "message": "Aponte a câmera do celular para este quadrado ou digite o código no app: Configurações → Dispositivos conectados."
+  },
+  "optLangTitle": {
+    "message": "Idioma dos cartões"
+  },
+  "optLangHelp": {
+    "message": "Os novos cartões serão explicados neste idioma. Os já salvos continuam como estão."
+  },
+  "optPrivacy": {
+    "message": "Política de privacidade"
+  },
+  "optSubKeyTitle": {
+    "message": "Pegar palavras das legendas"
+  },
+  "optSubKeyHelp": {
+    "message": "Enquanto a tecla estiver pressionada, a linha vira texto selecionável. Ao soltar, o player recupera o mouse: arrastar a legenda, clicar para pausar e o tamanho da legenda continuam funcionando."
+  },
+  "optSubKeyNone": {
+    "message": "Sem tecla"
+  },
+  "optOr": {
+    "message": "ou"
+  },
+  "optSubKeyNow": {
+    "message": "Agora: $KEYS$",
+    "placeholders": {
+      "keys": {
+        "content": "$1"
+      }
+    }
+  },
+  "optSubKeyNoneNow": {
+    "message": "Agora: sem tecla - a linha está sempre selecionável"
+  },
+  "optLangLocked": {
+    "message": "Conecte uma conta primeiro - o idioma fica salvo nela."
+  },
+  "mine": {
+    "message": "Minha versão"
+  },
+  "minePlaceholder": {
+    "message": "O que significa aqui"
+  },
+  "mineThanks": {
+    "message": "Salvo. Se outros escreverem o mesmo, vira o padrão."
+  },
+  "mineAgreed": {
+    "message": "Salvo - gente suficiente concorda, agora é o padrão."
+  },
+  "popupSettings": {
+    "message": "Configurações"
+  },
+  "tourTitle": {
+    "message": "Subtitle Notes"
+  },
+  "tourLede": {
+    "message": "Como funciona"
+  },
+  "tourMeaning": {
+    "message": "a record - ficha criminal"
+  },
+  "tourSubtitle": {
+    "message": "No one wants a record.",
+    "description": "The subtitle shown on the welcome card."
+  },
+  "tourPick": {
+    "message": "a record",
+    "description": "The part of that subtitle that is picked out."
+  },
+  "tourLine": {
+    "message": "Ninguém quer ficha criminal.",
+    "description": "The translated subtitle line on the welcome card."
+  },
+  "tourSaved": {
+    "message": "Salvo na sua biblioteca"
+  },
+  "tourStep1": {
+    "message": "Segure Ctrl e arraste sobre a legenda"
+  },
+  "tourStep1Body": {
+    "message": "Sem a tecla o player continua igual: a legenda arrasta, um clique pausa."
+  },
+  "tourStep2": {
+    "message": "No resto, é só selecionar"
+  },
+  "tourStep2Body": {
+    "message": "Uma página, um PDF, um comentário. Com Ctrl+Alt salva sem perguntar."
+  },
+  "tourStep3": {
+    "message": "Tudo vai para a mesma biblioteca"
+  },
+  "tourStep3Body": {
+    "message": "A mesma conta do Google no celular, no navegador e no computador."
+  },
+  "tourConnect": {
+    "message": "Conectar a conta"
+  },
+  "tourLater": {
+    "message": "Mais tarde"
+  },
+  "optDesktopTitle": {
+    "message": "No computador"
+  },
+  "optDesktopHelp": {
+    "message": "Legendas no VLC e texto de qualquer programa, na mesma biblioteca."
+  },
+  "optDesktopGet": {
+    "message": "Baixar para Windows"
+  },
+  "optPhoneTitle": {
+    "message": "No celular",
+    "description": "The offer of the Android app in settings."
+  },
+  "optPhoneHelp": {
+    "message": "As mesmas palavras, com revisão e busca. Por enquanto Android; o arquivo instala fora da loja, então o celular pergunta uma vez.",
+    "description": "The offer of the Android app in settings."
+  },
+  "optPhoneGet": {
+    "message": "Baixar para Android",
+    "description": "The offer of the Android app in settings."
+  },
+  "tourDesktop": {
+    "message": "Também para o computador"
+  },
+  "tourPhone": {
+    "message": "E no celular",
+    "description": "The offer of the Android app on the welcome page."
+  },
+  "optCompact": {
+    "message": "Cartão curto"
+  },
+  "optCompactHelp": {
+    "message": "Só o significado: sem sinônimos nem notas."
+  },
+  "optSpaceLine": {
+    "message": "Espaço lê a fala",
+    "description": "Options toggle for translating the caption with space"
+  },
+  "optSpaceLineHelp": {
+    "message": "A linha na tela, traduzida quando você pausa."
+  },
+  "optSpaceSaves": {
+    "message": "Salvar o que o espaço lê"
+  },
+  "optSpaceSavesHelp": {
+    "message": "Caso contrário, a linha é apenas exibida."
+  },
+  "pageSubtitles": {
+    "message": "Há legendas aqui. Segure $KEYS$ e arraste sobre uma palavra.",
+    "placeholders": {
+      "keys": {
+        "content": "$1"
+      }
+    }
+  },
+  "pageNoKey": {
+    "message": "sem tecla"
+  },
+  "pageSubtitlesOff": {
+    "message": "Há legendas aqui, mas as legendas clicáveis estão desligadas."
+  },
+  "pageText": {
+    "message": "Não há legendas de player aqui. Destaque qualquer texto e segure Ctrl+Alt."
+  },
+  "pageOff": {
+    "message": "O Subtitle Notes fica fora deste site, como você pediu."
+  }
+}

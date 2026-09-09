@@ -3,10 +3,14 @@
 Left: the English the key stands for. Right: what this language says.
 Empty English means the key is its own source text.
 
-## app  (374)
+## app  (378)
 
 | key | English | pl |
 |---|---|---|
+| Connect your phone | Connect your phone | Połącz telefon |
+| Settings | Settings | Ustawienia |
+| Sources | Sources | Źródła |
+| System language | System language | Język systemu |
 | Not the word - what it means here | Not the word - what it means here | Nie słowo, tylko sens |
 | A dictionary translates the word by itself. Here the whole s | A dictionary translates the word by itself. Here the whole sentence is read, so the word gets the meaning it has in it. | Słownik tłumaczy samo słowo. Tu czytane jest całe zdanie, więc słowo dostaje sens, który w nim ma. |
 | Saving a word is one movement | Saving a word is one movement | Zapisanie słowa to jeden ruch |
@@ -124,7 +128,7 @@ Empty English means the key is its own source text.
 | Add to home screen | Add to home screen | Dodaj do ekranu głównego |
 | Added | Added | Dodano |
 | Again | Again | Znowu |
-| All $saved saved ${saved == 1 ?  | All $saved saved ${saved == 1 ?  | Wszystko $saved zapisane ${zapisane == 1 ? |
+| All $saved saved ${saved == 1 ?  | All $saved saved ${saved == 1 ?  | Zapisano $saved ${saved == 1 ? |
 | All ${stats.unlocked} levels. Keep saving what you like. | All ${stats.unlocked} levels. Keep saving what you like. | Wszystkie poziomy ${stats.unlocked}. Zapisuj dalej to, co lubisz. |
 | All meanings | All meanings | Wszystkie znaczenia |
 | All of them | All of them | Wszystkie |
@@ -144,9 +148,9 @@ Empty English means the key is its own source text.
 | Change your nickname | Change your nickname | Zmień swój pseudonim |
 | Clear search | Clear search | Wyczyść wyszukiwanie |
 | Close | Close | Zamknij |
-| Close practice | Close practice | Zamknięta praktyka |
+| Close practice | Close practice | Zamknij ćwiczenie |
 | Close the scanner | Close the scanner | Zamknij skaner |
-| Code ${widget.code} came from a Subtitle Notes window. It ca | Code ${widget.code} came from a Subtitle Notes window. It can then send words into your library. | Kod ${widget.code} pochodzi z okna uwag do napisów. Następnie może wysłać słowa do Twojej biblioteki. |
+| Code ${widget.code} came from a Subtitle Notes window. It ca | Code ${widget.code} came from a Subtitle Notes window. It can then send words into your library. | Kod ${widget.code} pochodzi z okna Subtitle Notes. Może potem wysyłać słowa do Twojej biblioteki. |
 | Compact cards | Compact cards | Karty kompaktowe |
 | Computer connected | Computer connected | Komputer podłączony |
 | Confirm the placement on your home screen. | Confirm the placement on your home screen. | Potwierdź położenie na ekranie głównym. |
@@ -182,7 +186,7 @@ Empty English means the key is its own source text.
 | Film, series or source | Film, series or source | Film, serial lub źródło |
 | Find someone by nickname | Find someone by nickname | Znajdź kogoś po pseudonimie |
 | Fit more words on one screen. | Fit more words on one screen. | Zmieścić więcej słów na jednym ekranie. |
-| Follow your phone, or choose the language Subtitle Notes use | Follow your phone, or choose the language Subtitle Notes uses. | Śledź swój telefon lub wybierz język, którego używają napisy. |
+| Follow your phone, or choose the language Subtitle Notes use | Follow your phone, or choose the language Subtitle Notes uses. | Użyj języka systemu albo wybierz język Subtitle Notes. |
 | Found in $_moves turns. | Found in $_moves turns. | Znaleziono w $_moves turach. |
 | Friends | Friends | Przyjaciele |
 | Friends find you as @${widget.profile!.nickname}. | Friends find you as @${widget.profile!.nickname}. | Znajomi znajdą Cię jako @${widget.profile!.nickname}. |
@@ -233,7 +237,7 @@ Empty English means the key is its own source text.
 | On a computer | On a computer | Na komputerze |
 | On this phone | On this phone | Na tym telefonie |
 | One account connects your phone, computer and browser. No pa | One account connects your phone, computer and browser. No password to remember. | Jedno konto łączy Twój telefon, komputer i przeglądarkę. Brak hasła do zapamiętania. |
-| People are found by nickname. Ask your friend which one they | People are found by nickname. Ask your friend which one they picked in Subtitle Notes. | Ludzi można znaleźć po pseudonimie. Zapytaj znajomego, który wybrał w Notatkach do napisów. |
+| People are found by nickname. Ask your friend which one they | People are found by nickname. Ask your friend which one they picked in Subtitle Notes. | Ludzi można znaleźć po pseudonimie. Zapytaj znajomego, który pseudonim wybrał w Subtitle Notes. |
 | Phone | Phone | Telefon |
 | Pick a nickname | Pick a nickname | Wybierz pseudonim |
 | Pick a nickname so friends can find you. | Pick a nickname so friends can find you. | Wybierz pseudonim, aby znajomi mogli Cię znaleźć. |
@@ -248,7 +252,7 @@ Empty English means the key is its own source text.
 | Remove like | Remove like | Usuń polubienie |
 | Retry | Retry | Spróbuj ponownie |
 | Return ${card.learningLabel} to the library | Return ${card.learningLabel} to the library | Wróć ${card.learningLabel} do biblioteki |
-| Review | Review | Recenzja |
+| Review | Review | Powtórka |
 | Round complete | Round complete | Runda zakończona |
 | SAVED WORD | SAVED WORD | ZACHOWANE SŁOWO |
 | Same in other words | Same in other words | Innymi słowy to samo |
@@ -264,7 +268,7 @@ Empty English means the key is its own source text.
 | Search a nickname above to add someone. Words you both save  | Search a nickname above to add someone. Words you both save show up here, and you can like them. | Wyszukaj pseudonim powyżej, aby kogoś dodać. Tutaj pojawiają się słowa, które oboje zapisaliście i możecie je polubić. |
 | Search your words | Search your words | Szukaj swoich słów |
 | Select text anywhere, then pick Subtitle Notes from the menu | Select text anywhere, then pick Subtitle Notes from the menu. | Zaznacz tekst w dowolnym miejscu, a następnie wybierz z menu opcję Subtitle Notes. |
-| Select text in any app, tap Share, then Subtitle Notes. | Select text in any app, tap Share, then Subtitle Notes. | Zaznacz tekst w dowolnej aplikacji, dotknij Udostępnij, a następnie Notatki podtytułowe. |
+| Select text in any app, tap Share, then Subtitle Notes. | Select text in any app, tap Share, then Subtitle Notes. | Zaznacz tekst w dowolnej aplikacji, dotknij Udostępnij, a następnie „Subtitle Notes”. |
 | Selected subtitle | Selected subtitle | Wybrany podtytuł |
 | Selected text | Selected text | Wybrany tekst |
 | Show my words to friends | Show my words to friends | Pokaż moje słowa przyjaciołom |
@@ -280,7 +284,7 @@ Empty English means the key is its own source text.
 | Start | Start | Zacznij |
 | Stay signed in | Stay signed in | Pozostań zalogowany |
 | Subtitle Notes | Subtitle Notes | Subtitle Notes |
-| Subtitle Notes | Subtitle Notes | Podtytuł Notatki |
+| Subtitle Notes | Subtitle Notes | Subtitle Notes |
 | Subtitles in VLC and text in PDFs, through the Windows progr | Subtitles in VLC and text in PDFs, through the Windows program. | Napisy w VLC i tekst w plikach PDF za pośrednictwem programu Windows. |
 | Swipe a card right when a word feels familiar. It moves here | Swipe a card right when a word feels familiar. It moves here and stops crowding your library. | Przesuń kartę w prawo, gdy słowo wyda Ci się znajome. Przenosi się tutaj i przestaje zapełniać twoją bibliotekę. |
 | Switch to grid layout | Switch to grid layout | Przełącz na układ siatki |
@@ -316,7 +320,7 @@ Empty English means the key is its own source text.
 | You | You | Ty |
 | Your account, and anything saved under it, is erased from th | Your account, and anything saved under it, is erased from the server for good. This cannot be undone. | Twoje konto i wszystko, co jest na nim zapisane, zostanie trwale usunięte z serwera. Tego nie można cofnąć. |
 | Your feed is empty | Your feed is empty | Twój kanał jest pusty |
-| Your launcher cannot add it directly. Long-press the home sc | Your launcher cannot add it directly. Long-press the home screen, choose Widgets, then Subtitle Notes. | Twój program uruchamiający nie może dodać go bezpośrednio. Naciśnij i przytrzymaj ekran główny, wybierz Widżety, a następnie Notatki podtytułowe. |
+| Your launcher cannot add it directly. Long-press the home sc | Your launcher cannot add it directly. Long-press the home screen, choose Widgets, then Subtitle Notes. | Twój launcher nie może dodać go bezpośrednio. Naciśnij i przytrzymaj ekran główny, wybierz Widżety, a następnie „Subtitle Notes”. |
 | Your library is safe in the cloud. Pull down or try again on | Your library is safe in the cloud. Pull down or try again once you are back online. | Twoja biblioteka jest bezpieczna w chmurze. Pociągnij w dół lub spróbuj ponownie, gdy będziesz ponownie online. |
 | Your library starts empty | Your library starts empty | Twoja biblioteka zaczyna być pusta |
 | Your words stay in the cloud. Signing back in restores them. | Your words stay in the cloud. Signing back in restores them. | Twoje słowa pozostają w chmurze. Ponowne zalogowanie przywraca je. |
@@ -532,7 +536,7 @@ Empty English means the key is its own source text.
 | tourMeaning | assiette - the way you feel | a record - kartoteka karna |
 | tourSubtitle | Il n'est pas dans son assiette. | No one wants a record. |
 | tourPick | assiette | a record |
-| tourLine | He is not feeling well. | Nikt nie chce kartoteki. |
+| tourLine | He is not feeling well. | Nikt nie chce kartoteki karnej. |
 | tourSaved | Saved to your library | Zapisano w bibliotece |
 | tourStep1 | Hold Ctrl and drag across the subtitle | Przytrzymaj Ctrl i przeciągnij po napisach |
 | tourStep1Body | Without the key the player is untouched: the line still drags, a click still pauses. | Bez klawisza odtwarzacz działa jak zwykle: napis można przeciągnąć, klik pauzuje. |

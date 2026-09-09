@@ -3,10 +3,15 @@
 Left: the English the key stands for. Right: what this language says.
 Empty English means the key is its own source text.
 
-## app  (373)
+## app  (378)
 
 | key | English | tr |
 |---|---|---|
+| As in the file | As in the file | Dosyadaki gibi |
+| Connect your phone | Connect your phone | Telefonunu bağla |
+| Settings | Settings | Ayarlar |
+| Sources | Sources | Kaynaklar |
+| System language | System language | Sistem dili |
 | Not the word - what it means here | Not the word - what it means here | Kelime değil, anlamı |
 | A dictionary translates the word by itself. Here the whole s | A dictionary translates the word by itself. Here the whole sentence is read, so the word gets the meaning it has in it. | Sözlük kelimeyi tek başına çevirir. Burada cümlenin tamamı okunur, yani kelime o cümledeki anlamını alır. |
 | Saving a word is one movement | Saving a word is one movement | Bir kelimeyi kaydetmek tek hareket |
@@ -143,7 +148,7 @@ Empty English means the key is its own source text.
 | Change your nickname | Change your nickname | Takma adınızı değiştirin |
 | Clear search | Clear search | Aramayı temizle |
 | Close | Close | Kapat |
-| Close practice | Close practice | Yakın antrenman |
+| Close practice | Close practice | Antrenmanı kapat |
 | Close the scanner | Close the scanner | Tarayıcıyı kapatın |
 | Code ${widget.code} came from a Subtitle Notes window. It ca | Code ${widget.code} came from a Subtitle Notes window. It can then send words into your library. | ${widget.code} Kodu bir Subtitle Notes penceresinden geldi. Daha sonra kelimeleri kitaplığınıza gönderebilir. |
 | Compact cards | Compact cards | Kompakt kartlar |
@@ -279,7 +284,7 @@ Empty English means the key is its own source text.
 | Start | Start | Başlat |
 | Stay signed in | Stay signed in | Oturumunuzu açık tutun |
 | Subtitle Notes | Subtitle Notes | Subtitle Notes |
-| Subtitle Notes | Subtitle Notes | Altyazı Notlar |
+| Subtitle Notes | Subtitle Notes | Subtitle Notes |
 | Subtitles in VLC and text in PDFs, through the Windows progr | Subtitles in VLC and text in PDFs, through the Windows program. | Windows programı aracılığıyla VLC'deki altyazılar ve PDF'lerdeki metinler. |
 | Swipe a card right when a word feels familiar. It moves here | Swipe a card right when a word feels familiar. It moves here and stops crowding your library. | Bir kelime tanıdık geldiğinde kartı sağa kaydırın. Buraya taşınır ve kitaplığınızı doldurmayı bırakır. |
 | Switch to grid layout | Switch to grid layout | Izgara düzenine geç |
@@ -394,7 +399,7 @@ Empty English means the key is its own source text.
 | not_a_film | This needs a video file or an .srt subtitle file. | Bir video dosyası ya da .srt altyazı dosyası gerekir. |
 | no_vlc | VLC was not found. Install VLC and try again. | VLC bulunamadı. VLC’yi kurup yeniden deneyin. |
 | no_subtitles | No subtitles were found next to this film or inside it. | Bu filmin yanında ya da içinde altyazı bulunamadı. |
-| tour_line | Nobody wants a criminal record. | Kimse sabıka istemez. |
+| tour_line | Nobody wants a criminal record. | Kimse sabıka kaydı istemez. |
 | tour_meaning | a record - a criminal record | a record - sabıka kaydı |
 | tour_steps | Open a film through "Open with Subtitle Notes" and pick a word out of the subtitle. Ctrl+Alt+S does the same for text in any program. Everything lands in the same library as on the phone. | Bir filmi "Open with Subtitle Notes" ile açın ve altyazıdan bir kelime seçin. Ctrl+Alt+S aynısını her programdaki metin için yapar. Her şey telefondaki kütüphaneye gider. |
 | update_ready | Version {version} is out. | Sürüm {version} çıktı. |

@@ -3,10 +3,15 @@
 Left: the English the key stands for. Right: what this language says.
 Empty English means the key is its own source text.
 
-## app  (373)
+## app  (378)
 
 | key | English | sv |
 |---|---|---|
+| Auto | Auto | Automatiskt |
+| Connect your phone | Connect your phone | Anslut din telefon |
+| Settings | Settings | Inställningar |
+| Sources | Sources | Källor |
+| System language | System language | Systemspråk |
 | Not the word - what it means here | Not the word - what it means here | Inte ordet, utan betydelsen |
 | A dictionary translates the word by itself. Here the whole s | A dictionary translates the word by itself. Here the whole sentence is read, so the word gets the meaning it has in it. | En ordbok översätter ordet för sig. Här läses hela meningen, så ordet får den betydelse det har där. |
 | Saving a word is one movement | Saving a word is one movement | Att spara ett ord är en rörelse |
@@ -125,7 +130,7 @@ Empty English means the key is its own source text.
 | Add to home screen | Add to home screen | Lägg till på startskärmen |
 | Added | Added | Tillagd |
 | Again | Again | Återigen |
-| All $saved saved ${saved == 1 ?  | All $saved saved ${saved == 1 ?  | Alla $saved sparade ${sparade == 1 ? |
+| All $saved saved ${saved == 1 ?  | All $saved saved ${saved == 1 ?  | Alla $saved sparade ${saved == 1 ? |
 | All ${stats.unlocked} levels. Keep saving what you like. | All ${stats.unlocked} levels. Keep saving what you like. | Alla ${stats.unlocked} nivåer. Fortsätt spara det du gillar. |
 | All meanings | All meanings | Alla betydelser |
 | All of them | All of them | Alla av dem |
@@ -144,9 +149,9 @@ Empty English means the key is its own source text.
 | Change your nickname | Change your nickname | Ändra ditt smeknamn |
 | Clear search | Clear search | Rensa sökning |
 | Close | Close | Stäng |
-| Close practice | Close practice | Nära övning |
+| Close practice | Close practice | Stäng övningen |
 | Close the scanner | Close the scanner | Stäng skannern |
-| Code ${widget.code} came from a Subtitle Notes window. It ca | Code ${widget.code} came from a Subtitle Notes window. It can then send words into your library. | Koden ${widget.code} kom från ett undertextningsanteckningsfönster. Det kan sedan skicka ord till ditt bibliotek. |
+| Code ${widget.code} came from a Subtitle Notes window. It ca | Code ${widget.code} came from a Subtitle Notes window. It can then send words into your library. | Koden ${widget.code} kom från ett Subtitle Notes-fönster. Det kan sedan skicka ord till ditt bibliotek. |
 | Compact cards | Compact cards | Kompakta kort |
 | Computer connected | Computer connected | Dator ansluten |
 | Confirm the placement on your home screen. | Confirm the placement on your home screen. | Bekräfta placeringen på din startskärm. |
@@ -182,7 +187,7 @@ Empty English means the key is its own source text.
 | Film, series or source | Film, series or source | Film, serie eller källa |
 | Find someone by nickname | Find someone by nickname | Hitta någon med smeknamn |
 | Fit more words on one screen. | Fit more words on one screen. | Få plats med fler ord på en skärm. |
-| Follow your phone, or choose the language Subtitle Notes use | Follow your phone, or choose the language Subtitle Notes uses. | Följ din telefon eller välj språket undertextanteckningar använder. |
+| Follow your phone, or choose the language Subtitle Notes use | Follow your phone, or choose the language Subtitle Notes uses. | Följ telefonens språk eller välj språket Subtitle Notes ska använda. |
 | Found in $_moves turns. | Found in $_moves turns. | Hittas i $_moves varv. |
 | Friends | Friends | Vänner |
 | Friends find you as @${widget.profile!.nickname}. | Friends find you as @${widget.profile!.nickname}. | Vänner hittar dig som @${widget.profile!.nickname}. |
@@ -232,7 +237,7 @@ Empty English means the key is its own source text.
 | On a computer | On a computer | På en dator |
 | On this phone | On this phone | På den här telefonen |
 | One account connects your phone, computer and browser. No pa | One account connects your phone, computer and browser. No password to remember. | Ett konto kopplar ihop din telefon, dator och webbläsare. Inget lösenord att komma ihåg. |
-| People are found by nickname. Ask your friend which one they | People are found by nickname. Ask your friend which one they picked in Subtitle Notes. | Människor hittas med smeknamn. Fråga din vän vilken de valde i undertextanteckningar. |
+| People are found by nickname. Ask your friend which one they | People are found by nickname. Ask your friend which one they picked in Subtitle Notes. | Hitta personer via deras smeknamn. Fråga din vän vilket smeknamn hen valde i Subtitle Notes. |
 | Phone | Phone | Telefon |
 | Pick a nickname | Pick a nickname | Välj ett smeknamn |
 | Pick a nickname so friends can find you. | Pick a nickname so friends can find you. | Välj ett smeknamn så att vänner kan hitta dig. |
@@ -247,7 +252,7 @@ Empty English means the key is its own source text.
 | Remove like | Remove like | Ta bort gilla |
 | Retry | Retry | Försök igen |
 | Return ${card.learningLabel} to the library | Return ${card.learningLabel} to the library | Returnera ${card.learningLabel} till biblioteket |
-| Review | Review | Granska |
+| Review | Review | Repetera |
 | Round complete | Round complete | Omgången klar |
 | SAVED WORD | SAVED WORD | SPARAT ORD |
 | Same in other words | Same in other words | Samma med andra ord |
@@ -279,7 +284,7 @@ Empty English means the key is its own source text.
 | Start | Start | Starta |
 | Stay signed in | Stay signed in | Fortsätt inloggad |
 | Subtitle Notes | Subtitle Notes | Subtitle Notes |
-| Subtitle Notes | Subtitle Notes | Undertext Anteckningar |
+| Subtitle Notes | Subtitle Notes | Subtitle Notes |
 | Subtitles in VLC and text in PDFs, through the Windows progr | Subtitles in VLC and text in PDFs, through the Windows program. | Undertexter i VLC och text i PDF-filer, genom Windows-programmet. |
 | Swipe a card right when a word feels familiar. It moves here | Swipe a card right when a word feels familiar. It moves here and stops crowding your library. | Svep ett kort direkt när ett ord känns bekant. Den flyttar hit och slutar tränga ditt bibliotek. |
 | Switch to grid layout | Switch to grid layout | Byt till rutnätslayout |

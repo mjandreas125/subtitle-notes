@@ -1,0 +1,484 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>Store screenshots</title>
+<!--
+  Five store screenshots, any locale, one file.
+
+      shots.html?lang=en&n=3      one scene at exactly 1280x800
+      shots.html?lang=ru          all five, stacked, for eyeballing
+
+  Nothing is written in the markup: every string comes from strings.js, so a
+  new locale is a new key and never a new file. The screen inside the frame is
+  drawn in CSS rather than lifted from a film, and the phones in shot 4 are
+  drawn rather than photographed - a screenshot of the real app would be in
+  whatever language the phone was in when it was taken, which is exactly the
+  bug this file exists to fix.
+-->
+<script src="strings.js"></script>
+<style>
+  :root {
+    --paper:  #faf8f4;
+    --card:   #ffffff;
+    --ink:    #14201c;
+    --body:   #46554e;   /* 7.4:1 on paper - small text lives here */
+    --soft:   #5d6d67;   /* 5.1:1 on paper - secondary, never below 15px */
+    --hair:   #e4dfd5;
+    --accent: #1e7a4c;
+    --wash:   #e7f2ea;
+    --lit:    #35a874;   /* the accent as it survives on near-black */
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: #6c716b;
+    font: 400 16px/1.5 "Segoe UI", system-ui, -apple-system, sans-serif;
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: geometricPrecision;
+  }
+  body.one { background: #fff; }
+  #root { display: flex; flex-direction: column; align-items: center; gap: 26px; padding: 26px 0; }
+  body.one #root { gap: 0; padding: 0; }
+
+  /* --- the stage ----------------------------------------------------------- */
+  .shot {
+    width: 1280px; height: 800px; flex: none; overflow: hidden; position: relative;
+    background: var(--paper); padding: 46px 60px 44px;
+    display: flex; flex-direction: column;
+  }
+  .mark {
+    display: flex; align-items: center; gap: 10px; flex: none;
+    font-size: 13px; font-weight: 700; letter-spacing: .17em;
+    text-transform: uppercase; color: var(--accent);
+  }
+  .mark i {
+    width: 21px; height: 21px; border-radius: 6px; background: var(--accent);
+    position: relative; flex: none;
+  }
+  .mark i::after {
+    content: ''; position: absolute; left: 4px; right: 4px; bottom: 4.5px;
+    height: 3.5px; border-radius: 2px; background: var(--paper); opacity: .92;
+  }
+  h1 {
+    margin-top: 15px; flex: none;
+    font-size: 46px; font-weight: 800; line-height: 1.08;
+    letter-spacing: -.028em; text-wrap: balance;
+  }
+  .lede {
+    margin-top: 11px; flex: none;
+    font-size: 20.5px; line-height: 1.42; color: var(--soft); max-width: 76ch;
+  }
+
+  /* --- the film frame ------------------------------------------------------ */
+  .screen {
+    position: relative; border-radius: 18px; overflow: hidden; background: #05080a;
+  }
+  .scene { position: absolute; inset: 0; }
+  .scene::before, .scene::after { content: ''; position: absolute; border-radius: 50%; filter: blur(58px); }
+  .scene::before {
+    width: 620px; height: 480px; left: -80px; top: -140px;
+    background: radial-gradient(circle, rgba(94,132,148,.75), transparent 68%);
+  }
+  .scene::after {
+    width: 700px; height: 520px; right: -140px; bottom: -180px;
+    background: radial-gradient(circle, rgba(196,146,74,.55), transparent 66%);
+  }
+  .lamp { position: absolute; border-radius: 50%; filter: blur(16px); background: rgba(255,226,168,.75); }
+  /* A shoulder and the back of a head, rim-lit: enough for the eye to read
+     "night scene from a film" without borrowing anybody's frame. */
+  .silh { position: absolute; left: 34px; bottom: -26px; width: 430px; height: 320px; }
+  .screen.small .silh { transform: scale(.58); transform-origin: left bottom; }
+  .silh .head {
+    position: absolute; left: 118px; bottom: 148px; width: 152px; height: 176px;
+    border-radius: 50% 50% 42% 42%; background: #04070a;
+    box-shadow: 7px -7px 0 -3px rgba(255,214,150,.34);
+  }
+  .silh .body {
+    position: absolute; left: 0; bottom: 0; width: 400px; height: 178px;
+    border-radius: 150px 130px 0 0; background: #04070a;
+    box-shadow: 11px -9px 0 -7px rgba(255,214,150,.2);
+  }
+  .blinds {
+    position: absolute; right: 0; top: 0; width: 46%; height: 74%;
+    background: repeating-linear-gradient(to bottom, rgba(255,224,176,.11) 0 5px, transparent 5px 22px);
+    mask-image: radial-gradient(80% 70% at 80% 30%, #000 20%, transparent 78%);
+  }
+  .grain {
+    position: absolute; inset: 0;
+    background-image: radial-gradient(rgba(255,255,255,.055) 1px, transparent 1px);
+    background-size: 3px 3px;
+  }
+  .vignette {
+    position: absolute; inset: 0;
+    background: radial-gradient(120% 90% at 50% 45%, transparent 40%, rgba(0,0,0,.72));
+  }
+  .caption {
+    position: absolute; left: 50%; transform: translateX(-50%); bottom: 44px;
+    padding: 10px 18px; border-radius: 9px; background: rgba(0,0,0,.62);
+    font-size: 30px; font-weight: 600; color: #fff; white-space: nowrap;
+    text-shadow: 0 2px 6px rgba(0,0,0,.6);
+  }
+  .caption .pick {
+    background: var(--lit); border-radius: 6px; padding: 2px 7px; margin: 0 -3px;
+    box-shadow: 0 0 0 3px rgba(53,168,116,.3);
+  }
+  .cursor { position: absolute; width: 24px; height: 24px; filter: drop-shadow(0 2px 4px rgba(0,0,0,.5)); }
+  .key {
+    position: absolute; padding: 9px 15px; border-radius: 9px;
+    background: #f4f1ea; border: 1px solid #cfc8ba; border-bottom-width: 3px;
+    font-size: 15px; font-weight: 700; color: #2c352f;
+    box-shadow: 0 5px 14px rgba(0,0,0,.35);
+  }
+
+  /* --- the product's own card ---------------------------------------------- */
+  .ncard {
+    border-radius: 14px; padding: 16px 19px; max-width: 360px;
+    background: rgba(16,22,20,.96); border: 1px solid rgba(255,255,255,.1);
+    box-shadow: 0 20px 48px rgba(0,0,0,.5); color: #eef3f0;
+  }
+  .ncard.float { position: absolute; }
+  .ncard b { display: block; font-size: 19px; font-weight: 620; line-height: 1.3; }
+  .ncard .w { margin-top: 8px; font-size: 15.5px; color: #85e7b0; }
+  .ncard .s { margin-top: 7px; font-size: 13.5px; color: #94a59d; }
+
+  /* --- steps under a picture ------------------------------------------------ */
+  .steps { display: flex; gap: 34px; flex: none; margin-top: 20px; }
+  .steps > div { flex: 1; }
+  .steps b { display: block; font-size: 19px; font-weight: 650; letter-spacing: -.012em; }
+  .steps span { display: block; margin-top: 4px; font-size: 16px; line-height: 1.4; color: var(--body); }
+  .steps em { font-style: normal; color: var(--accent); font-weight: 800; margin-right: 9px; }
+
+  /* --- shot 2: two answers -------------------------------------------------- */
+  .source {
+    margin-top: 20px; flex: none; padding: 17px 22px; border-radius: 12px;
+    background: #0d1512; color: #dfe7e3; font-size: 21px;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .source .pick { background: var(--lit); border-radius: 5px; padding: 1px 7px; color: #fff; }
+  .source small { margin-left: auto; color: #8b9a93; font-size: 14px; }
+  /* The two answers take the slack between the quoted line and the band, so
+     the shot has no dead middle. */
+  .versus { margin-top: 16px; display: grid; gap: 14px; flex: 1; align-content: center; }
+  .row {
+    display: grid; grid-template-columns: 196px 1fr; align-items: center; gap: 24px;
+    padding: 20px 26px; border-radius: 14px; background: var(--card);
+    border: 1px solid var(--hair);
+  }
+  .row .who { font-size: 15px; font-weight: 700; color: var(--soft); }
+  .row p { font-size: 31px; font-weight: 650; letter-spacing: -.02em; }
+  .row.lose p { color: #868f8a; text-decoration: line-through; text-decoration-thickness: 2px; }
+  .row.win { border-color: rgba(30,122,76,.45); box-shadow: 0 12px 32px rgba(20,60,40,.08); }
+  .row.win .who { color: var(--accent); }
+  .row.win p { color: var(--accent); }
+  .chips { display: flex; gap: 9px; margin-top: 11px; flex-wrap: wrap; }
+  .chip {
+    padding: 6px 13px; border-radius: 999px; background: var(--wash);
+    color: #17603b; font-size: 15px; font-weight: 600;
+  }
+  .literal { margin-top: 10px; font-size: 16px; color: var(--body); }
+  .band { padding-top: 6px; flex: none; }
+  .band h6 { font-size: 14px; font-weight: 700; color: var(--soft); }
+  .band .three { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 12px; }
+  .band .three > div { padding: 15px 18px; border-radius: 12px; background: var(--card); border: 1px solid var(--hair); }
+  .band .three b { display: block; font-size: 16.5px; font-weight: 600; color: #37453e; }
+  .band .three span { display: block; margin-top: 6px; font-size: 18px; font-weight: 650; color: var(--accent); }
+
+  /* --- shot 3: a browser window --------------------------------------------- */
+  .browser {
+    margin-top: 20px; border-radius: 14px; overflow: hidden; flex: 1;
+    border: 1px solid var(--hair); background: var(--card);
+    box-shadow: 0 18px 44px rgba(20,40,30,.1); display: flex; flex-direction: column;
+  }
+  .bar { display: flex; align-items: center; gap: 9px; padding: 12px 15px; background: #efece5; border-bottom: 1px solid var(--hair); flex: none; }
+  .bar i { width: 11px; height: 11px; border-radius: 50%; background: #cfc8ba; }
+  .bar .url { margin-left: 10px; flex: 1; padding: 6px 13px; border-radius: 999px; background: #fff; border: 1px solid var(--hair); font-size: 13.5px; color: #6b7770; }
+  .page { padding: 26px 32px; display: grid; grid-template-columns: 1fr 330px; gap: 32px; flex: 1; }
+  .page h4 { font-size: 24px; font-weight: 700; letter-spacing: -.018em; }
+  .page p { margin-top: 13px; font-size: 17px; line-height: 1.7; color: var(--body); }
+  .page .pick {
+    background: rgba(53,168,116,.92); color: #fff; border-radius: 4px; padding: 1px 5px;
+    -webkit-box-decoration-break: clone; box-decoration-break: clone;
+  }
+  .byline { margin-top: 6px; font-size: 14px; color: var(--soft); }
+  .pdfmini { border-radius: 11px; border: 1px solid var(--hair); overflow: hidden; background: #fbfaf7; }
+  .pdfmini .t { padding: 8px 12px; background: #333b36; color: #e7ece9; font-size: 12.5px; display: flex; justify-content: space-between; }
+  .pdfmini .b { padding: 14px; font-size: 14px; line-height: 1.65; color: var(--body); }
+  .pdfmini .b .pick { background: rgba(53,168,116,.92); color: #fff; border-radius: 3px; padding: 0 4px; }
+
+  /* --- shot 4: two phones, drawn ------------------------------------------- */
+  .decks { margin-top: 20px; display: flex; gap: 30px; flex: 1; align-items: stretch; }
+  .phone {
+    width: 268px; flex: none; border-radius: 30px; padding: 9px; background: #16211c;
+    box-shadow: 0 24px 52px rgba(15,40,28,.26);
+  }
+  .glass { height: 100%; border-radius: 23px; background: var(--paper); overflow: hidden; display: flex; flex-direction: column; position: relative; }
+  .notch { height: 26px; flex: none; display: flex; align-items: center; justify-content: center; }
+  .notch::after { content: ''; width: 74px; height: 5px; border-radius: 3px; background: #d8d2c6; }
+  .ptitle { padding: 2px 17px 12px; flex: none; }
+  .ptitle b { display: block; font-size: 20px; font-weight: 750; letter-spacing: -.02em; }
+  .ptitle span { display: block; margin-top: 2px; font-size: 12.5px; color: var(--soft); }
+  .plist { padding: 0 12px; display: grid; gap: 8px; align-content: start; }
+  .prow { background: var(--card); border: 1px solid var(--hair); border-radius: 13px; padding: 11px 13px; }
+  .prow b { display: block; font-size: 14.5px; font-weight: 650; }
+  .prow u { display: block; margin-top: 3px; text-decoration: none; font-size: 13.5px; color: var(--accent); font-weight: 600; }
+  .prow s { display: block; margin-top: 4px; text-decoration: none; font-size: 11.5px; color: var(--soft); }
+  .prev { padding: 18px 16px; display: flex; flex-direction: column; height: 100%; }
+  .prevq {
+    background: var(--card); border: 1px solid var(--hair); border-radius: 16px;
+    padding: 26px 18px; text-align: center; box-shadow: 0 10px 26px rgba(20,50,36,.07);
+  }
+  .prevq b { display: block; font-size: 21px; font-weight: 700; letter-spacing: -.02em; line-height: 1.25; }
+  .prevq span { display: block; margin-top: 5px; font-size: 12px; color: var(--soft); }
+  .prevq hr { margin: 14px -18px; border: 0; border-top: 1px solid var(--hair); }
+  .prevq u { display: block; text-decoration: none; font-size: 19px; font-weight: 700; color: var(--accent); }
+  .prevq i { display: block; margin-top: 9px; font-style: normal; font-size: 12.5px; line-height: 1.45; color: var(--body); }
+  .prog { margin-bottom: 12px; font-size: 12px; font-weight: 600; color: var(--soft); text-align: center; }
+  .prog b { display: block; height: 4px; margin-top: 6px; border-radius: 2px; background: var(--hair); overflow: hidden; }
+  .prog b::after { content: ''; display: block; width: 25%; height: 100%; background: var(--accent); }
+  /* Devices and the note read as one block at the foot of the column, so the
+     column has a single deliberate gap rather than two accidental ones. */
+  .devs { display: flex; gap: 9px; margin-top: auto; }
+  .devs span {
+    flex: 1; padding: 11px 0; border-radius: 11px; background: var(--card);
+    border: 1px solid var(--hair); text-align: center;
+    font-size: 14.5px; font-weight: 650; color: var(--body);
+  }
+  .devs span::before { content: ''; display: block; width: 7px; height: 7px; margin: 0 auto 6px; border-radius: 50%; background: var(--accent); }
+  .prevbtns { margin-top: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
+  .prevbtns div { padding: 12px 0; border-radius: 12px; text-align: center; font-size: 14px; font-weight: 700; }
+  .prevbtns div:first-child { background: #f0ece4; color: var(--body); }
+  .prevbtns div:last-child { background: var(--accent); color: #fff; }
+  .aside { flex: 1; display: flex; flex-direction: column; }
+  .aside h5 { font-size: 20px; font-weight: 700; letter-spacing: -.015em; }
+  .aside ul { margin-top: 14px; list-style: none; display: grid; gap: 14px; }
+  .aside li { font-size: 16.5px; line-height: 1.45; color: var(--body); display: flex; gap: 12px; }
+  .aside li i { flex: none; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); margin-top: 8px; }
+  .aside li b { color: var(--ink); font-weight: 650; }
+  .note {
+    margin-top: 14px; padding: 17px 20px; border-radius: 13px; background: var(--wash);
+    font-size: 16.5px; line-height: 1.5; color: #1c4e36;
+  }
+
+  /* --- shot 5: the language grid is the hero -------------------------------- */
+  .picker { margin-top: 20px; flex: none; }
+  .picker h6 { font-size: 15px; font-weight: 700; color: var(--soft); }
+  .langs { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 12px; }
+  .langs span {
+    padding: 9px 16px; border-radius: 999px; background: var(--card);
+    border: 1px solid var(--hair); font-size: 17px; font-weight: 550; color: #3b4a43;
+  }
+  .langs span.on {
+    background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 700;
+    box-shadow: 0 8px 20px rgba(30,122,76,.28);
+  }
+  .pnote { margin-top: 12px; font-size: 16px; color: var(--body); }
+  .pair { margin-top: auto; padding-top: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 26px; flex: none; }
+  .anki { border-radius: 13px; border: 1px solid var(--hair); background: var(--card); overflow: hidden; }
+  .anki .h { padding: 11px 16px; background: #f1eee7; font-size: 13px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; color: var(--soft); display: flex; justify-content: space-between; }
+  .anki .r { display: grid; grid-template-columns: 168px 1fr; gap: 14px; padding: 11px 16px; border-top: 1px solid var(--hair); font-size: 15px; }
+  .anki .r b { font-weight: 620; }
+  .anki .r span { color: var(--body); }
+  .under { margin-top: 12px; }
+  .under b { display: block; font-size: 17.5px; font-weight: 650; }
+  .under span { display: block; margin-top: 4px; font-size: 15.5px; line-height: 1.45; color: var(--body); }
+</style>
+
+<div id="root"></div>
+
+<script>
+(() => {
+  const q = new URLSearchParams(location.search);
+  const lang = q.get('lang') || 'en';
+  const only = q.get('n');
+  const t = window.STRINGS[lang] || window.STRINGS.en;
+  const root = document.getElementById('root');
+  document.documentElement.lang = lang;
+
+  const esc = (s) => String(s).replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
+  /** A three-part string ["before", "highlighted", "after"] as marked-up HTML. */
+  const mark = (parts, cls) => esc(parts[0]) + '<span class="' + cls + '">' + esc(parts[1]) + '</span>' + esc(parts[2]);
+  const head = () => '<div class="mark"><i></i>' + esc(t.brand) + '</div>';
+
+  /* The pointer, drawn rather than imported so it keeps its outline on any
+     background. */
+  const CURSOR = '<svg class="cursor" viewBox="0 0 24 24"><path d="M4 2 L4 21 L9.6 15 L13 22.6 L16.1 21.2 L12.7 13.9 L21 13.9 Z" fill="#fff" stroke="#0d1512" stroke-width="1.3" stroke-linejoin="round"/></svg>';
+
+  const LAMPS = [
+    [30, 872, 128, .8], [20, 946, 196, .55], [44, 1010, 96, .45], [16, 760, 214, .4],
+  ].map(([d, x, y, o]) =>
+    `<div class="lamp" style="width:${d}px;height:${d}px;left:${x}px;top:${y}px;opacity:${o}"></div>`).join('');
+
+  /** The dark film rectangle: the one image this brand owns. */
+  const frame = (inner, lamps = true) => `
+    <div class="scene"></div><div class="blinds"></div>${lamps ? LAMPS : ''}
+    <div class="silh"><div class="body"></div><div class="head"></div></div>
+    <div class="grain"></div><div class="vignette"></div>${inner}`;
+
+  const card = (title, word, seen, cls = '', style = '') => `
+    <div class="ncard ${cls}" style="${style}">
+      <b>${esc(title)}</b><div class="w">${esc(word)}</div>
+      ${seen ? `<div class="s">${esc(seen)}</div>` : ''}
+    </div>`;
+
+  // --- 1 -------------------------------------------------------------------
+  const shot1 = () => `
+    <section class="shot">
+      ${head()}
+      <h1>${esc(t.s1h)}</h1>
+      <p class="lede">${esc(t.s1l)}</p>
+      <div class="screen" style="flex:1;margin-top:20px">
+        ${frame(`
+          ${card(t.s1card, t.s1word, t.s1seen, 'float', 'right:56px;top:48px')}
+          <div class="caption">${mark(t.s1cap, 'pick')}</div>
+          <div class="key" style="left:84px;bottom:48px">${esc(t.s1k)}</div>
+          <div style="position:absolute;left:50%;bottom:36px;transform:translateX(76px)">${CURSOR}</div>
+        `)}
+      </div>
+      <div class="steps">
+        ${t.s1s.map(([b, s], i) => `<div><b><em>${i + 1}</em>${esc(b)}</b><span>${esc(s)}</span></div>`).join('')}
+      </div>
+    </section>`;
+
+  // --- 2 -------------------------------------------------------------------
+  const shot2 = () => `
+    <section class="shot">
+      ${head()}
+      <h1>${esc(t.s2h)}</h1>
+      <p class="lede">${esc(t.s2l)}</p>
+      <div class="source"><span>${mark(t.s2src, 'pick')}</span><small>${esc(t.s2time)}</small></div>
+      <div class="versus">
+        <div class="row lose"><div class="who">${esc(t.s2lose)}</div><p>${esc(t.s2losep)}</p></div>
+        <div class="row win">
+          <div class="who">${esc(t.s2win)}</div>
+          <div>
+            <p>${esc(t.s2winp)}</p>
+            <div class="chips">${t.s2chips.map((c) => `<span class="chip">${esc(c)}</span>`).join('')}</div>
+            <div class="literal">${esc(t.s2lit)}</div>
+          </div>
+        </div>
+      </div>
+      <div class="band">
+        <h6>${esc(t.s2band)}</h6>
+        <div class="three">
+          ${t.s2three.map(([a, b]) => `<div><b>${esc(a)}</b><span>${esc(b)}</span></div>`).join('')}
+        </div>
+      </div>
+    </section>`;
+
+  // --- 3 -------------------------------------------------------------------
+  const shot3 = () => `
+    <section class="shot">
+      ${head()}
+      <h1>${esc(t.s3h)}</h1>
+      <p class="lede">${esc(t.s3l)}</p>
+      <div class="browser">
+        <div class="bar"><i></i><i></i><i></i><div class="url">${esc(t.s3url)}</div></div>
+        <div class="page">
+          <div>
+            <h4>${esc(t.s3title)}</h4>
+            <div class="byline">${esc(t.s3by)}</div>
+            <p>${mark(t.s3p1, 'pick')}</p>
+            <p>${esc(t.s3p2)}</p>
+            <p>${esc(t.s3p3)}</p>
+            <p>${esc(t.s3p4)}</p>
+          </div>
+          <div style="display:grid;align-content:start;gap:18px">
+            ${card(t.s3card, t.s3word, t.s1seen, '', 'max-width:none')}
+            <div class="pdfmini">
+              <div class="t"><span>${esc(t.s3pdf)}</span><span>${esc(t.s3pdfpage)}</span></div>
+              <div class="b">${mark(t.s3pdfbody, 'pick')}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="steps">
+        ${t.s3s.map(([b, s]) => `<div><b>${esc(b)}</b><span>${esc(s)}</span></div>`).join('')}
+      </div>
+    </section>`;
+
+  // --- 4 -------------------------------------------------------------------
+  const shot4 = () => `
+    <section class="shot">
+      ${head()}
+      <h1>${esc(t.s4h)}</h1>
+      <p class="lede">${esc(t.s4l)}</p>
+      <div class="decks">
+        <div class="phone"><div class="glass">
+          <div class="notch"></div>
+          <div class="ptitle"><b>${esc(t.s4lib)}</b><span>${esc(t.s4libsub)}</span></div>
+          <div class="plist">
+            ${t.s4rows.map(([w, m, src]) =>
+              `<div class="prow"><b>${esc(w)}</b><u>${esc(m)}</u><s>${esc(src)}</s></div>`).join('')}
+          </div>
+        </div></div>
+        <div class="phone"><div class="glass">
+          <div class="notch"></div>
+          <div class="ptitle"><b>${esc(t.s4rev)}</b></div>
+          <div class="prev">
+            <div class="prog">${esc(t.s4prog)}<b></b></div>
+            <div class="prevq">
+              <b>${esc(t.s4revq)}</b><span>${esc(t.s4revhint)}</span>
+              <hr /><u>${esc(t.s4revans)}</u><i>${esc(t.s4revline)}</i>
+            </div>
+            <div class="prevbtns">${t.s4revbtns.map((b) => `<div>${esc(b)}</div>`).join('')}</div>
+          </div>
+        </div></div>
+        <div class="aside">
+          <h5>${esc(t.s4aside)}</h5>
+          <ul>${t.s4list.map(([b, s]) =>
+            `<li><i></i><span><b>${esc(b)}</b> ${esc(s)}</span></li>`).join('')}</ul>
+          <div class="devs">${t.s4dev.map((d) => `<span>${esc(d)}</span>`).join('')}</div>
+          <div class="note">${esc(t.s4note)}</div>
+        </div>
+      </div>
+    </section>`;
+
+  // --- 5 -------------------------------------------------------------------
+  const shot5 = () => `
+    <section class="shot">
+      ${head()}
+      <h1>${esc(t.s5h)}</h1>
+      <p class="lede">${esc(t.s5l)}</p>
+      <div class="picker">
+        <h6>${esc(t.s5pick)}</h6>
+        <div class="langs">
+          ${window.LANGS.map(([code, name]) =>
+            `<span class="${code === lang ? 'on' : ''}">${esc(name)}</span>`).join('')}
+        </div>
+        <div class="pnote">${esc(t.s5note)}</div>
+      </div>
+      <div class="pair">
+        <div>
+          <div class="screen small" style="height:212px">
+            ${frame(`
+              <div style="position:absolute;left:0;right:0;top:0;padding:9px 15px;background:rgba(8,10,9,.72);
+                          color:#c9d3ce;font-size:13px;display:flex;justify-content:space-between">
+                <span>VLC media player</span><span>00:27:44 / 00:52:10</span>
+              </div>
+              <div class="caption" style="bottom:20px;font-size:21px">${mark(t.s5cap, 'pick')}</div>
+              ${card(t.s5card, t.s5word, '', 'float', 'left:18px;top:52px;max-width:230px;padding:12px 15px')}
+            `, false)}
+          </div>
+          <div class="under"><b>${esc(t.s5vlc)}</b><span>${esc(t.s5vlcs)}</span></div>
+        </div>
+        <div>
+          <div class="anki">
+            <div class="h"><span>${esc(t.s5anki)}</span><span>${esc(t.s5ankin)}</span></div>
+            ${t.s5rows.map(([a, b]) => `<div class="r"><b>${esc(a)}</b><span>${esc(b)}</span></div>`).join('')}
+          </div>
+          <div class="under"><b>${esc(t.s5own)}</b><span>${esc(t.s5owns)}</span></div>
+        </div>
+      </div>
+    </section>`;
+
+  const shots = [shot1, shot2, shot3, shot4, shot5];
+  if (only) {
+    document.body.classList.add('one');
+    root.innerHTML = shots[Number(only) - 1]();
+  } else {
+    root.innerHTML = shots.map((f) => f()).join('');
+  }
+  /* The renderer waits for this: fonts settle after first paint, and a
+     screenshot taken before they do is a screenshot of the fallback face. */
+  document.fonts.ready.then(() => { document.documentElement.dataset.ready = '1'; });
+})();
+</script>
