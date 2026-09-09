@@ -1,15 +1,38 @@
 # Что осталось сделать руками
 
-Обновлено 19 августа 2026. Всё, что ниже, требует твоего аккаунта, денег или
+Обновлено 9 сентября 2026. Всё, что ниже, требует твоего аккаунта, денег или
 телефона - код готов.
+
+## Первым делом: адреса возврата Google для нового домена
+
+Домен `subtitlenotes.com` куплен 9 сентября и привязан к воркеру; продукт
+отвечает на нём, `www` уводит на корень, старый `app.subtitlenotes.workers.dev`
+оставлен включённым для уже установленных копий.
+
+Google сверяет адрес возврата буквально, поэтому вход на новом домене будет
+отвечать `redirect_uri_mismatch`, пока в веб-клиенте
+`151185018789-tjda40ks4kb2vo8s30f9359n2b9o4dlb`
+(<https://console.cloud.google.com/auth/clients?project=151185018789>) не
+появятся, **не удаляя старые**:
+
+```
+Authorized JavaScript origins:  https://subtitlenotes.com
+Authorized redirect URIs:       https://subtitlenotes.com/library
+                                https://subtitlenotes.com/link
+```
+
+Вход на телефоне это не затрагивает: там нативный `google_sign_in`, он
+опирается на пару «пакет + сертификат», а не на адрес возврата. Расширению и
+программе для Windows адреса нужны.
 
 ## Сейчас в работе
 
 **Расширение опубликовано в Chrome Web Store**, адрес:
 https://chromewebstore.google.com/detail/subtitle-notes/lkajlfbpeinegffgmmmiemknkhbklmca
 
-В магазине лежит **2.8.1** (обновлена 26 августа). Собранное здесь ушло
-дальше, поэтому очередное дело - загрузить свежий
+В магазине лежит **2.8.1** (обновлена 26 августа), а собрано здесь уже
+**2.9.8** - в ней, помимо накопившегося, новый адрес в `host_permissions`.
+Очередное дело - загрузить свежий
 `release_package/subtitle-notes-extension-<версия>.zip` тем же порядком:
 позиция -> Package -> Upload new package -> Submit for review. Тексты карточки
 при этом не трогаются. Грузить архив **без** `-for-testing`: в том всё лежит
@@ -28,12 +51,10 @@ https://chromewebstore.google.com/detail/subtitle-notes/lkajlfbpeinegffgmmmiemkn
 
 ## Название на экране входа Google
 
-Сейчас при входе Google пишет «Jätka rakenduses andreas-sultseng228.workers.dev»
-вместо «Subtitle Notes». Правится один раз:
+Сейчас при входе Google пишет домен вместо «Subtitle Notes». Правится один раз:
 <https://console.cloud.google.com/auth/branding?project=151185018789> → поле
-**App name** → `Subtitle Notes` → сохранить.
-
-Адреса возврата и origin уже прописаны, вход работает.
+**App name** → `Subtitle Notes` → сохранить. Делается заодно с адресами
+возврата выше - там же, в том же проекте.
 
 ## Google Play - 25 долларов разово
 
