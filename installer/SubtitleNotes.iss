@@ -109,6 +109,12 @@ Root: HKCU; Subkey: "Software\Classes\SystemFileAssociations\.mp4\shell\OpenWith
 Root: HKCU; Subkey: "Software\Classes\SystemFileAssociations\.avi\shell\OpenWithTranslatedVLC"; Flags: deletekey
 Root: HKCU; Subkey: "Software\Classes\SystemFileAssociations\.mov\shell\OpenWithTranslatedVLC"; Flags: deletekey
 Root: HKCU; Subkey: "Software\Classes\SystemFileAssociations\.webm\shell\OpenWithTranslatedVLC"; Flags: deletekey
+Root: HKCU; Subkey: "Software\Classes\SystemFileAssociations\.m4v\shell\OpenWithTranslatedVLC"; Flags: deletekey
+Root: HKCU; Subkey: "Software\Classes\SystemFileAssociations\.wmv\shell\OpenWithTranslatedVLC"; Flags: deletekey
+Root: HKCU; Subkey: "Software\Classes\SystemFileAssociations\.mpg\shell\OpenWithTranslatedVLC"; Flags: deletekey
+Root: HKCU; Subkey: "Software\Classes\SystemFileAssociations\.mpeg\shell\OpenWithTranslatedVLC"; Flags: deletekey
+; And the name it gave itself in the "Open with" list.
+Root: HKCU; Subkey: "Software\Classes\Applications\OpenWithTranslatedVLC.exe"; Flags: deletekey
 Root: HKCU; Subkey: "Software\Classes\SystemFileAssociations\.mkv\shell\OpenWithSubtitleNotes"; ValueType: string; ValueName: "MUIVerb"; ValueData: "Open with Subtitle Notes"; Flags: uninsdeletekey
 Root: HKCU; Subkey: "Software\Classes\SystemFileAssociations\.mp4\shell\OpenWithSubtitleNotes"; ValueType: string; ValueName: "MUIVerb"; ValueData: "Open with Subtitle Notes"; Flags: uninsdeletekey
 Root: HKCU; Subkey: "Software\Classes\SystemFileAssociations\.avi\shell\OpenWithSubtitleNotes"; ValueType: string; ValueName: "MUIVerb"; ValueData: "Open with Subtitle Notes"; Flags: uninsdeletekey
