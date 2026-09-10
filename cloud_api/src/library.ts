@@ -9,7 +9,7 @@ const SAY: Record<string, Record<string, string>> = {
     title: 'Your library', words: 'Words', review: 'Practise', goals: 'Achievements',
     settings: 'Settings', search: 'Search your words', clear: 'Clear', all: 'All',
     active: 'Saved', learned: 'Learned', refresh: 'Refresh', signout: 'Sign out',
-    pro: 'Pro', proLeft: '{n} left today', proOn: 'Pro',
+    pro: 'Pro', proLeft: '{n} left today', proOn: 'Pro', account: 'Account',
     proHead: 'Subtitle Notes Pro',
     proNote: 'A free account gets {n} readings a day. Past that a card is still made, '
       + 'from the dictionary rather than the model. Pro removes the ceiling and gives '
@@ -41,7 +41,7 @@ const SAY: Record<string, Record<string, string>> = {
     title: 'Ваша библиотека', words: 'Слова', review: 'Повторение', goals: 'Достижения',
     settings: 'Настройки', search: 'Поиск по словам', clear: 'Очистить', all: 'Все',
     active: 'Сохранённые', learned: 'Выученные', refresh: 'Обновить', signout: 'Выйти',
-    pro: 'Pro', proLeft: 'осталось {n}', proOn: 'Pro',
+    pro: 'Pro', proLeft: 'осталось {n}', proOn: 'Pro', account: 'Аккаунт',
     proHead: 'Subtitle Notes Pro',
     proNote: 'Бесплатному аккаунту — {n} разборов в день. Дальше карточка всё равно '
       + 'делается, только словарём, а не моделью. Pro снимает потолок и даёт медленную, '
@@ -401,8 +401,10 @@ export const libraryPage = (lang: string, clientId: string) => {
                          height:2.5px; border-radius:2px; background:var(--accent) }
 
   button, input, select { font:inherit }
-  .go { border:0; border-radius:10px; padding:10px 14px; color:#fff; background:var(--accent);
-        font-weight:700; cursor:pointer; transition:transform .12s, filter .16s, box-shadow .16s }
+  .go { display:inline-block; border:0; border-radius:10px; padding:10px 14px; color:#fff;
+        background:var(--accent); text-decoration:none; font-weight:700; cursor:pointer;
+        font:inherit; font-weight:700;
+        transition:transform .12s, filter .16s, box-shadow .16s }
   .go:hover { filter:brightness(1.07); box-shadow:var(--lift) }
   .go:active { transform:translateY(1px) scale(.985) }
   /* Small, green and in the corner: the one place in this page that is
@@ -439,6 +441,26 @@ export const libraryPage = (lang: string, clientId: string) => {
   @media (prefers-reduced-motion: reduce) {
     .toast { transition:none; transform:translateX(-50%) }
     .toast[data-on="1"] { transform:translateX(-50%) }
+  }
+  /* An icon, not a word: the settings live behind the same shape everywhere
+     else, and the row across the top is calmer for having one fewer label. */
+  .icon {
+    display:grid; place-items:center; width:36px; height:36px; flex:0 0 auto;
+    border:0; border-radius:10px; background:transparent; color:var(--soft); cursor:pointer;
+    transition:color .16s ease, background .16s ease, transform .16s ease;
+  }
+  .icon:hover { color:var(--ink); background:var(--wash) }
+  .icon:active { transform:translateY(1px) scale(.96) }
+  .icon[data-on="1"] { color:var(--accent); background:var(--wash) }
+  .icon svg { display:block }
+  /* Paid accounts get a mark beside the count, not a button in the corner:
+     there is nothing left to sell them, so nothing should look for sale. */
+  .badge {
+    display:inline-flex; align-items:center; gap:5px; margin-left:8px;
+    color:var(--accent); font-weight:650;
+  }
+  .badge::before {
+    content:""; width:6px; height:6px; border-radius:50%; background:var(--accent);
   }
   .ghost { border:0; border-radius:10px; padding:9px 12px; color:var(--soft); background:transparent;
            font-weight:700; cursor:pointer; transition:background .16s,color .16s,transform .12s }
@@ -566,8 +588,11 @@ export const libraryPage = (lang: string, clientId: string) => {
   <div><h1>Subtitle Notes</h1><div id="count" class="count"></div></div>
   <div class="spacer"></div>
   <a id="pro" class="pro" hidden></a>
-  <button id="refresh" class="ghost" hidden></button>
-  <button id="signout" class="ghost" hidden></button>
+  <button id="gear" class="icon" hidden aria-label="Settings" title="Settings">
+    <svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true">
+      <path fill="currentColor" d="M12 8.5A3.5 3.5 0 1 0 12 15.5 3.5 3.5 0 1 0 12 8.5zm8.6 3.5c0 .5-.05.97-.13 1.43l1.9 1.48a.45.45 0 0 1 .1.58l-1.8 3.11c-.11.2-.35.27-.56.2l-2.24-.9c-.47.35-.97.65-1.52.87l-.34 2.38a.45.45 0 0 1-.44.38h-3.6a.45.45 0 0 1-.44-.38l-.34-2.38c-.55-.22-1.05-.51-1.52-.88l-2.24.9a.45.45 0 0 1-.56-.19l-1.8-3.11a.45.45 0 0 1 .1-.58l1.9-1.48A7.3 7.3 0 0 1 3.4 12c0-.48.05-.97.13-1.43L1.63 9.09a.45.45 0 0 1-.1-.58l1.8-3.11c.11-.2.35-.27.56-.2l2.24.9c.47-.35.97-.65 1.52-.87l.34-2.38A.45.45 0 0 1 8.43 2h3.6c.22 0 .41.16.44.38l.34 2.38c.55.22 1.05.51 1.52.88l2.24-.9c.21-.8.45 0 .56.19l1.8 3.11c.11.2.06.44-.1.58l-1.9 1.48c.08.46.13.93.13 1.42z"/>
+    </svg>
+  </button>
 </header>
 <nav id="tabs" hidden></nav>
 <main>
@@ -582,6 +607,7 @@ export const libraryPage = (lang: string, clientId: string) => {
       <input id="search" type="search" autocomplete="off">
       <div class="chips" id="filters"></div>
       <button id="clear" class="ghost"></button>
+      <button id="refresh" class="ghost"></button>
     </div>
     <div id="grid" class="grid"></div>
     <div id="empty" class="empty" hidden><h2></h2><p></p></div>
@@ -688,6 +714,7 @@ export const libraryPage = (lang: string, clientId: string) => {
     }
     $('count').textContent = cards.length + ' ' + T.saved +
       (learned.length ? ' · ' + learned.length + ' ' + T.learnedCount : '');
+    markPro();
     $('grid').innerHTML = shown.map(function (card) {
       return '<article class="card" data-id="' + esc(card.id) + '">' +
         (card.archived ? '<div class="badge"></div>' : '') +
@@ -929,8 +956,9 @@ export const libraryPage = (lang: string, clientId: string) => {
         esc((usage && usage.plan === 'pro') ? T.proManage : T.proBuy) + '</a></div>' +
       '<div class="panel"><h3>' + esc(T.exportAnki) + '</h3><p>' + esc(T.exportNote) + '</p>' +
         '<button class="go" id="anki">' + esc(T.exportAnki) + '</button></div>' +
-      '<div class="panel"><h3>' + esc(T.deleteAccount) + '</h3>' +
+      '<div class="panel"><h3>' + esc(T.account) + '</h3>' +
         '<p>' + esc(me ? me.email : '') + '</p>' +
+        '<button class="ghost" id="leave">' + esc(T.signout) + '</button> ' +
         '<button class="ghost danger" id="wipe">' + esc(T.deleteAccount) + '</button></div>';
 
     $('lang').onchange = async function () {
@@ -950,6 +978,7 @@ export const libraryPage = (lang: string, clientId: string) => {
       link.click();
       URL.revokeObjectURL(link.href);
     };
+    $('leave').onclick = function () { localStorage.removeItem(KEY); location.reload(); };
     $('wipe').onclick = async function () {
       if (!confirm(T.deleteAccount + '?')) return;
       await request('/me', 'DELETE');
@@ -960,8 +989,10 @@ export const libraryPage = (lang: string, clientId: string) => {
 
   // ---- frame ---------------------------------------------------------------
   function renderTabs() {
+    // Settings is the gear at the top right now; a row of tabs should hold
+    // the things somebody moves between, not the drawer they open twice.
     var tabs = [['words', T.words], ['review', T.review + (review.length ? ' · ' + review.length : '')],
-                ['goals', T.goals], ['settings', T.settings]];
+                ['goals', T.goals]];
     $('tabs').innerHTML = tabs.map(function (tab) {
       return '<button data-view="' + tab[0] + '"' + (view === tab[0] ? ' class="on"' : '') + '>' +
         esc(tab[1]) + '</button>';
@@ -977,6 +1008,10 @@ export const libraryPage = (lang: string, clientId: string) => {
       $('view-' + name).hidden = name !== next;
     });
     renderTabs();
+    if ($('gear')) {
+      if (next === 'settings') $('gear').dataset.on = '1';
+      else delete $('gear').dataset.on;
+    }
     if (next === 'words') renderWords();
     if (next === 'review') renderReview();
     if (next === 'goals') renderGoals();
@@ -1028,15 +1063,30 @@ export const libraryPage = (lang: string, clientId: string) => {
   /// Green and selling on a free account; quiet and merely informative on a
   /// paid one. The number of readings left appears only when it is worth
   /// knowing - a counter that is always on screen is a nag.
+  /// The count line is rewritten on every render, so the mark is put back
+  /// after it rather than once at the start.
+  function markPro() {
+    if (!usage || usage.plan !== 'pro') return;
+    var count = $('count');
+    if (!count || count.querySelector('.badge')) return;
+    var mark = document.createElement('span');
+    mark.className = 'badge';
+    mark.textContent = T.proOn;
+    count.appendChild(mark);
+  }
+
   function dressPro() {
     var badge = $('pro');
-    badge.hidden = false;
     badge.href = proHref();
     if (usage && usage.plan === 'pro') {
-      badge.dataset.paid = '1';
-      badge.textContent = T.proOn;
+      // Nothing left to sell, so nothing in the corner that looks for sale.
+      // The state goes next to the count, where a person reads about their
+      // own library rather than about an offer.
+      badge.hidden = true;
+      markPro();
       return;
     }
+    badge.hidden = false;
     delete badge.dataset.paid;
     var left = usage ? usage.left : -1;
     var near = left >= 0 && left <= 8;
@@ -1054,8 +1104,7 @@ export const libraryPage = (lang: string, clientId: string) => {
       usage = answers[4];
       $('login').hidden = true;
       $('tabs').hidden = false;
-      $('refresh').hidden = false;
-      $('signout').hidden = false;
+      $('gear').hidden = false;
       dressPro();
       show(view);
     } catch (error) {
@@ -1079,7 +1128,6 @@ export const libraryPage = (lang: string, clientId: string) => {
 
   window.addEventListener('load', function () {
     $('refresh').textContent = T.refresh;
-    $('signout').textContent = T.signout;
     $('clear').textContent = T.clear;
     $('login-sync').textContent = T.sync;
     $('search').placeholder = T.search;
@@ -1124,7 +1172,7 @@ export const libraryPage = (lang: string, clientId: string) => {
       renderWords();
     };
     $('refresh').onclick = load;
-    $('signout').onclick = function () { localStorage.removeItem(KEY); load(); };
+    $('gear').onclick = function () { show(view === 'settings' ? 'words' : 'settings'); };
     $('detail').onclick = function (event) { if (event.target === $('detail')) closeSheet(); };
     document.addEventListener('keydown', function (event) {
       if (event.key === 'Escape') closeSheet();
