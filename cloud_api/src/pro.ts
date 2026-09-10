@@ -40,6 +40,8 @@ const TEXT: Record<string, Record<string, string>> = {
     cancelled: 'Nothing was charged. The free account is unchanged.',
     manage: 'Change or cancel',
     already: 'This account is Pro.',
+    working: 'Taking you to Stripe…',
+    back: 'Back to your words',
     perMonth: '/mo',
     perYear: '/yr',
   },
@@ -70,6 +72,8 @@ const TEXT: Record<string, Record<string, string>> = {
     cancelled: 'Ничего не списано. Бесплатный аккаунт не изменился.',
     manage: 'Изменить или отменить',
     already: 'Этот аккаунт — Pro.',
+    working: 'Открываю Stripe…',
+    back: 'Назад к своим словам',
     perMonth: '/мес',
     perYear: '/год',
   },
@@ -130,11 +134,45 @@ export function proPage(
   .plans { display: grid; gap: .9rem; grid-template-columns: 1fr; margin-top: 1.2rem; }
   @media (min-width: 34rem) { .plans { grid-template-columns: 1fr 1fr; } }
   .plan {
-    display: block; width: 100%; text-align: left; cursor: pointer;
+    position: relative; display: block; width: 100%; text-align: left; cursor: pointer;
     background: var(--card); border: 1px solid var(--hair); border-radius: 14px;
-    padding: 1.15rem 1.25rem 1.25rem; color: inherit; font: inherit;
+    padding: 1.15rem 3rem 1.25rem 1.25rem; color: inherit; font: inherit;
+    /* The same easing the rest of the product uses when something is pressed:
+       a short ease-out, and a press that actually moves. A choice that does
+       not move under the finger reads as a choice that did not register. */
+    transition: border-color .18s ease, background .18s ease, box-shadow .18s ease,
+                transform .18s cubic-bezier(.16, 1, .3, 1);
   }
-  .plan[data-on="1"] { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+  .plan:hover { border-color: var(--soft); }
+  .plan:active { transform: translateY(1px) scale(.985); }
+  .plan:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .plan[data-on="1"] {
+    border-color: var(--accent); background: var(--wash);
+    transform: translateY(-1px);
+    box-shadow: 0 0 0 1px var(--accent), 0 10px 22px -16px rgba(0, 0, 0, .5);
+  }
+  .plan[data-on="1"]:active { transform: translateY(0) scale(.99); }
+
+  /* The mark that says which one is chosen. It grows rather than appearing,
+     which is the difference between a state that changed and a state that was
+     always like that. */
+  .dot {
+    position: absolute; top: 1.2rem; right: 1.2rem; width: 18px; height: 18px;
+    border-radius: 50%; border: 1.5px solid var(--hair);
+    transition: border-color .18s ease;
+  }
+  .dot::after {
+    content: ""; position: absolute; inset: 3px; border-radius: 50%;
+    background: var(--accent); transform: scale(0);
+    transition: transform .24s cubic-bezier(.16, 1, .3, 1);
+  }
+  .plan[data-on="1"] .dot { border-color: var(--accent); }
+  .plan[data-on="1"] .dot::after { transform: scale(1); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .plan, .dot, .dot::after, button.go { transition: none; }
+    .plan:active, .plan[data-on="1"] { transform: none; }
+  }
   .plan .amount { font-size: 1.7rem; font-weight: 700; letter-spacing: -.03em; }
   .plan .amount span { font-size: 1rem; font-weight: 400; color: var(--soft); }
   .plan .name { font-size: .8rem; letter-spacing: .08em; text-transform: uppercase; color: var(--soft); }
@@ -145,12 +183,29 @@ export function proPage(
     border-radius: 12px; background: var(--accent); color: #fff;
     font: 600 1.02rem/1 system-ui, sans-serif; letter-spacing: -.01em;
   }
-  button.go[disabled] { opacity: .55; cursor: default; }
+  button.go {
+    transition: transform .18s cubic-bezier(.16, 1, .3, 1), filter .18s ease;
+  }
+  button.go:hover { filter: brightness(1.06); }
+  button.go:active { transform: translateY(1px) scale(.99); }
+  button.go[disabled] { opacity: .55; cursor: default; transform: none; filter: none; }
+  button.go[data-busy="1"] { cursor: progress; animation: breathe 1.1s ease-in-out infinite; }
+  @keyframes breathe { 0%, 100% { filter: brightness(1) } 50% { filter: brightness(1.13) } }
+  @media (prefers-reduced-motion: reduce) { button.go[data-busy="1"] { animation: none; opacity: .8 } }
   .fine { color: var(--soft); font-size: .9rem; margin-top: 1rem; }
+  .back {
+    display: inline-flex; align-items: center; gap: .45rem; margin-top: 1.6rem;
+    color: var(--soft); text-decoration: none; font-size: .95rem;
+    transition: color .16s ease, gap .16s ease;
+  }
+  .back:hover { color: var(--ink); gap: .65rem; }
+  .back:active { transform: translateY(1px); }
+  header a { color: inherit; text-decoration: none; display: flex; align-items: center; gap: .7rem; }
+  @media (prefers-reduced-motion: reduce) { .back { transition: none } }
   a { color: var(--accent); }
 </style></head>
 <body><div class="page">
-  <header><div class="glyph"></div><div class="wordmark">Subtitle Notes</div></header>
+  <header><a href="/library"><div class="glyph"></div><div class="wordmark">Subtitle Notes</div></a></header>
 
   <h1>${esc(t.title)}</h1>
   <p class="lede">${esc(t.lede)}</p>
@@ -172,11 +227,13 @@ export function proPage(
 
   <div class="plans">
     <button class="plan" data-period="yearly" data-on="1">
+      <span class="dot"></span>
       <div class="name">${esc(t.yearly)}</div>
       <div class="amount">24 €<span>${esc(t.perYear)}</span></div>
       <div class="sub">${esc(t.yearlyNote)}</div>
     </button>
     <button class="plan" data-period="monthly">
+      <span class="dot"></span>
       <div class="name">${esc(t.monthly)}</div>
       <div class="amount">3 €<span>${esc(t.perMonth)}</span></div>
       <div class="sub">${esc(t.monthlyNote)}</div>
@@ -185,6 +242,7 @@ export function proPage(
 
   <button class="go" id="go">${esc(t.buy)}</button>
   <p class="fine" id="fine"></p>
+  <a class="back" href="/library">&larr; ${esc(t.back)}</a>
 </div>
 
 <script>
@@ -228,6 +286,8 @@ export function proPage(
   go.addEventListener('click', function () {
     if (go.dataset.busy) return;
     go.dataset.busy = '1';
+    var said = go.textContent;
+    go.textContent = ${JSON.stringify(TEXT[lang]?.working ?? TEXT.en.working)};
     var path = mode === 'manage' ? '/v1/billing/portal' : '/v1/billing/checkout';
     fetch(path, {
       method: 'POST',
@@ -238,8 +298,9 @@ export function proPage(
         if (d.url) { location.href = d.url; return; }
         fine.textContent = d.detail || 'Something went wrong';
         go.dataset.busy = '';
+        go.textContent = said;
       })
-      .catch(function () { go.dataset.busy = ''; });
+      .catch(function () { go.dataset.busy = ''; go.textContent = said; });
   });
 })();
 </script>
