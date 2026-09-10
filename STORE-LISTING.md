@@ -124,7 +124,7 @@ Nothing is sent for translation until you select text yourself. https://subtitle
 ```
 
 ---
-
+а хули ты не продолжаешь тогад сам хуйло добавь себ в память доделыват до конца и проверять ебалн ебанывй я сижу жду блять 
 ## Русский
 
 **Название:**
