@@ -589,8 +589,15 @@ export const libraryPage = (lang: string, clientId: string) => {
   <div class="spacer"></div>
   <a id="pro" class="pro" hidden></a>
   <button id="gear" class="icon" hidden aria-label="Settings" title="Settings">
-    <svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true">
-      <path fill="currentColor" d="M12 8.5A3.5 3.5 0 1 0 12 15.5 3.5 3.5 0 1 0 12 8.5zm8.6 3.5c0 .5-.05.97-.13 1.43l1.9 1.48a.45.45 0 0 1 .1.58l-1.8 3.11c-.11.2-.35.27-.56.2l-2.24-.9c-.47.35-.97.65-1.52.87l-.34 2.38a.45.45 0 0 1-.44.38h-3.6a.45.45 0 0 1-.44-.38l-.34-2.38c-.55-.22-1.05-.51-1.52-.88l-2.24.9a.45.45 0 0 1-.56-.19l-1.8-3.11a.45.45 0 0 1 .1-.58l1.9-1.48A7.3 7.3 0 0 1 3.4 12c0-.48.05-.97.13-1.43L1.63 9.09a.45.45 0 0 1-.1-.58l1.8-3.11c.11-.2.35-.27.56-.2l2.24.9c.47-.35.97-.65 1.52-.87l.34-2.38A.45.45 0 0 1 8.43 2h3.6c.22 0 .41.16.44.38l.34 2.38c.55.22 1.05.51 1.52.88l2.24-.9c.21-.8.45 0 .56.19l1.8 3.11c.11.2.06.44-.1.58l-1.9 1.48c.08.46.13.93.13 1.42z"/>
+    <!-- A cog built from circles: the teeth are a thick dashed rim, the hub a
+         thin ring inside it. Nothing is plotted by hand, so nothing can come
+         out malformed - the first attempt here was a path I wrote by eye and
+         it drew a broken star. -->
+    <svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true"
+         fill="none" stroke="currentColor">
+      <circle cx="12" cy="12" r="7.6" stroke-width="3.2" stroke-dasharray="2.6 3.37"/>
+      <circle cx="12" cy="12" r="7.5" stroke-width="1.5"/>
+      <circle cx="12" cy="12" r="3.5" stroke-width="1.7"/>
     </svg>
   </button>
 </header>
