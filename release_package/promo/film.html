@@ -165,71 +165,141 @@ window.addEventListener('DOMContentLoaded', () => {
 
   // -------------------------------------------------------------- scene one
   const tvGroup = new THREE.Group();
+  /* A frame from a series, not a diagram of one. It is built the way the shot
+     it imitates is built: a cold window well behind the subject, a warm
+     practical beside her, an out-of-focus shoulder in the near foreground, and
+     the whole thing graded cool in the shadows and warm in the highlights.
+     The depth is real blur, not a suggestion of it - canvas can do a gaussian,
+     so the background is genuinely out of focus and the foreground more so.
+     Nobody has a face: a rim-lit head reads as a person, and a drawn face at
+     this size reads as a cartoon. */
   const tv = flat(1500, 844, function (x, w, h) {
-    x.fillStyle = '#05090a'; roundRect(x, w, h, 16); x.fill();
-    x.save(); roundRect(x, w, h, 16); x.clip();
-    x.save(); x.translate(26, 26);
-    const iw = w - 52, ih = h - 52;
-    // Night interior. Cool from the window, warm from the lamp, and the room
-    // between them almost black - the grade a series actually has.
-    const air = x.createLinearGradient(0, 0, iw * 0.4, ih);
-    air.addColorStop(0, '#16232b'); air.addColorStop(1, '#070c0e');
-    x.fillStyle = air; x.fillRect(0, 0, iw, ih);
-    // The window: a cold slab of light with a frame across it.
+    const bar = h * 0.085;                 // the letterbox
+    x.fillStyle = '#030506'; x.fillRect(0, 0, w, h);
     x.save();
-    const win = x.createLinearGradient(iw * 0.08, 0, iw * 0.42, ih * 0.7);
-    win.addColorStop(0, 'rgba(150,186,205,.5)'); win.addColorStop(1, 'rgba(90,130,150,.06)');
-    x.fillStyle = win; x.fillRect(iw * 0.08, ih * 0.06, iw * 0.3, ih * 0.62);
-    x.strokeStyle = 'rgba(8,12,14,.85)'; x.lineWidth = 7;
-    x.strokeRect(iw * 0.08, ih * 0.06, iw * 0.3, ih * 0.62);
+    x.beginPath(); x.rect(0, bar, w, h - bar * 2); x.clip();
+
+    // --- the room, softly out of focus -------------------------------------
+    x.save();
+    x.filter = 'blur(9px)';
+    const wall = x.createLinearGradient(0, 0, w * 0.7, h);
+    wall.addColorStop(0, '#1b2a33'); wall.addColorStop(0.5, '#0d161b'); wall.addColorStop(1, '#05090b');
+    x.fillStyle = wall; x.fillRect(-20, 0, w + 40, h);
+
+    // the window: the cold source, and the light it lays on the floor
+    const wx = w * 0.1, wy = h * 0.1, ww = w * 0.27, wh = h * 0.56;
+    const pane = x.createLinearGradient(wx, wy, wx + ww, wy + wh);
+    pane.addColorStop(0, 'rgba(176,205,222,.62)');
+    pane.addColorStop(1, 'rgba(96,136,158,.28)');
+    x.fillStyle = pane; x.fillRect(wx, wy, ww, wh);
+    x.strokeStyle = 'rgba(5,9,11,.9)'; x.lineWidth = 9;
+    x.strokeRect(wx, wy, ww, wh);
     x.beginPath();
-    x.moveTo(iw * 0.23, ih * 0.06); x.lineTo(iw * 0.23, ih * 0.68);
-    x.moveTo(iw * 0.08, ih * 0.34); x.lineTo(iw * 0.38, ih * 0.34);
+    x.moveTo(wx + ww * 0.5, wy); x.lineTo(wx + ww * 0.5, wy + wh);
+    x.moveTo(wx, wy + wh * 0.45); x.lineTo(wx + ww, wy + wh * 0.45);
     x.stroke();
+    const spill = x.createLinearGradient(wx, wy + wh, wx + ww * 1.6, h);
+    spill.addColorStop(0, 'rgba(150,186,206,.3)'); spill.addColorStop(1, 'rgba(0,0,0,0)');
+    x.fillStyle = spill;
+    x.beginPath();
+    x.moveTo(wx, wy + wh); x.lineTo(wx + ww, wy + wh);
+    x.lineTo(wx + ww * 2.1, h); x.lineTo(wx - ww * 0.5, h); x.closePath(); x.fill();
     x.restore();
-    // The light the window throws across the floor.
-    const spill = x.createLinearGradient(iw * 0.1, ih * 0.68, iw * 0.55, ih);
-    spill.addColorStop(0, 'rgba(140,175,196,.22)'); spill.addColorStop(1, 'rgba(0,0,0,0)');
-    x.fillStyle = spill; x.beginPath();
-    x.moveTo(iw * 0.08, ih * 0.68); x.lineTo(iw * 0.38, ih * 0.68);
-    x.lineTo(iw * 0.62, ih); x.lineTo(iw * 0.02, ih); x.closePath(); x.fill();
-    // A practical, warm, and its bloom.
-    const lamp = x.createRadialGradient(iw * 0.79, ih * 0.4, 4, iw * 0.79, ih * 0.4, iw * 0.26);
-    lamp.addColorStop(0, 'rgba(255,214,150,.95)');
-    lamp.addColorStop(0.12, 'rgba(255,196,120,.4)');
-    lamp.addColorStop(1, 'rgba(255,180,100,0)');
-    x.fillStyle = lamp; x.fillRect(iw * 0.4, 0, iw * 0.6, ih);
-    // A figure standing between the lamp and us, rimmed by it.
+
+    // --- the practical, and the halation around it -------------------------
+    const lx = w * 0.845, ly = h * 0.42;
+    x.save(); x.filter = 'blur(3px)';
+    const halo = x.createRadialGradient(lx, ly, 2, lx, ly, w * 0.3);
+    halo.addColorStop(0, 'rgba(255,222,168,1)');
+    halo.addColorStop(0.06, 'rgba(255,206,140,.7)');
+    halo.addColorStop(0.3, 'rgba(238,166,96,.18)');
+    halo.addColorStop(1, 'rgba(220,140,70,0)');
+    x.fillStyle = halo; x.fillRect(w * 0.45, 0, w * 0.55, h);
+    x.restore();
+    // the lamp's own body, sharper than its glow
+    x.save(); x.filter = 'blur(1.5px)';
+    x.fillStyle = 'rgba(20,14,10,.9)';
+    x.beginPath(); x.moveTo(lx - 44, ly + 34); x.lineTo(lx + 44, ly + 34);
+    x.lineTo(lx + 30, ly - 26); x.lineTo(lx - 30, ly - 26); x.closePath(); x.fill();
+    x.fillStyle = 'rgba(255,214,150,.85)';
+    x.fillRect(lx - 42, ly + 28, 84, 7);
+    x.restore();
+
+    // --- the subject, in focus ---------------------------------------------
+    const sx = w * 0.585, sy = h * 0.72;
     x.save();
-    x.fillStyle = 'rgba(6,10,12,.94)';
-    x.beginPath(); x.ellipse(iw * 0.62, ih * 1.02, iw * 0.13, ih * 0.42, -0.07, 0, 7); x.fill();
-    x.beginPath(); x.ellipse(iw * 0.62, ih * 0.55, iw * 0.052, ih * 0.1, 0, 0, 7); x.fill();
+    // shoulders
+    x.fillStyle = '#070c0e';
+    x.beginPath();
+    x.moveTo(sx - 210, h);
+    x.bezierCurveTo(sx - 190, sy - 10, sx - 96, sy - 62, sx - 12, sy - 66);
+    x.bezierCurveTo(sx + 92, sy - 62, sx + 176, sy - 6, sx + 196, h);
+    x.closePath(); x.fill();
+    // head, three-quarter, with the hair mass reading past the jaw
+    x.beginPath(); x.ellipse(sx - 6, sy - 148, 74, 92, 0.06, 0, 7); x.fill();
+    x.beginPath(); x.ellipse(sx - 30, sy - 176, 84, 84, 0.1, 0, 7); x.fill();
+    // the practical rims her: warm, thin, only where it can reach
     x.globalCompositeOperation = 'lighter';
-    x.strokeStyle = 'rgba(255,206,150,.5)'; x.lineWidth = 4;
-    x.beginPath(); x.ellipse(iw * 0.62, ih * 0.55, iw * 0.052, ih * 0.1, 0, -1.1, 1.2); x.stroke();
-    x.beginPath(); x.ellipse(iw * 0.62, ih * 1.02, iw * 0.13, ih * 0.42, -0.07, -1.3, 0.5); x.stroke();
+    x.strokeStyle = 'rgba(255,206,148,.62)'; x.lineWidth = 5;
+    x.beginPath(); x.ellipse(sx - 6, sy - 148, 74, 92, 0.06, -1.35, 0.75); x.stroke();
+    x.strokeStyle = 'rgba(255,198,138,.4)'; x.lineWidth = 7;
+    x.beginPath();
+    x.moveTo(sx + 40, sy - 58);
+    x.bezierCurveTo(sx + 120, sy - 44, sx + 172, sy + 30, sx + 192, h - 30);
+    x.stroke();
+    // the window fills the other side, cold and much weaker
+    x.strokeStyle = 'rgba(150,186,206,.22)'; x.lineWidth = 4;
+    x.beginPath(); x.ellipse(sx - 6, sy - 148, 74, 92, 0.06, 2.1, 3.9); x.stroke();
     x.restore();
-    // Grain, then the bars. A frame with bars on it reads as film before
-    // anything in it has been recognised.
-    for (let i = 0; i < 2600; i++) {
-      x.fillStyle = 'rgba(255,255,255,' + (0.012 + (i % 7) * 0.004) + ')';
-      x.fillRect((i * 6151) % iw, (i * 2749) % ih, 1.3, 1.3);
+
+    // --- the foreground shoulder, close and far out of focus ---------------
+    x.save();
+    x.filter = 'blur(26px)';
+    x.fillStyle = 'rgba(3,5,6,.97)';
+    x.beginPath();
+    x.moveTo(-40, h);
+    x.bezierCurveTo(w * 0.02, h * 0.52, w * 0.13, h * 0.42, w * 0.2, h * 0.44);
+    x.bezierCurveTo(w * 0.29, h * 0.47, w * 0.34, h * 0.72, w * 0.35, h);
+    x.closePath(); x.fill();
+    x.beginPath(); x.ellipse(w * 0.16, h * 0.38, 92, 104, 0, 0, 7); x.fill();
+    x.restore();
+
+    // --- grade -------------------------------------------------------------
+    // Cool into the shadows, warm into the highlights: the split every night
+    // interior on television has.
+    x.save();
+    x.globalCompositeOperation = 'multiply';
+    const cool = x.createLinearGradient(0, 0, w * 0.55, h);
+    cool.addColorStop(0, 'rgba(150,190,215,1)'); cool.addColorStop(1, 'rgba(255,255,255,1)');
+    x.fillStyle = cool; x.fillRect(0, 0, w, h);
+    x.restore();
+    x.save();
+    x.globalCompositeOperation = 'lighter';
+    const warm = x.createRadialGradient(lx, ly, 10, lx, ly, w * 0.55);
+    warm.addColorStop(0, 'rgba(90,54,20,.5)'); warm.addColorStop(1, 'rgba(0,0,0,0)');
+    x.fillStyle = warm; x.fillRect(0, 0, w, h);
+    x.restore();
+    // lens vignette
+    const vig = x.createRadialGradient(w / 2, h / 2, h * 0.32, w / 2, h / 2, h * 0.92);
+    vig.addColorStop(0, 'rgba(0,0,0,0)'); vig.addColorStop(1, 'rgba(0,0,0,.72)');
+    x.fillStyle = vig; x.fillRect(0, 0, w, h);
+    // grain, fine and even
+    for (let i = 0; i < 5200; i++) {
+      x.fillStyle = 'rgba(255,255,255,' + (0.008 + (i % 5) * 0.005) + ')';
+      x.fillRect((i * 6151) % w, (i * 2749) % h, 1.2, 1.2);
     }
-    x.fillStyle = '#040708';
-    x.fillRect(0, 0, iw, ih * 0.075); x.fillRect(0, ih * 0.925, iw, ih * 0.075);
-    const c = x.createLinearGradient(0, ih * 0.45, 0, ih);
-    c.addColorStop(0, 'rgba(4,7,8,0)'); c.addColorStop(1, 'rgba(4,7,8,.85)');
-    x.fillStyle = c; x.fillRect(0, 0, iw, ih);
     x.restore();
-    x.fillStyle = 'rgba(255,255,255,.02)';
-    for (let y = 0; y < h; y += 3) x.fillRect(0, y, w, 1);
-    x.restore();
+
+    // --- the bars and the player's own furniture ---------------------------
+    x.fillStyle = '#030506';
+    x.fillRect(0, 0, w, bar); x.fillRect(0, h - bar, w, bar);
     x.fillStyle = 'rgba(238,243,240,.2)'; x.fillRect(60, h - 46, w - 120, 3);
     x.fillStyle = ACC; x.fillRect(60, h - 46, (w - 120) * 0.66, 3);
     x.beginPath(); x.arc(60 + (w - 120) * 0.66, h - 44.5, 8, 0, 7); x.fill();
     write(x, T.fep, '500 21px ' + FONT, FAINT, 60, h - 70, 'left');
     write(x, T.ftotal, '500 21px ' + FONT, FAINT, w - 60, h - 70, 'right');
   });
+
   tv.material = new THREE.MeshBasicMaterial({ map: tv.material.map, transparent: true, toneMapped: false });
   tv.position.set(0, 1.2, -9);
   tvGroup.add(tv);
