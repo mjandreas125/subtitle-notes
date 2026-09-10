@@ -29,7 +29,7 @@ const ANDROID_LATEST = {
 };
 
 const BROWSER_LATEST = {
-  version: '2.8.1',
+  version: '2.9.7',
   url: 'https://chromewebstore.google.com/detail/subtitle-notes/lkajlfbpeinegffgmmmiemknkhbklmca',
   source: 'chrome-web-store',
 };

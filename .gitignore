@@ -42,3 +42,9 @@ TranslatedVLC-*.zip
 release_package/play/
 *.spec
 .wrangler/
+
+# Renders from other tools, dropped into the promo folder. Twenty-three
+# gigabytes of frames and encodes: a repository is not a scratch disk, and
+# `git add -A` in here will otherwise sit there indexing them.
+release_package/promo/astra/
+release_package/promo/astra-v2/
