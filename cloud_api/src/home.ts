@@ -411,6 +411,7 @@ export function homePage(lang: string, links: Record<string, string> = {}): stri
   return `<!doctype html>
 <html lang="${code}"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%231e7a4c'/%3E%3Crect x='7' y='11' width='18' height='3.4' rx='1.7' fill='%23faf8f4'/%3E%3Crect x='7' y='18' width='9' height='3.4' rx='1.7' fill='%23faf8f4'/%3E%3C/svg%3E">
 <title>${escape(t.title)}</title>
 <meta name="description" content="${escape(t.lede)}">
 <style>

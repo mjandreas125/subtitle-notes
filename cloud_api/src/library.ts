@@ -362,6 +362,7 @@ export const libraryPage = (lang: string, clientId: string) => {
   return `<!doctype html>
 <html lang="${code}"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%231e7a4c'/%3E%3Crect x='7' y='11' width='18' height='3.4' rx='1.7' fill='%23faf8f4'/%3E%3Crect x='7' y='18' width='9' height='3.4' rx='1.7' fill='%23faf8f4'/%3E%3C/svg%3E">
 <title>Subtitle Notes</title>
 <script src="https://accounts.google.com/gsi/client" async></script>
 <style>
@@ -395,14 +396,18 @@ export const libraryPage = (lang: string, clientId: string) => {
   .count { color:var(--soft); font-size:12.5px; font-weight:650 }
   .spacer { flex:1 }
 
-  nav { display:flex; gap:4px; padding:0 max(20px,calc((100vw - 1120px)/2));
-        border-bottom:1px solid var(--hair); background:var(--paper); position:sticky; top:59px; z-index:2 }
-  nav button { position:relative; padding:11px 14px; border:0; background:transparent; color:var(--soft);
-               font-weight:700; font-size:14px; cursor:pointer; transition:color .16s }
-  nav button:hover { color:var(--ink) }
-  nav button.on { color:var(--ink) }
-  nav button.on::after { content:''; position:absolute; left:12px; right:12px; bottom:-1px;
-                         height:2.5px; border-radius:2px; background:var(--accent) }
+  nav { display:flex; padding:10px max(20px,calc((100vw - 1120px)/2)) 12px;
+        background:var(--paper); position:sticky; top:59px; z-index:2 }
+  #tabs { display:inline-flex; gap:2px; padding:3px; border-radius:12px;
+          background:var(--wash); border:1px solid var(--hair) }
+  nav button { position:relative; padding:8px 15px; border:0; border-radius:9px;
+               background:transparent; color:var(--soft); font-weight:650; font-size:13.5px;
+               letter-spacing:-.01em; cursor:pointer; white-space:nowrap;
+               transition:color .18s ease, background .18s ease, transform .18s ease }
+  nav button:hover { color:var(--ink); background:color-mix(in srgb,var(--card) 70%,transparent) }
+  nav button:active { transform:translateY(1px) scale(.98) }
+  nav button.on { color:var(--ink); background:var(--card); box-shadow:0 1px 2px rgba(0,0,0,.06) }
+  @media (prefers-reduced-motion: reduce) { nav button { transition:none } }
 
   button, input, select { font:inherit }
   .go { display:inline-block; border:0; border-radius:10px; padding:10px 14px; color:#fff;
@@ -503,6 +508,7 @@ export const libraryPage = (lang: string, clientId: string) => {
   .word { position:relative; display:inline; font-size:19.5px; font-weight:760; letter-spacing:-.02em;
           overflow-wrap:anywhere; background-image:linear-gradient(var(--wash),var(--wash));
           background-repeat:no-repeat; background-position:0 88%; background-size:0% .62em;
+          -webkit-box-decoration-break:clone; box-decoration-break:clone;
           transition:background-size .28s cubic-bezier(.2,.7,.3,1) }
   .card:hover .word { background-size:100% .62em }
   .meaning { margin-top:7px; color:var(--accent); font-weight:650; overflow-wrap:anywhere }
@@ -515,7 +521,7 @@ export const libraryPage = (lang: string, clientId: string) => {
   /* Two lines for the word, two for the meaning, two for the line it came
      from - reserved whether or not there is a line, so the name of the film
      sits at the same height on every card in the grid. */
-  .word { display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden }
+  .wordbox { display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden }
   .meaning { display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden }
   .context { min-height:2.8em }
   .card .badge { position:absolute; top:14px; right:14px; width:8px; height:8px; border-radius:50%;
@@ -755,7 +761,7 @@ export const libraryPage = (lang: string, clientId: string) => {
       var showLine = line && !echoes(line, source(card));
       return '<article class="card" data-id="' + esc(card.id) + '">' +
         (card.archived ? '<div class="badge"></div>' : '') +
-        '<div><span class="word">' + esc(label(card)) + '</span></div>' +
+        '<div class="wordbox"><span class="word">' + esc(label(card)) + '</span></div>' +
         '<div class="meaning">' + esc(meaning(card)) + '</div>' +
         '<div class="context">' + (showLine ? contextHtml(card) : '') + '</div>' +
         '<div class="source">' + esc(source(card)) + '</div></article>';
