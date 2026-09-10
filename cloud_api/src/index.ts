@@ -18,6 +18,8 @@ import {
   AI_PROVIDERS, FREE_SMART_PER_DAY, FREE_DEEP_PER_DAY,
   entitlementOf, countUse, usageOf, seal, hintOf, sameSecret,
 } from './billing';
+import { checkoutUrl, portalUrl, verify, applyEvent } from './stripe';
+import { proPage } from './pro';
 import { homePage } from './home';
 
 const CLIENT_ID = '151185018789-tjda40ks4kb2vo8s30f9359n2b9o4dlb.apps.googleusercontent.com';
@@ -1389,6 +1391,13 @@ export default { async fetch(request: Request, env: Env, ctx: ExecutionContext):
         { headers: { ...cors, 'Content-Type': 'text/html; charset=utf-8' } },
       );
     }
+    if (path === '/pro') {
+      return new Response(proPage(url.searchParams.get('lang') || 'en', {
+        done: url.searchParams.has('done'),
+        cancelled: url.searchParams.has('cancelled'),
+        smartPerDay: FREE_SMART_PER_DAY,
+      }), { headers: { ...cors, 'Content-Type': 'text/html; charset=utf-8' } });
+    }
     if (path === '/privacy') return new Response(PRIVACY_PAGE, { headers: { ...cors, 'Content-Type': 'text/html; charset=utf-8' } });
     // Opened by the browser extension and by the Windows program, and by a
     // phone camera pointed at the code they show.
@@ -1425,6 +1434,22 @@ export default { async fetch(request: Request, env: Env, ctx: ExecutionContext):
     }
     if (path === '/v1/pairings/start' && request.method === 'POST') { const body: any = await request.json(); const code = Array.from(crypto.getRandomValues(new Uint8Array(8))).map(value => 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'[value % 32]).join(''); const secret = b64(crypto.getRandomValues(new Uint8Array(24))); const hash = await sign(secret, env.TOKEN_SECRET); const id = uid(); await env.DB.prepare('INSERT INTO device_pairings (id, code, request_hash, device_name, expires_at) VALUES (?, ?, ?, ?, ?)').bind(id, code, hash, clean(body.device_name) || 'New device', Date.now() + 600000).run(); return json({ pairing_id: id, code, request_secret: secret, expires_at: new Date(Date.now() + 600000).toISOString() }, 201); }
     if (path === '/v1/pairings/poll' && request.method === 'POST') { const body: any = await request.json(); const row = await env.DB.prepare('SELECT * FROM device_pairings WHERE id = ?').bind(clean(body.pairing_id)).first<any>(); if (!row || row.expires_at < Date.now() || row.request_hash !== await sign(clean(body.request_secret), env.TOKEN_SECRET)) throw new Error('Pairing code expired'); if (!row.user_id) return json({ status: 'waiting' }); await env.DB.prepare('DELETE FROM device_pairings WHERE id = ?').bind(row.id).run(); const user = await env.DB.prepare('SELECT email FROM users WHERE id = ?').bind(row.user_id).first<any>(); return json({ status: 'connected', token: row.token, user: { email: user?.email ?? '' } }); }
+    /// Stripe's own signed message, and the only thing in this service that
+    /// may move an account to paid. It arrives without a session, so it is
+    /// answered here, before anything asks for one.
+    ///
+    /// A body that does not verify gets 400 and changes nothing. A body that
+    /// does gets 200 even if it means nothing to us: an unknown event is not
+    /// an error, and refusing it only makes Stripe redeliver it forever.
+    if (path === '/v1/billing/hook' && request.method === 'POST') {
+      const body = await request.text();
+      if (!await verify(env, body, request.headers.get('stripe-signature'))) {
+        return json({ detail: 'Bad signature' }, 400);
+      }
+      await applyEvent(env, JSON.parse(body));
+      return json({ received: true });
+    }
+
     const user = await userFrom(request, env);
 
     // Anki imports plain tab-separated text: front, back, then the line the
@@ -1543,6 +1568,24 @@ export default { async fetch(request: Request, env: Env, ctx: ExecutionContext):
     /// What has been spent today, for the one thin line a client draws about
     /// it. Deliberately its own endpoint: a client that only wants the number
     /// should not have to fetch the whole profile for it.
+    /// Where to send somebody who wants to pay. The URL is made by Stripe
+    /// for this account and this price; nothing about the amount or the plan
+    /// is decided in the browser.
+    if (path === '/v1/billing/checkout' && request.method === 'POST') {
+      const input: any = await request.json().catch(() => ({}));
+      const period = input.period === 'monthly' ? 'monthly' : 'yearly';
+      return json({ url: await checkoutUrl(env, user.id, user.email, period, url.origin) });
+    }
+
+    /// Changing or cancelling happens on Stripe's own pages. Card details
+    /// should never pass through a screen of ours.
+    if (path === '/v1/billing/portal' && request.method === 'POST') {
+      const row = await env.DB.prepare('SELECT billing_ref FROM users WHERE id = ?')
+        .bind(user.id).first<any>();
+      if (!row?.billing_ref) throw new Error('Nothing to manage yet');
+      return json({ url: await portalUrl(env, String(row.billing_ref), url.origin) });
+    }
+
     if (path === '/v1/usage' && request.method === 'GET') {
       const spent = await usageOf(env, user.id);
       const allowance = await entitlementOf(env, user.id);
