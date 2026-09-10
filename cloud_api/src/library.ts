@@ -512,6 +512,12 @@ export const libraryPage = (lang: string, clientId: string) => {
          font-weight:780; font-style:normal }
   .source { margin-top:auto; padding-top:12px; color:var(--soft); font-size:12px;
             font-weight:650; white-space:nowrap; overflow:hidden; text-overflow:ellipsis }
+  /* Two lines for the word, two for the meaning, two for the line it came
+     from - reserved whether or not there is a line, so the name of the film
+     sits at the same height on every card in the grid. */
+  .word { display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden }
+  .meaning { display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden }
+  .context { min-height:2.8em }
   .card .badge { position:absolute; top:14px; right:14px; width:8px; height:8px; border-radius:50%;
                  background:var(--accent); opacity:.55 }
   /* The dot marks a learned card; the word must not run under it. */
@@ -718,6 +724,19 @@ export const libraryPage = (lang: string, clientId: string) => {
     // Where the line came from. The episode is worth the four characters: the
     // same word turns up in the second episode and the sixth, and a list that
     // says only the name of the series cannot tell them apart.
+    /// True when these two say the same thing. Compared on letters and digits
+    /// alone, because one of them usually carries brackets, a view count or a
+    /// season mark that the other does not.
+    function echoes(a, b) {
+      var bare = function (x) {
+        return String(x || '').toLowerCase().replace(/[^\p{L}\p{N}]+/gu, '');
+      };
+      var one = bare(a), two = bare(b);
+      if (!one || !two) return false;
+      if (one.length < 8 || two.length < 8) return one === two;
+      return one.indexOf(two) >= 0 || two.indexOf(one) >= 0;
+    }
+
     function source(card) {
       var name = card.media_title || 'Subtitle';
       if (card.season == null && card.episode == null) return name;
@@ -729,11 +748,16 @@ export const libraryPage = (lang: string, clientId: string) => {
       (learned.length ? ' · ' + learned.length + ' ' + T.learnedCount : '');
     markPro();
     $('grid').innerHTML = shown.map(function (card) {
+      // A word taken from the title of a video has a "line" that is the title,
+      // and the title is already printed at the bottom of the card as where it
+      // came from. Printing it twice tells the reader nothing the second time.
+      var line = contextLine(card);
+      var showLine = line && !echoes(line, source(card));
       return '<article class="card" data-id="' + esc(card.id) + '">' +
         (card.archived ? '<div class="badge"></div>' : '') +
         '<div><span class="word">' + esc(label(card)) + '</span></div>' +
         '<div class="meaning">' + esc(meaning(card)) + '</div>' +
-        (contextLine(card) ? '<div class="context">' + contextHtml(card) + '</div>' : '') +
+        '<div class="context">' + (showLine ? contextHtml(card) : '') + '</div>' +
         '<div class="source">' + esc(source(card)) + '</div></article>';
     }).join('');
     $('empty').hidden = shown.length !== 0;
