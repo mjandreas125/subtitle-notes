@@ -378,6 +378,10 @@ export const libraryPage = (lang: string, clientId: string) => {
     }
   }
   * { box-sizing:border-box }
+  /* A short view has no scrollbar and a long one does, so switching between
+     them moved everything sideways by the width of the bar. Reserving the
+     gutter always costs fifteen pixels and buys a page that does not jump. */
+  html { scrollbar-gutter: stable; }
   body { margin:0; min-height:100dvh; background:var(--paper); color:var(--ink);
          font:15px/1.45 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; }
   [hidden] { display:none!important }
@@ -468,7 +472,9 @@ export const libraryPage = (lang: string, clientId: string) => {
   .ghost:active { transform:translateY(1px) scale(.985) }
   .danger { color:var(--red) }
 
-  main { width:min(1120px,100%); margin:0 auto; padding:24px 20px 56px }
+  /* Every view is at least this tall, so the page does not shrink under
+     the pointer when a short one is chosen. */
+  main { width:min(1120px,100%); margin:0 auto; padding:24px 20px 56px; min-height:72dvh }
   .toolbar { display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin-bottom:18px }
   .toolbar input { flex:1; min-width:200px; padding:10px 13px; border:1px solid var(--hair);
                    border-radius:10px; color:var(--ink); background:var(--card); outline-color:var(--accent) }
