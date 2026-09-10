@@ -9,6 +9,13 @@ const SAY: Record<string, Record<string, string>> = {
     title: 'Your library', words: 'Words', review: 'Practise', goals: 'Achievements',
     settings: 'Settings', search: 'Search your words', clear: 'Clear', all: 'All',
     active: 'Saved', learned: 'Learned', refresh: 'Refresh', signout: 'Sign out',
+    pro: 'Pro', proLeft: '{n} left today', proOn: 'Pro',
+    proHead: 'Subtitle Notes Pro',
+    proNote: 'A free account gets {n} readings a day. Past that a card is still made, '
+      + 'from the dictionary rather than the model. Pro removes the ceiling and gives '
+      + 'you the slow, careful model whenever you ask for it - or bring your own API '
+      + 'key instead, which has no ceiling either.',
+    proBuy: 'See Pro', proManage: 'Change or cancel', proOnNote: 'This account is Pro.',
     empty: 'Nothing saved here yet',
     emptyNote: 'Highlight a subtitle in a player or any text on a page, and it appears here.',
     ready: 'ready to practise', reveal: 'Show meaning', again: 'Again', knew: 'I knew it',
@@ -31,6 +38,13 @@ const SAY: Record<string, Record<string, string>> = {
     title: 'Ваша библиотека', words: 'Слова', review: 'Повторение', goals: 'Достижения',
     settings: 'Настройки', search: 'Поиск по словам', clear: 'Очистить', all: 'Все',
     active: 'Сохранённые', learned: 'Выученные', refresh: 'Обновить', signout: 'Выйти',
+    pro: 'Pro', proLeft: 'осталось {n}', proOn: 'Pro',
+    proHead: 'Subtitle Notes Pro',
+    proNote: 'Бесплатному аккаунту — {n} разборов в день. Дальше карточка всё равно '
+      + 'делается, только словарём, а не моделью. Pro снимает потолок и даёт медленную, '
+      + 'вдумчивую модель тогда, когда попросишь. Либо свой ключ — там потолка тоже нет.',
+    proBuy: 'Посмотреть Pro', proManage: 'Изменить или отменить',
+    proOnNote: 'Этот аккаунт — Pro.',
     empty: 'Здесь пока пусто',
     emptyNote: 'Выделите субтитр в плеере или любой текст на странице - слово появится тут.',
     ready: 'ждут повторения', reveal: 'Показать значение', again: 'Ещё раз', knew: 'Вспомнил',
@@ -385,6 +399,17 @@ export const libraryPage = (lang: string, clientId: string) => {
         font-weight:700; cursor:pointer; transition:transform .12s, filter .16s, box-shadow .16s }
   .go:hover { filter:brightness(1.07); box-shadow:var(--lift) }
   .go:active { transform:translateY(1px) scale(.985) }
+  /* Small, green and in the corner: the one place in this page that is
+     allowed to sell anything. On a paid account it stops selling and just
+     says what the account is. */
+  .pro { display:inline-flex; align-items:center; gap:6px; text-decoration:none;
+    border-radius:999px; padding:7px 13px; font-size:.85rem; font-weight:650;
+    letter-spacing:-.01em; color:#fff; background:var(--accent);
+    border:1px solid transparent; white-space:nowrap }
+  .pro:hover { filter:brightness(1.06) }
+  .pro[data-paid="1"] { background:transparent; color:var(--accent);
+    border-color:var(--accent); font-weight:600 }
+  .pro .left { opacity:.82; font-weight:500 }
   .ghost { border:0; border-radius:10px; padding:9px 12px; color:var(--soft); background:transparent;
            font-weight:700; cursor:pointer; transition:background .16s,color .16s,transform .12s }
   .ghost:hover { color:var(--ink); background:var(--wash) }
@@ -510,6 +535,7 @@ export const libraryPage = (lang: string, clientId: string) => {
   <div class="mark">▤</div>
   <div><h1>Subtitle Notes</h1><div id="count" class="count"></div></div>
   <div class="spacer"></div>
+  <a id="pro" class="pro" hidden></a>
   <button id="refresh" class="ghost" hidden></button>
   <button id="signout" class="ghost" hidden></button>
 </header>
@@ -540,6 +566,7 @@ export const libraryPage = (lang: string, clientId: string) => {
 <script>
   var API = '/v1', KEY = 'subtitle-notes/library-token';
   var T = ${JSON.stringify(SAY[code])};
+  var LANG = ${JSON.stringify(code)};
   var GOALS = ${JSON.stringify(GOAL_NAMES[code] || GOAL_NAMES.en)};
   var LANGS = ${JSON.stringify({
     ru: 'Русский', en: 'English', et: 'Eesti', de: 'Deutsch', fr: 'Français', es: 'Español',
@@ -861,6 +888,11 @@ export const libraryPage = (lang: string, clientId: string) => {
           return '<option value="' + code + '"' + (code === current ? ' selected' : '') + '>' +
             esc(LANGS[code]) + '</option>';
         }).join('') + '</select><div class="note" id="lang-note"></div></div>' +
+      '<div class="panel"><h3>' + esc(T.proHead) + '</h3><p>' +
+        esc((usage && usage.plan === 'pro') ? T.proOnNote
+            : T.proNote.replace('{n}', String((usage && usage.smart_per_day) || 25))) + '</p>' +
+        '<a class="go" id="proLink" href="' + proHref() + '">' +
+        esc((usage && usage.plan === 'pro') ? T.proManage : T.proBuy) + '</a></div>' +
       '<div class="panel"><h3>' + esc(T.exportAnki) + '</h3><p>' + esc(T.exportNote) + '</p>' +
         '<button class="go" id="anki">' + esc(T.exportAnki) + '</button></div>' +
       '<div class="panel"><h3>' + esc(T.deleteAccount) + '</h3>' +
@@ -917,16 +949,47 @@ export const libraryPage = (lang: string, clientId: string) => {
     if (next === 'settings') renderSettings();
   }
 
+  var usage = null;
+
+  /// The session travels in the fragment, never in the query: a fragment is
+  /// not sent to the server and cannot end up in a log or a referrer.
+  function proHref() {
+    return '/pro?lang=' + encodeURIComponent(LANG) + '#t=' +
+      encodeURIComponent(localStorage.getItem(KEY) || '');
+  }
+
+  /// Green and selling on a free account; quiet and merely informative on a
+  /// paid one. The number of readings left appears only when it is worth
+  /// knowing - a counter that is always on screen is a nag.
+  function dressPro() {
+    var badge = $('pro');
+    badge.hidden = false;
+    badge.href = proHref();
+    if (usage && usage.plan === 'pro') {
+      badge.dataset.paid = '1';
+      badge.textContent = T.proOn;
+      return;
+    }
+    delete badge.dataset.paid;
+    var left = usage ? usage.left : -1;
+    var near = left >= 0 && left <= 8;
+    badge.innerHTML = esc(T.pro) +
+      (near ? ' <span class="left">' + esc(T.proLeft.replace('{n}', String(left))) + '</span>' : '');
+  }
+
   async function load() {
     try {
       var answers = await Promise.all([
         request('/selections'), request('/selections?archived=true'), request('/review'), request('/me'),
+        request('/usage').catch(function () { return null; }),
       ]);
       cards = answers[0]; learned = answers[1]; review = answers[2]; me = answers[3];
+      usage = answers[4];
       $('login').hidden = true;
       $('tabs').hidden = false;
       $('refresh').hidden = false;
       $('signout').hidden = false;
+      dressPro();
       show(view);
     } catch (error) {
       localStorage.removeItem(KEY);
