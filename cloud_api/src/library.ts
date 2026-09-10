@@ -16,6 +16,9 @@ const SAY: Record<string, Record<string, string>> = {
       + 'you the slow, careful model whenever you ask for it - or bring your own API '
       + 'key instead, which has no ceiling either.',
     proBuy: 'See Pro', proManage: 'Change or cancel', proOnNote: 'This account is Pro.',
+    proThanks: 'Thank you - this account is Pro. The phone, the browser and the computer '
+      + 'will know at their next request.',
+    proCancelled: 'Nothing was charged.',
     empty: 'Nothing saved here yet',
     emptyNote: 'Highlight a subtitle in a player or any text on a page, and it appears here.',
     ready: 'ready to practise', reveal: 'Show meaning', again: 'Again', knew: 'I knew it',
@@ -45,6 +48,9 @@ const SAY: Record<string, Record<string, string>> = {
       + 'вдумчивую модель тогда, когда попросишь. Либо свой ключ — там потолка тоже нет.',
     proBuy: 'Посмотреть Pro', proManage: 'Изменить или отменить',
     proOnNote: 'Этот аккаунт — Pro.',
+    proThanks: 'Спасибо — аккаунт теперь Pro. Телефон, браузер и компьютер узнают об этом '
+      + 'при следующем запросе.',
+    proCancelled: 'Ничего не списано.',
     empty: 'Здесь пока пусто',
     emptyNote: 'Выделите субтитр в плеере или любой текст на странице - слово появится тут.',
     ready: 'ждут повторения', reveal: 'Показать значение', again: 'Ещё раз', knew: 'Вспомнил',
@@ -410,6 +416,30 @@ export const libraryPage = (lang: string, clientId: string) => {
   .pro[data-paid="1"] { background:transparent; color:var(--accent);
     border-color:var(--accent); font-weight:600 }
   .pro .left { opacity:.82; font-weight:500 }
+  /* Says one thing, at the top, and then goes away. It is not a dialog: it
+     never takes the pointer, never blocks the page, and closes itself. */
+  .toast {
+    position:fixed; left:50%; top:16px; z-index:60; transform:translateX(-50%) translateY(-14px);
+    display:flex; align-items:flex-start; gap:12px; max-width:min(34rem, calc(100vw - 2rem));
+    padding:13px 14px 13px 16px; border-radius:14px;
+    background:var(--card); color:var(--ink);
+    border:1px solid var(--accent);
+    box-shadow:0 18px 40px -24px rgba(0,0,0,.55), 0 0 0 4px var(--wash);
+    font-size:.95rem; line-height:1.45; opacity:0;
+    transition:opacity .28s ease, transform .28s cubic-bezier(.16,1,.3,1);
+  }
+  .toast[data-on="1"] { opacity:1; transform:translateX(-50%) translateY(0) }
+  .toast-x {
+    border:0; background:transparent; cursor:pointer; color:var(--soft);
+    font-size:1.25rem; line-height:1; padding:0 2px; margin-top:-1px;
+    transition:color .15s ease, transform .15s ease;
+  }
+  .toast-x:hover { color:var(--ink) }
+  .toast-x:active { transform:scale(.9) }
+  @media (prefers-reduced-motion: reduce) {
+    .toast { transition:none; transform:translateX(-50%) }
+    .toast[data-on="1"] { transform:translateX(-50%) }
+  }
   .ghost { border:0; border-radius:10px; padding:9px 12px; color:var(--soft); background:transparent;
            font-weight:700; cursor:pointer; transition:background .16s,color .16s,transform .12s }
   .ghost:hover { color:var(--ink); background:var(--wash) }
@@ -541,7 +571,7 @@ export const libraryPage = (lang: string, clientId: string) => {
 </header>
 <nav id="tabs" hidden></nav>
 <main>
-  <section id="login">
+  <section id="login" hidden>
     <p id="login-sync"></p>
     <div id="google"></div>
     <p id="login-note"></p>
@@ -562,6 +592,10 @@ export const libraryPage = (lang: string, clientId: string) => {
   <section id="view-settings" hidden><div id="settings"></div></section>
 </main>
 
+<div id="toast" class="toast" hidden role="status">
+  <span id="toast-text"></span>
+  <button id="toast-close" class="toast-x" aria-label="Close">&times;</button>
+</div>
 <div id="detail" class="detail"><article class="sheet" id="sheet"></article></div>
 <script>
   var API = '/v1', KEY = 'subtitle-notes/library-token';
@@ -950,6 +984,39 @@ export const libraryPage = (lang: string, clientId: string) => {
   }
 
   var usage = null;
+  var toastTimer = null;
+
+  /// One line at the top, for ten seconds, closable. Deliberately not a
+  /// dialog: nothing here is worth interrupting somebody for.
+  function toast(message) {
+    if (!message) return;
+    var box = $('toast');
+    $('toast-text').textContent = message;
+    box.hidden = false;
+    // A frame between "in the document" and "visible", or the transition has
+    // nothing to transition from.
+    requestAnimationFrame(function () { box.dataset.on = '1'; });
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(hideToast, 10000);
+  }
+  function hideToast() {
+    var box = $('toast');
+    delete box.dataset.on;
+    clearTimeout(toastTimer);
+    setTimeout(function () { box.hidden = true; }, 320);
+  }
+
+  /// What Stripe sent us back with. The parameter is wiped from the address
+  /// afterwards, so a refresh does not say thank you a second time.
+  function noteFromQuery() {
+    var q = new URLSearchParams(location.search);
+    var pro = q.get('pro');
+    if (!pro) return;
+    toast(pro === 'cancelled' ? T.proCancelled : T.proThanks);
+    q.delete('pro');
+    var rest = q.toString();
+    history.replaceState(null, '', location.pathname + (rest ? '?' + rest : '') + location.hash);
+  }
 
   /// The session travels in the fragment, never in the query: a fragment is
   /// not sent to the server and cannot end up in a log or a referrer.
@@ -1068,8 +1135,15 @@ export const libraryPage = (lang: string, clientId: string) => {
       }
     });
 
+    $('toast-close').onclick = hideToast;
     showSignIn();
-    if (localStorage.getItem(KEY)) load();
+    if (localStorage.getItem(KEY)) {
+      load();
+    } else {
+      // Nothing to try, so ask straight away.
+      $('login').hidden = false;
+    }
+    noteFromQuery();
   });
 
   // Built whether or not there is a token: a token from a previous life of the

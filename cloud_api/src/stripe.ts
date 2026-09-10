@@ -58,8 +58,10 @@ export async function checkoutUrl(
     'line_items[0][quantity]': '1',
     client_reference_id: userId,
     customer_email: email || undefined,
-    success_url: `${origin}/pro?done=1`,
-    cancel_url: `${origin}/pro?cancelled=1`,
+    // Back to the library, not to the page they were trying to leave. Being
+    // returned to a payment page after paying reads as "it did not work".
+    success_url: `${origin}/library?pro=1`,
+    cancel_url: `${origin}/library?pro=cancelled`,
     allow_promotion_codes: 'true',
     'subscription_data[metadata][user_id]': userId,
   });
