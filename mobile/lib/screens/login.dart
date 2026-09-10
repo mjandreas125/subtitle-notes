@@ -151,7 +151,7 @@ class _LoginPageState extends State<LoginPage> {
                     const Center(child: _Mark()),
                     const SizedBox(height: AppSpace.h1),
                     Text(
-                      context.t('Subtitle\\nNotes'),
+                      context.t('Subtitle\nNotes'),
                       textAlign: TextAlign.center,
                       style: AppText.display(c.ink),
                     ),
