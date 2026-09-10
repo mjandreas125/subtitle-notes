@@ -1,6 +1,23 @@
-interface Env { DB: D1Database; TOKEN_SECRET: string; AI: { run(model: string, input: unknown): Promise<any> } }
+interface Env {
+  DB: D1Database;
+  TOKEN_SECRET: string;
+  AI: { run(model: string, input: unknown): Promise<any> };
+  /// Master key for sealing the API keys people bring. A Worker secret, never
+  /// in the repository and never in the database beside what it protects.
+  KEY_SECRET?: string;
+  /// Lemon Squeezy. Absent in development, which is why every use is guarded.
+  LEMONSQUEEZY_API_KEY?: string;
+  LEMONSQUEEZY_STORE_ID?: string;
+  LEMONSQUEEZY_VARIANT_M?: string;
+  LEMONSQUEEZY_VARIANT_Y?: string;
+  LEMONSQUEEZY_WEBHOOK_SECRET?: string;
+}
 
 import { libraryPage } from './library';
+import {
+  AI_PROVIDERS, FREE_SMART_PER_DAY, FREE_DEEP_PER_DAY,
+  entitlementOf, countUse, usageOf, seal, hintOf, sameSecret,
+} from './billing';
 import { homePage } from './home';
 
 const CLIENT_ID = '151185018789-tjda40ks4kb2vo8s30f9359n2b9o4dlb.apps.googleusercontent.com';
@@ -955,6 +972,7 @@ function person(row: any) {
 async function profile(env: Env, id: string) {
   const row = await env.DB.prepare(
     `SELECT u.id, u.email, u.display_name, u.nickname, u.share_feed, u.language,
+            u.plan, u.plan_until, u.ai_provider, u.ai_hint,
             (SELECT COUNT(*) FROM friendships f WHERE f.follower_id = u.id) AS friend_count,
             (SELECT COUNT(*) FROM friendships f WHERE f.friend_id = u.id) AS follower_count
        FROM users u WHERE u.id = ?`
@@ -969,7 +987,23 @@ async function profile(env: Env, id: string) {
     language: row.language || 'ru',
     friend_count: Number(row.friend_count ?? 0),
     follower_count: Number(row.follower_count ?? 0),
+    // What this account may spend, and what it has spent today. Every client
+    // already reads this endpoint, so nothing else has to be taught about
+    // plans - the line about what is left can be drawn from here alone.
+    plan: paid(row) ? 'pro' : 'free',
+    plan_until: row.plan_until ?? null,
+    // Never the key. The provider and four characters, so a person can see
+    // which key is in place without anybody being able to use it.
+    own_key: row.ai_provider ? { provider: row.ai_provider, hint: row.ai_hint ?? '' } : null,
+    limits: { smart_per_day: FREE_SMART_PER_DAY, deep_per_day: FREE_DEEP_PER_DAY },
   };
+}
+
+/// A plan that has not run out. Written here rather than inline so that the
+/// endpoint and the page cannot drift apart on what "paid" means.
+function paid(row: { plan?: string; plan_until?: string | null }): boolean {
+  if (row.plan !== 'pro') return false;
+  return !row.plan_until || row.plan_until >= new Date().toISOString();
 }
 /// Picks the dictionary sense that the sentence actually used.
 ///
@@ -1079,13 +1113,21 @@ async function agreedCorrection(env: Env, term: string, language: string) {
 /// nobody waits four seconds for examples they are not looking at yet.
 type Depth = 'quick' | 'full';
 
-async function enrich(env: Env, selected: string, context = '', language = 'ru', depth: Depth = 'full') {
-  const full = depth === 'full';
+async function enrich(
+  env: Env, selected: string, context = '', language = 'ru', depth: Depth = 'full',
+  allow: { deep?: boolean; smart?: boolean } = {},
+) {
+  // Over the day's ceiling the card is still made - it is just read by the
+  // fast model instead of the deep one, and past the outer ceiling by the
+  // dictionary alone. A ceiling that returns an error would put a paywall in
+  // the middle of a scene, which is the one thing this must never do.
+  const full = depth === 'full' && allow.deep !== false;
+  const mayModel = allow.smart !== false;
   // Detect first.  The old order treated a Spanish line as English in both
   // the model prompt and the dictionary, so neither answer was trustworthy.
   const main = await translate(env, selected, false, language);
   const sourceLanguage = main.source;
-  const smart = await smartReading(
+  const smart = !mayModel ? null : await smartReading(
     env,
     selected,
     context,
@@ -1271,11 +1313,11 @@ async function applyReading(env: Env, row: any, data: any) {
 /// wait four seconds. The card, though, is read for weeks: this runs after the
 /// reply has already gone out and quietly replaces it with the slower model's
 /// reading, the dictionary's base form and its examples.
-async function refineCapture(env: Env, id: string, language: string) {
+async function refineCapture(env: Env, id: string, language: string, allowDeep = true) {
   try {
     const row = await env.DB.prepare('SELECT * FROM selections WHERE id = ?').bind(id).first<any>();
     if (!row) return;
-    const data = await enrich(env, clean(row.selected_text), String(row.context ?? ''), language, 'full');
+    const data = await enrich(env, clean(row.selected_text), String(row.context ?? ''), language, 'full', { deep: allowDeep });
     await applyReading(env, row, data);
   } catch {
     // The card the reader already has is fine. A failed second opinion is not
@@ -1451,6 +1493,70 @@ export default { async fetch(request: Request, env: Env, ctx: ExecutionContext):
     // likes given and received, both directions of every friendship, and the
     // paired computers. Nothing is kept for later, because a deletion that
     // leaves a copy behind is not a deletion.
+    /// The key a person brought with them.
+    ///
+    /// Set on the account it works everywhere, because every client asks this
+    /// same server. Set with `scope=device` it belongs to the machine that is
+    /// asking and wins there only - which is what makes "a different key on
+    /// the work laptop" possible without two accounts.
+    ///
+    /// The key is sealed before it is stored and is never returned by
+    /// anything, including this endpoint. What comes back is the provider and
+    /// four characters.
+    if (path === '/v1/ai-key' && request.method === 'PUT') {
+      const input: any = await request.json();
+      const provider = String(input.provider ?? '').toLowerCase();
+      const key = String(input.key ?? '').trim();
+      if (!(AI_PROVIDERS as readonly string[]).includes(provider)) throw new Error('Unknown provider');
+      // Long enough to be a key and short enough not to be a paste of a file.
+      if (key.length < 16 || key.length > 400) throw new Error('That does not look like a key');
+      const sealed = await seal(env, key);
+      const hint = hintOf(key);
+      if (input.scope === 'device') {
+        const device = String(input.device_id ?? '');
+        if (!device) throw new Error('No device');
+        await env.DB.prepare(
+          'UPDATE device_pairings SET ai_provider = ?, ai_key_enc = ?, ai_hint = ? WHERE id = ? AND user_id = ?'
+        ).bind(provider, sealed, hint, device, user.id).run();
+      } else {
+        await env.DB.prepare(
+          'UPDATE users SET ai_provider = ?, ai_key_enc = ?, ai_hint = ? WHERE id = ?'
+        ).bind(provider, sealed, hint, user.id).run();
+      }
+      return json({ provider, hint });
+    }
+
+    if (path === '/v1/ai-key' && request.method === 'DELETE') {
+      const device = url.searchParams.get('device_id');
+      if (device) {
+        await env.DB.prepare(
+          'UPDATE device_pairings SET ai_provider = NULL, ai_key_enc = NULL, ai_hint = NULL WHERE id = ? AND user_id = ?'
+        ).bind(device, user.id).run();
+      } else {
+        await env.DB.prepare(
+          'UPDATE users SET ai_provider = NULL, ai_key_enc = NULL, ai_hint = NULL WHERE id = ?'
+        ).bind(user.id).run();
+      }
+      return new Response(null, { status: 204, headers: cors });
+    }
+
+    /// What has been spent today, for the one thin line a client draws about
+    /// it. Deliberately its own endpoint: a client that only wants the number
+    /// should not have to fetch the whole profile for it.
+    if (path === '/v1/usage' && request.method === 'GET') {
+      const spent = await usageOf(env, user.id);
+      const allowance = await entitlementOf(env, user.id);
+      return json({
+        plan: allowance.plan,
+        smart: spent.smart,
+        deep: spent.deep,
+        left: allowance.left,
+        smart_per_day: FREE_SMART_PER_DAY,
+        deep_per_day: FREE_DEEP_PER_DAY,
+        own_key: allowance.ownKey ? allowance.ownKey.provider : null,
+      });
+    }
+
     if (path === '/v1/me' && request.method === 'DELETE') {
       await env.DB.batch([
         env.DB.prepare('DELETE FROM selection_likes WHERE user_id = ?').bind(user.id),
@@ -1583,8 +1689,13 @@ export default { async fetch(request: Request, env: Env, ctx: ExecutionContext):
     if (path === '/v1/captures' && request.method === 'POST') {
       const input: any = await request.json();
       const language = user.language || 'ru';
-      const row: any = await upsertSelection(env, user.id, input, await enrich(env, clean(input.selected_text), String(input.context ?? ''), language, 'quick'));
-      ctx.waitUntil(refineCapture(env, String(row.id), language));
+      const allow = await entitlementOf(env, user.id);
+      const row: any = await upsertSelection(env, user.id, input,
+        await enrich(env, clean(input.selected_text), String(input.context ?? ''), language, 'quick',
+          { smart: allow.smartAllowed }));
+      if (allow.smartAllowed) ctx.waitUntil(countUse(env, user.id, 'smart', !!allow.ownKey));
+      if (allow.deepAllowed) ctx.waitUntil(countUse(env, user.id, 'deep', !!allow.ownKey));
+      ctx.waitUntil(refineCapture(env, String(row.id), language, allow.deepAllowed));
       return json(await detail(row), 201);
     }
     // The dictionary alone, as fast as the network allows. The model reads the
@@ -1611,7 +1722,9 @@ export default { async fetch(request: Request, env: Env, ctx: ExecutionContext):
       // Workers AI is temporarily unavailable instead of returning an error.
       const dictionary = await translate(env, text, false, user.language || 'ru');
       const deliberatePhrase = isDeliberatePhrase(text);
-      const smart = await smartReading(
+      const allowance = await entitlementOf(env, user.id);
+      if (allowance.smartAllowed) ctx.waitUntil(countUse(env, user.id, 'smart', !!allowance.ownKey));
+      const smart = !allowance.smartAllowed ? null : await smartReading(
         env,
         text,
         String(input.context ?? ''),
