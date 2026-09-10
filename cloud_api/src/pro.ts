@@ -42,6 +42,13 @@ const TEXT: Record<string, Record<string, string>> = {
     already: 'This account is Pro.',
     working: 'Taking you to Stripe…',
     back: 'Back to your words',
+    haveHead: 'You have Pro',
+    haveBody: 'This account has no daily ceiling: every reading is the full one, and the '
+      + 'slow, careful model is there whenever you ask for it. It works the same in the '
+      + 'browser, on the phone and on the computer, because it belongs to the account '
+      + 'rather than to a device.',
+    haveManage: 'Change or cancel',
+    haveNote: 'Cancelling keeps Pro until the end of the period you have paid for.',
     perMonth: '/mo',
     perYear: '/yr',
   },
@@ -74,6 +81,12 @@ const TEXT: Record<string, Record<string, string>> = {
     already: 'Этот аккаунт — Pro.',
     working: 'Открываю Stripe…',
     back: 'Назад к своим словам',
+    haveHead: 'У тебя есть Pro',
+    haveBody: 'У этого аккаунта нет дневного потолка: каждый разбор полный, а медленная, '
+      + 'вдумчивая модель доступна тогда, когда попросишь. Одинаково работает в браузере, '
+      + 'на телефоне и на компьютере — потому что подписка принадлежит аккаунту, а не устройству.',
+    haveManage: 'Изменить или отменить',
+    haveNote: 'После отмены Pro работает до конца оплаченного периода.',
     perMonth: '/мес',
     perYear: '/год',
   },
@@ -225,6 +238,14 @@ export function proPage(
     <li>${esc(t.proThree)}</li>
   </ul>
 
+  <div id="have" hidden>
+    <h2>${esc(t.haveHead)}</h2>
+    <p>${esc(t.haveBody)}</p>
+    <button class="go" id="manage">${esc(t.haveManage)}</button>
+    <p class="fine">${esc(t.haveNote)}</p>
+  </div>
+
+  <div id="offer" hidden>
   <div class="plans">
     <button class="plan" data-period="yearly" data-on="1">
       <span class="dot"></span>
@@ -242,6 +263,7 @@ export function proPage(
 
   <button class="go" id="go">${esc(t.buy)}</button>
   <p class="fine" id="fine"></p>
+  </div>
   <a class="back" href="/library">&larr; ${esc(t.back)}</a>
 </div>
 
@@ -264,32 +286,45 @@ export function proPage(
   var go = document.getElementById('go');
   var fine = document.getElementById('fine');
   if (!token) {
+    document.getElementById('offer').hidden = false;
     go.disabled = true;
     fine.textContent = ${JSON.stringify(TEXT[lang]?.signedOut ?? TEXT.en.signedOut)};
     return;
   }
 
-  // One handler, one branch. An account that is already paid gets Stripe's
-  // own portal; everybody else gets a checkout. Two handlers on one button is
-  // how a person ends up buying a second subscription by accident.
-  var mode = 'buy';
+  // Neither half of the page is shown until the account has said which one it
+  // is. Offering a subscription to somebody who already has one is the same
+  // mistake as showing the sign-in screen to somebody already signed in.
+  function showOffer() { document.getElementById('offer').hidden = false; }
+  function showHave() { document.getElementById('have').hidden = false; }
+
   fetch('/v1/me', { headers: { Authorization: 'Bearer ' + token } })
     .then(function (r) { return r.ok ? r.json() : null; })
     .then(function (me) {
-      if (!me || me.plan !== 'pro') return;
-      mode = 'manage';
-      go.textContent = ${JSON.stringify(TEXT[lang]?.manage ?? TEXT.en.manage)};
-      fine.textContent = ${JSON.stringify(TEXT[lang]?.already ?? TEXT.en.already)};
+      if (me && me.plan === 'pro') { showHave(); } else { showOffer(); }
     })
-    .catch(function () { /* the button still works; it just says "buy" */ });
+    .catch(showOffer);
+
+  document.getElementById('manage').addEventListener('click', function (event) {
+    var button = event.currentTarget;
+    if (button.dataset.busy) return;
+    button.dataset.busy = '1';
+    fetch('/v1/billing/portal', {
+      method: 'POST', headers: { Authorization: 'Bearer ' + token },
+    }).then(function (r) { return r.json(); })
+      .then(function (d) {
+        if (d.url) { location.href = d.url; return; }
+        button.dataset.busy = '';
+      })
+      .catch(function () { button.dataset.busy = ''; });
+  });
 
   go.addEventListener('click', function () {
     if (go.dataset.busy) return;
     go.dataset.busy = '1';
     var said = go.textContent;
     go.textContent = ${JSON.stringify(TEXT[lang]?.working ?? TEXT.en.working)};
-    var path = mode === 'manage' ? '/v1/billing/portal' : '/v1/billing/checkout';
-    fetch(path, {
+    fetch('/v1/billing/checkout', {
       method: 'POST',
       headers: { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' },
       body: JSON.stringify({ period: period }),

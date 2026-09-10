@@ -1572,6 +1572,15 @@ export default { async fetch(request: Request, env: Env, ctx: ExecutionContext):
     /// for this account and this price; nothing about the amount or the plan
     /// is decided in the browser.
     if (path === '/v1/billing/checkout' && request.method === 'POST') {
+      // An account that is already paying is sent to manage what it has, not
+      // to buy a second one. The page knows this too, but the page is not what
+      // decides it: a client that asks the wrong question gets the right
+      // answer anyway.
+      const held = await env.DB.prepare('SELECT plan, plan_until, billing_ref FROM users WHERE id = ?')
+        .bind(user.id).first<any>();
+      if (paid(held || {}) && held?.billing_ref) {
+        return json({ url: await portalUrl(env, String(held.billing_ref), url.origin), managing: true });
+      }
       const input: any = await request.json().catch(() => ({}));
       const period = input.period === 'monthly' ? 'monthly' : 'yearly';
       return json({ url: await checkoutUrl(env, user.id, user.email, period, url.origin) });
