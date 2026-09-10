@@ -419,7 +419,7 @@ window.addEventListener('DOMContentLoaded', () => {
     x.fillStyle = ACC; roundRect(x, w, h, 12); x.fill();
     write(x, T.s1cap[1], '600 54px ' + FONT, '#06231a', w / 2, h / 2 + 19);
   });
-  const phraseGlow = glow(8, 0x46d68f, 0.45);
+  const phraseGlow = glow(9, 0x46d68f, 0.55);
   phraseGroup.add(phrase, phraseGlow);
   scene.add(phraseGroup);
 
@@ -478,12 +478,12 @@ window.addEventListener('DOMContentLoaded', () => {
     return p;
   }
 
-  const COUNT = 900;
+  const COUNT = 1400;
   function seedRand(n) { let s = n >>> 0; return function () { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; }; }
   const MOTE = (function () {
     const r = seedRand(12345);
     return Array.from({ length: COUNT }, function () {
-      return { lead: r() * 0.82, wob: r() * 6.283, amp: 0.2 + r() * 1.6, hot: r() };
+      return { lead: r() * 0.9, wob: r() * 6.283, amp: 0.25 + r() * 1.9, hot: r() };
     });
   })();
   const motePos = new Float32Array(COUNT * 3);
@@ -492,7 +492,7 @@ window.addEventListener('DOMContentLoaded', () => {
   moteGeo.setAttribute('position', new THREE.BufferAttribute(motePos, 3));
   moteGeo.setAttribute('color', new THREE.BufferAttribute(moteCol, 3));
   const motes = new THREE.Points(moteGeo, new THREE.PointsMaterial({
-    size: 0.2, map: GLOW, vertexColors: true, transparent: true,
+    size: 0.62, map: GLOW, vertexColors: true, transparent: true,
     blending: THREE.AdditiveBlending, depthWrite: false, sizeAttenuation: true,
   }));
   scene.add(motes);
@@ -609,12 +609,12 @@ window.addEventListener('DOMContentLoaded', () => {
   markMesh.add(markFace);
   markMesh.position.y = 1.75;
   const endText = flat(1500, 330, function (x, w, h) {
-    write(x, T.f8, '700 92px ' + FONT, INK, w / 2, 100);
-    write(x, T.f9, '400 34px ' + FONT, DIM, w / 2, 162);
-    write(x, 'subtitlenotes.com', '400 27px ' + FONT, FAINT, w / 2, 240);
+    write(x, T.f8, '700 96px ' + FONT, '#ffffff', w / 2, 104);
+    write(x, T.f9, '400 36px ' + FONT, '#c3d2cb', w / 2, 172);
+    write(x, 'subtitlenotes.com', '400 28px ' + FONT, '#8fa39a', w / 2, 252);
   });
   endText.position.y = -0.95;
-  const endGlow = glow(18, 0x46d68f, 0.2);
+  const endGlow = glow(20, 0x46d68f, 0.3);
   endGlow.position.y = 1.75;
   endGroup.add(markMesh, endText, endGlow);
   scene.add(endGroup);
@@ -674,8 +674,9 @@ window.addEventListener('DOMContentLoaded', () => {
     { at: B.held,     look: [0, -1.0, -4.2], w: 11.0, fill: 0.80, tilt: 0.2 },
     { at: B.n1,       look: [-1.0, 0.5, -18], w: 25.0, fill: 0.9,  tilt: 0.5 },
     { at: B.n3,       look: [0.4, 0.7, -23],  w: 27.0, fill: 0.9,  tilt: 0.4 },
-    { at: B.answer + 0.6, look: [0, 0.1, -2], w: 12.4, fill: 0.78, tilt: 0.1 },
-    { at: B.dev + 0.8, look: [0, 0.2, -6.5], w: 19.5, fill: 0.88, tilt: 0.15 },
+    { at: B.answer + 0.6, look: [0, 0.1, -2], w: 13.2, fill: 0.74, tilt: 0.1 },
+    { at: B.chips + 1.4, look: [0, -0.1, -2], w: 11.6, fill: 0.8, tilt: 0.06 },
+    { at: B.dev + 0.8, look: [0, 0.1, -6.5], w: 17.0, fill: 0.92, tilt: 0.12 },
     { at: B.swaps + 0.4, look: [0, 0.2, -2], w: 12.4, fill: 0.78, tilt: 0.1 },
     { at: B.endCard + 1.4, look: [0, 0.3, 1.4], w: 15.5, fill: 0.78, tilt: 0.1 },
   ];
@@ -740,7 +741,7 @@ window.addEventListener('DOMContentLoaded', () => {
       const fly = clamp((s - B.away) / (B.answer - 0.6 - B.away));
       const home = new THREE.Vector3(0, -2.3 + rise * 1.5, -3.6 + rise * 1.4);
       phraseGroup.position.copy(fly > 0 ? onPath(fly) : home);
-      phraseGroup.scale.setScalar(mix(1, 0.72, rise) * (1 - fly * 0.5));
+      phraseGroup.scale.setScalar(mix(1, 0.8, rise) * (1 - fly * 0.34));
       phraseGroup.lookAt(camera.position);
       phrase.material.opacity = rise * (1 - span(s, B.n1 + 0.2, B.n1 + 0.8));
       phraseGlow.material.opacity = 0.45 * rise * (1 - fly * 0.6);
@@ -776,8 +777,9 @@ window.addEventListener('DOMContentLoaded', () => {
         motePos[i * 3] = p.x + Math.sin(u * 9 + m.wob) * m.amp * leg;
         motePos[i * 3 + 1] = p.y + Math.cos(u * 7 + m.wob) * m.amp * 0.7 * leg;
         motePos[i * 3 + 2] = p.z + Math.sin(u * 5 + m.wob * 2) * m.amp * 0.5 * leg;
-        const col = m.hot > 0.78 ? c2 : c1;
-        moteCol[i * 3] = col.r * a; moteCol[i * 3 + 1] = col.g * a; moteCol[i * 3 + 2] = col.b * a;
+        const col = m.hot > 0.9 ? c2 : c1;
+        const soft = m.hot > 0.9 ? 0.62 : 0.86;
+        moteCol[i * 3] = col.r * a * soft; moteCol[i * 3 + 1] = col.g * a * soft; moteCol[i * 3 + 2] = col.b * a * soft;
       }
       moteGeo.attributes.position.needsUpdate = true;
       moteGeo.attributes.color.needsUpdate = true;
@@ -835,7 +837,7 @@ window.addEventListener('DOMContentLoaded', () => {
       endGroup.position.set(0, mix(-0.8, 0.1, k), mix(-3.5, 1.4, k));
       markMesh.rotation.y = mix(-0.8, 0, k);
       markMesh.material.opacity = k;
-      endText.material.opacity = span(s, B.endCard + 0.9, B.endCard + 1.9);
+      endText.material.opacity = span(s, B.endCard + 0.8, B.endCard + 1.6);
       endGlow.material.opacity = 0.2 * k;
     }
 
