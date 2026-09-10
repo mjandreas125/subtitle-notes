@@ -385,10 +385,15 @@ export const libraryPage = (lang: string, clientId: string) => {
   html { scrollbar-gutter: stable; }
   body { margin:0; min-height:100dvh; background:var(--paper); color:var(--ink);
          font:15px/1.45 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; }
+  /* Every band on the page starts here. The main column is a centred 1120 box
+     with 20 of its own padding, so the header and the tab row have to add that
+     20 to the centring maths or they sit proud of the content by that much.
+     No backticks in here: this stylesheet lives inside a template string. */
+  :root { --gutter: max(20px, calc((100vw - 1120px) / 2 + 20px)) }
   [hidden] { display:none!important }
 
   header { position:sticky; top:0; z-index:3; display:flex; align-items:center; gap:14px;
-           padding:12px max(20px,calc((100vw - 1120px)/2)); border-bottom:1px solid var(--hair);
+           padding:12px var(--gutter); border-bottom:1px solid var(--hair);
            background:color-mix(in srgb,var(--paper) 92%,transparent); backdrop-filter:blur(12px) }
   .mark { display:grid; place-items:center; width:34px; height:34px; border-radius:10px;
           background:var(--accent); color:#fff; font-size:17px }
@@ -396,17 +401,27 @@ export const libraryPage = (lang: string, clientId: string) => {
   .count { color:var(--soft); font-size:12.5px; font-weight:650 }
   .spacer { flex:1 }
 
-  nav { display:flex; padding:10px max(20px,calc((100vw - 1120px)/2)) 12px;
-        background:var(--paper); position:sticky; top:59px; z-index:2 }
-  #tabs { display:inline-flex; gap:2px; padding:3px; border-radius:12px;
+  nav { display:flex; padding:12px var(--gutter) 14px; background:var(--paper);
+        position:sticky; top:59px; z-index:2 }
+  /* A segmented control, which is what this is: one rail, one pill behind the
+     current view. Familiar on purpose - the tool should disappear into the
+     task, and a person should not have to learn a navigation invented here. */
+  #tabs { display:inline-flex; gap:2px; padding:3px; border-radius:11px;
           background:var(--wash); border:1px solid var(--hair) }
-  nav button { position:relative; padding:8px 15px; border:0; border-radius:9px;
-               background:transparent; color:var(--soft); font-weight:650; font-size:13.5px;
-               letter-spacing:-.01em; cursor:pointer; white-space:nowrap;
-               transition:color .18s ease, background .18s ease, transform .18s ease }
-  nav button:hover { color:var(--ink); background:color-mix(in srgb,var(--card) 70%,transparent) }
-  nav button:active { transform:translateY(1px) scale(.98) }
-  nav button.on { color:var(--ink); background:var(--card); box-shadow:0 1px 2px rgba(0,0,0,.06) }
+  nav button { position:relative; display:inline-flex; align-items:center; gap:7px;
+               height:32px; padding:0 13px; border:0; border-radius:8px;
+               background:transparent; color:var(--soft); font-weight:600; font-size:13.5px;
+               letter-spacing:-.006em; cursor:pointer; white-space:nowrap;
+               transition:color .18s ease, background .18s ease }
+  nav button:hover { color:var(--ink); background:color-mix(in srgb,var(--card) 65%,transparent) }
+  nav button:focus-visible { outline:2px solid var(--accent); outline-offset:2px }
+  nav button.on { color:var(--ink); background:var(--card);
+                  box-shadow:0 1px 1px rgba(16,32,28,.05), 0 1px 6px -3px rgba(16,32,28,.18) }
+  /* The number of cards waiting is a count, not part of the name of the tab. */
+  nav button .n { display:inline-grid; place-items:center; min-width:18px; height:18px;
+                  padding:0 5px; border-radius:9px; font-size:11.5px; font-weight:700;
+                  background:color-mix(in srgb,var(--accent) 15%,transparent); color:var(--accent) }
+  nav button.on .n { background:var(--accent); color:#fff }
   @media (prefers-reduced-motion: reduce) { nav button { transition:none } }
 
   button, input, select { font:inherit }
@@ -619,7 +634,7 @@ export const libraryPage = (lang: string, clientId: string) => {
     </svg>
   </button>
 </header>
-<nav id="tabs" hidden></nav>
+<nav id="tabbar" hidden><div id="tabs"></div></nav>
 <main>
   <section id="login" hidden>
     <p id="login-sync"></p>
@@ -1034,11 +1049,10 @@ export const libraryPage = (lang: string, clientId: string) => {
   function renderTabs() {
     // Settings is the gear at the top right now; a row of tabs should hold
     // the things somebody moves between, not the drawer they open twice.
-    var tabs = [['words', T.words], ['review', T.review + (review.length ? ' · ' + review.length : '')],
-                ['goals', T.goals]];
+    var tabs = [['words', T.words, 0], ['review', T.review, review.length], ['goals', T.goals, 0]];
     $('tabs').innerHTML = tabs.map(function (tab) {
       return '<button data-view="' + tab[0] + '"' + (view === tab[0] ? ' class="on"' : '') + '>' +
-        esc(tab[1]) + '</button>';
+        esc(tab[1]) + (tab[2] ? '<span class="n">' + tab[2] + '</span>' : '') + '</button>';
     }).join('');
     Array.prototype.forEach.call($('tabs').children, function (node) {
       node.onclick = function () { show(node.dataset.view); };
@@ -1146,14 +1160,14 @@ export const libraryPage = (lang: string, clientId: string) => {
       cards = answers[0]; learned = answers[1]; review = answers[2]; me = answers[3];
       usage = answers[4];
       $('login').hidden = true;
-      $('tabs').hidden = false;
+      $('tabbar').hidden = false;
       $('gear').hidden = false;
       dressPro();
       show(view);
     } catch (error) {
       localStorage.removeItem(KEY);
       $('login').hidden = false;
-      $('tabs').hidden = true;
+      $('tabbar').hidden = true;
       showSignIn();
       ['words', 'review', 'goals', 'settings'].forEach(function (name) { $('view-' + name).hidden = true; });
       $('login-note').textContent = error.message === 'Unauthorized' ? '' : error.message;
